@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StrategyGame.Api.DTO;
 using StrategyGame.Dal;
-using StrategyGame.Dal.Entities;
+using StrategyGame.Model.Entities;
 
 namespace StrategyGame.Api.Controllers
 {

@@ -14,7 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using StrategyGame.Dal;
-using StrategyGame.Dal.Entities;
+using StrategyGame.Model.Entities;
 
 namespace StrategyGame.Api
 {
