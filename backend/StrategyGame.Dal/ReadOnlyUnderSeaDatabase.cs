@@ -84,8 +84,10 @@ namespace StrategyGame.Dal
         /// </summary>
         public DbSet<AbstractEffect> Effects { get; }
 
-
-
+        /// <summary>
+        /// Gets the collection of <see cref="GlobalValue"/> in the database.
+        /// </summary>
+        public DbSet<GlobalValue> GlobalValues { get; set; }
 
 
         /// <summary>
@@ -122,9 +124,8 @@ namespace StrategyGame.Dal
             InProgressBuildings = Set<InProgressBuilding>();
             InProgressResearches = Set<InProgressResearch>();
             Effects = Set<AbstractEffect>();
+            GlobalValues = Set<GlobalValue>();
         }
-
-
 
         /// <summary>
         /// Configures the model of the database.
