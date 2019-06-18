@@ -70,6 +70,16 @@ namespace StrategyGame.Dal
         public DbSet<InProgressResearch> InProgressResearches { get; }
 
         /// <summary>
+        /// Gets the collection of <see cref="BuildingEffect"/> in the database.
+        /// </summary>
+        public DbSet<BuildingEffect> BuildingEffects { get; }
+
+        /// <summary>
+        /// Gets the collection of <see cref="ResearchEffect"/> in the database.
+        /// </summary>
+        public DbSet<ResearchEffect> ResearchEffects { get; }
+
+        /// <summary>
         /// Gets the collection of <see cref="AbstractEffect"/> in the database.
         /// </summary>
         public DbSet<AbstractEffect> Effects { get; }
@@ -122,18 +132,39 @@ namespace StrategyGame.Dal
         /// <param name="Builder">The <see cref="ModelBuilder"/> to use.</param>
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            //BuildingEffect
+            builder.Entity<BuildingEffect>().HasKey(be => be.Id);     
+            
+            //Building - BuildingEffect - Effect
+            builder.Entity<BuildingEffect>()
+                .HasOne(be => be.Building)
+                .WithMany(b => b.Effects);
+
+            builder.Entity<BuildingEffect>()
+                .HasOne(be => be.Effect)
+                .WithMany(e => e.AffectedBuildings);
+
+            //ReseatchEffect
+            builder.Entity<ResearchEffect>().HasKey(re => re.Id);
+
+            //Research - ResearchEffect - Effect
+            builder.Entity<ResearchEffect>()
+                .HasOne(re => re.Research)
+                .WithMany(r => r.Effects);
+
+            builder.Entity<ResearchEffect>()
+                .HasOne(re => re.Effect)
+                .WithMany(e => e.AffectedResearches);
+
             // Country
             builder.Entity<Country>().HasKey(x => x.Id);
             builder.Entity<Country>().Property(x => x.Id).ValueGeneratedOnAdd();
             builder.Entity<Country>().Property(x => x.ParentUser).IsRequired();
             builder.Entity<Country>().Property(x => x.Pearls).IsRequired();
             builder.Entity<Country>().Property(x => x.Corals).IsRequired();
-            builder.Entity<Country>().HasMany(x => x.InProgressBuildings);
-            builder.Entity<Country>().HasMany(x => x.InProgressResearches);
-            builder.Entity<Country>().HasMany(x => x.Buildings);
-            builder.Entity<Country>().HasMany(x => x.Researches);
-            builder.Entity<Country>().HasMany(x => x.Commands);
-            builder.Entity<Country>().HasOne(x => x.ParentUser);
+            builder.Entity<Country>().HasMany(x => x.Researches).WithOne(x => x.ParentCountry);
+            builder.Entity<Country>().HasMany(x => x.Commands).WithOne(x => x.ParentCountry);
+            builder.Entity<Country>().HasOne(x => x.ParentUser).WithOne(x => x.RuledCountry);
 
             // BuildingType
             builder.Entity<BuildingType>().HasKey(x => x.Id);
@@ -142,9 +173,6 @@ namespace StrategyGame.Dal
             builder.Entity<BuildingType>().Property(x => x.CostCoral).IsRequired();
             builder.Entity<BuildingType>().Property(x => x.BuildTime).IsRequired();
             builder.Entity<BuildingType>().Property(x => x.MaxCount).IsRequired();
-            builder.Entity<BuildingType>().HasMany(x => x.CompletedBuildings);
-            builder.Entity<BuildingType>().HasMany(x => x.InProgressBuildings);
-            builder.Entity<BuildingType>().HasMany(x => x.Effects);
 
             // ResearchType
             builder.Entity<ResearchType>().HasKey(x => x.Id);
@@ -153,9 +181,6 @@ namespace StrategyGame.Dal
             builder.Entity<ResearchType>().Property(x => x.CostCoral).IsRequired();
             builder.Entity<ResearchType>().Property(x => x.ResearchTime).IsRequired();
             builder.Entity<ResearchType>().Property(x => x.MaxCompletedAmount).IsRequired();
-            builder.Entity<ResearchType>().HasMany(x => x.CompletedResearches);
-            builder.Entity<ResearchType>().HasMany(x => x.InProgressResearches);
-            builder.Entity<ResearchType>().HasMany(x => x.Effects);
 
             // UnitType
             builder.Entity<UnitType>().HasKey(x => x.Id);
@@ -171,16 +196,27 @@ namespace StrategyGame.Dal
             builder.Entity<Command>().HasKey(x => x.Id);
             builder.Entity<Command>().Property(x => x.Id).ValueGeneratedOnAdd();
             builder.Entity<Command>().HasIndex(nameof(Command.ParentCountry), nameof(Command.TargetCountry));
-            builder.Entity<Command>().HasOne(x => x.ParentCountry);
-            builder.Entity<Command>().HasOne(x => x.TargetCountry);
-            builder.Entity<Command>().HasMany(x => x.Divisons);
+
+            builder.Entity<Command>()
+                .HasOne(c => c.ParentCountry)
+                .WithMany(c => c.Commands);
+
+            builder.Entity<Command>()
+                .HasOne(c => c.TargetCountry)
+                .WithMany(c => c.IncomingAttacks);
+
+            builder.Entity<Command>()
+                .HasMany(c => c.Divisons)
+                .WithOne(d => d.ParentCommand);
 
             // Divisions
             builder.Entity<Division>().HasKey(x => x.Id);
             builder.Entity<Division>().Property(x => x.Id).ValueGeneratedOnAdd();
             builder.Entity<Division>().Property(x => x.Count).IsRequired();
-            builder.Entity<Division>().HasOne(x => x.ParentCommand);
-            builder.Entity<Division>().HasOne(x => x.Unit);
+
+            builder.Entity<Division>()
+                .HasOne(d => d.Unit)
+                .WithMany(u => u.ContainingDivisions);
 
             // CountryBuilding
             builder.Entity<CountryBuilding>().HasKey(x => x.Id);
@@ -189,8 +225,15 @@ namespace StrategyGame.Dal
             builder.Entity<CountryBuilding>().Property(x => x.Building).IsRequired();
             builder.Entity<CountryBuilding>().Property(x => x.Count).IsRequired();
             builder.Entity<CountryBuilding>().HasIndex(nameof(CountryBuilding.ParentCountry), nameof(CountryBuilding.Building));
-            builder.Entity<CountryBuilding>().HasOne(x => x.ParentCountry);
-            builder.Entity<CountryBuilding>().HasOne(x => x.Building);
+
+            //Country - CountryBuilding - BuildingType
+            builder.Entity<CountryBuilding>()
+                .HasOne(cb => cb.ParentCountry)
+                .WithMany(c => c.Buildings);
+
+            builder.Entity<CountryBuilding>()
+                .HasOne(cb => cb.Building)
+                .WithMany(b => b.CompletedBuildings);
 
             // CountryResearch
             builder.Entity<CountryResearch>().HasKey(x => x.Id);
@@ -199,8 +242,15 @@ namespace StrategyGame.Dal
             builder.Entity<CountryResearch>().Property(x => x.Research).IsRequired();
             builder.Entity<CountryResearch>().Property(x => x.Count).IsRequired();
             builder.Entity<CountryResearch>().HasIndex(nameof(CountryResearch.ParentCountry), nameof(CountryResearch.Research));
-            builder.Entity<CountryResearch>().HasOne(x => x.ParentCountry);
-            builder.Entity<CountryResearch>().HasOne(x => x.Research);
+
+            //Country - CountryResearch - ResearchType
+            builder.Entity<CountryResearch>()
+                .HasOne(cr => cr.ParentCountry)
+                .WithMany(c => c.Researches);
+
+            builder.Entity<CountryResearch>()
+                .HasOne(cr => cr.Research)
+                .WithMany(r => r.CompletedResearches);
 
             // InProgressBuilding
             builder.Entity<InProgressBuilding>().HasKey(x => x.Id);
@@ -209,8 +259,15 @@ namespace StrategyGame.Dal
             builder.Entity<InProgressBuilding>().Property(x => x.Building).IsRequired();
             builder.Entity<InProgressBuilding>().Property(x => x.TimeLeft).IsRequired();
             builder.Entity<InProgressBuilding>().HasIndex(nameof(InProgressBuilding.ParentCountry), nameof(InProgressBuilding.Building));
-            builder.Entity<InProgressBuilding>().HasOne(x => x.ParentCountry);
-            builder.Entity<InProgressBuilding>().HasOne(x => x.Building);
+
+            //Country - InProgressBuilding - BuildingType
+            builder.Entity<InProgressBuilding>()
+                .HasOne(ib => ib.ParentCountry)
+                .WithMany(c => c.InProgressBuildings);
+
+            builder.Entity<InProgressBuilding>()
+                .HasOne(ib => ib.Building)
+                .WithMany(b => b.InProgressBuildings);
 
             // InProgressResearch
             builder.Entity<InProgressResearch>().HasKey(x => x.Id);
@@ -219,8 +276,15 @@ namespace StrategyGame.Dal
             builder.Entity<InProgressResearch>().Property(x => x.Research).IsRequired();
             builder.Entity<InProgressResearch>().Property(x => x.TimeLeft).IsRequired();
             builder.Entity<InProgressResearch>().HasIndex(nameof(InProgressResearch.ParentCountry), nameof(InProgressResearch.Research));
-            builder.Entity<InProgressResearch>().HasOne(x => x.ParentCountry);
-            builder.Entity<InProgressResearch>().HasOne(x => x.Research);
+
+            //Country - InProgressResearch - ResearchType
+            builder.Entity<InProgressResearch>()
+                .HasOne(ir => ir.ParentCountry)
+                .WithMany(c => c.InProgressResearches);
+
+            builder.Entity<InProgressResearch>()
+                .HasOne(ir => ir.Research)
+                .WithMany(r => r.InProgressResearches);
 
             // Effect
             builder.Entity<AbstractEffect>().HasKey(x => x.Id);

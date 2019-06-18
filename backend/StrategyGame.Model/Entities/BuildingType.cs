@@ -34,7 +34,7 @@ namespace StrategyGame.Model.Entities
         /// <summary>
         /// Gets the collection of effects this building provides.
         /// </summary>
-        public virtual ICollection<AbstractEffect> Effects { get; protected internal set; }
+        public virtual ICollection<BuildingEffect> Effects { get; protected internal set; }
 
         /// <summary>
         /// Gets the collection of buildings of this type that are completed.

@@ -1,4 +1,6 @@
-﻿namespace StrategyGame.Model.Entities
+﻿using System.Collections.Generic;
+
+namespace StrategyGame.Model.Entities
 {
     /// <summary>
     /// Represents an effect within the UnderSea database.
@@ -9,6 +11,9 @@
         /// Gets or sets the value of the effect.
         /// </summary>
         public double Value { get; set; }
+
+        public ICollection<BuildingEffect> AffectedBuildings { get; set; }
+        public ICollection<ResearchEffect> AffectedResearches { get; set; }
 
         /// <summary>
         /// Applies the effect to the target country. Beware of saving!

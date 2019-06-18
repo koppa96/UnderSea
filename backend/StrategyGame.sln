@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrategyGame.Dal", "Strateg
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrategyGame.Bll", "StrategyGame.Bll\StrategyGame.Bll.csproj", "{AC0B5CDC-62D0-4584-8FD2-638D2F198E9A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StrategyGame.Model", "StrategyGame.Model\StrategyGame.Model.csproj", "{826D68D7-6812-402E-9E24-F724830B934F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrategyGame.Model", "StrategyGame.Model\StrategyGame.Model.csproj", "{826D68D7-6812-402E-9E24-F724830B934F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

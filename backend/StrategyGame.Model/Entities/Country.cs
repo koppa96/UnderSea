@@ -48,7 +48,10 @@ namespace StrategyGame.Model.Entities
         /// </summary>
         public virtual ICollection<Command> Commands { get; protected internal set; }
 
-        
+        /// <summary>
+        /// Gets the collection of commands targetting the country.
+        /// </summary>
+        public virtual ICollection<Command> IncomingAttacks { get; protected internal set; }
 
         /// <summary>
         /// Initializes a new instance of <see cref="Country"/>, with the specified starting pearl and coral amounts.

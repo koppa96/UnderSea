@@ -6,5 +6,10 @@ namespace StrategyGame.Model.Entities
     /// Represents a user in the UnderSea database.
     /// </summary>
     public class User : IdentityUser
-    { }
+    {
+        /// <summary>
+        /// Get or sets the country that is ruled by the user.
+        /// </summary>
+        public Country RuledCountry { get; set; }
+    }
 }

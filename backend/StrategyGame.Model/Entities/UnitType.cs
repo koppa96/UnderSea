@@ -1,4 +1,6 @@
-﻿namespace StrategyGame.Model.Entities
+﻿using System.Collections.Generic;
+
+namespace StrategyGame.Model.Entities
 {
     /// <summary>
     /// Represents a unit type within the UnderSea database.
@@ -35,7 +37,7 @@
         /// </summary>
         public int MaintenanceCoral { get; set; }
 
-
+        public virtual ICollection<Division> ContainingDivisions { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UnitType"/>.
