@@ -1,7 +1,10 @@
 import * as React from "react";
 
-import { Button, Form, FormGroup, Input } from "reactstrap";
+//import "./../../../app.scss";
+
+import { Form } from "reactstrap";
 import { LoginProps, LoginState } from "./Interface";
+import { Link } from "react-router-dom";
 
 export class Login extends React.Component<LoginProps, LoginState> {
   state: LoginState = {
@@ -11,9 +14,11 @@ export class Login extends React.Component<LoginProps, LoginState> {
 
   render() {
     return (
-      <Form onSubmit={this.handleSubmit}>
-        <FormGroup>
-          <Input
+      <div className="form-bg">
+        <h3 className="form-font">Belépés</h3>
+        <Form onSubmit={this.handleSubmit}>
+          <input
+            className="form-input"
             required
             onChange={e =>
               this.setState({
@@ -23,11 +28,10 @@ export class Login extends React.Component<LoginProps, LoginState> {
             }
             placeholder="Felhasználó"
             name="name"
-            id="name"
           />
-        </FormGroup>
-        <FormGroup>
-          <Input
+
+          <input
+            className="form-input"
             required
             onChange={e =>
               this.setState({
@@ -37,15 +41,18 @@ export class Login extends React.Component<LoginProps, LoginState> {
             }
             placeholder="Jelszó"
             name="password"
-            id="password"
           />
-        </FormGroup>
-        <FormGroup>
-          <Button variant={"success"} color="primary" type="submit">
-            Regisztráció
-          </Button>
-        </FormGroup>
-      </Form>
+          <div className="button-container text-center">
+            <button className="form-button" type="submit">
+              Belépés
+            </button>
+
+            <Link className="form-link" to="/registration">
+              Regisztráció
+            </Link>
+          </div>
+        </Form>
+      </div>
     );
   }
 

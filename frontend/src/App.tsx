@@ -5,26 +5,44 @@ import { Login } from "./pages/account/login/index";
 
 import "./app.scss";
 import { Navbar } from "reactstrap";
-import { NotFound } from "./pages/notFound/NotFound";
+import { NotFound } from "./pages/notFound/index";
+import { LoginCheck } from "./components/LoginCheck/LoginCheck";
+import { MainPage } from "./pages/mainpage/Mainpage";
 
 export const App = () => {
+  const loggedin = true;
+
   return (
     <Router>
       <div className="App">
-        <Navbar>
-          <Link to="/login">Login</Link>
-          <span> and </span>
-          <Link to="/register">Register</Link>
-        </Navbar>
-        <h1>My react app</h1>
-      </div>
+        <div className="bg-image">
+          <div className="mainpage-width">
+            <span className="game-name">Undersea</span>
+            <Switch>
+              <Route exact path="/">
+                <LoginCheck login={loggedin}>
+                  <MainPage />
+                </LoginCheck>
+              </Route>
+              <Route path="/register" component={Register} />
 
-      <Switch>
-        <Route exact path="/" component={Login} />
-        <Route path="/register" component={Register} />
-        <Route path="/login" component={Login} />
-        <Route component={NotFound} />
-      </Switch>
+              <Route path="/login">
+                <LoginCheck login={!loggedin}>
+                  <Login />
+                </LoginCheck>
+              </Route>
+              <Route component={NotFound} />
+            </Switch>
+          </div>
+
+          <Navbar>
+            <Link to="/login">Login</Link>
+            <span> and </span>
+            <Link to="/register">Register</Link>
+          </Navbar>
+          <h1>My react app</h1>
+        </div>
+      </div>
     </Router>
   );
 };

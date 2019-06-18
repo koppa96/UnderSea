@@ -1,10 +1,12 @@
-import { Fragment } from "react";
+import React from "react";
 
-export const MainPage = () => {
-  return (
-    <>
-      <span>Gratulálok, bejelentkeztél</span>
-      <span>Placeholder szöveg</span>
-    </>
-  );
-};
+export class MainPage extends React.Component {
+  render() {
+    return (
+      <>
+        <h3>Gratulálok, bejelentkeztél</h3>
+        <span>Placeholder szöveg</span>
+      </>
+    );
+  }
+}
