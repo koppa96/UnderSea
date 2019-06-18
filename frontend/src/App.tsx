@@ -4,7 +4,6 @@ import { Register } from "./pages/account/register/index";
 import { Login } from "./pages/account/login/index";
 
 import "./app.scss";
-import { Navbar } from "reactstrap";
 import { NotFound } from "./pages/notFound/index";
 import { LoginCheck } from "./components/LoginCheck/LoginCheck";
 import { MainPage } from "./pages/mainpage/Mainpage";
@@ -17,7 +16,7 @@ export const App = () => {
       <div className="App">
         <div className="bg-image">
           <div className="mainpage-width">
-            <span className="game-name">Undersea</span>
+            <h1 className="undersea">Undersea</h1>
             <Switch>
               <Route exact path="/">
                 <LoginCheck login={loggedin}>
@@ -34,13 +33,6 @@ export const App = () => {
               <Route component={NotFound} />
             </Switch>
           </div>
-
-          <Navbar>
-            <Link to="/login">Login</Link>
-            <span> and </span>
-            <Link to="/register">Register</Link>
-          </Navbar>
-          <h1>My react app</h1>
         </div>
       </div>
     </Router>

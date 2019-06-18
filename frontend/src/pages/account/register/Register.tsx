@@ -1,7 +1,8 @@
 import * as React from "react";
 
-import { Button, Form, FormGroup, Input } from "reactstrap";
+import { Form } from "reactstrap";
 import { RegisterProps, RegisterState } from "./Interface";
+import { Link } from "react-router-dom";
 
 export class Register extends React.Component<RegisterProps, RegisterState> {
   state: RegisterState = {
@@ -13,9 +14,11 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
 
   render() {
     return (
-      <Form onSubmit={this.handleSubmit}>
-        <FormGroup>
-          <Input
+      <div className="form-bg">
+        <h3 className="form-font">Regisztráció</h3>
+        <Form onSubmit={this.handleSubmit}>
+          <input
+            className="form-input"
             required
             onChange={e =>
               this.setState({
@@ -25,25 +28,22 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
             }
             placeholder="Felhasználó"
             name="name"
-            id="name"
           />
-        </FormGroup>
-        <FormGroup>
-          <Input
+
+          <input
+            className="form-input"
             required
             onChange={e =>
               this.setState({
                 ...this.state,
-                password: e.target.value
+                name: e.target.value
               })
             }
             placeholder="Jelszó"
             name="password"
-            id="password"
           />
-        </FormGroup>
-        <FormGroup>
-          <Input
+          <input
+            className="form-input"
             required
             onChange={e =>
               this.setState({
@@ -53,11 +53,9 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
             }
             placeholder="Jelszó megerősítése"
             name="repassword"
-            id="repassword"
           />
-        </FormGroup>
-        <FormGroup>
-          <Input
+          <input
+            className="form-input"
             required
             onChange={e =>
               this.setState({
@@ -65,17 +63,21 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
                 countryname: e.target.value
               })
             }
-            placeholder="A városod neve amit építesz"
+            placeholder="A városod neve, amit építesz"
             name="countryname"
-            id="countryname"
           />
-        </FormGroup>
-        <FormGroup>
-          <Button variant={"success"} color="primary" type="submit">
-            Regisztráció
-          </Button>
-        </FormGroup>
-      </Form>
+          <div className="button-container text-center">
+            <button className="form-button" type="submit">
+              Regisztráció
+            </button>
+          </div>
+        </Form>
+        <div className="button-container text-center">
+          <Link className="form-link" to="/login">
+            Bejelentkezés
+          </Link>
+        </div>
+      </div>
     );
   }
 

@@ -1,6 +1,6 @@
 import * as React from "react";
 
-//import "./../../../app.scss";
+import "./../../../assets/scss/forms.scss";
 
 import { Form } from "reactstrap";
 import { LoginProps, LoginState } from "./Interface";
@@ -15,7 +15,7 @@ export class Login extends React.Component<LoginProps, LoginState> {
   render() {
     return (
       <div className="form-bg">
-        <h3 className="form-font">Belépés</h3>
+        <h2 className="form-font">Belépés</h2>
         <Form onSubmit={this.handleSubmit}>
           <input
             className="form-input"
@@ -46,12 +46,13 @@ export class Login extends React.Component<LoginProps, LoginState> {
             <button className="form-button" type="submit">
               Belépés
             </button>
-
-            <Link className="form-link" to="/registration">
-              Regisztráció
-            </Link>
           </div>
         </Form>
+        <div className="button-container text-center">
+          <Link className="form-link" to="/register">
+            Regisztráció
+          </Link>
+        </div>
       </div>
     );
   }

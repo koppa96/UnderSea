@@ -1,39 +1,20 @@
 @import "./variables.scss";
+@import "./fonts.scss";
 
-@font-face {
+.undersea {
+  display: inline-block;
+  margin-left: auto;
+  margin-right: auto;
   font-family: Baloo;
-  src: url("./assets/fonts/baloo/Baloo-Regular.ttf");
-}
-
-.background {
-  object-fit: cover;
+  color: $primary-color;
+  font-size: 93px;
 }
 
 .bg-image {
-  height: 600px;
+  min-height: 100vh;
   background-image: url("./assets/images/undersea-bg.png");
   background-repeat: no-repeat;
   background-size: cover;
-}
-
-.form-input {
-  border-radius: 20px;
-  background-color: rgba(255, 255, 255, 0.39);
-  padding-top: 9px;
-  padding-bottom: 9px;
-  padding-left: 23px;
-  width: 100%;
-  border: none;
-  margin-top: 10px;
-  font-size: 16px;
-  color: rgba(28, 62, 118, 1);
-}
-
-.form-link {
-  display: block;
-  color: $primary-color;
-  font-size: 18px;
-  font-family: Baloo;
 }
 
 .mainpage-middle {
@@ -42,36 +23,5 @@
 }
 .mainpage-width {
   @extend .mainpage-middle;
-  max-width: 460px;
-}
-.form-font {
-  font-size: 32px;
-  color: $secondary-color;
-  text-align: center;
-  font-family: Baloo;
-  margin-bottom: 28px;
-}
-
-.form-button {
-  @extend .form-font;
-  @extend .mainpage-middle;
-  font-size: 18px;
-  border-radius: 100px;
-  min-width: 190px;
-  border: none;
-  height: 50px;
-  margin-top: 44px;
-  margin-bottom: 27px;
-  background-image: linear-gradient(
-    to right,
-    rgba(15, 207, 222, 1),
-    rgba(159, 255, 240, 1)
-  );
-}
-.form-bg {
-  background-color: rgba(255, 255, 255, 0.3);
-  padding: 48px;
-  padding-top: 37px;
-
-  border-radius: 16px;
+  max-width: 408px;
 }
