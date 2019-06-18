@@ -11,5 +11,10 @@ namespace StrategyGame.Model.Entities
         /// Get or sets the country that is ruled by the user.
         /// </summary>
         public Country RuledCountry { get; set; }
+
+        /// <summary>
+        /// The Id of the ruled country.
+        /// </summary>
+        public int RuledCountryId { get; set; }
     }
 }

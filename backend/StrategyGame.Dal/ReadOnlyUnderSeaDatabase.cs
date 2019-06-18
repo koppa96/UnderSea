@@ -165,7 +165,11 @@ namespace StrategyGame.Dal
             builder.Entity<Country>().Property(x => x.Corals).IsRequired();
             builder.Entity<Country>().HasMany(x => x.Researches).WithOne(x => x.ParentCountry);
             builder.Entity<Country>().HasMany(x => x.Commands).WithOne(x => x.ParentCountry);
-            builder.Entity<Country>().HasOne(x => x.ParentUser).WithOne(x => x.RuledCountry);
+
+            builder.Entity<Country>()
+                .HasOne(c => c.ParentUser)
+                .WithOne(u => u.RuledCountry)
+                .HasForeignKey<User>(u => u.RuledCountryId);
 
             // BuildingType
             builder.Entity<BuildingType>().HasKey(x => x.Id);
