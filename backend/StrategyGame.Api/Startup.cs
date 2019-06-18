@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using IdentityModel;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -12,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using StrategyGame.Dal;
+using StrategyGame.Dal.Entities;
 
 namespace StrategyGame.Api
 {
@@ -36,6 +39,32 @@ namespace StrategyGame.Api
             services.AddDbContext<UnderSeaDatabase>(optionsAction);
             services.AddDbContext<ReadOnlyUnderSeaDatabase>(optionsAction);
 
+            services.AddDefaultIdentity<User>()
+                .AddEntityFrameworkStores<UnderSeaDatabase>();
+
+            services.AddIdentityServer()
+                .AddDeveloperSigningCredential()
+                .AddInMemoryPersistedGrants()
+                .AddInMemoryIdentityResources(IdentityServerConfig.GetIdentityResources())
+                .AddInMemoryApiResources(IdentityServerConfig.GetApiResources(Configuration))
+                .AddInMemoryClients(IdentityServerConfig.GetClients(Configuration))
+                .AddAspNetIdentity<User>();
+
+            services.AddAuthentication(options => 
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+                {
+                    options.Authority = Configuration["Authority"];
+                    options.Audience = Configuration["ApiName"];
+                    options.RequireHttpsMetadata = false;
+                    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                    {
+                        NameClaimType = JwtClaimTypes.Name
+                    };
+                });
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
@@ -46,6 +75,10 @@ namespace StrategyGame.Api
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseHttpsRedirection();
+            app.UseAuthentication();
+            app.UseIdentityServer();
 
             app.UseMvc();
         }
