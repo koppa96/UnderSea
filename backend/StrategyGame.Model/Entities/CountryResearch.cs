@@ -14,12 +14,12 @@ namespace StrategyGame.Model.Entities
         /// <summary>
         /// Gets the parent country this <see cref="CountryResearch"/> belongs to.
         /// </summary>
-        public Country ParentCountry { get; protected internal set; }
+        public Country ParentCountry { get; set; }
 
         /// <summary>
         /// Gets the research this <see cref="CountryResearch"/> represents within the country.
         /// </summary>
-        public ResearchType Research { get; protected internal set; }
+        public ResearchType Research { get; set; }
 
         /// <summary>
         /// Gets the amount the research was completed by the country.
@@ -27,6 +27,12 @@ namespace StrategyGame.Model.Entities
         public int Count { get; set; }
 
 
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="CountryResearch"/>.
+        /// </summary>
+        public CountryResearch()
+        { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CountryResearch"/>.

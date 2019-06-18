@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using StrategyGame.Model.Entities.Frontend;
+using System.Collections.Generic;
 
 namespace StrategyGame.Model.Entities
 {
@@ -37,7 +38,23 @@ namespace StrategyGame.Model.Entities
         /// </summary>
         public int MaintenanceCoral { get; set; }
 
+        /// <summary>
+        /// Gets or sets the content of the unit.
+        /// </summary>
+        public virtual UnitContent Content { get; set; }
+
+        /// <summary>
+        /// Gets or sets the collection of divisions that contain the unit type.
+        /// </summary>
         public virtual ICollection<Division> ContainingDivisions { get; set; }
+
+
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="UnitType"/>.
+        /// </summary>
+        public UnitType()
+        { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UnitType"/>.

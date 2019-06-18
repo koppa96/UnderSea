@@ -14,12 +14,12 @@ namespace StrategyGame.Model.Entities
         /// <summary>
         /// Gets the parent country this <see cref="CountryBuilding"/> belongs to.
         /// </summary>
-        public Country ParentCountry { get; protected internal set; }
+        public Country ParentCountry { get; set; }
 
         /// <summary>
         /// Gets the building this <see cref="CountryBuilding"/> represents within the country.
         /// </summary>
-        public BuildingType Building { get; protected internal set; }
+        public BuildingType Building { get; set; }
 
         /// <summary>
         /// Gets the amount of buildings there are in the country.
@@ -27,6 +27,12 @@ namespace StrategyGame.Model.Entities
         public int Count { get; set; }
 
 
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="CountryBuilding"/>.
+        /// </summary>
+        public CountryBuilding()
+        { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CountryBuilding"/>.

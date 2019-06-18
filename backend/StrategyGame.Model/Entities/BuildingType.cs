@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StrategyGame.Model.Entities.Frontend;
+using System;
 using System.Collections.Generic;
 
 namespace StrategyGame.Model.Entities
@@ -32,21 +33,32 @@ namespace StrategyGame.Model.Entities
         public int MaxCount { get; set; }
 
         /// <summary>
+        /// Gets or sets the <see cref="BuildingContent"/> of the building.
+        /// </summary>
+        public virtual BuildingContent Content { get; set; }
+
+        /// <summary>
         /// Gets the collection of effects this building provides.
         /// </summary>
-        public virtual ICollection<BuildingEffect> Effects { get; protected internal set; }
+        public virtual ICollection<BuildingEffect> Effects { get; set; }
 
         /// <summary>
         /// Gets the collection of buildings of this type that are completed.
         /// </summary>
-        public virtual ICollection<CountryBuilding> CompletedBuildings { get; protected internal set; }
+        public virtual ICollection<CountryBuilding> CompletedBuildings { get; set; }
 
         /// <summary>
         /// Gets the collection of buildings of this type that are being built.
         /// </summary>
-        public virtual ICollection<InProgressBuilding> InProgressBuildings { get; protected internal set; }
+        public virtual ICollection<InProgressBuilding> InProgressBuildings { get; set; }
 
 
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="BuildingType"/>.
+        /// </summary>
+        public BuildingType()
+        { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BuildingType"/>.

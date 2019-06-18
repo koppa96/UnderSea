@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StrategyGame.Model.Entities.Frontend;
+using System;
 using System.Collections.Generic;
 
 namespace StrategyGame.Model.Entities
@@ -32,21 +33,32 @@ namespace StrategyGame.Model.Entities
         public int MaxCompletedAmount { get; set; }
 
         /// <summary>
+        /// Gets or sets the content of the research.
+        /// </summary>
+        public virtual ResearchContent Content { get; set; }
+
+        /// <summary>
         /// Gets the collection of effects this research provides.
         /// </summary>
-        public virtual ICollection<ResearchEffect> Effects { get; protected internal set; }
+        public virtual ICollection<ResearchEffect> Effects { get; set; }
 
         /// <summary>
         /// Gets the collection of researches of this type that are completed.
         /// </summary>
-        public virtual ICollection<CountryResearch> CompletedResearches { get; protected internal set; }
+        public virtual ICollection<CountryResearch> CompletedResearches { get; set; }
 
         /// <summary>
         /// Gets the collection of researches of this type that are being researched.
         /// </summary>
-        public virtual ICollection<InProgressResearch> InProgressResearches { get; protected internal set; }
+        public virtual ICollection<InProgressResearch> InProgressResearches { get; set; }
 
 
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="ResearchType"/>.
+        /// </summary>
+        public ResearchType()
+        { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResearchType"/>.

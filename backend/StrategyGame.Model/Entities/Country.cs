@@ -21,37 +21,45 @@ namespace StrategyGame.Model.Entities
         /// <summary>
         /// Gets the user to whom the country belongs.
         /// </summary>
-        public virtual User ParentUser { get; protected internal set; }
+        public virtual User ParentUser { get; set; }
 
         /// <summary>
         /// Gets the collection of buildings that are within the country.
         /// </summary>
-        public virtual ICollection<CountryBuilding> Buildings { get; protected internal set; }
+        public virtual ICollection<CountryBuilding> Buildings { get; set; }
 
         /// <summary>
         /// Gets the collection of researches completed by the country.
         /// </summary>
-        public virtual ICollection<CountryResearch> Researches { get; protected internal set; }
+        public virtual ICollection<CountryResearch> Researches { get; set; }
         
         /// <summary>
         /// Gets the collection of buildings that are within the country.
         /// </summary>
-        public virtual ICollection<InProgressBuilding> InProgressBuildings { get; protected internal set; }
+        public virtual ICollection<InProgressBuilding> InProgressBuildings { get; set; }
 
         /// <summary>
         /// Gets the collection of researches completed by the country.
         /// </summary>
-        public virtual ICollection<InProgressResearch> InProgressResearches { get; protected internal set; }
+        public virtual ICollection<InProgressResearch> InProgressResearches { get; set; }
 
         /// <summary>
         /// Gets the collection of commands issues by the country for the current turn.
         /// </summary>
-        public virtual ICollection<Command> Commands { get; protected internal set; }
+        public virtual ICollection<Command> Commands { get; set; }
 
         /// <summary>
         /// Gets the collection of commands targetting the country.
         /// </summary>
-        public virtual ICollection<Command> IncomingAttacks { get; protected internal set; }
+        public virtual ICollection<Command> IncomingAttacks { get; set; }
+
+
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="Country"/>.
+        /// </summary>
+        public Country()
+        { }
 
         /// <summary>
         /// Initializes a new instance of <see cref="Country"/>, with the specified starting pearl and coral amounts.

@@ -10,12 +10,12 @@ namespace StrategyGame.Model.Entities
         /// <summary>
         /// Gets the type of units in the division.
         /// </summary>
-        public virtual UnitType Unit { get; protected internal set; }
+        public virtual UnitType Unit { get; set; }
 
         /// <summary>
         /// Gets the command the division belongs to.
         /// </summary>
-        public virtual Command ParentCommand { get; protected internal set; }
+        public virtual Command ParentCommand { get; set; }
 
         /// <summary>
         /// Gets the amount of units in the division.
@@ -23,6 +23,12 @@ namespace StrategyGame.Model.Entities
         public int Count { get; set; }
 
 
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="Division"/>.
+        /// </summary>
+        public Division()
+        { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Division"/>.

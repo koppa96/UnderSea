@@ -10,12 +10,12 @@ namespace StrategyGame.Model.Entities
         /// <summary>
         /// Gets the parent country this <see cref="CountryBuilding"/> belongs to.
         /// </summary>
-        public Country ParentCountry { get; protected internal set; }
+        public Country ParentCountry { get; set; }
 
         /// <summary>
         /// Gets the building this <see cref="CountryBuilding"/> represents within the country.
         /// </summary>
-        public BuildingType Building { get; protected internal set; }
+        public BuildingType Building { get; set; }
 
         /// <summary>
         /// Gets the amount of turns left until the building is built.
@@ -23,6 +23,13 @@ namespace StrategyGame.Model.Entities
         public int TimeLeft { get; set; }
 
 
+
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="InProgressBuilding"/>.
+        /// </summary>
+        public InProgressBuilding()
+        { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InProgressBuilding"/>.

@@ -6,6 +6,7 @@ namespace StrategyGame.Model.Entities
 {
     public class GlobalValue
     {
+        //TODO comment
         public int Id { get; set; }
         public uint Round { get; set; }
         public int StartingPopulation { get; set; }

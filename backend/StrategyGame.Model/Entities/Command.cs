@@ -14,19 +14,25 @@ namespace StrategyGame.Model.Entities
         /// <summary>
         /// Gets the country that this command belongs to.
         /// </summary>
-        public virtual Country ParentCountry { get; protected internal set; }
+        public virtual Country ParentCountry { get; set; }
 
         /// <summary>
         /// Gets the target country of the command.
         /// </summary>
-        public virtual Country TargetCountry { get; protected internal set; }
+        public virtual Country TargetCountry { get; set; }
 
         /// <summary>
         /// Gets the collection of divisions assigned to this command.
         /// </summary>
-        public virtual ICollection<Division> Divisons { get; protected internal set; }
+        public virtual ICollection<Division> Divisons { get; set; }
 
 
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="Command"/>.
+        /// </summary>
+        public Command()
+        { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Command"/>

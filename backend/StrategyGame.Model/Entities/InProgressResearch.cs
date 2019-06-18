@@ -11,12 +11,12 @@ namespace StrategyGame.Model.Entities
         /// <summary>
         /// Gets the parent country this <see cref="InProgressResearch"/> belongs to.
         /// </summary>
-        public Country ParentCountry { get; protected internal set; }
+        public Country ParentCountry { get; set; }
 
         /// <summary>
         /// Gets the research this <see cref="InProgressResearch"/> represents within the country.
         /// </summary>
-        public ResearchType Research { get; protected internal set; }
+        public ResearchType Research { get; set; }
 
         /// <summary>
         /// Gets the amount of turns left until the building is built.
@@ -24,6 +24,12 @@ namespace StrategyGame.Model.Entities
         public int TimeLeft { get; set; }
 
 
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="InProgressResearch"/>.
+        /// </summary>
+        public InProgressResearch()
+        { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InProgressResearch"/>.

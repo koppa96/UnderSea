@@ -8,4 +8,13 @@
     <Folder Include="Services\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\StrategyGame.Dal\StrategyGame.Dal.csproj" />
+    <ProjectReference Include="..\StrategyGame.Model\StrategyGame.Model.csproj" />
+  </ItemGroup>
+
 </Project>
