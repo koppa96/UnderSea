@@ -1,15 +1,11 @@
-$local-recangle: 58px;
+@import './variables.scss';
+
 .navbaricon-bg {
   display: flex;
   flex-direction: row;
-  margin-left: 15px;
 }
 .navbaricon-rectangle {
-  width: $local-recangle;
-  height: $local-recangle;
-  background-color: $primary-color;
-  border: #428dff 2px solid;
-  border-radius: 14px;
+@extend .rectangle;
   margin-right: 19px;
 }
 .navbaricon-rectangle > div {

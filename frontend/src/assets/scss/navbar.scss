@@ -25,13 +25,20 @@ $local-padding-horizontal: 29px;
   justify-content: space-between;
 }
 
-.navbar-flex {
-  flex-direction: row;
-}
-
-.navbar-flex > li > span {
+.navbar-color > ul > li > span {
   font-size: 32px;
   color: $secondary-color;
   text-align: center;
   font-family: Baloo;
+}
+.navbar-color > ul > li{
+ 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 15px;
+}
+
+.navbar-color > ul > li:first-child{
+  margin-left: 0px;
 }

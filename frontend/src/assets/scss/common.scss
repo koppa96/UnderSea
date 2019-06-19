@@ -20,10 +20,20 @@
   }
 }
 
+.rectangle{
+  width: $rectangle-size;
+  height: $rectangle-size;
+  background-color: $primary-color;
+  border: #428dff 2px solid;
+  border-radius: 14px;
+}
+
 .side-menu {
   width: 192px;
   padding-left: $total-padding-vertical;
   padding-right: $total-padding-vertical;
+  display: flex;
+  flex-direction: column;
 }
 
 .bg-image {

@@ -6,7 +6,7 @@ export class NavBar extends React.Component {
     return (
       <div className="navbar-bg">
         <div className="navbar container-fluid navbar-color ">
-          <ul className="nav navbar-nav navbar-flex">
+          <ul className="nav navbar-nav">
             <li>
               <span>4.kör</span>
             </li>
