@@ -42,7 +42,7 @@ namespace StrategyGame.Api.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         public async Task<ActionResult> CreateAccountAsnyc([FromBody] RegisterData data)
         {
@@ -71,6 +71,7 @@ namespace StrategyGame.Api.Controllers
         }
 
         [HttpDelete]
+        [Authorize]
         [ProducesResponseType(204)]
         [ProducesResponseType(500)]
         public async Task<ActionResult> DeleteAccountAsync()
