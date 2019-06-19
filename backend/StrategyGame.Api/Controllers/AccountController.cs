@@ -34,7 +34,7 @@ namespace StrategyGame.Api.Controllers
         [Authorize]
         [ProducesResponseType(200)]
         [ProducesResponseType(401)]
-        public async Task<ActionResult<UserData>> GetAccountsAsync()
+        public async Task<ActionResult<UserData>> GetAccountAsync()
         {
             var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
             return Ok(new UserData
