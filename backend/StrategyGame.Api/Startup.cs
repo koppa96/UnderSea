@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using IdentityModel;
@@ -13,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using NSwag.CodeGeneration.TypeScript;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
 
@@ -66,6 +68,30 @@ namespace StrategyGame.Api
                 });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddSwaggerDocument(options =>
+            {
+                options.PostProcess = document =>
+                {
+                    var settings = new TypeScriptClientGeneratorSettings
+                    {
+                        ClassName = "{controller}Client"
+                    };
+
+                    var generator = new TypeScriptClientGenerator(document, settings);
+                    var code = generator.GenerateFile();
+
+                    var path = Directory.GetCurrentDirectory();
+                    var directory = new DirectoryInfo(path + @"\TypeScript");
+                    if (!directory.Exists)
+                    {
+                        directory.Create();
+                    }
+
+                    var filePath = path + @"\TypeScript\Client.ts";
+                    File.WriteAllText(filePath, code);
+                };
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -79,6 +105,9 @@ namespace StrategyGame.Api
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseIdentityServer();
+
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
 
             app.UseMvc();
         }
