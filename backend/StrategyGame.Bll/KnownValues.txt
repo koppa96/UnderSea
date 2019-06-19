@@ -1,4 +1,12 @@
-﻿Effects
+﻿To create a migration for your local DB:
+	- Open the SQL Server object explorer
+	- Add a new database under "Databases", by the name "UnderSeaDb"
+	- Open the nuget package manager console (VS -> Tools)
+	- Select the Dal project as Default project in the console
+	- add-migration initial -context UnderSeaDatabase
+	- update-database -context UnderSeaDatabase
+
+Effects
 	- population-increase - Increases the population by the set amount. Value is an integer.
 	- barrack-space-increase - Increases the barrack space by the set amount. Value is integer.
 	- coral-production - Increases end-of-turn coral production by the set amount. Value is an integer.
