@@ -8,23 +8,26 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StrategyGame.Api.DTO;
+using StrategyGame.Bll.Services.Country;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
 
 namespace StrategyGame.Api.Controllers
 {
     /// <summary>
-    /// Endpoint for creating, querying and deleting accounts
+    /// API Endpoint for creating accounts and querying the currently logged in user's data.
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class AccountController : ControllerBase
     {
         private readonly UserManager<User> _userManager;
+        private readonly ICountryService _countryService;
 
-        public AccountController(UserManager<User> userManager)
+        public AccountController(UserManager<User> userManager, ICountryService countryService)
         {
             _userManager = userManager;
+            _countryService = countryService;
         }
 
         [HttpGet]
@@ -63,28 +66,12 @@ namespace StrategyGame.Api.Controllers
                 return BadRequest(result.Errors);
             }
 
+            await _countryService.CreateAsync(data.Username, data.CountryName);
             return StatusCode(201, new UserData
             {
                 Username = user.UserName,
                 Email = user.Email
             });
-        }
-
-        [HttpDelete]
-        [Authorize]
-        [ProducesResponseType(204)]
-        [ProducesResponseType(500)]
-        public async Task<ActionResult> DeleteAccountAsync()
-        {
-            var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            var result = await _userManager.DeleteAsync(user);
-
-            if (result.Succeeded)
-            {
-                return NoContent();
-            }
-
-            return StatusCode(500);
         }
     }
 }

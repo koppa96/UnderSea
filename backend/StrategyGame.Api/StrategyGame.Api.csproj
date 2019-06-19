@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\StrategyGame.Bll\StrategyGame.Bll.csproj" />
     <ProjectReference Include="..\StrategyGame.Dal\StrategyGame.Dal.csproj" />
   </ItemGroup>
 
