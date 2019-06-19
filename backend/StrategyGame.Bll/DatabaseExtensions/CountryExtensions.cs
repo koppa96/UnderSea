@@ -189,14 +189,14 @@ namespace StrategyGame.Bll.DatabaseExtensions
         /// <param name="country">The <see cref="Country"/> to get the defenders for.</param>
         /// <returns>The collection of <see cref="Division"/>s defending the country.</returns>
         /// <exception cref="ArgumentNullException">Thrown if an argument was null.</exception>
-        public static IEnumerable<Division> GetAllDefending(this Country country)
+        public static Command GetAllDefending(this Country country)
         {
             if (country == null)
             {
                 throw new ArgumentNullException(nameof(country));
             }
 
-            return country.Commands.Single(c => c.ParentCountry.Equals(c.TargetCountry)).Divisons;
+            return country.Commands.Single(c => c.ParentCountry.Equals(c.TargetCountry));
         }
     }
 }

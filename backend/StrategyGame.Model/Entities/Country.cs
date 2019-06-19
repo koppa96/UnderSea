@@ -19,6 +19,11 @@ namespace StrategyGame.Model.Entities
         public long Corals { get; set; }
 
         /// <summary>
+        /// Gets or sets the current ranking place of the country.
+        /// </summary>
+        public long Rank { get; set; }
+
+        /// <summary>
         /// Gets the user to whom the country belongs.
         /// </summary>
         public virtual User ParentUser { get; set; }
