@@ -1,0 +1,46 @@
+$local-recangle: 58px;
+.navbaricon-bg {
+  display: flex;
+  flex-direction: row;
+  margin-left: 15px;
+}
+.navbaricon-rectangle {
+  width: $local-recangle;
+  height: $local-recangle;
+  background-color: $primary-color;
+  border: #428dff 2px solid;
+  border-radius: 14px;
+  margin-right: 19px;
+}
+.navbaricon-rectangle > div {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.navbaricon-font {
+  display: flex;
+  flex-direction: column;
+  height: 58px;
+}
+
+.navbaricon-font > span {
+  color: $secondary-color;
+  text-align: center;
+  font-family: Baloo;
+
+  display: inline-flex;
+  align-items: center;
+}
+
+.navbaricon-amount {
+  font-size: 32px;
+  flex: 1;
+  line-height: 1;
+}
+
+.navbaricon-info {
+  @extend .navbaricon-font;
+  height: 31px;
+  font-size: 20px;
+}

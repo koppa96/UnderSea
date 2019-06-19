@@ -15,24 +15,21 @@ export const App = () => {
     <Router>
       <div className="App">
         <div className="bg-image">
-          <div className="mainpage-width">
-            <h1 className="undersea-font-big undersea-font">Undersea</h1>
-            <Switch>
-              <Route exact path="/">
-                <LoginCheck login={loggedin}>
-                  <MainPage />
-                </LoginCheck>
-              </Route>
-              <Route path="/register" component={Register} />
+          <Switch>
+            <Route exact path="/">
+              <LoginCheck login={loggedin}>
+                <MainPage />
+              </LoginCheck>
+            </Route>
+            <Route path="/register" component={Register} />
 
-              <Route path="/login">
-                <LoginCheck login={!loggedin}>
-                  <Login />
-                </LoginCheck>
-              </Route>
-              <Route component={NotFound} />
-            </Switch>
-          </div>
+            <Route path="/login">
+              <LoginCheck login={!loggedin}>
+                <Login />
+              </LoginCheck>
+            </Route>
+            <Route component={NotFound} />
+          </Switch>
         </div>
       </div>
     </Router>

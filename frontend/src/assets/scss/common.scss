@@ -1,8 +1,7 @@
 @import "./variables.scss";
 
 .undersea-font-big {
-  font-size: 100px;
-  letter-spacing: 2px;
+  font-size: 93px;
 }
 
 .undersea-font {
@@ -11,6 +10,20 @@
   margin-right: auto;
   font-family: Baloo;
   color: $primary-color;
+}
+.undersea-font-form {
+  @extend .undersea-font-big;
+  @extend .undersea-font;
+  padding-top: 153px;
+
+  @media screen {
+  }
+}
+
+.side-menu {
+  width: 192px;
+  padding-left: $total-padding-vertical;
+  padding-right: $total-padding-vertical;
 }
 
 .bg-image {

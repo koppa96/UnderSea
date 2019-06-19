@@ -1,0 +1,28 @@
+.menu-bg {
+  padding: 0;
+}
+.menu-bg > li {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 24px;
+  height: 50px;
+
+  justify-content: center;
+}
+
+.menu-bg > li > a {
+  color: $secondary-color;
+  text-align: center;
+  font-family: Baloo;
+  font-size: 18px;
+  border-radius: 100px;
+  flex: 1;
+  border: none;
+  height: 100%;
+  box-shadow: 0 3px 6px rgba(59, 125, 189, 1);
+  background-image: linear-gradient(
+    to right,
+    rgba(15, 207, 222, 1),
+    rgba(159, 255, 240, 1)
+  );
+}
