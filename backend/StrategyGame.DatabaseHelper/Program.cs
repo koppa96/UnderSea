@@ -142,13 +142,15 @@ namespace StrategyGame.DatabaseHelper
             var currentCont = new BuildingContent(currentController)
             {
                 Name = "Áramlásirányító",
-                Description = "+50 lakos, 200 korall / kör"
+                Description = "+50 lakos, 200 korall / kör",
+                ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTpStWdiTJFGARYo6i93yeO0pHA0EQYJelOifiWIPmP7qveLS6n"
             };
 
             var reefCastCont = new BuildingContent(reefCastle)
             {
                 Name = "Zátonyvár",
-                Description = "+200 szállás"
+                Description = "+200 szállás",
+                ImageUrl = "https://media-cdn.tripadvisor.com/media/photo-s/02/72/f4/54/filename-pict0458-jpg.jpg"
             };
 
             context.BuildingContents.AddRange(currentCont, reefCastCont);
@@ -156,17 +158,20 @@ namespace StrategyGame.DatabaseHelper
             var sealCont = new UnitContent(seal)
             {
                 Name = "Rohamfóka",
-                Description = "Jól támad de rosszul véd"
+                Description = "Jól támad de rosszul véd",
+                ImageUrl = "https://resources.stuff.co.nz/content/dam/images/1/t/a/s/4/o/image.related.StuffLandscapeSixteenByNine.710x400.1tankf.png/1546211918775.jpg"
             };
             var ponyCont = new UnitContent(pony)
             {
                 Name = "Csatacsikó",
-                Description = "Jól véd de rosszul támad"
+                Description = "Jól véd de rosszul támad",
+                ImageUrl = "http://www2.padi.com/blog/wp-content/uploads/2013/08/seahorse.jpg"
             };
             var lazorCont = new UnitContent(lazor)
             {
                 Name = "Lézercápa",
-                Description = "lazers man"
+                Description = "lazers man",
+                ImageUrl = "https://vignette.wikia.nocookie.net/venturian-battle-headquarters/images/6/69/Flyinglasershark.jpg/revision/latest?cb=20160714220743"
             };
 
             context.UnitContents.AddRange(sealCont, ponyCont, lazorCont);
@@ -174,35 +179,54 @@ namespace StrategyGame.DatabaseHelper
             var mudTCont = new ResearchContent(mudT)
             {
                 Name = "Iszap traktor",
-                Description = "Iszapozza a korallt (amitől amúgy IRL meghalna, korall nem növény nem kell neki föld), +10% korall termelés"
+                Description = "Iszapozza a korallt (amitől amúgy IRL meghalna, korall nem növény nem kell neki föld), +10% korall termelés",
+                ImageUrl = "https://cdn.pixabay.com/photo/2017/10/09/09/55/mud-2832910_960_720.jpg"
             };
             var mudCCont = new ResearchContent(mudC)
             {
                 Name = "Iszap kombájn",
-                Description = "Nagyon iszapozza a korallt, +15% korall termelés"
+                Description = "Nagyon iszapozza a korallt, +15% korall termelés",
+                ImageUrl = "https://secure.i.telegraph.co.uk/multimedia/archive/03350/glastonbury-mud-sp_3350460k.jpg"
             };
             var defCont = new ResearchContent(wall)
             {
                 Name = "Korallfal",
-                Description = "Fal, korallból. +20% védekezés"
+                Description = "Fal, korallból. +20% védekezés",
+                ImageUrl = "https://ak2.picdn.net/shutterstock/videos/1396612/thumb/1.jpg"
             };
             var attCont = new ResearchContent(canon)
             {
                 Name = "Szonárágyú",
-                Description = "Mint a denevér, echo-lokáció. +20% támadás"
+                Description = "Mint a denevér, echo-lokáció. +20% támadás",
+                ImageUrl = "https://media-cdn.tripadvisor.com/media/photo-s/07/24/69/da/dive-abaco.jpg"
             };
             var cCont = new ResearchContent(martialArts)
             {
                 Name = "Vízalatti harcművészetek",
-                Description = "\"A különbség a lehetetlen és a lehetséges között az egyén akarata.\", +10% védekezés és támadás"
+                Description = "\"A különbség a lehetetlen és a lehetséges között az egyén akarata.\", +10% védekezés és támadás",
+                ImageUrl = "https://www.pallensmartialarts.com/uploads/1/0/9/3/109303993/girl-kicking-boy-to-air_1_orig.jpg"
             };
             var taxCont = new ResearchContent(alchemy)
             {
                 Name = "Alkímia",
-                Description = "A népesség pénzt csinál, +30% adó bevétel"
+                Description = "A népesség pénzt csinál, +30% adó bevétel",
+                ImageUrl = "https://f4.bcbits.com/img/a3431451072_10.jpg"
             };
 
             context.ResearchContents.AddRange(mudTCont, mudCCont, defCont, attCont, cCont, taxCont);
+            context.SaveChanges();
+
+
+            // globals
+            context.GlobalValues.Add(new GlobalValue()
+            {
+                BaseTaxation = 25,
+                Round = 1,
+                StartingBarrackSpace = 100,
+                StartingCorals = 500,
+                StartingPearls = 500,
+                StartingPopulation = 10
+            });
             context.SaveChanges();
         }
     }
