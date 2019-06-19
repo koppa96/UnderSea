@@ -1,18 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace StrategyGame.Model.Entities
+﻿namespace StrategyGame.Model.Entities
 {
-    public class GlobalValue
+    /// <summary>
+    /// Represents the global values in the UnderSea database.
+    /// </summary>
+    public class GlobalValue : AbstractEntity<GlobalValue>
     {
-        //TODO comment
-        public int Id { get; set; }
+        /// <summary>
+        /// Gets or sets the current round of the game.
+        /// </summary>
         public uint Round { get; set; }
+
+        /// <summary>
+        /// Gets or sets the starting population for a country.
+        /// </summary>
         public int StartingPopulation { get; set; }
-        public int StartingSoldierCapacity { get; set; }
+
+        /// <summary>
+        /// Gets or sets the barrack space for a country.
+        /// </summary>
+        public int StartingBarrackSpace { get; set; }
+
+        /// <summary>
+        /// Gets or sets the starting pearls for a country.
+        /// </summary>
         public int StartingPearls { get; set; }
-        public int StartingCoral { get; set; }
-        public int PealPerPopulation { get; set; }
+
+        /// <summary>
+        /// Gets or sets the starting corals for a country.
+        /// </summary>
+        public int StartingCorals { get; set; }
+
+        /// <summary>
+        /// Gets or sets the base taxation (pearl production / population) of a country.
+        /// </summary>
+        public int BaseTaxation { get; set; }
     }
 }

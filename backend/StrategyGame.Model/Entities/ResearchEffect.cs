@@ -1,14 +1,20 @@
 ﻿using StrategyGame.Model.Entities.Effects;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace StrategyGame.Model.Entities
 {
+    /// <summary>
+    /// Represents the linking table between <see cref="ResearchType"/>s and effects.
+    /// </summary>
     public class ResearchEffect : AbstractEntity<ResearchEffect>
     {
-        //Todo comment
+        /// <summary>
+        /// Gets or sets the <see cref="ResearchType"/> the effect belongs.
+        /// </summary>
         public ResearchType Research { get; set; }
-        public AbstractEffect Effect { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the effect of the research.
+        /// </summary>
+        public Effect Effect { get; set; }
     }
 }

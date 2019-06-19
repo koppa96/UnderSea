@@ -86,9 +86,9 @@ namespace StrategyGame.Dal
         public DbSet<ResearchEffect> ResearchEffects { get; }
 
         /// <summary>
-        /// Gets the collection of <see cref="AbstractEffect"/> in the database.
+        /// Gets the collection of <see cref="Effect"/> in the database.
         /// </summary>
-        public DbSet<AbstractEffect> Effects { get; }
+        public DbSet<Effect> Effects { get; }
 
         /// <summary>
         /// Gets the collection of <see cref="GlobalValue"/> in the database.
@@ -152,7 +152,7 @@ namespace StrategyGame.Dal
             InProgressResearches = Set<InProgressResearch>();
             BuildingEffects = Set<BuildingEffect>();
             ResearchEffects = Set<ResearchEffect>();
-            Effects = Set<AbstractEffect>();
+            Effects = Set<Effect>();
 
             BuildingContents = Set<BuildingContent>();
             ResearchContents = Set<ResearchContent>();
@@ -166,7 +166,9 @@ namespace StrategyGame.Dal
         /// <param name="Builder">The <see cref="ModelBuilder"/> to use.</param>
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<DummyEffect>().HasBaseType<AbstractEffect>();
+            // Effect
+            builder.Entity<Effect>().Property(e => e.Name).IsRequired().HasMaxLength(200);
+            builder.Entity<Effect>().Property(e => e.Value).IsRequired();
 
             //Building - BuildingEffect - Effect
             builder.Entity<BuildingEffect>()

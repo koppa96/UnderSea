@@ -1,0 +1,16 @@
+﻿Effects
+	- population-increase - Increases the population by the set amount. Value is an integer.
+	- barrack-space-increase - Increases the barrack space by the set amount. Value is integer.
+	- coral-production - Increases end-of-turn coral production by the set amount. Value is an integer.
+	- unit-attack - Increases the attack power of units by the set percent. Value is double where 0.5 is 50%.
+	- unit-defense - Increases the defense power of units by the set percent. Value is double where 0.5 is 50%.
+	- taxation-modifier - Increases the taxation (pearl production) by the set percent. Value is double where 0.5 is 50%.
+	- harvest-modifier - Increases the taxation (pearl production) by the set percent. Value is double where 0.5 is 50%.
+
+Global values
+	- Round - The current round of the game, starts at 1.
+	- StartingPopulation - The starting population of any country.
+	- StartingSoldierCapacity - The starting barrack space (unit capacity) of any country.
+	- StartingPearls - The starting pearls for any country.
+	- StartingCorals - The starting corals for any country.
+	- BaseTaxation - The amount of pearls each population makes for the country.
