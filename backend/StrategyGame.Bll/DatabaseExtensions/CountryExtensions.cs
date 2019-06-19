@@ -23,7 +23,7 @@ namespace StrategyGame.Bll.DatabaseExtensions
         /// <param name="cancel">The token that can be used to cancel the operation.</param>
         /// <returns>If the building could be started.</returns>
         /// <exception cref="ArgumentNullException">Thrown if an argument was null.</exception>
-        public static async Task<bool> TryStartBuilding(this Country country, UnderSeaDatabase context,
+        public static async Task<bool> TryStartBuildingAsync(this Country country, UnderSeaDatabase context,
             BuildingType building, CancellationToken cancel = default)
         {
             if (country == null)
@@ -65,11 +65,11 @@ namespace StrategyGame.Bll.DatabaseExtensions
         /// </summary>
         /// <param name="country">The <see cref="Country"/> to research in.</param>
         /// <param name="context">The <see cref="UnderSeaDatabase"/> to use.</param>
-        /// <param name="research"></param>
+        /// <param name="research">The <see cref="ResearchType"/> to start researching.</param>
         /// <param name="cancel">The token that can be used to cancel the operation.</param>
-        /// <returns>If the building could be started.</returns>
+        /// <returns>If the research could be started.</returns>
         /// <exception cref="ArgumentNullException">Thrown if an argument was null.</exception>
-        public static async Task<bool> StartResearch(this Country country, UnderSeaDatabase context,
+        public static async Task<bool> TryStartResearchAsync(this Country country, UnderSeaDatabase context,
             ResearchType research, CancellationToken cancel = default)
         {
             if (country == null)
@@ -114,7 +114,7 @@ namespace StrategyGame.Bll.DatabaseExtensions
         /// <remarks>
         /// This method does not perform any safety check regarding the amount of buildings or researches!
         /// </remarks>
-        public static async Task CheckAddCompleted(this Country country, UnderSeaDatabase context,
+        public static async Task CheckAddCompletedAsync(this Country country, UnderSeaDatabase context,
             CancellationToken cancel = default)
         {
             if (country == null)
