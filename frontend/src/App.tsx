@@ -1,5 +1,5 @@
 import * as React from "react";
-import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Register } from "./pages/account/register/index";
 import { Login } from "./pages/account/login/index";
 
@@ -16,7 +16,7 @@ export const App = () => {
       <div className="App">
         <div className="bg-image">
           <div className="mainpage-width">
-            <h1 className="undersea">Undersea</h1>
+            <h1 className="undersea-font-big undersea-font">Undersea</h1>
             <Switch>
               <Route exact path="/">
                 <LoginCheck login={loggedin}>
