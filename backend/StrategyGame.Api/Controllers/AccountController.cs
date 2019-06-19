@@ -13,31 +13,44 @@ using StrategyGame.Model.Entities;
 
 namespace StrategyGame.Api.Controllers
 {
+    /// <summary>
+    /// Endpoint for creating, querying and deleting accounts
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly UnderSeaDatabase _context;
         private readonly UserManager<User> _userManager;
 
-        public AccountController(UnderSeaDatabase context, UserManager<User> userManager)
+        public AccountController(UserManager<User> userManager)
         {
-            _context = context;
             _userManager = userManager;
         }
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetAccountsAsync()
+        [ProducesResponseType(200)]
+        [ProducesResponseType(401)]
+        public async Task<ActionResult<UserData>> GetAccountsAsync()
         {
-            var users = await _context.Users.Select(u => u.UserName).ToListAsync();
-
-            return Ok(users);
+            var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
+            return Ok(new UserData
+            {
+                Username = currentUser.UserName,
+                Email = currentUser.Email
+            });
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAccountAsnyc([FromBody] RegisterData data)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<ActionResult> CreateAccountAsnyc([FromBody] RegisterData data)
         {
+            if (await _userManager.FindByNameAsync(data.Username) != null)
+            {
+                return BadRequest("Duplicate username");
+            }
+
             var user = new User()
             {
                 UserName = data.Username,
@@ -47,10 +60,30 @@ namespace StrategyGame.Api.Controllers
             var result = await _userManager.CreateAsync(user, data.Password);
             if (!result.Succeeded)
             {
-                return BadRequest();
+                return BadRequest(result.Errors);
             }
 
-            return Ok();
+            return StatusCode(201, new UserData
+            {
+                Username = user.UserName,
+                Email = user.Email
+            });
+        }
+
+        [HttpDelete]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(500)]
+        public async Task<ActionResult> DeleteAccountAsync()
+        {
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            var result = await _userManager.DeleteAsync(user);
+
+            if (result.Succeeded)
+            {
+                return NoContent();
+            }
+
+            return StatusCode(500);
         }
     }
 }
