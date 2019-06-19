@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using StrategyGame.Model.Entities;
-using StrategyGame.Model.Entities.Effects;
 using StrategyGame.Model.Entities.Frontend;
 using System;
 using System.Threading;

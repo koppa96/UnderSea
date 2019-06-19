@@ -1,4 +1,4 @@
-﻿using StrategyGame.Model.Entities.Effects;
+﻿using StrategyGame.Model.Entities;
 using System;
 
 namespace StrategyGame.Bll.EffectParsing

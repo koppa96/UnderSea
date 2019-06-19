@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrategyGame.Bll", "Strateg
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrategyGame.Model", "StrategyGame.Model\StrategyGame.Model.csproj", "{826D68D7-6812-402E-9E24-F724830B934F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StrategyGame.DatabaseHelper", "StrategyGame.DatabaseHelper\StrategyGame.DatabaseHelper.csproj", "{46687923-E9CF-4880-917B-56119650D769}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{826D68D7-6812-402E-9E24-F724830B934F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{826D68D7-6812-402E-9E24-F724830B934F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{826D68D7-6812-402E-9E24-F724830B934F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46687923-E9CF-4880-917B-56119650D769}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46687923-E9CF-4880-917B-56119650D769}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46687923-E9CF-4880-917B-56119650D769}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46687923-E9CF-4880-917B-56119650D769}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

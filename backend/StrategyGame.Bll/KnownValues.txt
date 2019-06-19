@@ -6,6 +6,10 @@
 	- add-migration initial -context UnderSeaDatabase
 	- update-database -context UnderSeaDatabase
 
+To fill the db with initial data:
+	- Run the DatabaseHelper project: By default this clears the entire DB, and then adds defaults.
+	Change the main method to modify the behaviour.
+
 Effects
 	- population-increase - Increases the population by the set amount. Value is an integer.
 	- barrack-space-increase - Increases the barrack space by the set amount. Value is integer.

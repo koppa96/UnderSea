@@ -1,4 +1,4 @@
-﻿using StrategyGame.Model.Entities.Effects;
+﻿using StrategyGame.Model.Entities;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
