@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace StrategyGame.Bll.DTO.Country
+namespace StrategyGame.Bll.DTO.Sent.Country
 {
     public class BriefCreationInfo
     {

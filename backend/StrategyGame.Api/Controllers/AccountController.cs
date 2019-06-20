@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using StrategyGame.Bll.DTO;
-using StrategyGame.Bll.DTO.UserManagement;
+using StrategyGame.Bll.DTO.Sent;
+using StrategyGame.Bll.DTO.Sent.UserManagement;
 using StrategyGame.Bll.Services.Country;
 using StrategyGame.Model.Entities;
 

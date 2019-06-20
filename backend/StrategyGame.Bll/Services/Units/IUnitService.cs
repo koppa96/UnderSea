@@ -1,4 +1,4 @@
-﻿using StrategyGame.Bll.DTO;
+﻿using StrategyGame.Bll.DTO.Sent;
 using System;
 using System.Collections.Generic;
 using System.Text;
