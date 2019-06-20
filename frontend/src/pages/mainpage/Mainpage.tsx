@@ -5,6 +5,7 @@ import { ProfileContainer } from "../../components/profileContainer";
 import { Buildings } from "./buildings";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Development } from "./development/Development";
+import { War } from "./war";
 
 export class MainPage extends React.Component {
   componentWillMount() {
@@ -32,6 +33,9 @@ export class MainPage extends React.Component {
 
                 <Route path="/account/development">
                   <Development />
+                </Route>
+                <Route path="/account/war">
+                  <War />
                 </Route>
               </Switch>
             </main>

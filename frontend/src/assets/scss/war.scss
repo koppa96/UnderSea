@@ -1,0 +1,21 @@
+.war-page {
+  width: 870px;
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+  li {
+    display: flex;
+    padding: 20px;
+    flex-direction: row;
+    justify-content: space-between;
+    border-bottom: 2px solid $underline-color;
+    span {
+      width: 200px;
+      padding-right: 10px;
+      color: white;
+    }
+    div {
+      flex: 1;
+    }
+  }
+}

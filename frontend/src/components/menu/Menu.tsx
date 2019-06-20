@@ -14,7 +14,7 @@ export const Menu = () => {
         <Link to="/account/development">Fejlesztések</Link>
       </li>
       <li>
-        <Link to="/asd">Harc</Link>
+        <Link to="/account/war">Harc</Link>
       </li>
       <li>
         <Link to="/asd">Ranglista</Link>
