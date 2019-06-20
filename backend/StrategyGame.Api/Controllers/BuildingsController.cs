@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using StrategyGame.Bll.DTO.Sent;
+using StrategyGame.Bll.Dto.Sent;
 
 namespace StrategyGame.Api.Controllers
 {

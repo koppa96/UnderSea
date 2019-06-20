@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace StrategyGame.Bll.DTO.Received
+namespace StrategyGame.Bll.Dto.Received
 {
     public class CommandDetails
     {

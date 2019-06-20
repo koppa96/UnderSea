@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace StrategyGame.Bll.DTO.Sent.UserManagement
+namespace StrategyGame.Bll.Dto.Sent.UserManagement
 {
     public class RegisterData
     {

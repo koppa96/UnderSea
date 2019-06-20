@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StrategyGame.Api.ControllerExtensions;
-using StrategyGame.Bll.DTO.Received;
-using StrategyGame.Bll.DTO.Sent;
+using StrategyGame.Bll.Dto.Received;
+using StrategyGame.Bll.Dto.Sent;
 using StrategyGame.Bll.Services.Commands;
 
 namespace StrategyGame.Api.Controllers

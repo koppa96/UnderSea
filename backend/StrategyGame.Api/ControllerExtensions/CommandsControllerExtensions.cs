@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StrategyGame.Api.Controllers;
-using StrategyGame.Bll.DTO.Received;
+using StrategyGame.Bll.Dto.Received;
 using System;
 using System.Collections.Generic;
 using System.Linq;

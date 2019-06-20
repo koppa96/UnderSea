@@ -1,5 +1,5 @@
-﻿using StrategyGame.Bll.DTO.Received;
-using StrategyGame.Bll.DTO.Sent;
+﻿using StrategyGame.Bll.Dto.Received;
+using StrategyGame.Bll.Dto.Sent;
 using System;
 using System.Collections.Generic;
 using System.Text;
