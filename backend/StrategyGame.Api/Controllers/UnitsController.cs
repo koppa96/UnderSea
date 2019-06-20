@@ -69,6 +69,15 @@ namespace StrategyGame.Api.Controllers
                     Detail = ErrorMessages.LimitReached
                 });
             }
+            catch (InvalidOperationException)
+            {
+                return BadRequest(new ProblemDetails
+                {
+                    Status = 400,
+                    Title = ErrorMessages.BadRequest,
+                    Detail = ErrorMessages.NotEnoughMoney
+                });
+            }
         }
 
         [HttpDelete("{id}/{count}")]

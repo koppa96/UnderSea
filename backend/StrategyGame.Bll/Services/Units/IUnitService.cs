@@ -28,6 +28,7 @@ namespace StrategyGame.Bll.Services.Units
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the unitId is invalid</exception>
         /// <exception cref="ArgumentException">Thrown when the count is not a valid amount</exception>
         /// <exception cref="LimitReachedException">Thrown when the unit would be exceeded by the creation of units</exception>
+        /// <exception cref="InvalidOperationException">Thrown when there is not enough money to hire the units</exception>
         /// <returns>A UnitInfo containing the new amount of units</returns>
         Task<UnitInfo> CreateUnitAsync(string username, int unitId, int count);
 
