@@ -1,0 +1,61 @@
+@import "./variables.scss";
+
+.building-page {
+  height: 380px;
+  display: flex;
+  flex-direction: row;
+  width: 700px;
+  border-bottom: 2px solid $underline-color;
+  padding-bottom: 20px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+.building-item {
+  width: 300px;
+  min-height: 320px;
+  border-radius: 16px;
+  margin-left: 15px;
+  margin-right: 15px;
+  padding-top: 30px;
+  padding-bottom: 22px;
+  padding-left: 15px;
+  padding-right: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+
+  img {
+    max-width: inherit;
+    height: 130px;
+  }
+
+  div {
+    p {
+      font-size: 16px;
+      font-family: OpenSansBold;
+      margin: 0;
+      color: white;
+      text-align: center;
+    }
+    div {
+      margin-top: 10px;
+
+      p {
+        font-size: 16px;
+        font-family: OpenSansRegular;
+        margin: 0;
+        margin-top: 10px;
+        color: white;
+        text-align: center;
+      }
+    }
+  }
+}
+.building-item:hover {
+  background-color: rgba(112, 112, 112, 0.12);
+}

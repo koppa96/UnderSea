@@ -5,13 +5,13 @@ export const Menu = () => {
   return (
     <ul className="menu-bg">
       <li>
-        <Link to="/asd">Épületek</Link>
+        <Link to="/account/buildings">Épületek</Link>
       </li>
       <li>
         <Link to="/asd">Támadás</Link>
       </li>
       <li>
-        <Link to="/asd">Fejlesztések</Link>
+        <Link to="/account/development">Fejlesztések</Link>
       </li>
       <li>
         <Link to="/asd">Harc</Link>
