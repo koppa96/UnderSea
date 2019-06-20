@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using StrategyGame.Api.DTO;
 using StrategyGame.Api.DTO.UserManagement;
 using StrategyGame.Bll.Services.Country;
 using StrategyGame.Model.Entities;
@@ -48,7 +49,7 @@ namespace StrategyGame.Api.Controllers
         [ProducesResponseType(401)]
         public async Task<ActionResult<IEnumerable<string>>> GetUsernamesAsync()
         {
-            return await _userManager.Users.Select(u => u.UserName).ToListAsync();
+            return Ok(await _userManager.Users.Select(u => u.UserName).ToListAsync());
         }
 
         [HttpPost]
@@ -79,6 +80,16 @@ namespace StrategyGame.Api.Controllers
                 Username = user.UserName,
                 Email = user.Email
             });
+        }
+
+        [HttpGet]
+        [Route("ranked")]
+        [Authorize]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(401)]
+        public async Task<ActionResult<IEnumerable<RankInfo>>> GetRankedListAsync()
+        {
+            return Ok();
         }
     }
 }
