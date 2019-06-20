@@ -46,34 +46,6 @@ namespace StrategyGame.Model.Entities
         /// <summary>
         /// Gets or sets the collection of divisions that contain the unit type.
         /// </summary>
-        public virtual ICollection<Division> ContainingDivisions { get; set; }
-
-
-
-        /// <summary>
-        /// Initializes a new instance of <see cref="UnitType"/>.
-        /// </summary>
-        public UnitType()
-        { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="UnitType"/>.
-        /// </summary>
-        /// <param name="attackPower">The attack power of the unit.</param>
-        /// <param name="defensePower">The defense power of the unit.</param>
-        /// <param name="costPearl">The amount of pearls the unit costs.</param>
-        /// <param name="costCoral">The amount of corals the unit costs.</param>
-        /// <param name="maintenancePearl">The maintenance of the unit in pearls.</param>
-        /// <param name="maintenanceCoral">The maintenance of the unit in corals.</param>
-        public UnitType(int attackPower, int defensePower, int costPearl, int costCoral, 
-            int maintenancePearl, int maintenanceCoral)
-        {
-            AttackPower = attackPower;
-            DefensePower = defensePower;
-            CostPearl = costPearl;
-            CostCoral = costCoral;
-            MaintenancePearl = maintenancePearl;
-            MaintenanceCoral = maintenanceCoral;
-        }
+        public virtual ICollection<Division> ContainingDivisions { get; set; } = new HashSet<Division>();
     }
 }

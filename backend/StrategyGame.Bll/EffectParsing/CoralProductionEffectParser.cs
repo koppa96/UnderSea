@@ -9,7 +9,7 @@
         /// Initializes a new instance of the <see cref="CoralProductionEffectParser"/>.
         /// </summary>
         public CoralProductionEffectParser()
-            : base("coral-production", (effect, builder) => builder.CoralProduction += (int)effect.Value)
+            : base(KnownValues.CoralProductionIncrease, (effect, builder) => builder.CoralProduction += (int)effect.Value)
         { }
     }
 }

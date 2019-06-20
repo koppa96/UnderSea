@@ -18,42 +18,26 @@
         /// <summary>
         /// Gets or sets the attack modifier for units of the country.
         /// </summary>
-        public double AttackModifier { get; set; }
+        public double AttackModifier { get; set; } = 1;
 
         /// <summary>
         /// Gets or sets the defense modifier for units of the country.
         /// </summary>
-        public double DefenseModifier { get; set; }
+        public double DefenseModifier { get; set; } = 1;
 
         /// <summary>
         /// Gets or sets the tax (pearl production) modifier for the country.
         /// </summary>
-        public double TaxModifier { get; set; }
+        public double TaxModifier { get; set; } = 1;
 
         /// <summary>
         /// Gets or sets the coral production modifier for the country.
         /// </summary>
-        public double HarvestModifier { get; set; }
+        public double HarvestModifier { get; set; } = 1;
 
         /// <summary>
         /// Gets or sets the country's base coral production.
         /// </summary>
         public int CoralProduction { get; set; }
-
-
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CountryModifierBuilder"/>.
-        /// </summary>
-        public CountryModifierBuilder()
-        {
-            Population = 0;
-            BarrackSpace = 0;
-            AttackModifier = 1;
-            DefenseModifier = 1;
-            TaxModifier = 1;
-            HarvestModifier = 1;
-            CoralProduction = 0;
-        }
     }
 }

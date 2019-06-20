@@ -1,7 +1,6 @@
 ﻿using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -53,7 +52,8 @@ namespace StrategyGame.Bll.DatabaseExtensions
                 return false;
             }
 
-            await context.InProgressBuildings.AddAsync(new InProgressBuilding(country, building), cancel)
+            await context.InProgressBuildings.AddAsync(new InProgressBuilding()
+            { ParentCountry = country, Building = building, TimeLeft = building.BuildTime }, cancel)
                 .ConfigureAwait(false);
 
             return true;
@@ -95,7 +95,8 @@ namespace StrategyGame.Bll.DatabaseExtensions
                 return false;
             }
 
-            await context.InProgressResearches.AddAsync(new InProgressResearch(country, research), cancel)
+            await context.InProgressResearches.AddAsync(new InProgressResearch()
+            { ParentCountry = country, Research = research, TimeLeft = research.ResearchTime }, cancel)
                 .ConfigureAwait(false);
 
             return true;
@@ -140,7 +141,9 @@ namespace StrategyGame.Bll.DatabaseExtensions
                     // Add a new research
                     if (existing == null)
                     {
-                        await context.CountryResearches.AddAsync(new CountryResearch(country, research.Key, research.Count()), cancel).ConfigureAwait(false);
+                        await context.CountryResearches.AddAsync(new CountryResearch()
+                        { ParentCountry = country, Research = research.Key, Count = research.Count() }, cancel)
+                            .ConfigureAwait(false);
                     }
                     else
                     {
@@ -168,7 +171,9 @@ namespace StrategyGame.Bll.DatabaseExtensions
                     // Add a new research
                     if (existing == null)
                     {
-                        await context.CountryBuildings.AddAsync(new CountryBuilding(country, building.Key, building.Count())).ConfigureAwait(false);
+                        await context.CountryBuildings.AddAsync(new CountryBuilding()
+                        { ParentCountry = country, Building = building.Key, Count = building.Count() })
+                        .ConfigureAwait(false);
                     }
                     else
                     {
