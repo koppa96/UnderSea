@@ -6,6 +6,7 @@ import { Buildings } from "./buildings";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Development } from "./development/Development";
 import { War } from "./war";
+import { Rank } from "./rank";
 
 export class MainPage extends React.Component {
   componentWillMount() {
@@ -36,6 +37,9 @@ export class MainPage extends React.Component {
                 </Route>
                 <Route path="/account/war">
                   <War />
+                </Route>
+                <Route path="/account/rank">
+                  <Rank />
                 </Route>
               </Switch>
             </main>

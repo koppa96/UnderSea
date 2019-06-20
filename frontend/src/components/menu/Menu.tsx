@@ -17,7 +17,7 @@ export const Menu = () => {
         <Link to="/account/war">Harc</Link>
       </li>
       <li>
-        <Link to="/asd">Ranglista</Link>
+        <Link to="/account/rank">Ranglista</Link>
       </li>
       <li>
         <Link to="/asd">Sereg</Link>

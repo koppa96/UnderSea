@@ -1,0 +1,42 @@
+$local-input-paddingh: 10px;
+$local-input-paddingw: 23px;
+
+.rank-input {
+  font-family: OpenSansRegular;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.39);
+  border-radius: 20px;
+  color: $secondary-color;
+  padding-left: $local-input-paddingw;
+  padding-right: $local-input-paddingw;
+  padding-top: $local-input-paddingh;
+  padding-bottom: $local-input-paddingh;
+  border: none;
+  margin-bottom: 20px;
+}
+.rank-page {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+  max-height: 450px;
+  overflow: scroll;
+ 
+  li {
+    display: flex;
+    padding: 20px;
+    flex-direction: row;
+    border-bottom: 2px solid $underline-color;
+    span:first-child{
+        margin-right: 30px;
+    }
+    span {
+      padding-right: 10px;
+      color: white;
+    }
+    .rank-point {
+      flex: 1;
+      text-align: right;
+    }
+  }
+}

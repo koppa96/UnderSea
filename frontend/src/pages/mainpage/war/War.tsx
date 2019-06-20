@@ -2,22 +2,22 @@ import React from "react";
 import { ComponentHeader } from "../componentHeader";
 
 export class War extends React.Component {
-  componentWillMount() {
+  componentDidMount() {
     document.title = "Harc";
   }
 
   render() {
     return (
-      <div className="main-component">
+      <div className="main-component war-component">
         <ComponentHeader title={title} />
         <ul className="war-page">
           {mockData.map(item => (
             <li key={item.id}>
-              <span>{item.title}</span>
-              <div>
-                {item.trops.map(single => (
-                  <div>
-                    <span>{single.amount}</span>
+              <span className="war-country">{item.title}</span>
+              <div className="war-scroll">
+                {item.trops.map((single,index) => (
+                  <div key={index}>
+                    <span className="war-margin">{single.amount}</span>
                     <span>{single.type}</span>
                   </div>
                 ))}
@@ -47,11 +47,117 @@ const mockData = [
       {
         type: "Csatacsikó",
         amount: 3
+      },
+      {
+        type: "Csatacsikó",
+        amount: 3
+      },
+      {
+        type: "Csatacsikó",
+        amount: 3
+      },
+      {
+        type: "Csatacsikó",
+        amount: 3
+      },
+      {
+        type: "Csatacsikó",
+        amount: 3
       }
     ]
   },
   {
     id: "2",
+    title: "Áramlásirányító",
+    trops: [
+      {
+        type: "Csatacsikó",
+        amount: 3
+      },
+      {
+        type: "Csatacsikó",
+        amount: 3
+      },
+      {
+        type: "Csatacsikó",
+        amount: 3
+      }
+    ]
+  },
+  {
+    id: "3",
+    title: "Áramlásirányító",
+    trops: [
+      {
+        type: "Csatacsikó",
+        amount: 3
+      },
+      {
+        type: "Csatacsikó",
+        amount: 3
+      },
+      {
+        type: "Csatacsikó",
+        amount: 3
+      }
+    ]
+  },
+  {
+    id: "3",
+    title: "Áramlásirányító",
+    trops: [
+      {
+        type: "Csatacsikó",
+        amount: 3
+      },
+      {
+        type: "Csatacsikó",
+        amount: 3
+      },
+      {
+        type: "Csatacsikó",
+        amount: 3
+      }
+    ]
+  },
+  {
+    id: "3",
+    title: "Áramlásirányító",
+    trops: [
+      {
+        type: "Csatacsikó",
+        amount: 3
+      },
+      {
+        type: "Csatacsikó",
+        amount: 3
+      },
+      {
+        type: "Csatacsikó",
+        amount: 3
+      }
+    ]
+  },
+  {
+    id: "3",
+    title: "Áramlásirányító",
+    trops: [
+      {
+        type: "Csatacsikó",
+        amount: 3
+      },
+      {
+        type: "Csatacsikó",
+        amount: 3
+      },
+      {
+        type: "Csatacsikó",
+        amount: 3
+      }
+    ]
+  },
+  {
+    id: "3",
     title: "Áramlásirányító",
     trops: [
       {

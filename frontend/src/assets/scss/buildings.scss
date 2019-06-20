@@ -4,12 +4,11 @@
   height: 380px;
   display: flex;
   flex-direction: row;
-  width: 700px;
   border-bottom: 2px solid $underline-color;
   padding-bottom: 20px;
   margin-bottom: 40px;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: space-around;
   overflow-y: scroll;
   overflow-x: hidden;
 }
