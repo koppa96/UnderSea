@@ -15,7 +15,7 @@ namespace StrategyGame.Bll.Dto.Sent.Country
         public IEnumerable<UnitInfo> ArmyInfo { get; set; }
         public long Pearls { get; set; }
         public long Corals { get; set; }
-        public BriefCreationInfo Buildings { get; set; }
-        public BriefCreationInfo Researches { get; set; }
+        public IEnumerable<BriefCreationInfo> Buildings { get; set; }
+        public IEnumerable<BriefCreationInfo> Researches { get; set; }
     }
 }

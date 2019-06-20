@@ -14,10 +14,10 @@ namespace StrategyGame.Bll.Services.Buildings
 {
     public class BuildingService : IBuildingService
     {
-        private readonly UnderSeaDatabase _context;
+        private readonly UnderSeaDatabaseContext _context;
         private readonly IMapper _mapper;
 
-        public BuildingService(UnderSeaDatabase context, IMapper mapper)
+        public BuildingService(UnderSeaDatabaseContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

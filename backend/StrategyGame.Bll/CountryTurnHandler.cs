@@ -27,7 +27,7 @@ namespace StrategyGame.Bll
 
 
 
-        public async Task<CountryModifierBuilder> HandlePreCombatAsync(UnderSeaDatabase context, int countryId,
+        public async Task<CountryModifierBuilder> HandlePreCombatAsync(UnderSeaDatabaseContext context, int countryId,
             CancellationToken cancel)
         {
             // Find the country and then load the nav properties we need
@@ -75,7 +75,7 @@ namespace StrategyGame.Bll
             return builder;
         }
 
-        public async Task HandleCombatAsync(UnderSeaDatabase context, int countryId,
+        public async Task HandleCombatAsync(UnderSeaDatabaseContext context, int countryId,
             CountryModifierBuilder builder, CancellationToken cancel)
         {
             // Find the country and then load the nav properties we need
@@ -131,7 +131,7 @@ namespace StrategyGame.Bll
             }
         }
 
-        public async Task HandlePostCombatAsync(UnderSeaDatabase context, int countryId,
+        public async Task HandlePostCombatAsync(UnderSeaDatabaseContext context, int countryId,
             CountryModifierBuilder builder, CancellationToken cancel)
         {
             // Find the country and then load the nav properties we need
@@ -191,7 +191,7 @@ namespace StrategyGame.Bll
             }
         }
 
-        protected async Task DesertUnits(Country country, UnderSeaDatabase context, CancellationToken cancel)
+        protected async Task DesertUnits(Country country, UnderSeaDatabaseContext context, CancellationToken cancel)
         {
             await context.Entry(country).Collection(c => c.Commands).LoadAsync(cancel).ConfigureAwait(false);
 

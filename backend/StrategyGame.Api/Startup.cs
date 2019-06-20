@@ -41,11 +41,10 @@ namespace StrategyGame.Api
             });
 
             Action<DbContextOptionsBuilder> optionsAction = options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-            services.AddDbContext<UnderSeaDatabase>(optionsAction);
-            services.AddDbContext<ReadOnlyUnderSeaDatabase>(optionsAction);
+            services.AddDbContext<UnderSeaDatabaseContext>(optionsAction);
 
             services.AddDefaultIdentity<User>()
-                .AddEntityFrameworkStores<UnderSeaDatabase>();
+                .AddEntityFrameworkStores<UnderSeaDatabaseContext>();
 
             services.AddIdentityServer()
                 .AddDeveloperSigningCredential()

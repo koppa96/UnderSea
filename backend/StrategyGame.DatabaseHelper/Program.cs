@@ -18,11 +18,11 @@ namespace StrategyGame.DatabaseHelper
 
             Console.WriteLine("Connecting to database with connection string: " + connString);
 
-            var builder = new DbContextOptionsBuilder<UnderSeaDatabase>();
+            var builder = new DbContextOptionsBuilder<UnderSeaDatabaseContext>();
             // local DB
             builder.UseSqlServer(connString);
 
-            using (var context = new UnderSeaDatabase(builder.Options))
+            using (var context = new UnderSeaDatabaseContext(builder.Options))
             {
                 Console.WriteLine("Connected to the database.");
 
@@ -34,7 +34,7 @@ namespace StrategyGame.DatabaseHelper
             Console.ReadKey(true);
         }
 
-        static void PurgeDatabase(UnderSeaDatabase context)
+        static void PurgeDatabase(UnderSeaDatabaseContext context)
         {
             Console.WriteLine("Purging the database...");
 
@@ -70,7 +70,7 @@ namespace StrategyGame.DatabaseHelper
             Console.WriteLine("Database purged!");
         }
 
-        static void FillWithDefault(UnderSeaDatabase context)
+        static void FillWithDefault(UnderSeaDatabaseContext context)
         {
             Console.WriteLine("Adding default data...");
 

@@ -19,7 +19,7 @@ namespace StrategyGame.Bll
 
 
 
-        public async Task EndTurnAsync(UnderSeaDatabase context, CancellationToken cancel)
+        public async Task EndTurnAsync(UnderSeaDatabaseContext context, CancellationToken cancel)
         {
             var turnData = new Dictionary<int, CountryModifierBuilder>();
 

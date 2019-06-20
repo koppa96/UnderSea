@@ -17,11 +17,11 @@ namespace StrategyGame.Bll.Services.Units
     {
         protected IMapper Mapper { get; }
 
-        protected UnderSeaDatabase Database { get; }
+        protected UnderSeaDatabaseContext Database { get; }
 
         protected ModifierParserContainer Parsers { get; }
 
-        public UnitService(IMapper mapper, UnderSeaDatabase database, ModifierParserContainer container)
+        public UnitService(IMapper mapper, UnderSeaDatabaseContext database, ModifierParserContainer container)
         {
             Mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             Database = database ?? throw new ArgumentNullException(nameof(database));

@@ -15,9 +15,9 @@ namespace StrategyGame.Api.Controllers
     public class DummyController : ControllerBase
     {
         IMapper mapper;
-        UnderSeaDatabase db;
+        UnderSeaDatabaseContext db;
 
-        public DummyController(IMapper mapper, UnderSeaDatabase db)
+        public DummyController(IMapper mapper, UnderSeaDatabaseContext db)
         {
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             this.db = db ?? throw new ArgumentNullException(nameof(db));

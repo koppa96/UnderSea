@@ -11,10 +11,10 @@ namespace StrategyGame.Bll.Services.Researches
 {
     public class ResearchService : IResearchService
     {
-        private readonly UnderSeaDatabase _context;
+        private readonly UnderSeaDatabaseContext _context;
         private readonly IMapper _mapper;
 
-        public ResearchService(UnderSeaDatabase context, IMapper mapper)
+        public ResearchService(UnderSeaDatabaseContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

@@ -355,7 +355,7 @@ export class CommandsClient {
         return Promise.resolve<CommandInfo[]>(<any>null);
     }
 
-    attackTarget(command: CommandInfo): Promise<void> {
+    attackTarget(command: CommandDetails): Promise<CommandInfo> {
         let url_ = this.baseUrl + "/api/Commands";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -366,6 +366,7 @@ export class CommandsClient {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                "Accept": "application/json"
             }
         };
 
@@ -374,7 +375,7 @@ export class CommandsClient {
         });
     }
 
-    protected processAttackTarget(response: Response): Promise<void> {
+    protected processAttackTarget(response: Response): Promise<CommandInfo> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 401) {
@@ -400,69 +401,17 @@ export class CommandsClient {
             });
         } else if (status === 200) {
             return response.text().then((_responseText) => {
-            return;
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CommandInfo.fromJS(resultData200);
+            return result200;
             });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<void>(<any>null);
-    }
-
-    updateCommand(command: CommandInfo): Promise<void> {
-        let url_ = this.baseUrl + "/api/Commands";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(command);
-
-        let options_ = <RequestInit>{
-            body: content_,
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json",
-            }
-        };
-
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processUpdateCommand(_response);
-        });
-    }
-
-    protected processUpdateCommand(response: Response): Promise<void> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 400) {
-            return response.text().then((_responseText) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ProblemDetails.fromJS(resultData400);
-            return throwException("A server error occurred.", status, _responseText, _headers, result400);
-            });
-        } else if (status === 401) {
-            return response.text().then((_responseText) => {
-            let result401: any = null;
-            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("A server error occurred.", status, _responseText, _headers, result401);
-            });
-        } else if (status === 404) {
-            return response.text().then((_responseText) => {
-            let result404: any = null;
-            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ProblemDetails.fromJS(resultData404);
-            return throwException("A server error occurred.", status, _responseText, _headers, result404);
-            });
-        } else if (status === 200) {
-            return response.text().then((_responseText) => {
-            return;
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<void>(<any>null);
+        return Promise.resolve<CommandInfo>(<any>null);
     }
 
     delete(id: number): Promise<void> {
@@ -510,6 +459,68 @@ export class CommandsClient {
             });
         }
         return Promise.resolve<void>(<any>null);
+    }
+
+    updateCommand(id: number, command: CommandDetails): Promise<CommandInfo> {
+        let url_ = this.baseUrl + "/api/Commands/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ = <RequestInit>{
+            body: content_,
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processUpdateCommand(_response);
+        });
+    }
+
+    protected processUpdateCommand(response: Response): Promise<CommandInfo> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("A server error occurred.", status, _responseText, _headers, result400);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("A server error occurred.", status, _responseText, _headers, result401);
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ProblemDetails.fromJS(resultData404);
+            return throwException("A server error occurred.", status, _responseText, _headers, result404);
+            });
+        } else if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CommandInfo.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<CommandInfo>(<any>null);
     }
 }
 
@@ -562,6 +573,49 @@ export class CountryClient {
             });
         }
         return Promise.resolve<CountryInfo>(<any>null);
+    }
+}
+
+export class DummyClient {
+    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        this.http = http ? http : <any>window;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    index(): Promise<FileResponse | null> {
+        let url_ = this.baseUrl + "/api/Dummy/map";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "GET",
+            headers: {
+                "Accept": "application/octet-stream"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processIndex(_response);
+        });
+    }
+
+    protected processIndex(response: Response): Promise<FileResponse | null> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FileResponse | null>(<any>null);
     }
 }
 
@@ -829,6 +883,13 @@ export class UnitsClient {
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("A server error occurred.", status, _responseText, _headers, result404);
             });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("A server error occurred.", status, _responseText, _headers, result400);
+            });
         } else if (status === 204) {
             return response.text().then((_responseText) => {
             return;
@@ -987,9 +1048,9 @@ export interface IRegisterData {
 }
 
 export class RankInfo implements IRankInfo {
-    position!: number;
     name?: string | undefined;
-    points?: string | undefined;
+    rank!: number;
+    score?: string | undefined;
 
     constructor(data?: IRankInfo) {
         if (data) {
@@ -1002,9 +1063,9 @@ export class RankInfo implements IRankInfo {
 
     init(data?: any) {
         if (data) {
-            this.position = data["position"];
             this.name = data["name"];
-            this.points = data["points"];
+            this.rank = data["rank"];
+            this.score = data["score"];
         }
     }
 
@@ -1017,17 +1078,17 @@ export class RankInfo implements IRankInfo {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["position"] = this.position;
         data["name"] = this.name;
-        data["points"] = this.points;
+        data["rank"] = this.rank;
+        data["score"] = this.score;
         return data; 
     }
 }
 
 export interface IRankInfo {
-    position: number;
     name?: string | undefined;
-    points?: string | undefined;
+    rank: number;
+    score?: string | undefined;
 }
 
 export class CreationInfo implements ICreationInfo {
@@ -1146,12 +1207,12 @@ export class UnitInfo implements IUnitInfo {
     id!: number;
     name?: string | undefined;
     imageUrl?: string | undefined;
-    attack!: number;
-    defense!: number;
+    attackPower!: number;
+    defensePower!: number;
     count!: number;
-    pearlsPerRound!: number;
-    coralsPerRound!: number;
-    price!: number;
+    maintenancePearl!: number;
+    maintenanceCoral!: number;
+    costPearl!: number;
 
     constructor(data?: IUnitInfo) {
         if (data) {
@@ -1167,12 +1228,12 @@ export class UnitInfo implements IUnitInfo {
             this.id = data["id"];
             this.name = data["name"];
             this.imageUrl = data["imageUrl"];
-            this.attack = data["attack"];
-            this.defense = data["defense"];
+            this.attackPower = data["attackPower"];
+            this.defensePower = data["defensePower"];
             this.count = data["count"];
-            this.pearlsPerRound = data["pearlsPerRound"];
-            this.coralsPerRound = data["coralsPerRound"];
-            this.price = data["price"];
+            this.maintenancePearl = data["maintenancePearl"];
+            this.maintenanceCoral = data["maintenanceCoral"];
+            this.costPearl = data["costPearl"];
         }
     }
 
@@ -1188,12 +1249,12 @@ export class UnitInfo implements IUnitInfo {
         data["id"] = this.id;
         data["name"] = this.name;
         data["imageUrl"] = this.imageUrl;
-        data["attack"] = this.attack;
-        data["defense"] = this.defense;
+        data["attackPower"] = this.attackPower;
+        data["defensePower"] = this.defensePower;
         data["count"] = this.count;
-        data["pearlsPerRound"] = this.pearlsPerRound;
-        data["coralsPerRound"] = this.coralsPerRound;
-        data["price"] = this.price;
+        data["maintenancePearl"] = this.maintenancePearl;
+        data["maintenanceCoral"] = this.maintenanceCoral;
+        data["costPearl"] = this.costPearl;
         return data; 
     }
 }
@@ -1202,12 +1263,100 @@ export interface IUnitInfo {
     id: number;
     name?: string | undefined;
     imageUrl?: string | undefined;
-    attack: number;
-    defense: number;
+    attackPower: number;
+    defensePower: number;
     count: number;
-    pearlsPerRound: number;
-    coralsPerRound: number;
-    price: number;
+    maintenancePearl: number;
+    maintenanceCoral: number;
+    costPearl: number;
+}
+
+export class CommandDetails implements ICommandDetails {
+    targetCountryId!: number;
+    units?: UnitDetails[] | undefined;
+
+    constructor(data?: ICommandDetails) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.targetCountryId = data["targetCountryId"];
+            if (Array.isArray(data["units"])) {
+                this.units = [] as any;
+                for (let item of data["units"])
+                    this.units!.push(UnitDetails.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): CommandDetails {
+        data = typeof data === 'object' ? data : {};
+        let result = new CommandDetails();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["targetCountryId"] = this.targetCountryId;
+        if (Array.isArray(this.units)) {
+            data["units"] = [];
+            for (let item of this.units)
+                data["units"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface ICommandDetails {
+    targetCountryId: number;
+    units?: UnitDetails[] | undefined;
+}
+
+export class UnitDetails implements IUnitDetails {
+    unitId!: number;
+    amount!: number;
+
+    constructor(data?: IUnitDetails) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.unitId = data["unitId"];
+            this.amount = data["amount"];
+        }
+    }
+
+    static fromJS(data: any): UnitDetails {
+        data = typeof data === 'object' ? data : {};
+        let result = new UnitDetails();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["unitId"] = this.unitId;
+        data["amount"] = this.amount;
+        return data; 
+    }
+}
+
+export interface IUnitDetails {
+    unitId: number;
+    amount: number;
 }
 
 export class CountryInfo implements ICountryInfo {
@@ -1320,6 +1469,13 @@ export interface IBriefCreationInfo {
     count: number;
     inProgressCount: number;
     imageUrl?: string | undefined;
+}
+
+export interface FileResponse {
+    data: Blob;
+    status: number;
+    fileName?: string;
+    headers?: { [name: string]: any };
 }
 
 export class ApiException extends Error {

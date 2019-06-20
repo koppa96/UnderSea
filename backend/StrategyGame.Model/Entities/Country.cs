@@ -8,6 +8,11 @@ namespace StrategyGame.Model.Entities
     public class Country : AbstractEntity<Country>
     {
         /// <summary>
+        /// Gets or sets the name of the country.
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
         /// Gets or sets the current amount of pearls the country has.
         /// </summary>
         public long Pearls { get; set; }

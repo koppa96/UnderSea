@@ -20,14 +20,14 @@ namespace StrategyGame.Bll.Extensions
         /// Attempts to start building a new <see cref="BuildingType"/> in the country.
         /// Returns if the building can be started (depending on the maximum building count).
         /// </summary>
-        /// <param name="context">The <see cref="UnderSeaDatabase"/> to use.</param>
+        /// <param name="context">The <see cref="UnderSeaDatabaseContext"/> to use.</param>
         /// <param name="countryId">The ID of the <see cref="Country"/> to build in.</param>
         /// <param name="building">The <see cref="BuildingType"/> to start.</param>
         /// <param name="cancel">The token that can be used to cancel the operation.</param>
         /// <returns>If the building could be started.</returns>
         /// <exception cref="ArgumentNullException">Thrown if an argument was null.</exception>
         /// <exception cref="KeyNotFoundException">Thrown if no country with the given ID exists.</exception>
-        public static async Task<bool> TryStartBuildingAsync(this UnderSeaDatabase context, int countryId,
+        public static async Task<bool> TryStartBuildingAsync(this UnderSeaDatabaseContext context, int countryId,
             BuildingType building, CancellationToken cancel = default)
         {
             if (context == null)
@@ -72,13 +72,13 @@ namespace StrategyGame.Bll.Extensions
         /// Attempts to start a new <see cref="ResearchType"/> in the country.
         /// Returns if the research can be started (depending on the maximum research count).
         /// </summary>
-        /// <param name="context">The <see cref="UnderSeaDatabase"/> to use.</param>
+        /// <param name="context">The <see cref="UnderSeaDatabaseContext"/> to use.</param>
         /// <param name="countryId">The ID of the <see cref="Country"/> to build in.</param>
         /// <param name="research">The <see cref="ResearchType"/> to start researching.</param>
         /// <param name="cancel">The token that can be used to cancel the operation.</param>
         /// <returns>If the research could be started.</returns>
         /// <exception cref="ArgumentNullException">Thrown if an argument was null.</exception>
-        public static async Task<bool> TryStartResearchAsync(this UnderSeaDatabase context, int countryId,
+        public static async Task<bool> TryStartResearchAsync(this UnderSeaDatabaseContext context, int countryId,
             ResearchType research, CancellationToken cancel = default)
         {
             if (context == null)
@@ -121,7 +121,7 @@ namespace StrategyGame.Bll.Extensions
         /// Checks all in-progress buildings and researches of the country, 
         /// and adds any completed ones to it. Does not delete in progress values that are completed.
         /// </summary>
-        /// <param name="context">The <see cref="UnderSeaDatabase"/> to use.</param>
+        /// <param name="context">The <see cref="UnderSeaDatabaseContext"/> to use.</param>
         /// <param name="countryId">The ID of the <see cref="Country"/> to build in.</param>
         /// <param name="cancel">The token that can be used to cancel the operation.</param>
         /// <returns>If the building could be started.</returns>
@@ -130,7 +130,7 @@ namespace StrategyGame.Bll.Extensions
         /// <remarks>
         /// This method does not perform any safety check regarding the amount of buildings or researches!
         /// </remarks>
-        public static async Task CheckAddCompletedAsync(this UnderSeaDatabase context, int countryId,
+        public static async Task CheckAddCompletedAsync(this UnderSeaDatabaseContext context, int countryId,
             CancellationToken cancel = default)
         {
             if (context == null)
@@ -218,7 +218,7 @@ namespace StrategyGame.Bll.Extensions
             return country.Commands.Single(c => c.ParentCountry.Equals(c.TargetCountry));
         }
 
-        public static async Task<CountryModifierBuilder> ParseAllEffectForCountry(this ReadOnlyUnderSeaDatabase context, 
+        public static async Task<CountryModifierBuilder> ParseAllEffectForCountry(this UnderSeaDatabaseContext context, 
             int countryId, ModifierParserContainer Parsers)
         {
             var country = await context.Countries.FindAsync(countryId).ConfigureAwait(false);
