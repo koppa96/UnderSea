@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using StrategyGame.Bll.DatabaseExtensions;
 using StrategyGame.Bll.EffectParsing;
+using StrategyGame.Bll.Extensions;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
 using System;
@@ -76,7 +76,7 @@ namespace StrategyGame.Bll
             }
 
             // Add buildings that are completed
-            await country.CheckAddCompletedAsync(context, cancel).ConfigureAwait(false);
+            await context.CheckAddCompletedAsync(country.Id, cancel).ConfigureAwait(false);
 
             return builder;
         }

@@ -84,7 +84,7 @@ namespace StrategyGame.Api.Controllers
         [ProducesResponseType(401)]
         [ProducesResponseType(404)]
         [ProducesResponseType(200)]
-        public async Task<ActionResult<CommandInfo>> UpdateCommand(int id, [FromBody] CommandDetails command)
+        public async Task<ActionResult<CommandInfo>> UpdateCommandAsync(int id, [FromBody] CommandDetails command)
         {
             try
             {
