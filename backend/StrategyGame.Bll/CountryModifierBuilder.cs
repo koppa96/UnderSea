@@ -39,5 +39,15 @@
         /// Gets or sets the country's base coral production.
         /// </summary>
         public int CoralProduction { get; set; }
+
+        /// <summary>
+        /// Gets or sets the pearl loot the country acquired.
+        /// </summary>
+        public long CurrentPearlLoot { get; set; }
+
+        /// <summary>
+        /// Gets or sets the coral loot the country acquired.
+        /// </summary>
+        public long CurrentCoralLoot { get; set; }
     }
 }

@@ -38,7 +38,7 @@ namespace StrategyGame.Bll.Extensions
             }
 
             // Find the country and then load the nav properties we need
-            var country = await context.Countries.FindAsync(countryId, cancel).ConfigureAwait(false);
+            var country = await context.Countries.FindAsync(new object[] { countryId }, cancel).ConfigureAwait(false);
 
             if (country == null)
             {
@@ -89,7 +89,7 @@ namespace StrategyGame.Bll.Extensions
             }
 
             // Find the country and then load the nav properties we need
-            var country = await context.Countries.FindAsync(countryId, cancel).ConfigureAwait(false);
+            var country = await context.Countries.FindAsync(new object[] { countryId }, cancel).ConfigureAwait(false);
 
             if (country == null)
             {
@@ -116,7 +116,7 @@ namespace StrategyGame.Bll.Extensions
 
         /// <summary>
         /// Checks all in-progress buildings and researches of the country, 
-        /// and adds any completed ones to it while deleting them from the in-progress ones.
+        /// and adds any completed ones to it. Does not delete in progress values that are completed.
         /// </summary>
         /// <param name="context">The <see cref="UnderSeaDatabase"/> to use.</param>
         /// <param name="countryId">The ID of the <see cref="Country"/> to build in.</param>
@@ -136,7 +136,7 @@ namespace StrategyGame.Bll.Extensions
             }
 
             // Find the country and then load the nav properties we need
-            var country = await context.Countries.FindAsync(countryId, cancel).ConfigureAwait(false);
+            var country = await context.Countries.FindAsync(new object[] { countryId }, cancel).ConfigureAwait(false);
 
             if (country == null)
             {
@@ -148,7 +148,7 @@ namespace StrategyGame.Bll.Extensions
             await context.Entry(country).Collection(c => c.InProgressResearches).LoadAsync(cancel).ConfigureAwait(false);
             await context.Entry(country).Collection(c => c.Researches).LoadAsync(cancel).ConfigureAwait(false);
 
-            var researches = country.InProgressResearches.Where(r => r.TimeLeft <= 0)
+            var researches = country.InProgressResearches.Where(r => r.TimeLeft == 0)
                 .GroupBy(r => r.Research)
                 .ToList();
 
@@ -158,7 +158,7 @@ namespace StrategyGame.Bll.Extensions
                 {
                     var existing = country.Researches.FirstOrDefault(r => r.Research.Equals(research.Key));
 
-                    // Add a new research
+                    // Add a new research, or update an existing one
                     if (existing == null)
                     {
                         await context.CountryResearches.AddAsync(new CountryResearch()
@@ -167,18 +167,13 @@ namespace StrategyGame.Bll.Extensions
                     }
                     else
                     {
-                        // Or update an existing one, this uses the context in order to ensure tha saving the givn context updates the db.
-                        // TODO: use context to get existing?
-                        (await context.CountryResearches.FindAsync(existing.Id, cancel).ConfigureAwait(false)).Count += research.Count();
+                        existing.Count += research.Count();
                     }
                 }
-
-                // Delete all in progress ones
-                context.InProgressResearches.RemoveRange(country.InProgressResearches.Where(r => r.TimeLeft <= 0));
             }
 
             // Get and complete buildings
-            var buildings = country.InProgressBuildings.Where(r => r.TimeLeft <= 0)
+            var buildings = country.InProgressBuildings.Where(r => r.TimeLeft == 0)
                 .GroupBy(b => b.Building)
                 .ToList();
 
@@ -188,7 +183,7 @@ namespace StrategyGame.Bll.Extensions
                 {
                     var existing = country.Buildings.FirstOrDefault(b => b.Building.Equals(building.Key));
 
-                    // Add a new research
+                    // Add a new building, or update an existing one
                     if (existing == null)
                     {
                         await context.CountryBuildings.AddAsync(new CountryBuilding()
@@ -197,19 +192,15 @@ namespace StrategyGame.Bll.Extensions
                     }
                     else
                     {
-                        // Or update an existing one, this uses the context in order to ensure tha saving the givn context updates the db.
-                        // TODO: use context to get existing?
-                        (await context.CountryResearches.FindAsync(existing.Id, cancel).ConfigureAwait(false)).Count += building.Count();
+                        existing.Count += building.Count();
+
                     }
                 }
-
-                // Delete all in progress ones
-                context.InProgressBuildings.RemoveRange(country.InProgressBuildings.Where(b => b.TimeLeft <= 0));
             }
         }
 
         /// <summary>
-        /// Gets all <see cref="Division"/>s tha are defending the country. THe <see cref="Country.Commands"/> collection must be loaded.
+        /// Gets all <see cref="Division"/>s tha are defending the country. The <see cref="Country.Commands"/> collection must be loaded.
         /// </summary>
         /// <param name="country">The <see cref="Country"/> to get the defenders for.</param>
         /// <returns>The collection of <see cref="Division"/>s defending the country.</returns>

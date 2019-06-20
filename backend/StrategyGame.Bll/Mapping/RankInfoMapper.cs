@@ -11,7 +11,9 @@ namespace StrategyGame.Bll.Mapping
     {
         public RankInfoMapper()
         {
-            CreateMap<Country, RankInfo>();
+            CreateMap<Country, RankInfo>()
+                .ForMember(dest => dest.Name, conf => conf.MapFrom(src => src.ParentUser.UserName));
+
         }
     }
 }

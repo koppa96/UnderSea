@@ -4,6 +4,7 @@ using StrategyGame.Bll.Extensions;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
@@ -15,7 +16,10 @@ namespace StrategyGame.Bll
     {
         static readonly Random rng = new Random();
 
-
+        public CountryTurnHandler(ModifierParserContainer parsers)
+        {
+            Parsers = parsers ?? throw new ArgumentNullException(nameof(parsers));
+        }
 
         public ModifierParserContainer Parsers { get; }
 
@@ -23,11 +27,25 @@ namespace StrategyGame.Bll
 
 
 
-        public async Task<CountryModifierBuilder> HandleTurnBeginingAsync(UnderSeaDatabase context, Country country,
+        public async Task<CountryModifierBuilder> HandlePreCombatAsync(UnderSeaDatabase context, int countryId,
             CancellationToken cancel)
         {
+            // Find the country and then load the nav properties we need
+            var country = await context.Countries.FindAsync(new object[] { countryId }, cancel).ConfigureAwait(false);
+
+            if (country == null)
+            {
+                throw new KeyNotFoundException();
+            }
+
+            await context.Entry(country).Collection(c => c.InProgressBuildings).LoadAsync(cancel).ConfigureAwait(false);
+            await context.Entry(country).Collection(c => c.Buildings).LoadAsync(cancel).ConfigureAwait(false);
+            await context.Entry(country).Collection(c => c.InProgressResearches).LoadAsync(cancel).ConfigureAwait(false);
+            await context.Entry(country).Collection(c => c.Researches).LoadAsync(cancel).ConfigureAwait(false);
+
+
             // Get global data
-            var globals = await context.GlobalValues.SingleAsync().ConfigureAwait(false);
+            var globals = await context.GlobalValues.SingleAsync(cancel).ConfigureAwait(false);
 
             // Set up builder
             var builder = new CountryModifierBuilder
@@ -62,7 +80,7 @@ namespace StrategyGame.Bll
             country.Corals += (long)Math.Round(builder.CoralProduction * builder.HarvestModifier);
 
             // #3: Pay soldiers
-            DesertUnits(country);
+            await DesertUnits(country, context, cancel).ConfigureAwait(false);
 
             // Advance research and buildings
             foreach (var b in country.InProgressBuildings)
@@ -81,12 +99,23 @@ namespace StrategyGame.Bll
             return builder;
         }
 
-        public async Task HandleCombatAsync(UnderSeaDatabase context, Country country,
+        public async Task HandleCombatAsync(UnderSeaDatabase context, int countryId,
             CountryModifierBuilder builder, CancellationToken cancel)
         {
+            // Find the country and then load the nav properties we need
+            var country = await context.Countries.FindAsync(new object[] { countryId }, cancel).ConfigureAwait(false);
+
+            if (country == null)
+            {
+                throw new KeyNotFoundException();
+            }
+
+            await context.Entry(country).Collection(c => c.IncomingAttacks).LoadAsync(cancel).ConfigureAwait(false);
+            await context.Entry(country).Collection(c => c.Commands).LoadAsync(cancel).ConfigureAwait(false);
+
             // First off, randomize the incoming attacks, excluding the defending forces
             var incomingAttacks = country.IncomingAttacks
-                .Where(c => c.ParentCountry.Equals(country))
+                .Where(c => !c.ParentCountry.Equals(country))
                 .Select(c => new { Order = rng.Next(), Command = c })
                 .OrderBy(x => x.Order)
                 .Select(x => x.Command)
@@ -94,9 +123,12 @@ namespace StrategyGame.Bll
 
             // Get defenders,  Calculate the current defense power
             var defenders = country.GetAllDefending();
+            await context.Entry(defenders).Collection(c => c.Divisons).LoadAsync(cancel).ConfigureAwait(false);
 
             foreach (var attack in incomingAttacks)
             {
+                await context.Entry(attack).Collection(c => c.Divisons).LoadAsync(cancel).ConfigureAwait(false);
+
                 double attackPower = GetCurrentUnitPower(attack, true, builder);
                 double defensePower = GetCurrentUnitPower(defenders, false, builder);
 
@@ -113,7 +145,7 @@ namespace StrategyGame.Bll
                     country.Corals -= coralLoot;
 
                     CountryLooted?.Invoke(this, new CountryLootedEventArgs(coralLoot, pearlLoot,
-                        attack.ParentCountry, attack.TargetCountry));
+                        attack.ParentCountry.Id, attack.TargetCountry.Id));
                 }
                 else
                 {
@@ -123,12 +155,38 @@ namespace StrategyGame.Bll
             }
         }
 
-        public async Task<long> CalculateScoreAsync(UnderSeaDatabase context, Country country,
+        public async Task HandlePostCombatAsync(UnderSeaDatabase context, int countryId,
             CountryModifierBuilder builder, CancellationToken cancel)
         {
-            return builder.Population
+            // Find the country and then load the nav properties we need
+            var country = await context.Countries.FindAsync(new object[] { countryId }, cancel).ConfigureAwait(false);
+
+            if (country == null)
+            {
+                throw new KeyNotFoundException();
+            }
+
+            await context.Entry(country).Collection(c => c.Buildings).LoadAsync(cancel).ConfigureAwait(false);
+            await context.Entry(country).Collection(c => c.Researches).LoadAsync(cancel).ConfigureAwait(false);
+            await context.Entry(country).Collection(c => c.Commands).LoadAsync(cancel).ConfigureAwait(false);
+
+            // Add loot
+            country.Pearls += builder.CurrentPearlLoot;
+            country.Corals += builder.CurrentCoralLoot;
+
+            // Calculate score
+            long divisionScore = 0;
+            foreach (var comm in country.Commands)
+            {
+                await context.Entry(comm).Collection(c => c.Divisons).LoadAsync(cancel).ConfigureAwait(false);
+                divisionScore += comm.Divisons.Sum(d => d.Count);
+            }
+
+            divisionScore *= 5;
+
+            country.Score = builder.Population
                 + country.Buildings.Count * 50
-                + country.Commands.Sum(c => c.Divisons.Sum(d => d.Count)) * 5
+                + divisionScore
                 + country.Researches.Count * 100;
         }
 
@@ -157,12 +215,52 @@ namespace StrategyGame.Bll
             }
         }
 
-        protected void DesertUnits(Country country)
+        protected async Task DesertUnits(Country country, UnderSeaDatabase context, CancellationToken cancel)
         {
-            var pearlUpkeep = country.Commands.Sum(c => c.Divisons.Sum(u => u.Count * u.Unit.CostPearl));
-            var coralUpkeep = country.Commands.Sum(c => c.Divisons.Sum(u => u.Count * u.Unit.CostCoral));
+            await context.Entry(country).Collection(c => c.Commands).LoadAsync(cancel).ConfigureAwait(false);
 
-            // TODO: remove soldiers if we got into the negatives
+            long pearlUpkeep = 0;
+            long coralUpkeep = 0;
+
+            foreach (var comm in country.Commands)
+            {
+                await context.Entry(comm).Collection(c => c.Divisons).LoadAsync(cancel).ConfigureAwait(false);
+
+                pearlUpkeep += comm.Divisons.Sum(u => u.Count * u.Unit.CostPearl);
+                coralUpkeep += comm.Divisons.Sum(u => u.Count * u.Unit.CostCoral);
+            }
+
+            if (coralUpkeep > country.Corals || pearlUpkeep > country.Pearls)
+            {
+                // Load unit data
+                foreach (var div in country.Commands.SelectMany(c => c.Divisons))
+                {
+                    await context.Entry(div).Reference(d => d.Unit).LoadAsync(cancel).ConfigureAwait(false);
+                }
+
+                long pearlDeficit = pearlUpkeep - country.Pearls;
+                long coralDeficit = coralUpkeep - country.Corals;
+
+                // Go through each div in cost order
+                foreach (var div in country.Commands.SelectMany(c => c.Divisons).OrderBy(d => d.Unit.CostPearl))
+                {
+                    // Calculate how many units of the type in the division needs to go.
+                    long requiredPearlReduction = (long)Math.Ceiling((double)pearlDeficit / div.Unit.MaintenancePearl);
+                    long requiredCoralReduction = (long)Math.Ceiling((double)coralDeficit / div.Unit.MaintenanceCoral);
+
+                    int desertedAmount = (int)Math.Min(Math.Max(requiredCoralReduction, requiredPearlReduction), div.Count);
+
+                    div.Count -= desertedAmount;
+
+                    pearlDeficit -= desertedAmount * div.Unit.MaintenancePearl;
+                    coralDeficit -= desertedAmount * div.Unit.MaintenanceCoral;
+
+                    if (coralUpkeep <= country.Corals || pearlUpkeep <= country.Pearls)
+                    {
+                        break;
+                    }
+                }
+            }
 
             country.Pearls -= pearlUpkeep;
             country.Corals -= coralUpkeep;

@@ -1,9 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StrategyGame.Bll;
+using StrategyGame.Bll.EffectParsing;
+using StrategyGame.Bll.Extensions;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
 using StrategyGame.Model.Entities.Frontend;
 using System;
+using System.Threading;
 
 namespace StrategyGame.DatabaseHelper
 {
@@ -24,9 +27,7 @@ namespace StrategyGame.DatabaseHelper
                 Console.WriteLine("Connected to the database.");
 
                 PurgeDatabase(context);
-                FillWithDefault(context);
-
-                //context.SaveChanges();
+                FillWithDefault(context);                               
             }
 
             Console.Write("Finished, press any key to exit...");
@@ -250,6 +251,43 @@ namespace StrategyGame.DatabaseHelper
                 StartingPopulation = 10
             });
             context.SaveChanges();
+
+
+            // Add some test data
+            var user1 = new User() { Email = "poi@poi.hu", UserName = "poi" };
+            var user2 = new User() { Email = "hue@poi.hu", UserName = "hue" };
+            context.Users.AddRange(user1, user2);
+
+            var country1 = new Country() { Pearls = 5000, Corals = 5000, ParentUser= user1 };
+            var country2 = new Country() { Pearls = 5000, Corals = 5000, ParentUser = user2 };
+            context.Countries.AddRange(country1, country2);
+            context.Commands.AddRange(new Command() { ParentCountry = country1, TargetCountry = country1 });
+            context.Commands.AddRange(new Command() { ParentCountry = country2, TargetCountry = country2 });
+            context.SaveChanges();
+
+            context.TryStartBuildingAsync(country1.Id, reefCastle).Wait();
+            context.TryStartBuildingAsync(country2.Id, currentController).Wait();
+
+            var handler = new GlobalTurnHandler(new CountryTurnHandler(new ModifierParserContainer(new AbstractEffectModifierParser[]
+            {
+                new BarrackSpaceEffectParser(),
+                new CoralProductionEffectParser(),
+                new HarvestModifierEffectParser(),
+                new PopulationEffectParser(),
+                new TaxModifierEffectParser(),
+                new UnitDefenseEffectParser()
+            })));
+
+            handler.EndTurnAsync(context, CancellationToken.None).Wait();
+            handler.EndTurnAsync(context, CancellationToken.None).Wait();
+            handler.EndTurnAsync(context, CancellationToken.None).Wait();
+            handler.EndTurnAsync(context, CancellationToken.None).Wait();
+            handler.EndTurnAsync(context, CancellationToken.None).Wait();
+            handler.EndTurnAsync(context, CancellationToken.None).Wait();
+            handler.EndTurnAsync(context, CancellationToken.None).Wait();
+            handler.EndTurnAsync(context, CancellationToken.None).Wait();
+
+            Console.WriteLine();
         }
     }
 }

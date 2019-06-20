@@ -11,18 +11,18 @@ namespace StrategyGame.Bll
 
         public long LootedPearls { get; }
 
-        public Country Looter { get; }
+        public int LooterId { get; }
 
-        public Country Looted { get; }
+        public int LootedId { get; }
 
 
 
-        public CountryLootedEventArgs(long lootedCorals, long lootedPearls, Country looter, Country looted)
+        public CountryLootedEventArgs(long lootedCorals, long lootedPearls, int looterId, int lootedId)
         {
             LootedCorals = lootedCorals;
             LootedPearls = lootedPearls;
-            Looter = looter ?? throw new ArgumentNullException(nameof(looter));
-            Looted = looted ?? throw new ArgumentNullException(nameof(looted));
+            LooterId = looterId;
+            LootedId = lootedId;
         }
     }
 }
