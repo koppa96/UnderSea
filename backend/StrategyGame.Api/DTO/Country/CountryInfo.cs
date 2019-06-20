@@ -15,7 +15,7 @@ namespace StrategyGame.Api.DTO.Country
         public IEnumerable<UnitInfo> ArmyInfo { get; set; }
         public int Pearls { get; set; }
         public int Corals { get; set; }
-        public CreationInfo Buildings { get; set; }
-        public CreationInfo Researches { get; set; }
+        public BriefCreationInfo Buildings { get; set; }
+        public BriefCreationInfo Researches { get; set; }
     }
 }

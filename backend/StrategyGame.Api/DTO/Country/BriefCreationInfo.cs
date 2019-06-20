@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace StrategyGame.Api.DTO.Country
 {
-    public class CreationInfo
+    public class BriefCreationInfo
     {
         public int Count { get; set; }
         public int InProgressCount { get; set; }
