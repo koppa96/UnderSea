@@ -13,8 +13,8 @@ namespace StrategyGame.Bll.Dto.Sent.Country
         public int Round { get; set; }
         public int Rank { get; set; }
         public IEnumerable<UnitInfo> ArmyInfo { get; set; }
-        public int Pearls { get; set; }
-        public int Corals { get; set; }
+        public long Pearls { get; set; }
+        public long Corals { get; set; }
         public BriefCreationInfo Buildings { get; set; }
         public BriefCreationInfo Researches { get; set; }
     }

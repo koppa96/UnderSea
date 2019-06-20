@@ -10,11 +10,11 @@ namespace StrategyGame.Bll.Dto.Sent
         public int Id { get; set; }
         public string Name { get; set; }
         public string ImageUrl { get; set; }
-        public int Attack { get; set; }
-        public int Defense { get; set; }
+        public int AttackPower { get; set; }
+        public int DefensePower { get; set; }
         public int Count { get; set; }
-        public int PearlsPerRound { get; set; }
-        public int CoralsPerRound { get; set; }
-        public int Price { get; set; }
+        public int MaintenancePearl { get; set; }
+        public int MaintenanceCoral { get; set; }
+        public int CostPearl { get; set; }
     }
 }

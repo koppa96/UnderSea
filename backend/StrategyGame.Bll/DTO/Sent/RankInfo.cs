@@ -7,8 +7,8 @@ namespace StrategyGame.Bll.Dto.Sent
 {
     public class RankInfo
     {
-        public int Position { get; set; }
         public string Name { get; set; }
-        public string Points { get; set; }
+        public int Rank { get; set; }
+        public string Score { get; set; }
     }
 }

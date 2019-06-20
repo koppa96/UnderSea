@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using AutoMapper;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -15,6 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NSwag.CodeGeneration.TypeScript;
+using StrategyGame.Bll;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
 
@@ -92,6 +95,8 @@ namespace StrategyGame.Api
                     File.WriteAllText(filePath, code);
                 };
             });
+
+            services.AddAutoMapper(typeof(KnownValues).Assembly);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
