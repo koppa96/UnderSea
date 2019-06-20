@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace StrategyGame.Bll
+namespace StrategyGame.Bll.Extensions
 {
     /// <summary>
     /// Provides exntension methods for the <see cref="Country"/> entity.
@@ -127,7 +127,7 @@ namespace StrategyGame.Bll
         /// <remarks>
         /// This method does not perform any safety check regarding the amount of buildings or researches!
         /// </remarks>
-        public static async Task CheckAddCompletedAsync(UnderSeaDatabase context, int countryId,
+        public static async Task CheckAddCompletedAsync(this UnderSeaDatabase context, int countryId,
             CancellationToken cancel = default)
         {
             if (context == null)
