@@ -9,7 +9,7 @@
         /// Initializes a new instance of the <see cref="UnitAttackEffectParser"/>.
         /// </summary>
         public HarvestModifierEffectParser()
-            : base("harvest-modifier", (effect, builder) => builder.HarvestModifier += effect.Value)
+            : base(KnownValues.HarvestModifier, (effect, builder) => builder.HarvestModifier += effect.Value)
         { }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using StrategyGame.Model.Entities.Frontend;
-using System;
 using System.Collections.Generic;
 
 namespace StrategyGame.Model.Entities
@@ -40,45 +39,16 @@ namespace StrategyGame.Model.Entities
         /// <summary>
         /// Gets the collection of effects this research provides.
         /// </summary>
-        public virtual ICollection<ResearchEffect> Effects { get; set; }
+        public virtual ICollection<ResearchEffect> Effects { get; set; } = new HashSet<ResearchEffect>();
 
         /// <summary>
         /// Gets the collection of researches of this type that are completed.
         /// </summary>
-        public virtual ICollection<CountryResearch> CompletedResearches { get; set; }
+        public virtual ICollection<CountryResearch> CompletedResearches { get; set; } = new HashSet<CountryResearch>();
 
         /// <summary>
         /// Gets the collection of researches of this type that are being researched.
         /// </summary>
-        public virtual ICollection<InProgressResearch> InProgressResearches { get; set; }
-
-
-
-        /// <summary>
-        /// Initializes a new instance of <see cref="ResearchType"/>.
-        /// </summary>
-        public ResearchType()
-        { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ResearchType"/>.
-        /// </summary>
-        /// <param name="costPearl">The amount of pearls the research costs.</param>
-        /// <param name="costCoral">The amount of corals the research costs.</param>
-        /// <param name="researchTime">The built time of the research (in turns).</param>
-        /// <param name="maxCompletedAmount">The times the research can be completed by a single country.</param>
-        /// <exception cref="ArgumentException">Thrown if the research time was negative.</exception>
-        public ResearchType(int costPearl, int costCoral, int researchTime, int maxCompletedAmount = 1)
-        {
-            if (researchTime < 0)
-            {
-                throw new ArgumentException("The research time may not be negative.", nameof(researchTime));
-            }
-
-            CostPearl = costPearl;
-            CostCoral = costCoral;
-            ResearchTime = researchTime;
-            MaxCompletedAmount = maxCompletedAmount;
-        }
+        public virtual ICollection<InProgressResearch> InProgressResearches { get; set; } = new HashSet<InProgressResearch>();
     }
 }

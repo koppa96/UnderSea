@@ -25,8 +25,6 @@ namespace StrategyGame.Bll.EffectParsing
         /// </summary>
         public IReadOnlyCollection<AbstractEffectModifierParser> Parsers => new ReadOnlyCollection<AbstractEffectModifierParser>(WriteableParsers);
 
-
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ModifierParserContainer"/>.
         /// </summary>
@@ -44,8 +42,6 @@ namespace StrategyGame.Bll.EffectParsing
         {
             WriteableParsers = Parsers?.ToList() ?? throw new ArgumentNullException(nameof(Parsers));
         }
-
-
 
         /// <summary>
         /// Adds a new parser to the container.

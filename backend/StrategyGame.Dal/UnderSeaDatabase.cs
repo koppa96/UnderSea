@@ -11,7 +11,7 @@ namespace StrategyGame.Dal
         /// <summary>
         /// Initializes a new instance of the <see cref="UnderSeaDatabase"/>.
         /// </summary>
-        /// <param name="options">The <see cref="DbContextOptions{NingyoDatabase}"/> for the database.</param>
+        /// <param name="options">The <see cref="DbContextOptions{UnderSeaDatabase}"/> for the database.</param>
         /// <exception cref="ArgumentNullException">Thrown if an argument was null.</exception>
         public UnderSeaDatabase(DbContextOptions<UnderSeaDatabase> options)
             : base(options, false)

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace StrategyGame.Model.Entities
 {
@@ -24,26 +23,6 @@ namespace StrategyGame.Model.Entities
         /// <summary>
         /// Gets the collection of divisions assigned to this command.
         /// </summary>
-        public virtual ICollection<Division> Divisons { get; set; }
-
-
-
-        /// <summary>
-        /// Initializes a new instance of <see cref="Command"/>.
-        /// </summary>
-        public Command()
-        { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Command"/>
-        /// </summary>
-        /// <param name="parentCountry">The country that this command belongs to.</param>
-        /// <param name="targetCountry">The target country of the command.</param>
-        /// <exception cref="ArgumentNullException">Thrown if an argument was null.</exception>
-        public Command(Country parentCountry, Country targetCountry)
-        {
-            ParentCountry = parentCountry ?? throw new ArgumentNullException(nameof(parentCountry));
-            TargetCountry = targetCountry ?? throw new ArgumentNullException(nameof(targetCountry));
-        }
+        public virtual ICollection<Division> Divisons { get; set; } = new HashSet<Division>();
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using StrategyGame.Bll;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
 using StrategyGame.Model.Entities.Frontend;
@@ -8,7 +9,7 @@ namespace StrategyGame.DatabaseHelper
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             var connString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=UnderSeaDb;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
 
@@ -74,38 +75,38 @@ namespace StrategyGame.DatabaseHelper
 
             // Effects, Buildings, researches
             // áramlásirányító
-            var popIn = new Effect("population-increase", 50);
-            var cp = new Effect("coral-production", 200);
-            var currentController = new BuildingType(1000, 0, 5, -1);
+            var popIn = new Effect() { Name = KnownValues.PopulationIncrease, Value = 50 };
+            var cp = new Effect() { Name = KnownValues.CoralProductionIncrease, Value = 200 };
+            var currentController = new BuildingType() { CostPearl = 1000, CostCoral = 0, BuildTime = 5, MaxCount = -1 };
 
             // zátonyvár
-            var bsIn = new Effect("barrack-space-increase", 200);
-            var reefCastle = new BuildingType(1000, 0, 5, -1);
+            var bsIn = new Effect() { Name = KnownValues.BarrackSpaceIncrease, Value = 200 };
+            var reefCastle = new BuildingType() { CostPearl = 1000, CostCoral = 0, BuildTime = 5, MaxCount = -1 };
 
             // Iszaptraktor
-            var harvMod1 = new Effect("harvest-modifier", 0.1);
-            var mudT = new ResearchType(0, 0, 15, 1);
+            var harvMod1 = new Effect() { Name = KnownValues.HarvestModifier, Value = 0.1 };
+            var mudT = new ResearchType() { CostPearl = 0, CostCoral = 0, ResearchTime = 15, MaxCompletedAmount = 1 };
 
             // Iszapkombájn
-            var harvMod2 = new Effect("harvest-modifier", 0.15);
-            var mudC = new ResearchType(0, 0, 15, 1);
+            var harvMod2 = new Effect() { Name = KnownValues.HarvestModifier, Value = 0.15 };
+            var mudC = new ResearchType() { CostPearl = 0, CostCoral = 0, ResearchTime = 15, MaxCompletedAmount = 1 };
 
             // korallfal
-            var defMod1 = new Effect("unit-defense", 0.2);
-            var wall = new ResearchType(0, 0, 15, 1);
+            var defMod1 = new Effect() { Name = KnownValues.UnitDefenseModifier, Value = 0.2 };
+            var wall = new ResearchType() { CostPearl = 0, CostCoral = 0, ResearchTime = 15, MaxCompletedAmount = 1 };
 
             // Szonárágyú
-            var attMod1 = new Effect("unit-attack", 0.2);
-            var canon = new ResearchType(0, 0, 15, 1);
+            var attMod1 = new Effect() { Name = KnownValues.UnitAttackModifier, Value = 0.2 };
+            var canon = new ResearchType() { CostPearl = 0, CostCoral = 0, ResearchTime = 15, MaxCompletedAmount = 1 };
 
             // Harcművészet
-            var combModA = new Effect("unit-attack", 0.1);
-            var combModD = new Effect("unit-defense", 0.1);
-            var martialArts = new ResearchType(0, 0, 15, 1);
+            var combModA = new Effect() { Name = KnownValues.UnitAttackModifier, Value = 0.1 };
+            var combModD = new Effect() { Name = KnownValues.UnitDefenseModifier, Value = 0.1 };
+            var martialArts = new ResearchType() { CostPearl = 0, CostCoral = 0, ResearchTime = 15, MaxCompletedAmount = 1 };
 
             // Alchemy
-            var taxMod1 = new Effect("taxation-modifier", 0.3);
-            var alchemy = new ResearchType(0, 0, 15, 1);
+            var taxMod1 = new Effect() { Name = KnownValues.TaxationModifier, Value = 0.3 };
+            var alchemy = new ResearchType() { CostPearl = 0, CostCoral = 0, ResearchTime = 15, MaxCompletedAmount = 1 };
 
 
             // Add effects, buildings, researches
@@ -117,37 +118,49 @@ namespace StrategyGame.DatabaseHelper
 
 
             // Add effects to buildings and researches
-            context.BuildingEffects.AddRange(new BuildingEffect(currentController, popIn),
-                new BuildingEffect(currentController, cp), new BuildingEffect(reefCastle, bsIn));
+            context.BuildingEffects.AddRange(
+                new BuildingEffect() { Building = currentController, Effect = popIn },
+                new BuildingEffect() { Building = currentController, Effect = cp },
+                new BuildingEffect() { Building = reefCastle, Effect = bsIn });
 
-            context.ResearchEffects.AddRange(new ResearchEffect(mudT, harvMod1), new ResearchEffect(mudC, harvMod2),
-                new ResearchEffect(wall, defMod1), new ResearchEffect(canon, attMod1), new ResearchEffect(martialArts, combModA),
-                new ResearchEffect(martialArts, combModD), new ResearchEffect(alchemy, taxMod1));
+            context.ResearchEffects.AddRange(
+                new ResearchEffect() { Research = mudT, Effect = harvMod1 },
+                new ResearchEffect() { Research = mudC, Effect = harvMod2 },
+                new ResearchEffect() { Research = wall, Effect = defMod1 },
+                new ResearchEffect() { Research = canon, Effect = attMod1 },
+                new ResearchEffect() { Research = martialArts, Effect = combModA },
+                new ResearchEffect() { Research = martialArts, Effect = combModD },
+                new ResearchEffect() { Research = alchemy, Effect = taxMod1 });
             context.SaveChanges();
 
 
             // Add units
             // rohamfóka
-            var seal = new UnitType(6, 2, 50, 0, 1, 1);
+            var seal = new UnitType()
+            { AttackPower = 6, DefensePower = 2, CostPearl = 50, CostCoral = 0, MaintenancePearl = 1, MaintenanceCoral = 1 };
             // csatacsikó
-            var pony = new UnitType(2, 6, 50, 0, 1, 1);
+            var pony = new UnitType()
+            { AttackPower = 2, DefensePower = 6, CostPearl = 50, CostCoral = 0, MaintenancePearl = 1, MaintenanceCoral = 1 };
             // lézercápa
-            var lazor = new UnitType(5, 5, 100, 0, 3, 2);
+            var lazor = new UnitType()
+            { AttackPower = 5, DefensePower = 5, CostPearl = 100, CostCoral = 0, MaintenancePearl = 3, MaintenanceCoral = 2 };
 
             context.UnitTypes.AddRange(seal, pony, lazor);
             context.SaveChanges();
 
 
             // Add contents
-            var currentCont = new BuildingContent(currentController)
+            var currentCont = new BuildingContent()
             {
+                Parent = currentController,
                 Name = "Áramlásirányító",
                 Description = "+50 lakos, 200 korall / kör",
                 ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTpStWdiTJFGARYo6i93yeO0pHA0EQYJelOifiWIPmP7qveLS6n"
             };
 
-            var reefCastCont = new BuildingContent(reefCastle)
+            var reefCastCont = new BuildingContent()
             {
+                Parent = reefCastle,
                 Name = "Zátonyvár",
                 Description = "+200 szállás",
                 ImageUrl = "https://media-cdn.tripadvisor.com/media/photo-s/02/72/f4/54/filename-pict0458-jpg.jpg"
@@ -155,20 +168,23 @@ namespace StrategyGame.DatabaseHelper
 
             context.BuildingContents.AddRange(currentCont, reefCastCont);
 
-            var sealCont = new UnitContent(seal)
+            var sealCont = new UnitContent()
             {
+                Parent = seal,
                 Name = "Rohamfóka",
                 Description = "Jól támad de rosszul véd",
                 ImageUrl = "https://resources.stuff.co.nz/content/dam/images/1/t/a/s/4/o/image.related.StuffLandscapeSixteenByNine.710x400.1tankf.png/1546211918775.jpg"
             };
-            var ponyCont = new UnitContent(pony)
+            var ponyCont = new UnitContent()
             {
+                Parent = pony,
                 Name = "Csatacsikó",
                 Description = "Jól véd de rosszul támad",
                 ImageUrl = "http://www2.padi.com/blog/wp-content/uploads/2013/08/seahorse.jpg"
             };
-            var lazorCont = new UnitContent(lazor)
+            var lazorCont = new UnitContent()
             {
+                Parent = lazor,
                 Name = "Lézercápa",
                 Description = "lazers man",
                 ImageUrl = "https://vignette.wikia.nocookie.net/venturian-battle-headquarters/images/6/69/Flyinglasershark.jpg/revision/latest?cb=20160714220743"
@@ -176,38 +192,44 @@ namespace StrategyGame.DatabaseHelper
 
             context.UnitContents.AddRange(sealCont, ponyCont, lazorCont);
 
-            var mudTCont = new ResearchContent(mudT)
+            var mudTCont = new ResearchContent()
             {
+                Parent = mudT,
                 Name = "Iszap traktor",
                 Description = "Iszapozza a korallt (amitől amúgy IRL meghalna, korall nem növény nem kell neki föld), +10% korall termelés",
                 ImageUrl = "https://cdn.pixabay.com/photo/2017/10/09/09/55/mud-2832910_960_720.jpg"
             };
-            var mudCCont = new ResearchContent(mudC)
+            var mudCCont = new ResearchContent()
             {
+                Parent = mudC,
                 Name = "Iszap kombájn",
                 Description = "Nagyon iszapozza a korallt, +15% korall termelés",
                 ImageUrl = "https://secure.i.telegraph.co.uk/multimedia/archive/03350/glastonbury-mud-sp_3350460k.jpg"
             };
-            var defCont = new ResearchContent(wall)
+            var defCont = new ResearchContent()
             {
+                Parent = wall,
                 Name = "Korallfal",
                 Description = "Fal, korallból. +20% védekezés",
                 ImageUrl = "https://ak2.picdn.net/shutterstock/videos/1396612/thumb/1.jpg"
             };
-            var attCont = new ResearchContent(canon)
+            var attCont = new ResearchContent()
             {
+                Parent = canon,
                 Name = "Szonárágyú",
                 Description = "Mint a denevér, echo-lokáció. +20% támadás",
                 ImageUrl = "https://media-cdn.tripadvisor.com/media/photo-s/07/24/69/da/dive-abaco.jpg"
             };
-            var cCont = new ResearchContent(martialArts)
+            var cCont = new ResearchContent()
             {
+                Parent = martialArts,
                 Name = "Vízalatti harcművészetek",
                 Description = "\"A különbség a lehetetlen és a lehetséges között az egyén akarata.\", +10% védekezés és támadás",
                 ImageUrl = "https://www.pallensmartialarts.com/uploads/1/0/9/3/109303993/girl-kicking-boy-to-air_1_orig.jpg"
             };
-            var taxCont = new ResearchContent(alchemy)
+            var taxCont = new ResearchContent()
             {
+                Parent = alchemy,
                 Name = "Alkímia",
                 Description = "A népesség pénzt csinál, +30% adó bevétel",
                 ImageUrl = "https://f4.bcbits.com/img/a3431451072_10.jpg"

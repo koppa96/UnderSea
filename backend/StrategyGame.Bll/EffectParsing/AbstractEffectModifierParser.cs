@@ -21,8 +21,6 @@ namespace StrategyGame.Bll.EffectParsing
         /// </summary>
         protected Action<Effect, CountryModifierBuilder> OnParse { get; }
 
-
-
         /// <summary>
         /// Initializes a new instance of the <see cref="AbstractEffectModifierParser"/>.
         /// </summary>
@@ -38,8 +36,6 @@ namespace StrategyGame.Bll.EffectParsing
             HandledEffectName = handledEffectName ?? throw new ArgumentNullException(nameof(handledEffectName));
             OnParse = onParse;
         }
-
-
 
         /// <summary>
         /// Attempts to parse an <see cref="Effect"/>, and add its modifier to the provided <see cref="CountryModifierBuilder"/>.

@@ -22,8 +22,6 @@ namespace StrategyGame.Dal
         /// </summary>
         readonly bool _isActuallyReadOnly;
 
-
-
         /// <summary>
         /// Gets the collection of <see cref="Country"/> in the database.
         /// </summary>
@@ -94,8 +92,6 @@ namespace StrategyGame.Dal
         /// </summary>
         public DbSet<GlobalValue> GlobalValues { get; set; }
 
-
-
         /// <summary>
         /// Gets the collection of <see cref="BuildingContent"/> in the database.
         /// </summary>
@@ -110,11 +106,6 @@ namespace StrategyGame.Dal
         /// Gets the collection of <see cref="UnitContent"/> in the database.
         /// </summary>
         public DbSet<UnitContent> UnitContents { get; }
-
-
-
-
-
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ReadOnlyUnderSeaDatabase"/>.
@@ -177,7 +168,7 @@ namespace StrategyGame.Dal
             builder.Entity<BuildingEffect>()
                 .HasOne(be => be.Effect)
                 .WithMany(e => e.AffectedBuildings);
-            
+
             //Research - ResearchEffect - Effect
             builder.Entity<ResearchEffect>()
                 .HasOne(re => re.Research)
@@ -252,7 +243,7 @@ namespace StrategyGame.Dal
 
             // CountryBuilding
             builder.Entity<CountryBuilding>().Property(x => x.Count).IsRequired();
-            
+
             //Country - CountryBuilding - BuildingType
             builder.Entity<CountryBuilding>()
                 .HasOne(cb => cb.ParentCountry)
@@ -264,7 +255,7 @@ namespace StrategyGame.Dal
 
             // CountryResearch
             builder.Entity<CountryResearch>().Property(x => x.Count).IsRequired();
-            
+
             //Country - CountryResearch - ResearchType
             builder.Entity<CountryResearch>()
                 .HasOne(cr => cr.ParentCountry)
@@ -276,7 +267,7 @@ namespace StrategyGame.Dal
 
             // InProgressBuilding
             builder.Entity<InProgressBuilding>().Property(x => x.TimeLeft).IsRequired();
-            
+
             //Country - InProgressBuilding - BuildingType
             builder.Entity<InProgressBuilding>()
                 .HasOne(ib => ib.ParentCountry)
@@ -288,7 +279,7 @@ namespace StrategyGame.Dal
 
             // InProgressResearch
             builder.Entity<InProgressResearch>().Property(x => x.TimeLeft).IsRequired();
-           
+
             //Country - InProgressResearch - ResearchType
             builder.Entity<InProgressResearch>()
                 .HasOne(ir => ir.ParentCountry)
@@ -297,11 +288,9 @@ namespace StrategyGame.Dal
             builder.Entity<InProgressResearch>()
                 .HasOne(ir => ir.Research)
                 .WithMany(r => r.InProgressResearches);
-            
+
             base.OnModelCreating(builder);
         }
-
-
 
         /// <summary>
         /// Adds no tracking query behaviour, effectively making the database read-only (and faster).
@@ -316,8 +305,6 @@ namespace StrategyGame.Dal
 
             base.OnConfiguring(Options);
         }
-
-
 
         // Override the save methods to ensure a read-only DB can't be saved.
 
