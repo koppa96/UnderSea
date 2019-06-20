@@ -51,5 +51,8 @@
         /// An effect that increases the taxation (pearl production) by the set percent. Value is double where 0.5 is 50%.
         /// </summary>
         public const string HarvestModifier = "harvest-modifier";
+
+        public const int BuildingTime = 5;
+        public const int ResearchTime = 15;
     }
 }
