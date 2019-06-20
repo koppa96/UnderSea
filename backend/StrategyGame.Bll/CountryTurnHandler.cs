@@ -136,11 +136,11 @@ namespace StrategyGame.Bll
         {
             if (doGetAttack)
             {
-                return command.Divisons.Sum(d => d.Count * d.Unit.DefensePower * builder.DefenseModifier) * (rng.NextDouble() / 10 + 0.95);
+                return command.Divisons.Sum(d => d.Count * d.Unit.AttackPower * builder.AttackModifier) * (rng.NextDouble() / 10 + 0.95);
             }
             else
             {
-                return command.Divisons.Sum(d => d.Count * d.Unit.DefensePower * builder.DefenseModifier) * (rng.NextDouble() / 10 + 0.95);
+                return command.Divisons.Sum(d => d.Count * d.Unit.DefensePower * builder.DefenseModifier);
             }
         }
 
