@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StrategyGame.Bll.Dto.Sent;
+using StrategyGame.Bll.Exceptions;
 using StrategyGame.Bll.Services.Units;
 
 namespace StrategyGame.Api.Controllers
@@ -57,6 +58,15 @@ namespace StrategyGame.Api.Controllers
                     Status = 400,
                     Title = ErrorMessages.BadRequest,
                     Detail = ErrorMessages.InvalidAmount
+                });
+            }
+            catch (LimitReachedException)
+            {
+                return BadRequest(new ProblemDetails
+                {
+                    Status = 400,
+                    Title = ErrorMessages.BadRequest,
+                    Detail = ErrorMessages.LimitReached
                 });
             }
         }

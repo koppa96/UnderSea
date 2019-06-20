@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using StrategyGame.Bll.Exceptions;
 
 namespace StrategyGame.Bll.Services.Units
 {
@@ -26,6 +27,7 @@ namespace StrategyGame.Bll.Services.Units
         /// <param name="count">The amount of units to be created</param>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the unitId is invalid</exception>
         /// <exception cref="ArgumentException">Thrown when the count is not a valid amount</exception>
+        /// <exception cref="LimitReachedException">Thrown when the unit would be exceeded by the creation of units</exception>
         /// <returns>A UnitInfo containing the new amount of units</returns>
         Task<UnitInfo> CreateUnitAsync(string username, int unitId, int count);
 

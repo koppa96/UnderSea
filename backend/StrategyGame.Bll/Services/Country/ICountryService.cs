@@ -19,7 +19,18 @@ namespace StrategyGame.Bll.Services.Country
         /// <param name="countryName">The name of the country</param>
         /// <returns></returns>
         Task CreateAsync(string username, string countryName);
+
+        /// <summary>
+        /// Gets the general information about a user's country.
+        /// </summary>
+        /// <param name="username">The name of the user</param>
+        /// <returns>The information about the country</returns>
         Task<CountryInfo> GetCountryInfoAsync(string username);
+
+        /// <summary>
+        /// Gets a list of players, their countries' score and rank. 
+        /// </summary>
+        /// <returns>The list of rank infos</returns>
         Task<IEnumerable<RankInfo>> GetRankedListAsync();
     }
 }

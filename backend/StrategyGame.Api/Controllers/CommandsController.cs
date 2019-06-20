@@ -77,6 +77,15 @@ namespace StrategyGame.Api.Controllers
                     Detail = ErrorMessages.NoSuchCommand
                 });
             }
+            catch (InvalidOperationException)
+            {
+                return Unauthorized(new ProblemDetails
+                {
+                    Status = 401,
+                    Title = ErrorMessages.Unauthorized,
+                    Detail = ErrorMessages.CannotChangeCommand
+                });
+            }
         }
 
         [HttpPatch("{id}")]
@@ -101,6 +110,15 @@ namespace StrategyGame.Api.Controllers
                     Status = 400,
                     Title = ErrorMessages.BadRequest,
                     Detail = ErrorMessages.NotEnoughUnits
+                });
+            }
+            catch (InvalidOperationException)
+            {
+                return Unauthorized(new ProblemDetails
+                {
+                    Status = 401,
+                    Title = ErrorMessages.Unauthorized,
+                    Detail = ErrorMessages.CannotChangeCommand
                 });
             }
         }
