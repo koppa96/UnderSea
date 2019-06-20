@@ -47,32 +47,8 @@ namespace StrategyGame.Bll
             // Get global data
             var globals = await context.GlobalValues.SingleAsync(cancel).ConfigureAwait(false);
 
-            // Set up builder
-            var builder = new CountryModifierBuilder
-            {
-                BarrackSpace = globals.StartingBarrackSpace,
-                Population = globals.StartingPopulation
-            };
-
-            // TODO optimize query (do it with query from context, with an async query and joins etc.
-            var effectparents = country.Buildings.Select(b => new { count = b.Count, effects = b.Building.Effects.Select(e => e.Effect) })
-                .Concat(country.Researches.Select(r => new { count = r.Count, effects = r.Research.Effects.Select(e => e.Effect) })).ToList();
-
-            // Calculate the effects
-            foreach (var effectParent in effectparents)
-            {
-                for (int iii = 0; iii < effectParent.count; iii++)
-                {
-                    foreach (var e in effectParent.effects)
-                    {
-                        if (!Parsers.TryParse(e, builder))
-                        {
-                            Debug.WriteLine("Effect with name {0} could not be handled by the provided parsers.", e.Name);
-                        }
-                    }
-                }
-            }
-
+            var builder = await context.ParseAllEffectForCountry(countryId, Parsers).ConfigureAwait(false);
+            
             // #1: Tax
             country.Pearls += (long)Math.Round(builder.Population * globals.BaseTaxation * builder.TaxModifier);
 

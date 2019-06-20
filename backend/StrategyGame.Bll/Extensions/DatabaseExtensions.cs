@@ -1,7 +1,10 @@
-﻿using StrategyGame.Dal;
+﻿using Microsoft.EntityFrameworkCore;
+using StrategyGame.Bll.EffectParsing;
+using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -213,6 +216,48 @@ namespace StrategyGame.Bll.Extensions
             }
 
             return country.Commands.Single(c => c.ParentCountry.Equals(c.TargetCountry));
+        }
+
+        public static async Task<CountryModifierBuilder> ParseAllEffectForCountry(this ReadOnlyUnderSeaDatabase context, 
+            int countryId, ModifierParserContainer Parsers)
+        {
+            var country = await context.Countries.FindAsync(countryId).ConfigureAwait(false);
+
+            if (country == null)
+            {
+                throw new KeyNotFoundException();
+            }
+
+            var globals = await context.GlobalValues.SingleAsync().ConfigureAwait(false);
+
+            // Set up builder
+            var builder = new CountryModifierBuilder
+            {
+                BarrackSpace = globals.StartingBarrackSpace,
+                Population = globals.StartingPopulation
+            };
+
+            await context.Entry(country).Collection(c => c.Buildings).LoadAsync().ConfigureAwait(false);
+            await context.Entry(country).Collection(c => c.Researches).LoadAsync().ConfigureAwait(false);
+            var effectparents = country.Buildings.Select(b => new { count = b.Count, effects = b.Building.Effects.Select(e => e.Effect) })
+                .Concat(country.Researches.Select(r => new { count = r.Count, effects = r.Research.Effects.Select(e => e.Effect) })).ToList();
+
+            // Calculate the effects
+            foreach (var effectParent in effectparents)
+            {
+                for (int iii = 0; iii < effectParent.count; iii++)
+                {
+                    foreach (var e in effectParent.effects)
+                    {
+                        if (!Parsers.TryParse(e, builder))
+                        {
+                            Debug.WriteLine("Effect with name {0} could not be handled by the provided parsers.", e.Name);
+                        }
+                    }
+                }
+            }
+
+            return builder;
         }
     }
 }

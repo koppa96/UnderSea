@@ -1,9 +1,8 @@
 ﻿using StrategyGame.Bll.Dto.Sent;
+using StrategyGame.Bll.Exceptions;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
-using StrategyGame.Bll.Exceptions;
 
 namespace StrategyGame.Bll.Services.Units
 {
