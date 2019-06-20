@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace StrategyGame.Api.DTO.Country
+namespace StrategyGame.Bll.DTO.Country
 {
     /// <summary>
     /// Contains information about the current country.

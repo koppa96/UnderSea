@@ -13,4 +13,8 @@
     <ProjectReference Include="..\StrategyGame.Model\StrategyGame.Model.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\Commands\" />
+  </ItemGroup>
+
 </Project>
