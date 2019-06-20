@@ -83,13 +83,13 @@ namespace StrategyGame.Api.Controllers
         }
 
         [HttpGet]
-        [Route("ranked")]
         [Authorize]
+        [Route("ranked")]
         [ProducesResponseType(200)]
         [ProducesResponseType(401)]
         public async Task<ActionResult<IEnumerable<RankInfo>>> GetRankedListAsync()
         {
-            return Ok();
+            return Ok(await _countryService.GetRankedListAsync());
         }
     }
 }

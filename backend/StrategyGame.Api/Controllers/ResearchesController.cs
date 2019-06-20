@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StrategyGame.Bll.Dto.Sent;
+using StrategyGame.Bll.Services.Researches;
 
 namespace StrategyGame.Api.Controllers
 {
@@ -14,12 +15,19 @@ namespace StrategyGame.Api.Controllers
     [Authorize]
     public class ResearchesController : ControllerBase
     {
+        private readonly IResearchService _researchService;
+
+        public ResearchesController(IResearchService researchService)
+        {
+            _researchService = researchService;
+        }
+
         [HttpGet]
         [ProducesResponseType(401)]
         [ProducesResponseType(200)]
         public async Task<ActionResult<IEnumerable<CreationInfo>>> GetResearchesAsync()
         {
-            return Ok();
+            return Ok(await _researchService.GetResearchesAsync(User.Identity.Name));
         }
 
         [HttpPost("{id}")]
@@ -29,7 +37,29 @@ namespace StrategyGame.Api.Controllers
         [ProducesResponseType(200)]
         public async Task<ActionResult> StartResearchAsync(int id)
         {
-            return Ok();
+            try
+            {
+                await _researchService.StartResearchAsync(User.Identity.Name, id);
+                return Ok();
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                return NotFound(new ProblemDetails
+                {
+                    Status = 404,
+                    Title = ErrorMessages.NotFound,
+                    Detail = ErrorMessages.NoSuchResearch
+                });
+            }
+            catch (InvalidOperationException)
+            {
+                return BadRequest(new ProblemDetails
+                {
+                    Status = 400,
+                    Title = ErrorMessages.BadRequest,
+                    Detail = ErrorMessages.NotEnoughMoney
+                });
+            }
         }
     }
 }

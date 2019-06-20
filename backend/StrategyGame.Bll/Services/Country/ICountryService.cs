@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using StrategyGame.Bll.Dto.Sent;
+using StrategyGame.Bll.Dto.Sent.Country;
 
 namespace StrategyGame.Bll.Services.Country
 {
@@ -17,5 +19,7 @@ namespace StrategyGame.Bll.Services.Country
         /// <param name="countryName">The name of the country</param>
         /// <returns></returns>
         Task CreateAsync(string username, string countryName);
+        Task<CountryInfo> GetCountryInfoAsync(string username);
+        Task<IEnumerable<RankInfo>> GetRankedListAsync();
     }
 }

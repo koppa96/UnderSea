@@ -51,8 +51,8 @@ namespace StrategyGame.Api.Controllers
                 return BadRequest(new ProblemDetails
                 {
                     Status = 400,
-                    Title = "Bad Request",
-                    Detail = "You don't have enough units to perform this command."
+                    Title = ErrorMessages.BadRequest,
+                    Detail = ErrorMessages.NotEnoughUnits
                 });
             }
         }
@@ -73,8 +73,8 @@ namespace StrategyGame.Api.Controllers
                 return NotFound(new ProblemDetails
                 {
                     Status = 404,
-                    Title = "Not Found",
-                    Detail = "Command not found."
+                    Title = ErrorMessages.NotFound,
+                    Detail = ErrorMessages.NoSuchCommand
                 });
             }
         }
@@ -88,7 +88,7 @@ namespace StrategyGame.Api.Controllers
         {
             try
             {
-                return Ok(_commandService.UpdateCommandAsync(User.Identity.Name, id, command));
+                return Ok(await _commandService.UpdateCommandAsync(User.Identity.Name, id, command));
             }
             catch (ArgumentOutOfRangeException e)
             {
@@ -99,8 +99,8 @@ namespace StrategyGame.Api.Controllers
                 return BadRequest(new ProblemDetails
                 {
                     Status = 400,
-                    Title = "Bad Request",
-                    Detail = "You don't have enough units to perform this command."
+                    Title = ErrorMessages.BadRequest,
+                    Detail = ErrorMessages.NotEnoughUnits
                 });
             }
         }

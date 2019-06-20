@@ -46,8 +46,8 @@ namespace StrategyGame.Api.Controllers
                 return NotFound(new ProblemDetails
                 {
                     Status = 404,
-                    Title = "Not Found",
-                    Detail = "No unit type found with the given ID."
+                    Title = ErrorMessages.NotFound,
+                    Detail = ErrorMessages.NoSuchUnit
                 });
             }
             catch (ArgumentException)
@@ -55,8 +55,8 @@ namespace StrategyGame.Api.Controllers
                 return BadRequest(new ProblemDetails
                 {
                     Status = 400,
-                    Title = "Bad Request",
-                    Detail = "Invalid amount. The amount must be a positive number and you have to have enough money."
+                    Title = ErrorMessages.BadRequest,
+                    Detail = ErrorMessages.InvalidAmount
                 });
             }
         }
@@ -78,8 +78,8 @@ namespace StrategyGame.Api.Controllers
                 return NotFound(new ProblemDetails
                 {
                     Status = 404,
-                    Title = "Not Found",
-                    Detail = "No unit type found with the given ID."
+                    Title = ErrorMessages.NotFound,
+                    Detail = ErrorMessages.NoSuchUnit
                 });
             }
             catch (ArgumentException)
@@ -87,8 +87,8 @@ namespace StrategyGame.Api.Controllers
                 return BadRequest(new ProblemDetails
                 {
                     Status = 400,
-                    Title = "Bad Request",
-                    Detail = "Invalid amount. The amount must be a positive number and not more than the amount of units you have."
+                    Title = ErrorMessages.BadRequest,
+                    Detail = ErrorMessages.InvalidAmount
                 });
             }
         }
