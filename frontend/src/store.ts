@@ -8,9 +8,10 @@ import {
 import saga from "redux-saga";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { RouterState } from "connected-react-router";
+import { PagesState, PagesReducer } from "./pages/store";
 
 export interface AppState {
-  test: any;
+  pages: PagesState;
 }
 
 export interface IApllicationState {
@@ -27,7 +28,7 @@ export const resetEverything = (): ResetAction => ({
 });
 
 export const appReducer = combineReducers<AppState>({
-  test: x => x || null
+  pages: PagesReducer
 });
 
 export const appRootReducer: Reducer<AppState> = (

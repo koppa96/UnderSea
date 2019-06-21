@@ -8,7 +8,7 @@ export const Menu = () => {
         <Link to="/account/buildings">Épületek</Link>
       </li>
       <li>
-        <Link to="/asd">Támadás</Link>
+        <Link to="/account/gyak">Gyakorlás</Link>
       </li>
       <li>
         <Link to="/account/development">Fejlesztések</Link>

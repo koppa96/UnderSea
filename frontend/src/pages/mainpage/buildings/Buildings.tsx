@@ -1,13 +1,24 @@
 import React from "react";
 import { ComponentHeader } from "../componentHeader";
 import { BuildingItem } from "./buildingItem";
+import { BuildingProps } from "./Interface";
 
-export class Buildings extends React.Component {
+export class Buildings extends React.Component<BuildingProps> {
   componentWillMount() {
     document.title = "Buildings";
   }
+  state = {
+    buildIDs: []
+  };
+  /*
+addBuildingById = (e)=>{
+this.setState({
+  buildIDs:[...this.state.buildIDs, e.target.value]
+})
+}*/
 
   render() {
+    const { addBuilding, buildingState } = this.props;
     return (
       <div className="main-component">
         <ComponentHeader
@@ -24,7 +35,9 @@ export class Buildings extends React.Component {
               </label>
             ))}
         </div>
-        <button>Megveszem</button>
+        <button onClick={() => addBuilding({ buildingIDs: [1, 2, 3] })}>
+          Megveszem
+        </button>
       </div>
     );
   }
@@ -32,7 +45,7 @@ export class Buildings extends React.Component {
 
 const mockData = [
   {
-    id: "1",
+    id: 1,
     imageUrl: "asdasd",
     title: "Zátorvány",
     description: "50 ember-t ad a népességhez 200 krumplit termel körönként",
@@ -40,7 +53,7 @@ const mockData = [
     price: "45 Gyöngy / db"
   },
   {
-    id: "2",
+    id: 2,
     imageUrl: "Áramlásirányító",
     title: "Áramlásirányító",
     description: "200 egység nyújt szállást",
@@ -48,7 +61,7 @@ const mockData = [
     price: "35 Gyöngy / db"
   },
   {
-    id: "3",
+    id: 3,
     imageUrl: "asdasd",
     title: "Áramlásirányító",
     description: "50 ember-t ad a népességhez 200 krumplit termel körönként",

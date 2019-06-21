@@ -17,7 +17,7 @@ export function configureStore(history: History) {
   const devToolsExtension =
     windowIfDefined &&
     isDevelopment &&
-    windowIfDefined.REDUX_DEVTOOLS_EXTENSION;
+    windowIfDefined.__REDUX_DEVTOOLS_EXTENSION__;
   if (
     isDevelopment &&
     devToolsExtension &&

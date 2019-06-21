@@ -8,6 +8,9 @@ import { Development } from "./development/Development";
 import { War } from "./war";
 import { Rank } from "./rank";
 import { Army } from "./army";
+import { Test } from "../gyakorlás";
+import { TestConnected } from "../gyakorlás/connect";
+import { BuildingsConnected } from "./buildings/connect";
 
 export class MainPage extends React.Component {
   componentWillMount() {
@@ -29,9 +32,8 @@ export class MainPage extends React.Component {
           <main>
             <Switch>
               <Route path="/account/buildings">
-                <Buildings />
+                <BuildingsConnected />
               </Route>
-
               <Route path="/account/development">
                 <Development />
               </Route>
@@ -43,6 +45,9 @@ export class MainPage extends React.Component {
               </Route>
               <Route path="/account/army">
                 <Army />
+              </Route>
+              <Route path="/account/gyak">
+                <TestConnected isNative />
               </Route>
             </Switch>
           </main>
