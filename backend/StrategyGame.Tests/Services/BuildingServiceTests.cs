@@ -17,25 +17,21 @@ namespace StrategyGame.Tests.Services
         private UnderSeaDatabaseContext context;
 
         [TestInitialize]
-        public void Initialize()
+        public async Task Initialize()
         {
-            context = UtilityFactory.CreateContext();
-            context.Database.EnsureCreated();
-            context.FillWithDefaultAsync().Wait();
-            context.AddTestUsersAsync().Wait();
-
+            context = await UtilityFactory.CreateContextAsync();
+            
             buildingService = new BuildingService(context, UtilityFactory.CreateMapper());
         }
 
         [TestMethod]
-        public async Task TestGetUserBuildings()
+        [DataRow("TheBuilder")]
+        public async Task TestGetUserBuildings(string username)
         {
-            var user = await context.Users.SingleAsync(u => u.UserName == "TheBuilder");
-
-            var buildings = await buildingService.GetBuildingsAsync(user.UserName);
+            var buildings = await buildingService.GetBuildingsAsync(username);
 
             var dbBuildings = await context.CountryBuildings.Include(cb => cb.Building)
-                .Where(cb => cb.ParentCountry.ParentUser.UserName == user.UserName)
+                .Where(cb => cb.ParentCountry.ParentUser.UserName == username)
                 .ToListAsync();
 
             foreach (var buildingInfo in buildings)
@@ -54,16 +50,16 @@ namespace StrategyGame.Tests.Services
         }
 
         [TestMethod]
-        public async Task TestStartBuilding()
+        [DataRow("TheRich")]
+        public async Task TestStartBuilding(string username)
         {
-            var user = await context.Users.SingleAsync(u => u.UserName == "TheRich");
             var buildingId = (await context.BuildingTypes.FirstAsync()).Id;
 
-            await buildingService.StartBuildingAsync(user.UserName, buildingId);
+            await buildingService.StartBuildingAsync(username, buildingId);
 
             var inProgressBuildings = await context.InProgressBuildings
                 .Include(b => b.Building)
-                .Where(b => b.ParentCountry.ParentUser.UserName == user.UserName)
+                .Where(b => b.ParentCountry.ParentUser.UserName == username)
                 .ToListAsync();
 
             Assert.AreEqual(1, inProgressBuildings.Count);
@@ -71,33 +67,32 @@ namespace StrategyGame.Tests.Services
         }
 
         [TestMethod]
+        [DataRow("ThePoor")]
         [ExpectedException(typeof(InvalidOperationException))]
-        public async Task TestStartBuildingNoMoney()
+        public async Task TestStartBuildingNoMoney(string username)
         {
-            var user = await context.Users.SingleAsync(u => u.UserName == "ThePoor");
             var buildingId = (await context.BuildingTypes.FirstAsync()).Id;
 
-            await buildingService.StartBuildingAsync(user.UserName, buildingId);
+            await buildingService.StartBuildingAsync(username, buildingId);
         }
 
         [TestMethod]
+        [DataRow("TheRich")]
         [ExpectedException(typeof(InProgressException))]
-        public async Task TestStartBuildingAlreadyBuilding()
+        public async Task TestStartBuildingAlreadyBuilding(string username)
         {
-            var user = await context.Users.SingleAsync(u => u.UserName == "TheRich");
             var buildingId = (await context.BuildingTypes.FirstAsync()).Id;
 
-            await buildingService.StartBuildingAsync(user.UserName, buildingId);
-            await buildingService.StartBuildingAsync(user.UserName, buildingId);
+            await buildingService.StartBuildingAsync(username, buildingId);
+            await buildingService.StartBuildingAsync(username, buildingId);
         }
 
         [TestMethod]
+        [DataRow("TheRich")]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public async Task TestStartBuildingNotExisting()
+        public async Task TestStartBuildingNotExisting(string username)
         {
-            var user = await context.Users.SingleAsync(u => u.UserName == "TheRich");
-
-            await buildingService.StartBuildingAsync(user.UserName, -1);
+            await buildingService.StartBuildingAsync(username, -1);
         }
 
         [TestCleanup]
