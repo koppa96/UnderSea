@@ -11,17 +11,26 @@
   justify-content: space-around;
   overflow-y: scroll;
   overflow-x: hidden;
+
+  label {
+    input:checked ~ .building-item {
+      background-color: rgba(112, 112, 112, 0.12);
+    }
+  }
 }
 .building-item {
   width: 300px;
   min-height: 320px;
   border-radius: 16px;
+
+  margin-bottom: 30px;
   margin-left: 15px;
   margin-right: 15px;
   padding-top: 30px;
   padding-bottom: 22px;
   padding-left: 15px;
   padding-right: 15px;
+
   display: flex;
   flex-direction: column;
   align-items: center;

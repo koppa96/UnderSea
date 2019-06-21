@@ -7,12 +7,15 @@ import "./app.scss";
 import { NotFound } from "./pages/notFound/index";
 import { LoginCheck } from "./components/LoginCheck/LoginCheck";
 import { MainPage } from "./pages/mainpage";
+import { ConnectedRouter } from "connected-react-router";
+import { createBrowserHistory } from "history";
 
 export const App = () => {
   const loggedin = true;
 
+  //TODO: Router kiszervezés
   return (
-    <Router>
+    <ConnectedRouter history={createBrowserHistory({ basename: "" })}>
       <div className="App">
         <div className="bg-image">
           <Switch>
@@ -37,6 +40,6 @@ export const App = () => {
           </Switch>
         </div>
       </div>
-    </Router>
+    </ConnectedRouter>
   );
 };

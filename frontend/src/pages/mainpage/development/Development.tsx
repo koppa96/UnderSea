@@ -18,7 +18,10 @@ export class Development extends React.Component {
         <div className="development-page hide-scroll">
           {mockData.length > 0 &&
             mockData.map(item => (
-              <DevelopmentItem key={item.id} development={item} />
+              <label key={item.id}>
+                <input value={item.id} className="sr-only" type="checkbox" />
+                <DevelopmentItem development={item} />
+              </label>
             ))}
         </div>
         <button>Megveszem</button>

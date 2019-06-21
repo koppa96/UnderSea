@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Development } from "./development/Development";
 import { War } from "./war";
 import { Rank } from "./rank";
+import { Army } from "./army";
 
 export class MainPage extends React.Component {
   componentWillMount() {
@@ -15,37 +16,38 @@ export class MainPage extends React.Component {
 
   render() {
     return (
-      <Router>
-        <div className="main-page">
-          <NavBar />
-          <div className="mainpage-content">
-            <div className="side-menu">
-              <Menu />
-              <div>
-                <ProfileContainer />
-              </div>
-              <h3 className="undersea-font-mainpage">UNDERSEA</h3>
+      <div className="main-page">
+        <NavBar />
+        <div className="mainpage-content">
+          <div className="side-menu">
+            <Menu />
+            <div>
+              <ProfileContainer />
             </div>
-            <main>
-              <Switch>
-                <Route path="/account/buildings">
-                  <Buildings />
-                </Route>
-
-                <Route path="/account/development">
-                  <Development />
-                </Route>
-                <Route path="/account/war">
-                  <War />
-                </Route>
-                <Route path="/account/rank">
-                  <Rank />
-                </Route>
-              </Switch>
-            </main>
+            <h3 className="undersea-font-mainpage">UNDERSEA</h3>
           </div>
+          <main>
+            <Switch>
+              <Route path="/account/buildings">
+                <Buildings />
+              </Route>
+
+              <Route path="/account/development">
+                <Development />
+              </Route>
+              <Route path="/account/war">
+                <War />
+              </Route>
+              <Route path="/account/rank">
+                <Rank />
+              </Route>
+              <Route path="/account/army">
+                <Army />
+              </Route>
+            </Switch>
+          </main>
         </div>
-      </Router>
+      </div>
     );
   }
 }

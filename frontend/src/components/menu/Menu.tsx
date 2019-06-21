@@ -20,7 +20,7 @@ export const Menu = () => {
         <Link to="/account/rank">Ranglista</Link>
       </li>
       <li>
-        <Link to="/asd">Sereg</Link>
+        <Link to="/account/army">Sereg</Link>
       </li>
     </ul>
   );

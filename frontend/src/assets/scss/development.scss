@@ -9,6 +9,7 @@ $local-circle-size: 22px;
   padding-right: 15px;
   padding-top: 10px;
   padding-bottom: 25px;
+  margin-bottom: 30px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -72,4 +73,9 @@ $local-circle-size: 22px;
   justify-content: space-around;
   overflow-y: scroll;
   overflow-x: hidden;
+  label {
+    input:checked ~ .development-item {
+      background-color: rgba(112, 112, 112, 0.12);
+    }
+  }
 }

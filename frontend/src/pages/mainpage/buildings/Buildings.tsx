@@ -18,7 +18,10 @@ export class Buildings extends React.Component {
         <div className="building-page hide-scroll">
           {mockData.length > 0 &&
             mockData.map(item => (
-              <BuildingItem key={item.id} building={item} />
+              <label key={item.id}>
+                <input value={item.id} className="sr-only" type="checkbox" />
+                <BuildingItem building={item} />
+              </label>
             ))}
         </div>
         <button>Megveszem</button>
