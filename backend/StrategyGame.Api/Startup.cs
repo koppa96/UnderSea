@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Hangfire;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -41,8 +42,8 @@ namespace StrategyGame.Api
                 options.Password.RequireNonAlphanumeric = false;
             });
 
-            Action<DbContextOptionsBuilder> optionsAction = options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-            services.AddDbContext<UnderSeaDatabaseContext>(optionsAction);
+            services.AddHangfire(x => x.UseSqlServerStorage(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<UnderSeaDatabaseContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddDefaultIdentity<User>()
                 .AddEntityFrameworkStores<UnderSeaDatabaseContext>();
@@ -131,6 +132,9 @@ namespace StrategyGame.Api
 
             app.UseOpenApi();
             app.UseSwaggerUi3();
+
+            app.UseHangfireServer();
+            app.UseHangfireDashboard();
 
             app.UseMvc();
         }

@@ -1,6 +1,8 @@
-﻿using StrategyGame.Dal;
+﻿using Microsoft.EntityFrameworkCore;
+using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
 using StrategyGame.Model.Entities.Frontend;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace StrategyGame.Bll.Extensions
@@ -13,7 +15,7 @@ namespace StrategyGame.Bll.Extensions
         /// <summary>
         /// Removes all data from the database.
         /// </summary>
-        /// <param name="context">The dncontext to use.</param>
+        /// <param name="context">The dbcontext to use.</param>
         /// <returns>The task representing the operation.</returns>
         public static Task PurgeDatabaseAsync(this UnderSeaDatabaseContext context)
         {
@@ -50,7 +52,7 @@ namespace StrategyGame.Bll.Extensions
         /// <summary>
         /// Fills the database with default data.
         /// </summary>
-        /// <param name="context">The dncontext to use.</param>
+        /// <param name="context">The dbcontext to use.</param>
         /// <returns>The task representing the operation.</returns>
         public static async Task FillWithDefaultAsync(this UnderSeaDatabaseContext context)
         {
@@ -231,6 +233,76 @@ namespace StrategyGame.Bll.Extensions
                 StartingPopulation = 10
             });
             await context.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Fills the database with some test users, armies, buildings.
+        /// </summary>
+        /// <param name="context">The dbcontext to use.</param>
+        /// <returns>The task representing the operation.</returns>
+        public static async Task AddTestUsersAsync(this UnderSeaDatabaseContext context)
+        {
+            var thePoor = new User()
+            { UserName = "ThePoor", Email = "poor@test.com" };
+            var theRich = new User()
+            { UserName = "TheRich", Email = "rich@test.com" };
+            var theCommander = new User()
+            { UserName = "TheCommander", Email = "comm@test.com" };
+            var theBuilder = new User()
+            { UserName = "TheBuilder", Email = "build@test.com" };
+            context.AddRange(thePoor, theRich, theCommander, theBuilder);
+
+            var pc = new Country()
+            { Name = "poor", Corals = 10, Pearls = 10, ParentUser = thePoor };
+            var rc = new Country()
+            { Name = "rich", Corals = 1000000, Pearls = 1000000, ParentUser = theRich };
+            var cc = new Country()
+            { Name = "attacky", Corals = 1000, Pearls = 1000, ParentUser = theCommander };
+            var bc = new Country()
+            { Name = "poi", Corals = 1000, Pearls = 1000, ParentUser = theBuilder };
+            context.Countries.AddRange(pc, rc, cc, bc);
+
+            var d1 = new Command() { ParentCountry = pc, TargetCountry = pc };
+            var d2 = new Command() { ParentCountry = rc, TargetCountry = rc };
+            var d3 = new Command() { ParentCountry = cc, TargetCountry = cc };
+            var d4 = new Command() { ParentCountry = bc, TargetCountry = bc };
+            context.Commands.AddRange(d1, d2, d3, d4);
+
+            var b1 = await context.BuildingTypes.FirstAsync().ConfigureAwait(false);
+            var b2 = await context.BuildingTypes.Skip(1).FirstAsync().ConfigureAwait(false);
+
+            context.CountryBuildings.AddRange(new CountryBuilding()
+            {
+                Building = b1,
+                Count = 1,
+                ParentCountry = bc
+            }, new CountryBuilding()
+            {
+                Building = b2,
+                Count = 13,
+                ParentCountry = bc
+            });
+
+            var u1 = await context.UnitTypes.FirstAsync().ConfigureAwait(false);
+            var u2 = await context.UnitTypes.Skip(1).FirstAsync().ConfigureAwait(false);
+            var u3 = await context.UnitTypes.Skip(2).FirstAsync().ConfigureAwait(false);
+
+            context.Divisions.AddRange(new Division()
+            {
+                Count = 50,
+                ParentCommand = d3,
+                Unit = u1
+            }, new Division()
+            {
+                Count = 10,
+                ParentCommand = d3,
+                Unit = u2
+            }, new Division()
+            {
+                Count = 1,
+                ParentCommand = d3,
+                Unit = u3
+            });
         }
     }
 }
