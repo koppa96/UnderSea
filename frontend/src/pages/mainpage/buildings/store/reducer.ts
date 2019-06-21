@@ -10,12 +10,12 @@ export const BuildingReducer = (
     case BuildingActions.REQUEST:
       return {
         ...state,
-        buildingIds: action.params.buildingIDs
+        buildingIds: [...action.params.buildingIDs, ...state.buildingIds]
       };
 
     default:
       //Mé nem teccik nekije
-      const check: never = action;
+      const check: never = action.type;
       return state;
   }
 };

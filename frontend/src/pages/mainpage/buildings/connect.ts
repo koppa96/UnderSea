@@ -1,9 +1,9 @@
-import { Dispatch, bindActionCreators } from "redux";
-import { connect } from "react-redux";
 import { MappedProps, DispachedProps } from "./Interface";
 import { IApllicationState } from "../../../store";
-import { Buildings } from "./Buildings";
+import { Dispatch, bindActionCreators } from "redux";
 import { BuildingAddActionCreator } from "./store/actions/buildingActions";
+import { connect } from "react-redux";
+import { Buildings } from "./Buildings";
 
 const mapStateToProps = (state: IApllicationState): MappedProps => ({
   buildingState: state.app.pages.buildingIds
@@ -12,11 +12,12 @@ const mapStateToProps = (state: IApllicationState): MappedProps => ({
 const mapDispatchToProps = (dispatch: Dispatch): DispachedProps =>
   bindActionCreators(
     {
-      addBuildings: BuildingAddActionCreator
+      addBuilding: BuildingAddActionCreator
     },
 
     dispatch
   );
+
 export const BuildingsConnected = connect(
   mapStateToProps,
   mapDispatchToProps

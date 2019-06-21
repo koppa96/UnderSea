@@ -1,4 +1,4 @@
-import { MappedProps } from "./Interface";
+import { MappedProps, DispachedProps } from "./Interface";
 import { IApllicationState } from "../../store";
 import { Dispatch, bindActionCreators } from "redux";
 import {
@@ -12,7 +12,7 @@ const mapStateToProps = (state: IApllicationState): MappedProps => ({
   humanState: state.app.pages.gyakorlas
 });
 
-const mapDispatchToProps = (dispatch: Dispatch) =>
+const mapDispatchToProps = (dispatch: Dispatch): DispachedProps =>
   bindActionCreators(
     {
       addHuman: TestAddActionCreator,

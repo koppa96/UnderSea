@@ -17,6 +17,9 @@ export interface IActionAddBuilding {
   params: IRequestParamState;
 }
 
+//REDUCERHEZ
+export type IActions = IActionAddBuilding;
+
 //ACTIONCREATORHOZ
 export const BuildingAddActionCreator = (
   params: IRequestParamState
