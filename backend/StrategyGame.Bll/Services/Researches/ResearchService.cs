@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -6,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using StrategyGame.Bll.Dto.Sent;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
+using StrategyGame.Bll.Exceptions;
 
 namespace StrategyGame.Bll.Services.Researches
 {
@@ -50,7 +52,42 @@ namespace StrategyGame.Bll.Services.Researches
 
         public async Task StartResearchAsync(string username, int researchId)
         {
-            throw new System.NotImplementedException();
+            var country = await _context.Countries.Include(c => c.InProgressResearches)
+                .Include(c => c.Researches)
+                    .ThenInclude(cr => cr.Research)
+                .SingleAsync(c => c.ParentUser.UserName == username);
+            
+            if (country.InProgressResearches.Count > 0)
+            {
+                throw new InProgressException("The country already has a research in progress.");
+            }
+
+            var research = country.Researches.SingleOrDefault(cr => cr.Research.Id == researchId);
+            if (research != null && research.Count > research.Research.MaxCompletedAmount)
+            {
+                throw new LimitReachedException("The max research count has been reached.");
+            }
+
+            var researchType = await _context.ResearchTypes.FindAsync(researchId);
+            if (researchType == null)
+            {
+                throw new ArgumentOutOfRangeException(nameof(researchId), "No such research id.");
+            }
+
+            if (country.Pearls < researchType.CostPearl || country.Corals < researchType.CostCoral)
+            {
+                throw new InvalidOperationException("Not enough money.");
+            }
+
+            var inProgressResearch = new InProgressResearch
+            {
+                ParentCountry = country,
+                Research = researchType,
+                TimeLeft = KnownValues.ResearchTime
+            };
+
+            _context.InProgressResearches.Add(inProgressResearch);
+            await _context.SaveChangesAsync();
         }
     }
 }
