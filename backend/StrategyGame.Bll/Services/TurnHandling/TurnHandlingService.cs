@@ -12,7 +12,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
     public class TurnHandlingService : ITurnHandlingService
     {
         protected CountryTurnHandler Handler { get; }
-        
+
         public TurnHandlingService(ModifierParserContainer parsers)
         {
             Handler = new CountryTurnHandler(parsers ?? throw new ArgumentNullException(nameof(parsers)));
@@ -20,6 +20,8 @@ namespace StrategyGame.Bll.Services.TurnHandling
 
         public async Task EndTurnAsync(UnderSeaDatabaseContext context, CancellationToken cancel = default)
         {
+            // Turndata contains the builders for all countries. The builder containes the live updated modifications
+            // along with the loot acquired by the countries. When below HandleLoot method adds the looted amounts to the builder.
             var turnData = new Dictionary<int, CountryModifierBuilder>();
 
             void HandleLoot(object sender, CountryLootedEventArgs Args)
@@ -28,12 +30,14 @@ namespace StrategyGame.Bll.Services.TurnHandling
                 turnData[Args.LooterId].CurrentCoralLoot += Args.LootedCorals;
             }
 
+            // First the pre-combat is handled for all countries individually. This calculates the builders.
             foreach (var c in context.Countries)
             {
                 var builder = await Handler.HandlePreCombatAsync(context, c.Id, cancel).ConfigureAwait(false);
                 turnData.Add(c.Id, builder);
             }
 
+            // The combat happens for all countries. Loot is acquired in this phase.
             Handler.CountryLooted += HandleLoot;
             foreach (var c in context.Countries)
             {
@@ -41,12 +45,13 @@ namespace StrategyGame.Bll.Services.TurnHandling
             }
             Handler.CountryLooted -= HandleLoot;
 
+            // Finally post combat happens. This is where loot is applied and score calculated.
             foreach (var c in context.Countries)
             {
                 await Handler.HandlePostCombatAsync(context, c.Id, turnData[c.Id], cancel).ConfigureAwait(false);
             }
 
-            // Calculate ranking
+            // Calculate ranking from country scores
             int index = 0;
             await context.Countries.OrderByDescending(c => c.Score).ForEachAsync(c => c.Rank = ++index).ConfigureAwait(false);
 
