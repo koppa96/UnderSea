@@ -3,8 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using StrategyGame.Model.Entities;
 using StrategyGame.Model.Entities.Frontend;
 using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace StrategyGame.Dal
 {
@@ -270,19 +268,6 @@ namespace StrategyGame.Dal
                 .WithMany(r => r.InProgressResearches);
 
             base.OnModelCreating(builder);
-        }
-
-        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-        {
-            try
-            {
-                return base.SaveChangesAsync(cancellationToken);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("");
-                throw;
-            }
         }
     }
 }

@@ -57,18 +57,8 @@ namespace StrategyGame.Bll.Services.TurnHandling
             await context.SaveChangesAsync().ConfigureAwait(false);
 
             // TODO Remove invalid in progress stuff
-            //foreach (var b in context.InProgressBuildings)
-            //{
-            //    if (b.TimeLeft < 0)
-            //    {
-            //        context.InProgressBuildings.Remove(b);
-            //    }
-            //}
-
-            context.InProgressBuildings.RemoveRange(context.InProgressBuildings.Where(b => b.TimeLeft <= 0));
-            //context.InProgressResearches.RemoveRange(context.InProgressResearches.Where(r => r.TimeLeft <= 0));
-
-            await context.SaveChangesAsync().ConfigureAwait(false);
+            //    context2.InProgressBuildings.RemoveRange(context.InProgressBuildings.Where(b => b.TimeLeft <= 0));
+            //    context2.InProgressResearches.RemoveRange(context.InProgressResearches.Where(r => r.TimeLeft <= 0));
         }
     }
 }

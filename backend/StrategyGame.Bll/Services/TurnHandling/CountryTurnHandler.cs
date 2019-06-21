@@ -64,7 +64,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
             await context.Entry(country).Collection(c => c.Buildings).LoadAsync(cancel).ConfigureAwait(false);
             await context.Entry(country).Collection(c => c.InProgressResearches).LoadAsync(cancel).ConfigureAwait(false);
             await context.Entry(country).Collection(c => c.Researches).LoadAsync(cancel).ConfigureAwait(false);
-            
+
             // Get global data, create a builder from the effects
             var globals = await context.GlobalValues.SingleAsync(cancel).ConfigureAwait(false);
             var builder = await context.ParseAllEffectForCountryAsync(countryId, Parsers).ConfigureAwait(false);
@@ -79,7 +79,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
             await DesertUnits(country, context, cancel).ConfigureAwait(false);
 
             // #4: Advance research and buildings
-            foreach (var b in country.InProgressBuildings.ToList())
+            foreach (var b in country.InProgressBuildings)
             {
                 if (b.TimeLeft >= 0)
                 {
@@ -87,7 +87,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
                 }
             }
 
-            foreach (var r in country.InProgressResearches.ToList())
+            foreach (var r in country.InProgressResearches)
             {
                 if (r.TimeLeft >= 0)
                 {
@@ -296,6 +296,14 @@ namespace StrategyGame.Bll.Services.TurnHandling
             }
         }
 
+        /// <summary>
+        /// Deletes units until the supply / maintenance consumption can be satisfied by the country.
+        /// Starts with the cheapest units.
+        /// </summary>
+        /// <param name="country">The country to delete from.</param>
+        /// <param name="context">Te context to use.</param>
+        /// <param name="cancel">The token that can be used to cancel the operation.</param>
+        /// <returns>The task that represents the operation.</returns>
         protected async Task DesertUnits(Model.Entities.Country country, UnderSeaDatabaseContext context, CancellationToken cancel)
         {
             // Load commands, divisons and units in the divisions
