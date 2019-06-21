@@ -287,7 +287,7 @@ namespace StrategyGame.Bll.Extensions
             var u2 = await context.UnitTypes.Skip(1).FirstAsync().ConfigureAwait(false);
             var u3 = await context.UnitTypes.Skip(2).FirstAsync().ConfigureAwait(false);
 
-            context.Divisions.AddRange(new Division()
+            context.Divisions.AddRange(new Division
             {
                 Count = 50,
                 ParentCommand = d3,

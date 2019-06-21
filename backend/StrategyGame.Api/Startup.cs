@@ -23,6 +23,7 @@ using StrategyGame.Model.Entities;
 using System;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace StrategyGame.Api
 {
@@ -139,8 +140,20 @@ namespace StrategyGame.Api
 
             app.UseMvc();
 
-            RecurringJob.AddOrUpdate(() => app.ApplicationServices.GetService<ITurnHandlingService>().EndTurnAsync(
-                app.ApplicationServices.GetService<UnderSeaDatabaseContext>(), CancellationToken.None), Cron.Hourly);
+            RecurringJob.AddOrUpdate(() => EndTurnHourlyAsync(), Cron.Hourly);
+        }
+
+        public static async Task EndTurnHourlyAsync()
+        {
+            var srv = new ServiceCollection().BuildServiceProvider();
+            var serviceScopeFactory = srv.GetService<IServiceScopeFactory>();
+            using (var scope = serviceScopeFactory.CreateScope())
+            {                
+                var context = scope.ServiceProvider.GetService<UnderSeaDatabaseContext>();
+                var handlyboi = scope.ServiceProvider.GetService<ITurnHandlingService>();
+                await srv.GetService<ITurnHandlingService>().EndTurnAsync(
+                     srv.GetService<UnderSeaDatabaseContext>(), CancellationToken.None);
+            }
         }
     }
 }
