@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using StrategyGame.Bll.Dto.Sent;
-using StrategyGame.Bll.Dto.Sent.Country;
 using StrategyGame.Bll.EffectParsing;
 using StrategyGame.Bll.Services.TurnHandling;
 using StrategyGame.Dal;
@@ -59,15 +58,22 @@ namespace StrategyGame.Bll.Extensions
             // Shortcut on unlimited first tho
             if (building.MaxCount == 0
                 || (building.MaxCount > 0
-                && building.MaxCount <= country.InProgressBuildings.Where(b => b.Building.Equals(building)).Count()
-                + country.Buildings.Where(b => b.Building.Equals(building)).Count()))
+                && building.MaxCount <=
+                    country.InProgressBuildings
+                        .Where(b => b.Building.Equals(building)).Count()
+                    + country.Buildings
+                        .Where(b => b.Building.Equals(building)).Count()))
             {
                 return false;
             }
 
-            await context.InProgressBuildings.AddAsync(new InProgressBuilding()
-            { ParentCountry = country, Building = building, TimeLeft = building.BuildTime }, cancel)
-                ;
+            await context.InProgressBuildings.AddAsync(new InProgressBuilding
+            {
+                ParentCountry = country,
+                Building = building,
+                TimeLeft
+                    = building.BuildTime
+            }, cancel);
 
             return true;
         }
@@ -108,15 +114,21 @@ namespace StrategyGame.Bll.Extensions
 
             if (research.MaxCompletedAmount == 0
                 || (research.MaxCompletedAmount > 0
-                && research.MaxCompletedAmount <= country.InProgressResearches.Where(r => r.Research.Equals(research)).Count()
-                + country.Researches.Where(r => r.Research.Equals(research)).Count()))
+                && research.MaxCompletedAmount <=
+                    country.InProgressResearches
+                        .Where(r => r.Research.Equals(research)).Count()
+                    + country.Researches
+                        .Where(r => r.Research.Equals(research)).Count()))
             {
                 return false;
             }
 
-            await context.InProgressResearches.AddAsync(new InProgressResearch()
-            { ParentCountry = country, Research = research, TimeLeft = research.ResearchTime }, cancel)
-                ;
+            await context.InProgressResearches.AddAsync(new InProgressResearch
+            {
+                ParentCountry = country,
+                Research = research,
+                TimeLeft = research.ResearchTime
+            }, cancel);
 
             return true;
         }
@@ -124,7 +136,8 @@ namespace StrategyGame.Bll.Extensions
         public static CommandInfo ToCommandInfo(this Command command, IMapper mapper)
         {
             var commandInfo = mapper.Map<Command, CommandInfo>(command);
-            commandInfo.Units = command.Divisons.Select(d => {
+            commandInfo.Units = command.Divisons.Select(d =>
+            {
                 var unitInfo = mapper.Map<UnitType, UnitInfo>(d.Unit);
                 unitInfo.Count = d.Count;
                 return unitInfo;
@@ -167,7 +180,8 @@ namespace StrategyGame.Bll.Extensions
             await context.Entry(country).Collection(c => c.InProgressResearches).LoadAsync(cancel);
             await context.Entry(country).Collection(c => c.Researches).LoadAsync(cancel);
 
-            var researches = country.InProgressResearches.Where(r => r.TimeLeft == 0)
+            var researches = country.InProgressResearches
+                .Where(r => r.TimeLeft == 0)
                 .GroupBy(r => r.Research)
                 .ToList();
 
@@ -180,9 +194,12 @@ namespace StrategyGame.Bll.Extensions
                     // Add a new research, or update an existing one
                     if (existing == null)
                     {
-                        await context.CountryResearches.AddAsync(new CountryResearch()
-                        { ParentCountry = country, Research = research.Key, Count = research.Count() }, cancel)
-                            ;
+                        await context.CountryResearches.AddAsync(new CountryResearch
+                        {
+                            ParentCountry = country,
+                            Research = research.Key,
+                            Count = research.Count()
+                        }, cancel);
                     }
                     else
                     {
@@ -192,7 +209,8 @@ namespace StrategyGame.Bll.Extensions
             }
 
             // Get and complete buildings
-            var buildings = country.InProgressBuildings.Where(r => r.TimeLeft == 0)
+            var buildings = country.InProgressBuildings
+                .Where(r => r.TimeLeft == 0)
                 .GroupBy(b => b.Building)
                 .ToList();
 
@@ -206,8 +224,11 @@ namespace StrategyGame.Bll.Extensions
                     if (existing == null)
                     {
                         await context.CountryBuildings.AddAsync(new CountryBuilding()
-                        { ParentCountry = country, Building = building.Key, Count = building.Count() },
-                        cancel);
+                        {
+                            ParentCountry = country,
+                            Building = building.Key,
+                            Count = building.Count()
+                        }, cancel);
                     }
                     else
                     {
@@ -234,7 +255,7 @@ namespace StrategyGame.Bll.Extensions
             return country.Commands.Single(c => c.ParentCountry.Equals(c.TargetCountry));
         }
 
-        public static async Task<CountryModifierBuilder> ParseAllEffectForCountryAsync(this UnderSeaDatabaseContext context, 
+        public static async Task<CountryModifierBuilder> ParseAllEffectForCountryAsync(this UnderSeaDatabaseContext context,
             int countryId, ModifierParserContainer Parsers)
         {
             var country = await context.Countries.FindAsync(countryId);
@@ -243,7 +264,7 @@ namespace StrategyGame.Bll.Extensions
             {
                 throw new KeyNotFoundException();
             }
-            
+
             await context.Entry(country).Collection(c => c.Buildings).LoadAsync();
             await context.Entry(country).Collection(c => c.Researches).LoadAsync();
 
@@ -262,7 +283,7 @@ namespace StrategyGame.Bll.Extensions
             foreach (var research in country.Researches)
             {
                 await context.Entry(research).Reference(r => r.Research).LoadAsync();
-                await context.Entry(research.Research).Collection(r =>r.Effects).LoadAsync();
+                await context.Entry(research.Research).Collection(r => r.Effects).LoadAsync();
 
                 foreach (var effect in research.Research.Effects)
                 {
@@ -270,8 +291,15 @@ namespace StrategyGame.Bll.Extensions
                 }
             }
 
-            var effectparents = country.Buildings.Select(b => new { count = b.Count, effects = b.Building.Effects.Select(e => e.Effect) })
-                .Concat(country.Researches.Select(r => new { count = r.Count, effects = r.Research.Effects.Select(e => e.Effect) })).ToList();
+            var effectparents = country.Buildings.Select(b => new
+            {
+                count = b.Count,
+                effects = b.Building.Effects.Select(e => e.Effect)
+            }).Concat(country.Researches.Select(r => new
+            {
+                count = r.Count,
+                effects = r.Research.Effects.Select(e => e.Effect)
+            })).ToList();
 
             var globals = await context.GlobalValues.SingleAsync();
 
