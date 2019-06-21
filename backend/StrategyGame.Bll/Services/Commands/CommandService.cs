@@ -79,6 +79,9 @@ namespace StrategyGame.Bll.Services.Commands
             var country = await _context.Countries.Include(c => c.Commands)
                 .ThenInclude(c => c.Divisons)
                     .ThenInclude(d => d.Unit)
+                .Include(c => c.Commands)
+                    .ThenInclude(c => c.TargetCountry)
+                .Include(c => c.ParentUser)
                 .SingleAsync(c => c.ParentUser.UserName == username);
 
             var command = country.Commands.SingleOrDefault(c => c.Id == commandId);
@@ -104,10 +107,12 @@ namespace StrategyGame.Bll.Services.Commands
                         Unit = division.Unit,
                         Count = 0
                     };
+
+                    _context.Divisions.Add(defendingDivision);
                 }
 
                 defendingDivision.Count += division.Count;
-                _context.Divisions.Remove(defendingDivision);
+                _context.Divisions.Remove(division);
             }
 
             _context.Commands.Remove(command);
@@ -116,9 +121,11 @@ namespace StrategyGame.Bll.Services.Commands
 
         public async Task<IEnumerable<CommandInfo>> GetCommandsAsync(string username)
         {
-            var commands = await _context.Commands.Include(c => c.Divisons)
+            var commands = await _context.Commands
+                .Include(c => c.Divisons)
                     .ThenInclude(d => d.Unit)
                         .ThenInclude(u => u.Content)
+                .Include(c => c.TargetCountry)
                 .Where(c => c.ParentCountry.ParentUser.UserName == username)
                 .ToListAsync();
             

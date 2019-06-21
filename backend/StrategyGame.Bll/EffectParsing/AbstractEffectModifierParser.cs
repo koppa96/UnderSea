@@ -1,4 +1,5 @@
-﻿using StrategyGame.Model.Entities;
+﻿using StrategyGame.Bll.Services.TurnHandling;
+using StrategyGame.Model.Entities;
 using System;
 
 namespace StrategyGame.Bll.EffectParsing

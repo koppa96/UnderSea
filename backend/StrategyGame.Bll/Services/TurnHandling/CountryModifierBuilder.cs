@@ -1,4 +1,4 @@
-﻿namespace StrategyGame.Bll
+﻿namespace StrategyGame.Bll.Services.TurnHandling
 {
     /// <summary>
     /// Provides a container for temporary, modifiable information about a country.

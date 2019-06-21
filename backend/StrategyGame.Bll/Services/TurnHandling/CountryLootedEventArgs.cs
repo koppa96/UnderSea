@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace StrategyGame.Bll
+namespace StrategyGame.Bll.Services.TurnHandling
 {
     /// <summary>
     /// Event args class for events that happen when a country is looted by another.

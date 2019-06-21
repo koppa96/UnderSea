@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using StrategyGame.Bll.EffectParsing;
 using StrategyGame.Dal;
 using System;
 using System.Collections.Generic;
@@ -6,15 +7,15 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace StrategyGame.Bll
+namespace StrategyGame.Bll.Services.TurnHandling
 {
-    public class GlobalTurnHandler
+    public class TurnHandlingService : ITurnHandlingService
     {
-        public CountryTurnHandler Handler { get; }
-
-        public GlobalTurnHandler(CountryTurnHandler handler)
+        protected CountryTurnHandler Handler { get; }
+        
+        public TurnHandlingService(ModifierParserContainer parsers)
         {
-            Handler = handler ?? throw new ArgumentNullException(nameof(handler));
+            Handler = new CountryTurnHandler(parsers ?? throw new ArgumentNullException(nameof(parsers)));
         }
 
         public async Task EndTurnAsync(UnderSeaDatabaseContext context, CancellationToken cancel = default)
@@ -53,8 +54,18 @@ namespace StrategyGame.Bll
             var globals = await context.GlobalValues.SingleAsync().ConfigureAwait(false);
             globals.Round++;
 
+            await context.SaveChangesAsync().ConfigureAwait(false);
+
             // TODO Remove invalid in progress stuff
-            //context.InProgressBuildings.RemoveRange(context.InProgressBuildings.Where(b => b.TimeLeft <= 0));
+            //foreach (var b in context.InProgressBuildings)
+            //{
+            //    if (b.TimeLeft < 0)
+            //    {
+            //        context.InProgressBuildings.Remove(b);
+            //    }
+            //}
+
+            context.InProgressBuildings.RemoveRange(context.InProgressBuildings.Where(b => b.TimeLeft <= 0));
             //context.InProgressResearches.RemoveRange(context.InProgressResearches.Where(r => r.TimeLeft <= 0));
 
             await context.SaveChangesAsync().ConfigureAwait(false);

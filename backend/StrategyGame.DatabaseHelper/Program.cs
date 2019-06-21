@@ -2,6 +2,7 @@
 using StrategyGame.Bll;
 using StrategyGame.Bll.EffectParsing;
 using StrategyGame.Bll.Extensions;
+using StrategyGame.Bll.Services.TurnHandling;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
 using StrategyGame.Model.Entities.Frontend;
@@ -270,7 +271,7 @@ namespace StrategyGame.DatabaseHelper
             context.TryStartBuildingAsync(country2.Id, reefCastle).Wait();
             context.TryStartResearchAsync(country2.Id, martialArts).Wait();
 
-            var handler = new GlobalTurnHandler(new CountryTurnHandler(new ModifierParserContainer(new AbstractEffectModifierParser[]
+            var handler = new TurnHandlingService(new ModifierParserContainer(new AbstractEffectModifierParser[]
             {
                 new BarrackSpaceEffectParser(),
                 new CoralProductionEffectParser(),
@@ -279,7 +280,7 @@ namespace StrategyGame.DatabaseHelper
                 new TaxModifierEffectParser(),
                 new UnitDefenseEffectParser(),
                 new UnitAttackEffectParser()
-            })));
+            }));
 
             for (int i = 0; i < 6; i++)
             {

@@ -9,24 +9,49 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace StrategyGame.Bll
+namespace StrategyGame.Bll.Services.TurnHandling
 {
+    /// <summary>
+    /// Handles turns in parts for individual countries.
+    /// </summary>
     public class CountryTurnHandler
     {
+        // Static random generation for attack power modification
         static readonly Random rng = new Random();
 
-        public ModifierParserContainer Parsers { get; }
+        protected ModifierParserContainer Parsers { get; }
 
+        /// <summary>
+        /// The event that is raised when a country is looted.
+        /// </summary>
         public event EventHandler<CountryLootedEventArgs> CountryLooted;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CountryTurnHandler"/>.
+        /// </summary>
+        /// <param name="parsers">The <see cref="ModifierParserContainer"/> containing effect parsers used by the handler.</param>
         public CountryTurnHandler(ModifierParserContainer parsers)
         {
             Parsers = parsers ?? throw new ArgumentNullException(nameof(parsers));
         }
 
+        /// <summary>
+        /// Handles pre-turn claculations, like building and research completitions, and income.
+        /// Returns the <see cref="CountryModifierBuilder"/> containing the modifications for the country.
+        /// </summary>
+        /// <param name="context">The <see cref="UnderSeaDatabaseContext"/> that is used to access the database.</param>
+        /// <param name="countryId">The ID of the country to handle.</param>
+        /// <param name="cancel">The <see cref="CancellationToken"/> that can be used to cancel the operation.</param>
+        /// <returns>The <see cref="CountryModifierBuilder"/> containing the modifications for the country.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if an argument was null.</exception>
+        /// <exception cref="KeyNotFoundException">Thrown if the specified country does not exist.</exception>
         public async Task<CountryModifierBuilder> HandlePreCombatAsync(UnderSeaDatabaseContext context, int countryId,
-            CancellationToken cancel)
+            CancellationToken cancel = default)
         {
+            if (context == null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
             // Find the country and then load the nav properties we need
             var country = await context.Countries.FindAsync(new object[] { countryId }, cancel).ConfigureAwait(false);
 
@@ -39,11 +64,9 @@ namespace StrategyGame.Bll
             await context.Entry(country).Collection(c => c.Buildings).LoadAsync(cancel).ConfigureAwait(false);
             await context.Entry(country).Collection(c => c.InProgressResearches).LoadAsync(cancel).ConfigureAwait(false);
             await context.Entry(country).Collection(c => c.Researches).LoadAsync(cancel).ConfigureAwait(false);
-
-
-            // Get global data
+            
+            // Get global data, create a builder from the effects
             var globals = await context.GlobalValues.SingleAsync(cancel).ConfigureAwait(false);
-
             var builder = await context.ParseAllEffectForCountryAsync(countryId, Parsers).ConfigureAwait(false);
 
             // #1: Tax
@@ -55,7 +78,7 @@ namespace StrategyGame.Bll
             // #3: Pay soldiers
             await DesertUnits(country, context, cancel).ConfigureAwait(false);
 
-            // Advance research and buildings
+            // #4: Advance research and buildings
             foreach (var b in country.InProgressBuildings.ToList())
             {
                 if (b.TimeLeft >= 0)
@@ -72,15 +95,41 @@ namespace StrategyGame.Bll
                 }
             }
 
-            // Add buildings that are completed
+            // #5: Add buildings that are completed
             await context.CheckAddCompletedAsync(country.Id, cancel).ConfigureAwait(false);
 
+            // Return the builder as the unit stats will be needed again.
             return builder;
         }
 
+        /// <summary>
+        /// Handles combat calculations for all incoming attacks of a country. The order of the attacks is randomized.
+        /// </summary>
+        /// <param name="context">The <see cref="UnderSeaDatabaseContext"/> that is used to access the database.</param>
+        /// <param name="countryId">The ID of the country to handle.</param>
+        /// <param name="builder">The <see cref="CountryModifierBuilder"/> containing the modifications of the country.</param>
+        /// <param name="builderFactory">The facory that can produce builders for country IDs.</param>
+        /// <param name="cancel">The <see cref="CancellationToken"/> that can be used to cancel the operation.</param>
+        /// <returns>The <see cref="Task"/> representing the operation.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if an argument was null.</exception>
+        /// <exception cref="KeyNotFoundException">Thrown if the specified country does not exist.</exception>
         public async Task HandleCombatAsync(UnderSeaDatabaseContext context, int countryId,
-            CountryModifierBuilder builder, Func<int, CountryModifierBuilder> builderFactory, CancellationToken cancel)
+            CountryModifierBuilder builder, Func<int, CountryModifierBuilder> builderFactory, CancellationToken cancel = default)
         {
+            if (context == null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
+
+            if (builder == null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (builderFactory == null)
+            {
+                throw new ArgumentNullException(nameof(builderFactory));
+            }
             // Find the country and then load the nav properties we need
             var country = await context.Countries.FindAsync(new object[] { countryId }, cancel).ConfigureAwait(false);
 
@@ -114,7 +163,7 @@ namespace StrategyGame.Bll
 
                 if (attackPower > defensePower)
                 {
-                    // Attackers won, defender loose 10% of units, and loose 50% of current pearl and coral
+                    // Attackers won, defender loose some units, and loose some of current pearl and coral
                     CullUnits(defenders, KnownValues.UnitLossOnDefense);
 
                     // Remove the looted amounts
@@ -129,12 +178,22 @@ namespace StrategyGame.Bll
                 }
                 else
                 {
-                    // Defenders won, attacker loose 10% of units.
+                    // Defenders won, attacker loose some units
                     CullUnits(attack, KnownValues.UnitLossOnDefense);
                 }
             }
         }
 
+        /// <summary>
+        /// Handles post-combat calculations for a country, like calculating the score, and merging commands into the defense command.
+        /// </summary>
+        /// <param name="context">The <see cref="UnderSeaDatabaseContext"/> that is used to access the database.</param>
+        /// <param name="countryId">The ID of the country to handle.</param>
+        /// <param name="builder">The <see cref="CountryModifierBuilder"/> containing the modifications of the country.</param>
+        /// <param name="cancel">The <see cref="CancellationToken"/> that can be used to cancel the operation.</param>
+        /// <returns>The <see cref="Task"/> representing the operation.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if an argument was null.</exception>
+        /// <exception cref="KeyNotFoundException">Thrown if the specified country does not exist.</exception>
         public async Task HandlePostCombatAsync(UnderSeaDatabaseContext context, int countryId,
             CountryModifierBuilder builder, CancellationToken cancel)
         {
@@ -199,9 +258,16 @@ namespace StrategyGame.Bll
             }
         }
 
+        /// <summary>
+        /// Calculate attack or defense power, based on the units in a command and their modifiers.
+        /// Attack power is modified randomly by 5%.
+        /// </summary>
+        /// <param name="command">The command to get the combat power of.</param>
+        /// <param name="doGetAttack">If attack or defense power should be calculated.</param>
+        /// <param name="builder">The builder that contains the stat modifiers.</param>
+        /// <returns>The combat power of the command.</returns>
         protected double GetCurrentUnitPower(Command command, bool doGetAttack, CountryModifierBuilder builder)
         {
-            // Get attack or defense power, attack power is modified randomly +-5%.
             if (doGetAttack)
             {
                 return command.Divisons.Sum(d => d.Count * d.Unit.AttackPower * builder.AttackModifier) * (rng.NextDouble() / 10 + 0.95);
@@ -212,6 +278,11 @@ namespace StrategyGame.Bll
             }
         }
 
+        /// <summary>
+        /// Deletes some units from all divisions of a command. Divisions must be loaded.
+        /// </summary>
+        /// <param name="command">The command to cull.</param>
+        /// <param name="lostPercentage">The percentage of units lost.</param>
         protected void CullUnits(Command command, double lostPercentage)
         {
             foreach (var div in command.Divisons)
@@ -225,7 +296,7 @@ namespace StrategyGame.Bll
             }
         }
 
-        protected async Task DesertUnits(Country country, UnderSeaDatabaseContext context, CancellationToken cancel)
+        protected async Task DesertUnits(Model.Entities.Country country, UnderSeaDatabaseContext context, CancellationToken cancel)
         {
             // Load commands, divisons and units in the divisions
             await context.Entry(country).Collection(c => c.Commands).LoadAsync(cancel).ConfigureAwait(false);

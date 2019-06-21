@@ -12,8 +12,10 @@ using NSwag.CodeGeneration.TypeScript;
 using StrategyGame.Bll;
 using StrategyGame.Bll.EffectParsing;
 using StrategyGame.Bll.Services.Buildings;
+using StrategyGame.Bll.Services.Commands;
 using StrategyGame.Bll.Services.Country;
 using StrategyGame.Bll.Services.Researches;
+using StrategyGame.Bll.Services.TurnHandling;
 using StrategyGame.Bll.Services.Units;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
@@ -107,12 +109,12 @@ namespace StrategyGame.Api
                     new UnitAttackEffectParser()
                 }));
 
-            services.AddTransient<GlobalTurnHandler>();
-            services.AddTransient<CountryTurnHandler>();
+            services.AddTransient<ITurnHandlingService, TurnHandlingService>();
             services.AddTransient<ICountryService, CountryService>();
             services.AddTransient<IResearchService, ResearchService>();
             services.AddTransient<IBuildingService, BuildingService>();
             services.AddTransient<IUnitService, UnitService>();
+            services.AddTransient<ICommandService, CommandService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StrategyGame.Bll;
+using StrategyGame.Bll.Services.TurnHandling;
 using StrategyGame.Dal;
 using System;
 using System.Threading.Tasks;
@@ -14,11 +15,11 @@ namespace StrategyGame.Api.Controllers
     [ApiController]
     public class MaintenanceController : ControllerBase
     {
-        protected GlobalTurnHandler Handler { get; }
+        protected ITurnHandlingService Handler { get; }
 
         protected UnderSeaDatabaseContext Database { get; }
 
-        public MaintenanceController(GlobalTurnHandler handler, UnderSeaDatabaseContext database)
+        public MaintenanceController(ITurnHandlingService handler, UnderSeaDatabaseContext database)
         {
             Handler = handler ?? throw new ArgumentNullException(nameof(handler));
             Database = database ?? throw new ArgumentNullException(nameof(database));
