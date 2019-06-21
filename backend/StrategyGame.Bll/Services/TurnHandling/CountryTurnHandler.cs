@@ -53,21 +53,21 @@ namespace StrategyGame.Bll.Services.TurnHandling
                 throw new ArgumentNullException(nameof(context));
             }
             // Find the country and then load the nav properties we need
-            var country = await context.Countries.FindAsync(new object[] { countryId }, cancel).ConfigureAwait(false);
+            var country = await context.Countries.FindAsync(new object[] { countryId }, cancel);
 
             if (country == null)
             {
                 throw new KeyNotFoundException();
             }
 
-            await context.Entry(country).Collection(c => c.InProgressBuildings).LoadAsync(cancel).ConfigureAwait(false);
-            await context.Entry(country).Collection(c => c.Buildings).LoadAsync(cancel).ConfigureAwait(false);
-            await context.Entry(country).Collection(c => c.InProgressResearches).LoadAsync(cancel).ConfigureAwait(false);
-            await context.Entry(country).Collection(c => c.Researches).LoadAsync(cancel).ConfigureAwait(false);
+            await context.Entry(country).Collection(c => c.InProgressBuildings).LoadAsync(cancel);
+            await context.Entry(country).Collection(c => c.Buildings).LoadAsync(cancel);
+            await context.Entry(country).Collection(c => c.InProgressResearches).LoadAsync(cancel);
+            await context.Entry(country).Collection(c => c.Researches).LoadAsync(cancel);
 
             // Get global data, create a builder from the effects
-            var globals = await context.GlobalValues.SingleAsync(cancel).ConfigureAwait(false);
-            var builder = await context.ParseAllEffectForCountryAsync(countryId, Parsers).ConfigureAwait(false);
+            var globals = await context.GlobalValues.SingleAsync(cancel);
+            var builder = await context.ParseAllEffectForCountryAsync(countryId, Parsers);
 
             // #1: Tax
             country.Pearls += (long)Math.Round(builder.Population * globals.BaseTaxation * builder.TaxModifier);
@@ -76,7 +76,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
             country.Corals += (long)Math.Round(builder.CoralProduction * builder.HarvestModifier);
 
             // #3: Pay soldiers
-            await DesertUnits(country, context, cancel).ConfigureAwait(false);
+            await DesertUnits(country, context, cancel);
 
             // #4: Advance research and buildings
             foreach (var b in country.InProgressBuildings)
@@ -96,7 +96,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
             }
 
             // #5: Add buildings that are completed
-            await context.CheckAddCompletedAsync(country.Id, cancel).ConfigureAwait(false);
+            await context.CheckAddCompletedAsync(country.Id, cancel);
 
             // Return the builder as the unit stats will be needed again.
             return builder;
@@ -131,15 +131,15 @@ namespace StrategyGame.Bll.Services.TurnHandling
                 throw new ArgumentNullException(nameof(builderFactory));
             }
             // Find the country and then load the nav properties we need
-            var country = await context.Countries.FindAsync(new object[] { countryId }, cancel).ConfigureAwait(false);
+            var country = await context.Countries.FindAsync(new object[] { countryId }, cancel);
 
             if (country == null)
             {
                 throw new KeyNotFoundException();
             }
 
-            await context.Entry(country).Collection(c => c.IncomingAttacks).LoadAsync(cancel).ConfigureAwait(false);
-            await context.Entry(country).Collection(c => c.Commands).LoadAsync(cancel).ConfigureAwait(false);
+            await context.Entry(country).Collection(c => c.IncomingAttacks).LoadAsync(cancel);
+            await context.Entry(country).Collection(c => c.Commands).LoadAsync(cancel);
 
             // First off, randomize the incoming attacks, excluding the defending forces
             var incomingAttacks = country.IncomingAttacks
@@ -151,12 +151,12 @@ namespace StrategyGame.Bll.Services.TurnHandling
 
             // Get defenders
             var defenders = country.GetAllDefending();
-            await context.Entry(defenders).Collection(c => c.Divisons).LoadAsync(cancel).ConfigureAwait(false);
+            await context.Entry(defenders).Collection(c => c.Divisons).LoadAsync(cancel);
 
             foreach (var attack in incomingAttacks)
             {
                 // Load the divisions, calculate attack and defense powers
-                await context.Entry(attack).Collection(c => c.Divisons).LoadAsync(cancel).ConfigureAwait(false);
+                await context.Entry(attack).Collection(c => c.Divisons).LoadAsync(cancel);
 
                 double attackPower = GetCurrentUnitPower(attack, true, builderFactory(attack.ParentCountry.Id));
                 double defensePower = GetCurrentUnitPower(defenders, false, builder);
@@ -198,16 +198,16 @@ namespace StrategyGame.Bll.Services.TurnHandling
             CountryModifierBuilder builder, CancellationToken cancel)
         {
             // Find the country and then load the nav properties we need
-            var country = await context.Countries.FindAsync(new object[] { countryId }, cancel).ConfigureAwait(false);
+            var country = await context.Countries.FindAsync(new object[] { countryId }, cancel);
 
             if (country == null)
             {
                 throw new KeyNotFoundException();
             }
 
-            await context.Entry(country).Collection(c => c.Buildings).LoadAsync(cancel).ConfigureAwait(false);
-            await context.Entry(country).Collection(c => c.Researches).LoadAsync(cancel).ConfigureAwait(false);
-            await context.Entry(country).Collection(c => c.Commands).LoadAsync(cancel).ConfigureAwait(false);
+            await context.Entry(country).Collection(c => c.Buildings).LoadAsync(cancel);
+            await context.Entry(country).Collection(c => c.Researches).LoadAsync(cancel);
+            await context.Entry(country).Collection(c => c.Commands).LoadAsync(cancel);
 
             // Add loot
             country.Pearls += builder.CurrentPearlLoot;
@@ -217,7 +217,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
             long divisionScore = 0;
             foreach (var comm in country.Commands)
             {
-                await context.Entry(comm).Collection(c => c.Divisons).LoadAsync(cancel).ConfigureAwait(false);
+                await context.Entry(comm).Collection(c => c.Divisons).LoadAsync(cancel);
                 divisionScore += comm.Divisons.Sum(d => d.Count);
             }
 
@@ -233,7 +233,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
             // Load units in defenders.
             foreach (var div in defenders.Divisons)
             {
-                await context.Entry(div).Reference(d => d.Unit).LoadAsync(cancel).ConfigureAwait(false);
+                await context.Entry(div).Reference(d => d.Unit).LoadAsync(cancel);
             }
 
             foreach (var attack in country.Commands.Where(c => c.Id != defenders.Id).ToList())
@@ -241,7 +241,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
                 foreach (var div in attack.Divisons)
                 {
                     // Load unit info in attack
-                    await context.Entry(div).Reference(d => d.Unit).LoadAsync(cancel).ConfigureAwait(false);
+                    await context.Entry(div).Reference(d => d.Unit).LoadAsync(cancel);
 
                     var existing = defenders.Divisons.SingleOrDefault(d => d.Unit.Id == div.Unit.Id);
                     if (existing == null)
@@ -307,16 +307,16 @@ namespace StrategyGame.Bll.Services.TurnHandling
         protected async Task DesertUnits(Model.Entities.Country country, UnderSeaDatabaseContext context, CancellationToken cancel)
         {
             // Load commands, divisons and units in the divisions
-            await context.Entry(country).Collection(c => c.Commands).LoadAsync(cancel).ConfigureAwait(false);
+            await context.Entry(country).Collection(c => c.Commands).LoadAsync(cancel);
 
             long pearlUpkeep = 0;
             long coralUpkeep = 0;
             foreach (var comm in country.Commands)
             {
-                await context.Entry(comm).Collection(c => c.Divisons).LoadAsync(cancel).ConfigureAwait(false);
+                await context.Entry(comm).Collection(c => c.Divisons).LoadAsync(cancel);
                 foreach (var div in comm.Divisons)
                 {
-                    await context.Entry(div).Reference(d => d.Unit).LoadAsync(cancel).ConfigureAwait(false);
+                    await context.Entry(div).Reference(d => d.Unit).LoadAsync(cancel);
                     pearlUpkeep += div.Count * div.Unit.CostPearl;
                     coralUpkeep += div.Count * div.Unit.CostCoral;
                 }
@@ -327,7 +327,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
                 // Load unit data
                 foreach (var div in country.Commands.SelectMany(c => c.Divisons))
                 {
-                    await context.Entry(div).Reference(d => d.Unit).LoadAsync(cancel).ConfigureAwait(false);
+                    await context.Entry(div).Reference(d => d.Unit).LoadAsync(cancel);
                 }
 
                 long pearlDeficit = pearlUpkeep - country.Pearls;

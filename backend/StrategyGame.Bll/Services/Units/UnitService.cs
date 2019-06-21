@@ -35,9 +35,9 @@ namespace StrategyGame.Bll.Services.Units
               .ThenInclude(comm => comm.Divisons)
               .ThenInclude(d => d.Unit)
               .ThenInclude(u => u.Content)
-              .SingleAsync(c => c.ParentUser.UserName == username).ConfigureAwait(false);
+              .SingleAsync(c => c.ParentUser.UserName == username);
 
-            return await country.GetAllUnitInfoAsync(Database, Mapper).ConfigureAwait(false);
+            return await country.GetAllUnitInfoAsync(Database, Mapper);
         }
 
         public async Task<UnitInfo> CreateUnitAsync(string username, int unitId, int count)
@@ -47,8 +47,8 @@ namespace StrategyGame.Bll.Services.Units
                 throw new ArgumentException();
             }
 
-            var unit = await Database.UnitTypes.FindAsync(unitId).ConfigureAwait(false);
-            await Database.Entry(unit).Reference(u => u.Content).LoadAsync().ConfigureAwait(false);
+            var unit = await Database.UnitTypes.FindAsync(unitId);
+            await Database.Entry(unit).Reference(u => u.Content).LoadAsync();
 
             if (unit == null)
             {
@@ -59,7 +59,7 @@ namespace StrategyGame.Bll.Services.Units
                .Include(c => c.Commands)
                .ThenInclude(comm => comm.Divisons)
                .ThenInclude(d => d.Unit)
-               .SingleAsync(c => c.ParentUser.UserName == username).ConfigureAwait(false);
+               .SingleAsync(c => c.ParentUser.UserName == username);
 
             // Check cost
             long costPearl = unit.CostPearl * count;
@@ -70,7 +70,7 @@ namespace StrategyGame.Bll.Services.Units
                 throw new InvalidOperationException("Units too expensive");
             }
 
-            var builder = await Database.ParseAllEffectForCountryAsync(country.Id, Parsers).ConfigureAwait(false);
+            var builder = await Database.ParseAllEffectForCountryAsync(country.Id, Parsers);
             var totalUnits = country.Commands.Sum(c => c.Divisons.Sum(d => d.Count));
 
             // Check pop-space
@@ -95,7 +95,7 @@ namespace StrategyGame.Bll.Services.Units
             country.Pearls -= costPearl;
             country.Corals -= costCoral;
 
-            await Database.SaveChangesAsync().ConfigureAwait(false);
+            await Database.SaveChangesAsync();
 
             var info = Mapper.Map<UnitType, UnitInfo>(unit);
             info.Count = count;
@@ -109,7 +109,7 @@ namespace StrategyGame.Bll.Services.Units
                 throw new ArgumentException();
             }
 
-            var unit = await Database.UnitTypes.FindAsync(unitId).ConfigureAwait(false);
+            var unit = await Database.UnitTypes.FindAsync(unitId);
 
             if (unit == null)
             {
@@ -120,7 +120,7 @@ namespace StrategyGame.Bll.Services.Units
                .Include(c => c.Commands)
                .ThenInclude(comm => comm.Divisons)
                .ThenInclude(d => d.Unit)
-               .SingleAsync(c => c.ParentUser.UserName == username).ConfigureAwait(false);
+               .SingleAsync(c => c.ParentUser.UserName == username);
 
             var defenders = country.GetAllDefending();
             var targetDiv = defenders.Divisons.SingleOrDefault(d => d.Unit.Id == unitId);
@@ -134,7 +134,7 @@ namespace StrategyGame.Bll.Services.Units
                 targetDiv.Count -= count;
             }
 
-            await Database.SaveChangesAsync().ConfigureAwait(false);
+            await Database.SaveChangesAsync();
         }
     }
 }

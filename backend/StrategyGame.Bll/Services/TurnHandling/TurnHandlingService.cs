@@ -33,7 +33,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
             // First the pre-combat is handled for all countries individually. This calculates the builders.
             foreach (var c in context.Countries)
             {
-                var builder = await Handler.HandlePreCombatAsync(context, c.Id, cancel).ConfigureAwait(false);
+                var builder = await Handler.HandlePreCombatAsync(context, c.Id, cancel);
                 turnData.Add(c.Id, builder);
             }
 
@@ -41,25 +41,25 @@ namespace StrategyGame.Bll.Services.TurnHandling
             Handler.CountryLooted += HandleLoot;
             foreach (var c in context.Countries)
             {
-                await Handler.HandleCombatAsync(context, c.Id, turnData[c.Id], id => turnData[id], cancel).ConfigureAwait(false);
+                await Handler.HandleCombatAsync(context, c.Id, turnData[c.Id], id => turnData[id], cancel);
             }
             Handler.CountryLooted -= HandleLoot;
 
             // Finally post combat happens. This is where loot is applied and score calculated.
             foreach (var c in context.Countries)
             {
-                await Handler.HandlePostCombatAsync(context, c.Id, turnData[c.Id], cancel).ConfigureAwait(false);
+                await Handler.HandlePostCombatAsync(context, c.Id, turnData[c.Id], cancel);
             }
 
             // Calculate ranking from country scores
             int index = 0;
-            await context.Countries.OrderByDescending(c => c.Score).ForEachAsync(c => c.Rank = ++index).ConfigureAwait(false);
+            await context.Countries.OrderByDescending(c => c.Score).ForEachAsync(c => c.Rank = ++index);
 
             // Increment turn number
-            var globals = await context.GlobalValues.SingleAsync().ConfigureAwait(false);
+            var globals = await context.GlobalValues.SingleAsync();
             globals.Round++;
 
-            await context.SaveChangesAsync().ConfigureAwait(false);
+            await context.SaveChangesAsync();
 
             // TODO Remove invalid in progress stuff
             //    context2.InProgressBuildings.RemoveRange(context.InProgressBuildings.Where(b => b.TimeLeft <= 0));

@@ -30,7 +30,7 @@ namespace StrategyGame.Api.Controllers
         [Authorize]
         public async Task<ActionResult> EndTurnAsync()
         {
-            await Handler.EndTurnAsync(Database).ConfigureAwait(false);
+            await Handler.EndTurnAsync(Database);
             return Ok();
         }
     }

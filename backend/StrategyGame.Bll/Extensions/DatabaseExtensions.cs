@@ -45,15 +45,15 @@ namespace StrategyGame.Bll.Extensions
             }
 
             // Find the country and then load the nav properties we need
-            var country = await context.Countries.FindAsync(new object[] { countryId }, cancel).ConfigureAwait(false);
+            var country = await context.Countries.FindAsync(new object[] { countryId }, cancel);
 
             if (country == null)
             {
                 throw new KeyNotFoundException();
             }
 
-            await context.Entry(country).Collection(c => c.InProgressBuildings).LoadAsync(cancel).ConfigureAwait(false);
-            await context.Entry(country).Collection(c => c.Buildings).LoadAsync(cancel).ConfigureAwait(false);
+            await context.Entry(country).Collection(c => c.InProgressBuildings).LoadAsync(cancel);
+            await context.Entry(country).Collection(c => c.Buildings).LoadAsync(cancel);
 
             // Check if building count + queued building count is less than max allowed
             // Shortcut on unlimited first tho
@@ -67,7 +67,7 @@ namespace StrategyGame.Bll.Extensions
 
             await context.InProgressBuildings.AddAsync(new InProgressBuilding()
             { ParentCountry = country, Building = building, TimeLeft = building.BuildTime }, cancel)
-                .ConfigureAwait(false);
+                ;
 
             return true;
         }
@@ -96,15 +96,15 @@ namespace StrategyGame.Bll.Extensions
             }
 
             // Find the country and then load the nav properties we need
-            var country = await context.Countries.FindAsync(new object[] { countryId }, cancel).ConfigureAwait(false);
+            var country = await context.Countries.FindAsync(new object[] { countryId }, cancel);
 
             if (country == null)
             {
                 throw new KeyNotFoundException();
             }
 
-            await context.Entry(country).Collection(c => c.InProgressResearches).LoadAsync(cancel).ConfigureAwait(false);
-            await context.Entry(country).Collection(c => c.Researches).LoadAsync(cancel).ConfigureAwait(false);
+            await context.Entry(country).Collection(c => c.InProgressResearches).LoadAsync(cancel);
+            await context.Entry(country).Collection(c => c.Researches).LoadAsync(cancel);
 
             if (research.MaxCompletedAmount == 0
                 || (research.MaxCompletedAmount > 0
@@ -116,7 +116,7 @@ namespace StrategyGame.Bll.Extensions
 
             await context.InProgressResearches.AddAsync(new InProgressResearch()
             { ParentCountry = country, Research = research, TimeLeft = research.ResearchTime }, cancel)
-                .ConfigureAwait(false);
+                ;
 
             return true;
         }
@@ -155,17 +155,17 @@ namespace StrategyGame.Bll.Extensions
             }
 
             // Find the country and then load the nav properties we need
-            var country = await context.Countries.FindAsync(new object[] { countryId }, cancel).ConfigureAwait(false);
+            var country = await context.Countries.FindAsync(new object[] { countryId }, cancel);
 
             if (country == null)
             {
                 throw new KeyNotFoundException();
             }
 
-            await context.Entry(country).Collection(c => c.InProgressBuildings).LoadAsync(cancel).ConfigureAwait(false);
-            await context.Entry(country).Collection(c => c.Buildings).LoadAsync(cancel).ConfigureAwait(false);
-            await context.Entry(country).Collection(c => c.InProgressResearches).LoadAsync(cancel).ConfigureAwait(false);
-            await context.Entry(country).Collection(c => c.Researches).LoadAsync(cancel).ConfigureAwait(false);
+            await context.Entry(country).Collection(c => c.InProgressBuildings).LoadAsync(cancel);
+            await context.Entry(country).Collection(c => c.Buildings).LoadAsync(cancel);
+            await context.Entry(country).Collection(c => c.InProgressResearches).LoadAsync(cancel);
+            await context.Entry(country).Collection(c => c.Researches).LoadAsync(cancel);
 
             var researches = country.InProgressResearches.Where(r => r.TimeLeft == 0)
                 .GroupBy(r => r.Research)
@@ -182,7 +182,7 @@ namespace StrategyGame.Bll.Extensions
                     {
                         await context.CountryResearches.AddAsync(new CountryResearch()
                         { ParentCountry = country, Research = research.Key, Count = research.Count() }, cancel)
-                            .ConfigureAwait(false);
+                            ;
                     }
                     else
                     {
@@ -207,7 +207,7 @@ namespace StrategyGame.Bll.Extensions
                     {
                         await context.CountryBuildings.AddAsync(new CountryBuilding()
                         { ParentCountry = country, Building = building.Key, Count = building.Count() },
-                        cancel).ConfigureAwait(false);
+                        cancel);
                     }
                     else
                     {
@@ -237,43 +237,43 @@ namespace StrategyGame.Bll.Extensions
         public static async Task<CountryModifierBuilder> ParseAllEffectForCountryAsync(this UnderSeaDatabaseContext context, 
             int countryId, ModifierParserContainer Parsers)
         {
-            var country = await context.Countries.FindAsync(countryId).ConfigureAwait(false);
+            var country = await context.Countries.FindAsync(countryId);
 
             if (country == null)
             {
                 throw new KeyNotFoundException();
             }
             
-            await context.Entry(country).Collection(c => c.Buildings).LoadAsync().ConfigureAwait(false);
-            await context.Entry(country).Collection(c => c.Researches).LoadAsync().ConfigureAwait(false);
+            await context.Entry(country).Collection(c => c.Buildings).LoadAsync();
+            await context.Entry(country).Collection(c => c.Researches).LoadAsync();
 
             // Loads builngs, researches and effects
             foreach (var building in country.Buildings)
             {
-                await context.Entry(building).Reference(b => b.Building).LoadAsync().ConfigureAwait(false);
-                await context.Entry(building.Building).Collection(b => b.Effects).LoadAsync().ConfigureAwait(false);
+                await context.Entry(building).Reference(b => b.Building).LoadAsync();
+                await context.Entry(building.Building).Collection(b => b.Effects).LoadAsync();
 
                 foreach (var effect in building.Building.Effects)
                 {
-                    await context.Entry(effect).Reference(e => e.Effect).LoadAsync().ConfigureAwait(false);
+                    await context.Entry(effect).Reference(e => e.Effect).LoadAsync();
                 }
             }
 
             foreach (var research in country.Researches)
             {
-                await context.Entry(research).Reference(r => r.Research).LoadAsync().ConfigureAwait(false);
-                await context.Entry(research.Research).Collection(r =>r.Effects).LoadAsync().ConfigureAwait(false);
+                await context.Entry(research).Reference(r => r.Research).LoadAsync();
+                await context.Entry(research.Research).Collection(r =>r.Effects).LoadAsync();
 
                 foreach (var effect in research.Research.Effects)
                 {
-                    await context.Entry(effect).Reference(e => e.Effect).LoadAsync().ConfigureAwait(false);
+                    await context.Entry(effect).Reference(e => e.Effect).LoadAsync();
                 }
             }
 
             var effectparents = country.Buildings.Select(b => new { count = b.Count, effects = b.Building.Effects.Select(e => e.Effect) })
                 .Concat(country.Researches.Select(r => new { count = r.Count, effects = r.Research.Effects.Select(e => e.Effect) })).ToList();
 
-            var globals = await context.GlobalValues.SingleAsync().ConfigureAwait(false);
+            var globals = await context.GlobalValues.SingleAsync();
 
             // Set up builder
             var builder = new CountryModifierBuilder
@@ -329,7 +329,7 @@ namespace StrategyGame.Bll.Extensions
 
             var flattened = await context.UnitTypes
                 .Include(u => u.Content)
-                .ToDictionaryAsync(x => x, x => 0).ConfigureAwait(false);
+                .ToDictionaryAsync(x => x, x => 0);
 
             foreach (var div in country.Commands.SelectMany(c => c.Divisons))
             {

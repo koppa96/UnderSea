@@ -26,8 +26,8 @@ namespace StrategyGame.Bll.Services.Country
 
         public async Task CreateAsync(string username, string countryName)
         {
-            var user = await Database.Users.SingleAsync(u => u.UserName == username).ConfigureAwait(false);
-            var globals = await Database.GlobalValues.SingleAsync().ConfigureAwait(false);
+            var user = await Database.Users.SingleAsync(u => u.UserName == username);
+            var globals = await Database.GlobalValues.SingleAsync();
             var country = new Model.Entities.Country()
             {
                 Name = countryName,
@@ -40,9 +40,9 @@ namespace StrategyGame.Bll.Services.Country
 
             var defenders = new Command() { ParentCountry = country, TargetCountry = country };
 
-            await Database.Countries.AddAsync(country).ConfigureAwait(false);
-            await Database.Commands.AddAsync(defenders).ConfigureAwait(false);
-            await Database.SaveChangesAsync().ConfigureAwait(false);
+            await Database.Countries.AddAsync(country);
+            await Database.Commands.AddAsync(defenders);
+            await Database.SaveChangesAsync();
         }
 
         public async Task<CountryInfo> GetCountryInfoAsync(string username)
@@ -64,17 +64,17 @@ namespace StrategyGame.Bll.Services.Country
                .Include(c => c.InProgressResearches)
                     .ThenInclude(r => r.Research)
                         .ThenInclude(r => r.Content)
-               .SingleAsync(c => c.ParentUser.UserName == username).ConfigureAwait(false);
+               .SingleAsync(c => c.ParentUser.UserName == username);
 
             var info = Mapper.Map<Model.Entities.Country, CountryInfo>(country);
-            var globals = await Database.GlobalValues.SingleAsync().ConfigureAwait(false);
+            var globals = await Database.GlobalValues.SingleAsync();
             info.Round = globals.Round;
 
             // Start with all buildings and researches
             var totalBuildings = await Database.BuildingTypes.Include(r => r.Content)
-                .ToDictionaryAsync(x => x.Id, x => Mapper.Map<BuildingType, BriefCreationInfo>(x)).ConfigureAwait(false);
+                .ToDictionaryAsync(x => x.Id, x => Mapper.Map<BuildingType, BriefCreationInfo>(x));
             var totalResearches = await Database.ResearchTypes.Include(r => r.Content)
-                .ToDictionaryAsync(x => x.Id, x => Mapper.Map<ResearchType, BriefCreationInfo>(x)).ConfigureAwait(false);
+                .ToDictionaryAsync(x => x.Id, x => Mapper.Map<ResearchType, BriefCreationInfo>(x));
 
             // Map all existing buildings and researches
             foreach (var building in country.Buildings)
@@ -114,7 +114,7 @@ namespace StrategyGame.Bll.Services.Country
 
             info.Buildings = totalBuildings.Select(x => x.Value).ToList();
             info.Researches = totalResearches.Select(x => x.Value).ToList();
-            info.ArmyInfo = await country.GetAllUnitInfoAsync(Database, Mapper).ConfigureAwait(false);
+            info.ArmyInfo = await country.GetAllUnitInfoAsync(Database, Mapper);
 
             return info;
         }
@@ -125,7 +125,7 @@ namespace StrategyGame.Bll.Services.Country
                 .Where(c => c.Rank > 0)
                 .OrderBy(c => c.Rank)
                 .Select(c => Mapper.Map<Model.Entities.Country, RankInfo>(c))
-                .ToListAsync().ConfigureAwait(false);
+                .ToListAsync();
         }
     }
 }
