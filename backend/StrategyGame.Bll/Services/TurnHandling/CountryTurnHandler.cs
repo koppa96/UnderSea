@@ -52,7 +52,6 @@ namespace StrategyGame.Bll.Services.TurnHandling
             {
                 throw new ArgumentNullException(nameof(context));
             }
-            // Find the country and then load the nav properties we need
             var country = await context.Countries.FindAsync(new object[] { countryId }, cancel);
 
             if (country == null)
@@ -65,7 +64,6 @@ namespace StrategyGame.Bll.Services.TurnHandling
             await context.Entry(country).Collection(c => c.InProgressResearches).LoadAsync(cancel);
             await context.Entry(country).Collection(c => c.Researches).LoadAsync(cancel);
 
-            // Get global data, create a builder from the effects
             var globals = await context.GlobalValues.SingleAsync(cancel);
             var builder = await context.ParseAllEffectForCountryAsync(countryId, Parsers);
 
@@ -98,7 +96,6 @@ namespace StrategyGame.Bll.Services.TurnHandling
             // #5: Add buildings that are completed
             await context.CheckAddCompletedAsync(country.Id, cancel);
 
-            // Return the builder as the unit stats will be needed again.
             return builder;
         }
 
@@ -130,7 +127,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
             {
                 throw new ArgumentNullException(nameof(builderFactory));
             }
-            // Find the country and then load the nav properties we need
+
             var country = await context.Countries.FindAsync(new object[] { countryId }, cancel);
 
             if (country == null)
@@ -141,7 +138,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
             await context.Entry(country).Collection(c => c.IncomingAttacks).LoadAsync(cancel);
             await context.Entry(country).Collection(c => c.Commands).LoadAsync(cancel);
 
-            // First off, randomize the incoming attacks, excluding the defending forces
+            // Randomize the incoming attacks, excluding the defending forces
             var incomingAttacks = country.IncomingAttacks
                 .Where(c => !c.ParentCountry.Equals(country))
                 .Select(c => new { Order = rng.Next(), Command = c })
@@ -149,13 +146,11 @@ namespace StrategyGame.Bll.Services.TurnHandling
                 .Select(x => x.Command)
                 .ToList();
 
-            // Get defenders
             var defenders = country.GetAllDefending();
             await context.Entry(defenders).Collection(c => c.Divisons).LoadAsync(cancel);
 
             foreach (var attack in incomingAttacks)
             {
-                // Load the divisions, calculate attack and defense powers
                 await context.Entry(attack).Collection(c => c.Divisons).LoadAsync(cancel);
 
                 double attackPower = GetCurrentUnitPower(attack, true, builderFactory(attack.ParentCountry.Id));
@@ -163,10 +158,8 @@ namespace StrategyGame.Bll.Services.TurnHandling
 
                 if (attackPower > defensePower)
                 {
-                    // Attackers won, defender loose some units, and loose some of current pearl and coral
                     CullUnits(defenders, KnownValues.UnitLossOnDefense);
 
-                    // Remove the looted amounts
                     var pearlLoot = (long)Math.Round(country.Pearls * KnownValues.LootPercentage);
                     var coralLoot = (long)Math.Round(country.Corals * KnownValues.LootPercentage);
 
@@ -178,7 +171,6 @@ namespace StrategyGame.Bll.Services.TurnHandling
                 }
                 else
                 {
-                    // Defenders won, attacker loose some units
                     CullUnits(attack, KnownValues.UnitLossOnDefense);
                 }
             }
@@ -209,11 +201,9 @@ namespace StrategyGame.Bll.Services.TurnHandling
             await context.Entry(country).Collection(c => c.Researches).LoadAsync(cancel);
             await context.Entry(country).Collection(c => c.Commands).LoadAsync(cancel);
 
-            // Add loot
             country.Pearls += builder.CurrentPearlLoot;
             country.Corals += builder.CurrentCoralLoot;
 
-            // Calculate score
             long divisionScore = 0;
             foreach (var comm in country.Commands)
             {
@@ -227,7 +217,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
                 + divisionScore * KnownValues.ScoreUnitMultiplier
                 + country.Researches.Count * KnownValues.ScoreResearchMultiplier);
 
-            // Merge all commands into the defense command
+            // Merge all attacking commands into the defense command, delete attacking commands
             var defenders = country.GetAllDefending();
 
             // Load units in defenders.
@@ -240,7 +230,6 @@ namespace StrategyGame.Bll.Services.TurnHandling
             {
                 foreach (var div in attack.Divisons)
                 {
-                    // Load unit info in attack
                     await context.Entry(div).Reference(d => d.Unit).LoadAsync(cancel);
 
                     var existing = defenders.Divisons.SingleOrDefault(d => d.Unit.Id == div.Unit.Id);
@@ -270,7 +259,8 @@ namespace StrategyGame.Bll.Services.TurnHandling
         {
             if (doGetAttack)
             {
-                return command.Divisons.Sum(d => d.Count * d.Unit.AttackPower * builder.AttackModifier) * (rng.NextDouble() / 10 + 0.95);
+                return command.Divisons.Sum(d => d.Count * d.Unit.AttackPower * builder.AttackModifier)
+                    * (rng.NextDouble() / 10 + 0.95);
             }
             else
             {
@@ -306,7 +296,6 @@ namespace StrategyGame.Bll.Services.TurnHandling
         /// <returns>The task that represents the operation.</returns>
         protected async Task DesertUnits(Model.Entities.Country country, UnderSeaDatabaseContext context, CancellationToken cancel)
         {
-            // Load commands, divisons and units in the divisions
             await context.Entry(country).Collection(c => c.Commands).LoadAsync(cancel);
 
             long pearlUpkeep = 0;
@@ -324,7 +313,6 @@ namespace StrategyGame.Bll.Services.TurnHandling
 
             if (coralUpkeep > country.Corals || pearlUpkeep > country.Pearls)
             {
-                // Load unit data
                 foreach (var div in country.Commands.SelectMany(c => c.Divisons))
                 {
                     await context.Entry(div).Reference(d => d.Unit).LoadAsync(cancel);
@@ -333,10 +321,8 @@ namespace StrategyGame.Bll.Services.TurnHandling
                 long pearlDeficit = pearlUpkeep - country.Pearls;
                 long coralDeficit = coralUpkeep - country.Corals;
 
-                // Go through each div in cost order
                 foreach (var div in country.Commands.SelectMany(c => c.Divisons).OrderBy(d => d.Unit.CostPearl))
                 {
-                    // Calculate how many units of the type in the division needs to go.
                     long requiredPearlReduction = (long)Math.Ceiling((double)pearlDeficit / div.Unit.MaintenancePearl);
                     long requiredCoralReduction = (long)Math.Ceiling((double)coralDeficit / div.Unit.MaintenanceCoral);
 

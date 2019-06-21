@@ -30,14 +30,12 @@ namespace StrategyGame.Bll.Services.TurnHandling
                 turnData[Args.LooterId].CurrentCoralLoot += Args.LootedCorals;
             }
 
-            // First the pre-combat is handled for all countries individually. This calculates the builders.
             foreach (var c in context.Countries)
             {
                 var builder = await Handler.HandlePreCombatAsync(context, c.Id, cancel);
                 turnData.Add(c.Id, builder);
             }
 
-            // The combat happens for all countries. Loot is acquired in this phase.
             Handler.CountryLooted += HandleLoot;
             foreach (var c in context.Countries)
             {
@@ -45,17 +43,14 @@ namespace StrategyGame.Bll.Services.TurnHandling
             }
             Handler.CountryLooted -= HandleLoot;
 
-            // Finally post combat happens. This is where loot is applied and score calculated.
             foreach (var c in context.Countries)
             {
                 await Handler.HandlePostCombatAsync(context, c.Id, turnData[c.Id], cancel);
             }
 
-            // Calculate ranking from country scores
             int index = 0;
             await context.Countries.OrderByDescending(c => c.Score).ForEachAsync(c => c.Rank = ++index);
 
-            // Increment turn number
             var globals = await context.GlobalValues.SingleAsync();
             globals.Round++;
 
