@@ -281,6 +281,7 @@ namespace StrategyGame.Dal
             catch (Exception e)
             {
                 Console.WriteLine("");
+                throw;
             }
         }
     }
