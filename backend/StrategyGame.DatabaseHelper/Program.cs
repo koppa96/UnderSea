@@ -261,12 +261,14 @@ namespace StrategyGame.DatabaseHelper
             var country1 = new Country() { Pearls = 5000, Corals = 5000, ParentUser= user1 };
             var country2 = new Country() { Pearls = 5000, Corals = 5000, ParentUser = user2 };
             context.Countries.AddRange(country1, country2);
-            context.Commands.AddRange(new Command() { ParentCountry = country1, TargetCountry = country1 });
-            context.Commands.AddRange(new Command() { ParentCountry = country2, TargetCountry = country2 });
+
+            var def = new Command() { ParentCountry = country1, TargetCountry = country1 };
+            context.Commands.AddRange(new Command() { ParentCountry = country2, TargetCountry = country2 }, def);
             context.SaveChanges();
 
-            context.TryStartBuildingAsync(country1.Id, reefCastle).Wait();
-            context.TryStartBuildingAsync(country2.Id, currentController).Wait();
+            context.TryStartBuildingAsync(country1.Id, currentController).Wait();
+            context.TryStartBuildingAsync(country2.Id, reefCastle).Wait();
+            context.TryStartResearchAsync(country2.Id, martialArts).Wait();
 
             var handler = new GlobalTurnHandler(new CountryTurnHandler(new ModifierParserContainer(new AbstractEffectModifierParser[]
             {
@@ -275,16 +277,25 @@ namespace StrategyGame.DatabaseHelper
                 new HarvestModifierEffectParser(),
                 new PopulationEffectParser(),
                 new TaxModifierEffectParser(),
-                new UnitDefenseEffectParser()
+                new UnitDefenseEffectParser(),
+                new UnitAttackEffectParser()
             })));
 
-            handler.EndTurnAsync(context, CancellationToken.None).Wait();
-            handler.EndTurnAsync(context, CancellationToken.None).Wait();
-            handler.EndTurnAsync(context, CancellationToken.None).Wait();
-            handler.EndTurnAsync(context, CancellationToken.None).Wait();
-            handler.EndTurnAsync(context, CancellationToken.None).Wait();
-            handler.EndTurnAsync(context, CancellationToken.None).Wait();
-            handler.EndTurnAsync(context, CancellationToken.None).Wait();
+            for (int i = 0; i < 6; i++)
+            {
+                handler.EndTurnAsync(context, CancellationToken.None).Wait();
+            }
+            for (int i = 0; i < 15; i++)
+            {
+                handler.EndTurnAsync(context, CancellationToken.None).Wait();
+            }
+            var attack = new Command() { ParentCountry = country2, TargetCountry = country1 };
+            var div = new Division() { ParentCommand = attack, Count = 20, Unit = lazor };
+            var div2 = new Division() { ParentCommand = def, Count = 20, Unit = lazor };
+
+            context.Commands.Add(attack);
+            context.Divisions.AddRange(div, div2);
+
             handler.EndTurnAsync(context, CancellationToken.None).Wait();
 
             Console.WriteLine();

@@ -38,7 +38,7 @@ namespace StrategyGame.Bll
             Handler.CountryLooted += HandleLoot;
             foreach (var c in context.Countries)
             {
-                await Handler.HandleCombatAsync(context, c.Id, turnData[c.Id], cancel).ConfigureAwait(false);
+                await Handler.HandleCombatAsync(context, c.Id, turnData[c.Id], id => turnData[id], cancel).ConfigureAwait(false);
             }
             Handler.CountryLooted -= HandleLoot;
 
@@ -50,9 +50,7 @@ namespace StrategyGame.Bll
             // Calculate ranking
             int index = 0;
             await context.Countries.OrderByDescending(c => c.Score).ForEachAsync(c => c.Rank = ++index).ConfigureAwait(false);
-
-            await context.SaveChangesAsync().ConfigureAwait(false);
-
+            
             // TODO Remove invalid in progress stuff
             //context.InProgressBuildings.RemoveRange(context.InProgressBuildings.Where(b => b.TimeLeft <= 0));
             //context.InProgressResearches.RemoveRange(context.InProgressResearches.Where(r => r.TimeLeft <= 0));

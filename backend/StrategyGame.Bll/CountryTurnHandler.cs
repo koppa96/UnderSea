@@ -48,7 +48,7 @@ namespace StrategyGame.Bll
             var globals = await context.GlobalValues.SingleAsync(cancel).ConfigureAwait(false);
 
             var builder = await context.ParseAllEffectForCountry(countryId, Parsers).ConfigureAwait(false);
-            
+
             // #1: Tax
             country.Pearls += (long)Math.Round(builder.Population * globals.BaseTaxation * builder.TaxModifier);
 
@@ -59,14 +59,20 @@ namespace StrategyGame.Bll
             await DesertUnits(country, context, cancel).ConfigureAwait(false);
 
             // Advance research and buildings
-            foreach (var b in country.InProgressBuildings)
+            foreach (var b in country.InProgressBuildings.ToList())
             {
-                b.TimeLeft--;
+                if (b.TimeLeft >= 0)
+                {
+                    b.TimeLeft--;
+                }
             }
 
-            foreach (var r in country.InProgressResearches)
+            foreach (var r in country.InProgressResearches.ToList())
             {
-                r.TimeLeft--;
+                if (r.TimeLeft >= 0)
+                {
+                    r.TimeLeft--;
+                }
             }
 
             // Add buildings that are completed
@@ -76,7 +82,7 @@ namespace StrategyGame.Bll
         }
 
         public async Task HandleCombatAsync(UnderSeaDatabaseContext context, int countryId,
-            CountryModifierBuilder builder, CancellationToken cancel)
+            CountryModifierBuilder builder, Func<int, CountryModifierBuilder> builderFactory, CancellationToken cancel)
         {
             // Find the country and then load the nav properties we need
             var country = await context.Countries.FindAsync(new object[] { countryId }, cancel).ConfigureAwait(false);
@@ -105,7 +111,7 @@ namespace StrategyGame.Bll
             {
                 await context.Entry(attack).Collection(c => c.Divisons).LoadAsync(cancel).ConfigureAwait(false);
 
-                double attackPower = GetCurrentUnitPower(attack, true, builder);
+                double attackPower = GetCurrentUnitPower(attack, true, builderFactory(attack.ParentCountry.Id));
                 double defensePower = GetCurrentUnitPower(defenders, false, builder);
 
                 if (attackPower > defensePower)
@@ -164,6 +170,36 @@ namespace StrategyGame.Bll
                 + country.Buildings.Count * 50
                 + divisionScore
                 + country.Researches.Count * 100;
+
+            // Merge all commands into the defense command
+            var defenders = country.GetAllDefending();
+
+            // Load units in defenders.
+            foreach (var div in defenders.Divisons)
+            {
+                await context.Entry(div).Reference(d => d.Unit).LoadAsync(cancel).ConfigureAwait(false);
+            }
+
+            foreach (var attack in country.Commands.Where(c => c.Id != defenders.Id).ToList())
+            {
+                foreach (var div in attack.Divisons)
+                {
+                    // Load unit info in attack
+                    await context.Entry(div).Reference(d => d.Unit).LoadAsync(cancel).ConfigureAwait(false);
+
+                    var existing = defenders.Divisons.SingleOrDefault(d => d.Unit.Id == div.Unit.Id);
+                    if (existing == null)
+                    {
+                        div.ParentCommand = defenders;
+                    }
+                    else
+                    {
+                        existing.Count += div.Count;
+                    }
+                }
+
+                context.Commands.Remove(attack);
+            }
         }
 
         protected double GetCurrentUnitPower(Command command, bool doGetAttack, CountryModifierBuilder builder)
