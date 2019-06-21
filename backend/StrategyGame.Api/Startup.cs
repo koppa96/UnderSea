@@ -22,6 +22,7 @@ using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
 using System;
 using System.IO;
+using System.Threading;
 
 namespace StrategyGame.Api
 {
@@ -137,6 +138,9 @@ namespace StrategyGame.Api
             app.UseHangfireDashboard();
 
             app.UseMvc();
+
+            RecurringJob.AddOrUpdate(() => app.ApplicationServices.GetService<ITurnHandlingService>().EndTurnAsync(
+                app.ApplicationServices.GetService<UnderSeaDatabaseContext>(), CancellationToken.None), Cron.Hourly);
         }
     }
 }
