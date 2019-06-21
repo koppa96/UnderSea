@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using StrategyGame.Bll.Dto.Sent;
 using StrategyGame.Bll.Dto.Sent.Country;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace StrategyGame.Bll.Services.Country
 {
@@ -56,23 +55,66 @@ namespace StrategyGame.Bll.Services.Country
                     .ThenInclude(b => b.Building)
                         .ThenInclude(b => b.Content)
                .Include(c => c.Researches)
-                    .ThenInclude(b => b.Research)
+                    .ThenInclude(r => r.Research)
+                        .ThenInclude(r => r.Content)
+               .Include(c => c.InProgressBuildings)
+                    .ThenInclude(b => b.Building)
                         .ThenInclude(b => b.Content)
+               .Include(c => c.InProgressResearches)
+                    .ThenInclude(r => r.Research)
+                        .ThenInclude(r => r.Content)
                .SingleAsync(c => c.ParentUser.UserName == username).ConfigureAwait(false);
 
             var info = Mapper.Map<Model.Entities.Country, CountryInfo>(country);
-            info.Buildings = country.Buildings.Select(b => Mapper.Map<CountryBuilding, BriefCreationInfo>(b)).ToList();
-            info.Researches = country.Researches.Select(r => Mapper.Map<CountryResearch, BriefCreationInfo>(r)).ToList();
+            var totalBuildings = country.Buildings.ToDictionary(b => b.Building.Id, b => Mapper.Map<CountryBuilding, BriefCreationInfo>(b));
+            var totalResearches = country.Researches.ToDictionary(r => r.Research.Id, r => Mapper.Map<CountryResearch, BriefCreationInfo>(r));
 
             // Calculate the in-progress research count
-            //foreach (var building in country.InProgressBuildings)
+            var inProgressBuildings = country.InProgressBuildings.GroupBy(b => b.Building);
 
-            throw new NotImplementedException();
+            foreach (var building in inProgressBuildings)
+            {
+                if (totalBuildings.ContainsKey(building.Key.Id))
+                {
+                    totalBuildings[building.Key.Id].InProgressCount += building.Count();
+                }
+                else
+                {
+                    var bInfo = Mapper.Map<BuildingType, BriefCreationInfo>(building.Key);
+                    bInfo.InProgressCount += building.Count();
+                    totalBuildings.Add(building.Key.Id, bInfo);
+                }
+            }
+
+            var inProgressResearches = country.InProgressResearches.GroupBy(b => b.Research);
+
+            foreach (var research in inProgressResearches)
+            {
+                if (totalResearches.ContainsKey(research.Key.Id))
+                {
+                    totalResearches[research.Key.Id].InProgressCount += research.Count();
+                }
+                else
+                {
+                    var rInfo = Mapper.Map<ResearchType, BriefCreationInfo>(research.Key);
+                    rInfo.InProgressCount += research.Count();
+                    totalResearches.Add(research.Key.Id, rInfo);
+                }
+            }
+
+            info.Buildings = totalBuildings.Select(x => x.Value).ToList();
+            info.Researches = totalResearches.Select(x => x.Value).ToList();
+
+            return info;
         }
 
-        public Task<IEnumerable<RankInfo>> GetRankedListAsync()
+        public async Task<IEnumerable<RankInfo>> GetRankedListAsync()
         {
-            throw new NotImplementedException();
+            return await Database.Countries
+                .Where(c => c.Rank > 0)
+                .OrderBy(c => c.Rank)
+                .Select(c => Mapper.Map<Model.Entities.Country, RankInfo>(c))
+                .ToListAsync().ConfigureAwait(false);
         }
     }
 }
