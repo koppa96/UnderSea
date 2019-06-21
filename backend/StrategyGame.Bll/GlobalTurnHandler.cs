@@ -10,16 +10,14 @@ namespace StrategyGame.Bll
 {
     public class GlobalTurnHandler
     {
+        public CountryTurnHandler Handler { get; }
+
         public GlobalTurnHandler(CountryTurnHandler handler)
         {
             Handler = handler ?? throw new ArgumentNullException(nameof(handler));
         }
 
-        public CountryTurnHandler Handler { get; }
-
-
-
-        public async Task EndTurnAsync(UnderSeaDatabaseContext context, CancellationToken cancel)
+        public async Task EndTurnAsync(UnderSeaDatabaseContext context, CancellationToken cancel = default)
         {
             var turnData = new Dictionary<int, CountryModifierBuilder>();
 
@@ -50,7 +48,11 @@ namespace StrategyGame.Bll
             // Calculate ranking
             int index = 0;
             await context.Countries.OrderByDescending(c => c.Score).ForEachAsync(c => c.Rank = ++index).ConfigureAwait(false);
-            
+
+            // Increment turn number
+            var globals = await context.GlobalValues.SingleAsync().ConfigureAwait(false);
+            globals.Round++;
+
             // TODO Remove invalid in progress stuff
             //context.InProgressBuildings.RemoveRange(context.InProgressBuildings.Where(b => b.TimeLeft <= 0));
             //context.InProgressResearches.RemoveRange(context.InProgressResearches.Where(r => r.TimeLeft <= 0));

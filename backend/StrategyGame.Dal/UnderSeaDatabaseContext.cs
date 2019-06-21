@@ -131,6 +131,9 @@ namespace StrategyGame.Dal
         /// <param name="Builder">The <see cref="ModelBuilder"/> to use.</param>
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            // User
+            builder.Entity<User>().Property(u => u.RuledCountryId).IsRequired(false);
+
             // Effect
             builder.Entity<Effect>().Property(e => e.Name).IsRequired().HasMaxLength(200);
             builder.Entity<Effect>().Property(e => e.Value).IsRequired();

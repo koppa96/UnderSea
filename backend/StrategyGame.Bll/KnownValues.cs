@@ -5,8 +5,8 @@
     //	- Add a new database under "Databases", by the name "UnderSeaDb"
     //	- Open the nuget package manager console(VS -> Tools)
     //	- Select the Dal project as Default project in the console
-    //	- add-migration initial -context UnderSeaDatabase
-    //	- update-database -context UnderSeaDatabase
+    //	- add-migration initial
+    //	- update-database
 
     // To fill the db with initial data:
     //	- Run the DatabaseHelper project: By default this clears the entire DB, and then adds defaults.
@@ -52,7 +52,44 @@
         /// </summary>
         public const string HarvestModifier = "harvest-modifier";
 
-        public const int BuildingTime = 5;
-        public const int ResearchTime = 15;
+        /// <summary>
+        /// The default time to build buildings, in turns.
+        /// </summary>
+        public const int DefaultBuildingTime = 5;
+
+        /// <summary>
+        /// The default time to research things, in turns.
+        /// </summary>
+        public const int DefaultResearchTime = 15;
+
+        /// <summary>
+        /// The percentage of units lost in a lost battle.
+        /// </summary>
+        public const double UnitLossOnDefense = 0.1;
+
+        /// <summary>
+        /// The percentage of resources lost when the country is looted.
+        /// </summary>
+        public const double LootPercentage = 0.5;
+
+        /// <summary>
+        /// The multiplier for population during score calculation.
+        /// </summary>
+        public const double ScorePopulationMultiplier = 1;
+
+        /// <summary>
+        /// The multiplier for units during score calculation.
+        /// </summary>
+        public const double ScoreUnitMultiplier = 5;
+
+        /// <summary>
+        /// The multiplier for buildings during score calculation.
+        /// </summary>
+        public const double ScoreBuildingMultiplier = 50;
+
+        /// <summary>
+        /// The multiplier for researches during score calculation.
+        /// </summary>
+        public const double ScoreResearchMultiplier = 100;
     }
 }

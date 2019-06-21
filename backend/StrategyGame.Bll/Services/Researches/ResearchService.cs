@@ -83,7 +83,7 @@ namespace StrategyGame.Bll.Services.Researches
             {
                 ParentCountry = country,
                 Research = researchType,
-                TimeLeft = KnownValues.ResearchTime
+                TimeLeft = KnownValues.DefaultResearchTime
             };
 
             _context.InProgressResearches.Add(inProgressResearch);

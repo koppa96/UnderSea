@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using StrategyGame.Bll.Dto.Sent;
 using StrategyGame.Bll.Dto.Sent.Country;
 using StrategyGame.Model.Entities;
 using System;
@@ -12,6 +13,7 @@ namespace StrategyGame.Bll.Mapping
         public CountryInfoMapper()
         {
             CreateMap<Country, CountryInfo>();
+            CreateMap<Country, RankInfo>();
 
             CreateMap<CountryBuilding, BriefCreationInfo>()
                 .ForMember(dest => dest.ImageUrl, conf => conf.MapFrom(src => src.Building.Content.ImageUrl))

@@ -37,25 +37,7 @@ namespace StrategyGame.Bll.Services.Units
               .ThenInclude(u => u.Content)
               .SingleAsync(c => c.ParentUser.UserName == username).ConfigureAwait(false);
 
-            var flattened = new Dictionary<UnitType, int>();
-            foreach (var div in country.Commands.SelectMany(c => c.Divisons))
-            {
-                if (flattened.ContainsKey(div.Unit))
-                {
-                    flattened[div.Unit] += div.Count;
-                }
-                else
-                {
-                    flattened.Add(div.Unit, div.Count);
-                }
-            }
-
-            return flattened.Select(d =>
-            {
-                var info = Mapper.Map<UnitType, UnitInfo>(d.Key);
-                info.Count = d.Value;
-                return info;
-            });
+            return await country.GetAllUnitInfoAsync(Database, Mapper).ConfigureAwait(false);
         }
 
         public async Task<UnitInfo> CreateUnitAsync(string username, int unitId, int count)
@@ -66,6 +48,7 @@ namespace StrategyGame.Bll.Services.Units
             }
 
             var unit = await Database.UnitTypes.FindAsync(unitId).ConfigureAwait(false);
+            await Database.Entry(unit).Reference(u => u.Content).LoadAsync().ConfigureAwait(false);
 
             if (unit == null)
             {
@@ -76,7 +59,6 @@ namespace StrategyGame.Bll.Services.Units
                .Include(c => c.Commands)
                .ThenInclude(comm => comm.Divisons)
                .ThenInclude(d => d.Unit)
-               .ThenInclude(u => u.Content)
                .SingleAsync(c => c.ParentUser.UserName == username).ConfigureAwait(false);
 
             // Check cost
@@ -88,7 +70,7 @@ namespace StrategyGame.Bll.Services.Units
                 throw new InvalidOperationException("Units too expensive");
             }
 
-            var builder = await Database.ParseAllEffectForCountry(country.Id, Parsers).ConfigureAwait(false);
+            var builder = await Database.ParseAllEffectForCountryAsync(country.Id, Parsers).ConfigureAwait(false);
             var totalUnits = country.Commands.Sum(c => c.Divisons.Sum(d => d.Count));
 
             // Check pop-space

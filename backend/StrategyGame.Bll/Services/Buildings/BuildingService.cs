@@ -76,7 +76,7 @@ namespace StrategyGame.Bll.Services.Buildings
             {
                 ParentCountry = country,
                 Building = buildingType,
-                TimeLeft = KnownValues.BuildingTime
+                TimeLeft = KnownValues.DefaultBuildingTime
             };
             _context.InProgressBuildings.Add(inProgressBuilding);
             await _context.SaveChangesAsync();

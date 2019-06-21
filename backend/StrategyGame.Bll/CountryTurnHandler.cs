@@ -5,7 +5,6 @@ using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,16 +15,14 @@ namespace StrategyGame.Bll
     {
         static readonly Random rng = new Random();
 
-        public CountryTurnHandler(ModifierParserContainer parsers)
-        {
-            Parsers = parsers ?? throw new ArgumentNullException(nameof(parsers));
-        }
-
         public ModifierParserContainer Parsers { get; }
 
         public event EventHandler<CountryLootedEventArgs> CountryLooted;
 
-
+        public CountryTurnHandler(ModifierParserContainer parsers)
+        {
+            Parsers = parsers ?? throw new ArgumentNullException(nameof(parsers));
+        }
 
         public async Task<CountryModifierBuilder> HandlePreCombatAsync(UnderSeaDatabaseContext context, int countryId,
             CancellationToken cancel)
@@ -47,7 +44,7 @@ namespace StrategyGame.Bll
             // Get global data
             var globals = await context.GlobalValues.SingleAsync(cancel).ConfigureAwait(false);
 
-            var builder = await context.ParseAllEffectForCountry(countryId, Parsers).ConfigureAwait(false);
+            var builder = await context.ParseAllEffectForCountryAsync(countryId, Parsers).ConfigureAwait(false);
 
             // #1: Tax
             country.Pearls += (long)Math.Round(builder.Population * globals.BaseTaxation * builder.TaxModifier);
@@ -103,12 +100,13 @@ namespace StrategyGame.Bll
                 .Select(x => x.Command)
                 .ToList();
 
-            // Get defenders,  Calculate the current defense power
+            // Get defenders
             var defenders = country.GetAllDefending();
             await context.Entry(defenders).Collection(c => c.Divisons).LoadAsync(cancel).ConfigureAwait(false);
 
             foreach (var attack in incomingAttacks)
             {
+                // Load the divisions, calculate attack and defense powers
                 await context.Entry(attack).Collection(c => c.Divisons).LoadAsync(cancel).ConfigureAwait(false);
 
                 double attackPower = GetCurrentUnitPower(attack, true, builderFactory(attack.ParentCountry.Id));
@@ -117,11 +115,11 @@ namespace StrategyGame.Bll
                 if (attackPower > defensePower)
                 {
                     // Attackers won, defender loose 10% of units, and loose 50% of current pearl and coral
-                    CullUnits(defenders, 0.1);
+                    CullUnits(defenders, KnownValues.UnitLossOnDefense);
 
                     // Remove the looted amounts
-                    var pearlLoot = (long)Math.Round(country.Pearls * 0.5);
-                    var coralLoot = (long)Math.Round(country.Corals * 0.5);
+                    var pearlLoot = (long)Math.Round(country.Pearls * KnownValues.LootPercentage);
+                    var coralLoot = (long)Math.Round(country.Corals * KnownValues.LootPercentage);
 
                     country.Pearls -= pearlLoot;
                     country.Corals -= coralLoot;
@@ -132,7 +130,7 @@ namespace StrategyGame.Bll
                 else
                 {
                     // Defenders won, attacker loose 10% of units.
-                    CullUnits(attack, 0.1);
+                    CullUnits(attack, KnownValues.UnitLossOnDefense);
                 }
             }
         }
@@ -164,12 +162,11 @@ namespace StrategyGame.Bll
                 divisionScore += comm.Divisons.Sum(d => d.Count);
             }
 
-            divisionScore *= 5;
-
-            country.Score = builder.Population
-                + country.Buildings.Count * 50
-                + divisionScore
-                + country.Researches.Count * 100;
+            country.Score = (long)Math.Round(
+                builder.Population * KnownValues.ScorePopulationMultiplier
+                + country.Buildings.Count * KnownValues.ScoreBuildingMultiplier
+                + divisionScore * KnownValues.ScoreUnitMultiplier
+                + country.Researches.Count * KnownValues.ScoreResearchMultiplier);
 
             // Merge all commands into the defense command
             var defenders = country.GetAllDefending();
@@ -204,6 +201,7 @@ namespace StrategyGame.Bll
 
         protected double GetCurrentUnitPower(Command command, bool doGetAttack, CountryModifierBuilder builder)
         {
+            // Get attack or defense power, attack power is modified randomly +-5%.
             if (doGetAttack)
             {
                 return command.Divisons.Sum(d => d.Count * d.Unit.AttackPower * builder.AttackModifier) * (rng.NextDouble() / 10 + 0.95);
@@ -229,17 +227,20 @@ namespace StrategyGame.Bll
 
         protected async Task DesertUnits(Country country, UnderSeaDatabaseContext context, CancellationToken cancel)
         {
+            // Load commands, divisons and units in the divisions
             await context.Entry(country).Collection(c => c.Commands).LoadAsync(cancel).ConfigureAwait(false);
 
             long pearlUpkeep = 0;
             long coralUpkeep = 0;
-
             foreach (var comm in country.Commands)
             {
                 await context.Entry(comm).Collection(c => c.Divisons).LoadAsync(cancel).ConfigureAwait(false);
-
-                pearlUpkeep += comm.Divisons.Sum(u => u.Count * u.Unit.CostPearl);
-                coralUpkeep += comm.Divisons.Sum(u => u.Count * u.Unit.CostCoral);
+                foreach (var div in comm.Divisons)
+                {
+                    await context.Entry(div).Reference(d => d.Unit).LoadAsync(cancel).ConfigureAwait(false);
+                    pearlUpkeep += div.Count * div.Unit.CostPearl;
+                    coralUpkeep += div.Count * div.Unit.CostCoral;
+                }
             }
 
             if (coralUpkeep > country.Corals || pearlUpkeep > country.Pearls)

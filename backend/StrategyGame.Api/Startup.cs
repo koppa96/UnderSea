@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -14,12 +8,17 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using NSwag.CodeGeneration.TypeScript;
 using StrategyGame.Bll;
+using StrategyGame.Bll.EffectParsing;
+using StrategyGame.Bll.Services.Buildings;
+using StrategyGame.Bll.Services.Country;
+using StrategyGame.Bll.Services.Researches;
+using StrategyGame.Bll.Services.Units;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
+using System;
+using System.IO;
 
 namespace StrategyGame.Api
 {
@@ -54,7 +53,7 @@ namespace StrategyGame.Api
                 .AddInMemoryClients(IdentityServerConfig.GetClients(Configuration))
                 .AddAspNetIdentity<User>();
 
-            services.AddAuthentication(options => 
+            services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -96,6 +95,24 @@ namespace StrategyGame.Api
             });
 
             services.AddAutoMapper(typeof(KnownValues).Assembly);
+
+            services.AddSingleton(new ModifierParserContainer(new AbstractEffectModifierParser[]
+                {
+                    new BarrackSpaceEffectParser(),
+                    new CoralProductionEffectParser(),
+                    new HarvestModifierEffectParser(),
+                    new PopulationEffectParser(),
+                    new TaxModifierEffectParser(),
+                    new UnitDefenseEffectParser(),
+                    new UnitAttackEffectParser()
+                }));
+
+            services.AddTransient<GlobalTurnHandler>();
+            services.AddTransient<CountryTurnHandler>();
+            services.AddTransient<ICountryService, CountryService>();
+            services.AddTransient<IResearchService, ResearchService>();
+            services.AddTransient<IBuildingService, BuildingService>();
+            services.AddTransient<IUnitService, UnitService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

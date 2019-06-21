@@ -8,7 +8,7 @@
         /// <summary>
         /// Gets or sets the current round of the game.
         /// </summary>
-        public uint Round { get; set; }
+        public ulong Round { get; set; }
 
         /// <summary>
         /// Gets or sets the starting population for a country.

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using StrategyGame.Bll.Dto.Sent;
 using StrategyGame.Bll.Dto.Sent.Country;
+using StrategyGame.Bll.Extensions;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
 using System;
@@ -66,44 +67,54 @@ namespace StrategyGame.Bll.Services.Country
                .SingleAsync(c => c.ParentUser.UserName == username).ConfigureAwait(false);
 
             var info = Mapper.Map<Model.Entities.Country, CountryInfo>(country);
-            var totalBuildings = country.Buildings.ToDictionary(b => b.Building.Id, b => Mapper.Map<CountryBuilding, BriefCreationInfo>(b));
-            var totalResearches = country.Researches.ToDictionary(r => r.Research.Id, r => Mapper.Map<CountryResearch, BriefCreationInfo>(r));
+            var globals = await Database.GlobalValues.SingleAsync().ConfigureAwait(false);
+            info.Round = globals.Round;
 
-            // Calculate the in-progress research count
-            var inProgressBuildings = country.InProgressBuildings.GroupBy(b => b.Building);
+            // Start with all buildings and researches
+            var totalBuildings = await Database.BuildingTypes.Include(r => r.Content)
+                .ToDictionaryAsync(x => x.Id, x => Mapper.Map<BuildingType, BriefCreationInfo>(x)).ConfigureAwait(false);
+            var totalResearches = await Database.ResearchTypes.Include(r => r.Content)
+                .ToDictionaryAsync(x => x.Id, x => Mapper.Map<ResearchType, BriefCreationInfo>(x)).ConfigureAwait(false);
 
-            foreach (var building in inProgressBuildings)
+            // Map all existing buildings and researches
+            foreach (var building in country.Buildings)
             {
-                if (totalBuildings.ContainsKey(building.Key.Id))
+                totalBuildings[building.Building.Id] = Mapper.Map<CountryBuilding, BriefCreationInfo>(building);
+            }
+
+            foreach (var research in country.Researches)
+            {
+                totalBuildings[research.Research.Id] = Mapper.Map<CountryResearch, BriefCreationInfo>(research);
+            }
+
+            // Add in progress buildings and researches
+            foreach (var building in country.InProgressBuildings)
+            {
+                if (totalBuildings[building.Building.Id] == null)
                 {
-                    totalBuildings[building.Key.Id].InProgressCount += building.Count();
+                    totalBuildings[building.Building.Id] = Mapper.Map<BuildingType, BriefCreationInfo>(building.Building);
                 }
                 else
                 {
-                    var bInfo = Mapper.Map<BuildingType, BriefCreationInfo>(building.Key);
-                    bInfo.InProgressCount += building.Count();
-                    totalBuildings.Add(building.Key.Id, bInfo);
+                    totalBuildings[building.Building.Id].InProgressCount++;
                 }
             }
 
-            var inProgressResearches = country.InProgressResearches.GroupBy(b => b.Research);
-
-            foreach (var research in inProgressResearches)
+            foreach (var research in country.InProgressResearches)
             {
-                if (totalResearches.ContainsKey(research.Key.Id))
+                if (totalResearches[research.Research.Id] == null)
                 {
-                    totalResearches[research.Key.Id].InProgressCount += research.Count();
+                    totalResearches[research.Research.Id] = Mapper.Map<ResearchType, BriefCreationInfo>(research.Research);
                 }
                 else
                 {
-                    var rInfo = Mapper.Map<ResearchType, BriefCreationInfo>(research.Key);
-                    rInfo.InProgressCount += research.Count();
-                    totalResearches.Add(research.Key.Id, rInfo);
+                    totalResearches[research.Research.Id].InProgressCount++;
                 }
             }
 
             info.Buildings = totalBuildings.Select(x => x.Value).ToList();
             info.Researches = totalResearches.Select(x => x.Value).ToList();
+            info.ArmyInfo = await country.GetAllUnitInfoAsync(Database, Mapper).ConfigureAwait(false);
 
             return info;
         }
