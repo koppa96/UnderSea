@@ -9,11 +9,11 @@ namespace StrategyGame.Bll.Mapping
         public BuildingMapper()
         {
             CreateMap<BuildingType, CreationInfo>()
-                .ForMember(ci => ci.Name, conf => conf.MapFrom(b => b.Content.Name))
-                .ForMember(ci => ci.Description, conf => conf.MapFrom(b => b.Content.Description))
-                .ForMember(ci => ci.ImageUrl, conf => conf.MapFrom(b => b.Content.ImageUrl))
-                .ForMember(ci => ci.Cost, conf => conf.MapFrom(b => b.CostPearl))
-                .ForMember(ci => ci.Count, conf => conf.MapFrom(b => 0));
+                .ForMember(dest => dest.Name, conf => conf.MapFrom(src => src.Content.Name))
+                .ForMember(dest => dest.Description, conf => conf.MapFrom(src => src.Content.Description))
+                .ForMember(dest => dest.ImageUrl, conf => conf.MapFrom(src => src.Content.ImageUrl))
+                .ForMember(dest => dest.Cost, conf => conf.MapFrom(src => src.CostPearl))
+                .ForMember(dest => dest.Count, conf => conf.MapFrom(src => 0));
         }
     }
 }
