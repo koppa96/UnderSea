@@ -303,6 +303,8 @@ namespace StrategyGame.Bll.Extensions
                 ParentCommand = d3,
                 Unit = u3
             });
+
+            await context.SaveChangesAsync();
         }
     }
 }

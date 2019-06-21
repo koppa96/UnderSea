@@ -11,6 +11,8 @@ namespace StrategyGame.Tests.Services
 {
     public class UtilityFactory
     {
+        private static bool mapperInitialized = false;
+
         public static UnderSeaDatabaseContext CreateContext()
         {
             var options = new DbContextOptionsBuilder<UnderSeaDatabaseContext>()
@@ -22,9 +24,14 @@ namespace StrategyGame.Tests.Services
 
         public static IMapper CreateMapper()
         {
-            var mapperConfiguration = new MapperConfigurationExpression();
-            mapperConfiguration.AddProfiles(typeof(KnownValues).Assembly);
-            Mapper.Initialize(mapperConfiguration);
+            if (!mapperInitialized)
+            {
+                var mapperConfiguration = new MapperConfigurationExpression();
+                mapperConfiguration.AddProfiles(typeof(KnownValues).Assembly);
+                Mapper.Initialize(mapperConfiguration);
+                mapperInitialized = true;
+            }
+            
             return Mapper.Instance;
         }
     }
