@@ -1,17 +1,33 @@
 import React from "react";
-import { ComponentHeader } from "../componentHeader";
+import { ComponentHeader } from "../../../components/componentHeader";
 import { ArmyItem } from "./ArmyItem";
+import { initialItems } from "./Interface";
 
 export class Army extends React.Component {
-  componentWillMount() {
+  componentDidMount() {
     document.title = title;
   }
 
+  state = {
+    trops: initialItems
+  };
+
+  currentSoliders = (id: string, trop: number) => {
+    const asd = this.state.trops;
+    const filtered = asd.filter(x => x.id !== id);
+    this.setState({ trops: [...filtered, { id: id, amount: trop }] });
+  };
+
   render() {
     return (
-      <div className="main-component">
+      <div className="main-component army-component">
         <ComponentHeader title={title} mainDescription={mainDescription} />
-        <div className="building-page hide-scroll" />
+        <div className="army-page hide-scroll">
+          {mockData.length > 0 &&
+            mockData.map(item => (
+              <ArmyItem solider={item} currentTrops={this.currentSoliders} />
+            ))}
+        </div>
         <button>Megveszem</button>
       </div>
     );
@@ -25,24 +41,30 @@ const mockData = [
     id: 1,
     imageUrl: "asdasd",
     title: "Lézercápa",
-    description: "50 ember-t ad a népességhez 200 krumplit termel körönként",
-    amount: "1 db",
-    price: "45 Gyöngy / db"
+    amount: 10,
+    stat: "1/2",
+    price: "45 Gyöngy / db",
+    price2: "45 Gyöngy / db",
+    price3: "45 Gyöngy / db"
   },
   {
     id: 2,
     imageUrl: "Rohamfóka",
     title: "Áramlásirányító",
-    description: "200 egység nyújt szállást",
-    amount: "0 db",
-    price: "35 Gyöngy / db"
+    amount: 3,
+    stat: "1/2",
+    price: "45 Gyöngy / db",
+    price2: "45 Gyöngy / db",
+    price3: "45 Gyöngy / db"
   },
   {
     id: 3,
     imageUrl: "asdasd",
     title: "Csatacsikó",
-    description: "50 ember-t ad a népességhez 200 krumplit termel körönként",
-    amount: "1 db",
-    price: "45 Gyöngy / db"
+    amount: 2,
+    stat: "1/2",
+    price: "45 Gyöngy / db",
+    price2: "45 Gyöngy / db",
+    price3: "45 Gyöngy / db"
   }
 ];

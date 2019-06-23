@@ -1,6 +1,11 @@
 $local-input-paddingh: 10px;
 $local-input-paddingw: 23px;
 
+.rank-width {
+  flex: 1;
+  max-width: 700px;
+}
+
 .rank-input {
   font-family: OpenSansRegular;
   width: 100%;
@@ -21,14 +26,14 @@ $local-input-paddingw: 23px;
   list-style-type: none;
   max-height: 450px;
   overflow: scroll;
- 
+
   li {
     display: flex;
     padding: 20px;
     flex-direction: row;
     border-bottom: 2px solid $underline-color;
-    span:first-child{
-        margin-right: 30px;
+    span:first-child {
+      margin-right: 30px;
     }
     span {
       padding-right: 10px;

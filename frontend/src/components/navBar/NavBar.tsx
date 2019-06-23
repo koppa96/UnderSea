@@ -1,39 +1,34 @@
 import * as React from "react";
 import { NavBarIcon } from "./../navBarIcons/index";
+import { NavBarProps } from "./Interface";
 
-export class NavBar extends React.Component {
+export class NavBar extends React.Component<NavBarProps> {
+  componentDidMount() {
+    const { navbar } = this.props;
+    console.log(navbar);
+  }
   render() {
+    //2x render?
+    const { navbar } = this.props;
+    console.log("navbar render", navbar);
     return (
       <div className="navbar-bg">
-        <div className="navbar container-fluid navbar-color ">
+        <div className="navbar-color ">
+          <div>
+            <span>4.kör</span>
+
+            <span>23.hely</span>
+          </div>
           <ul className="nav navbar-nav">
-            <li>
-              <span>4.kör</span>
-            </li>
-            <li>
-              <span>23.hely</span>
-            </li>
-            <li>
-              <NavBarIcon url="" amount="4" />
-            </li>
-            <li>
-              <NavBarIcon url="" amount="4" info="20/sajt" />
-            </li>
-            <li>
-              <NavBarIcon url="" amount="400" info="200/sajt" />
-            </li>
-            <li>
-              <NavBarIcon url="" amount="4" info="20/sajt" />
-            </li>
-            <li>
-              <NavBarIcon url="" amount="4" info="20/sajt" />
-            </li>
-            <li>
-              <NavBarIcon url="" amount="4" info="20/sajt" />
-            </li>
-            <li>
-              <NavBarIcon url="" amount="4" info="20/sajt" />
-            </li>
+            {navbar.navBarIcons.map(item => (
+              <li key={item.id}>
+                <NavBarIcon
+                  id={item.id}
+                  imageUrl={item.imageUrl}
+                  amount={item.amount}
+                />
+              </li>
+            ))}
           </ul>
         </div>
       </div>

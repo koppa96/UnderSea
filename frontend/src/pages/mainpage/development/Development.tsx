@@ -1,9 +1,9 @@
 import React from "react";
-import { ComponentHeader } from "../componentHeader";
+import { ComponentHeader } from "../../../components/componentHeader";
 import { DevelopmentItem } from "./developmentItem";
 
 export class Development extends React.Component {
-  componentWillMount() {
+  componentDidMount() {
     document.title = "Development";
   }
 

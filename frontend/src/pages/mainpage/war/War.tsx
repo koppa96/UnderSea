@@ -1,5 +1,5 @@
 import React from "react";
-import { ComponentHeader } from "../componentHeader";
+import { ComponentHeader } from "../../../components/componentHeader";
 
 export class War extends React.Component {
   componentDidMount() {
@@ -15,7 +15,7 @@ export class War extends React.Component {
             <li key={item.id}>
               <span className="war-country">{item.title}</span>
               <div className="war-scroll">
-                {item.trops.map((single,index) => (
+                {item.trops.map((single, index) => (
                   <div key={index}>
                     <span className="war-margin">{single.amount}</span>
                     <span>{single.type}</span>

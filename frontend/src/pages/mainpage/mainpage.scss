@@ -23,14 +23,11 @@
     margin-right: $total-padding-vertical;
     main {
       flex: 1;
-      position: relative;
-    }
-    main > * {
-      margin: 0;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-right: 30px;
+      padding-left: 30px;
     }
   }
 }

@@ -54,18 +54,18 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  
-  min-width: 780px;
-  
-  @media screen and (max-width: $first-breakpoint) {
-    min-width: 700px;
-  }
-  @media screen and (max-width: $second-breakpoint) {
-    min-width: 600px;
-  }
-  @media screen and (max-width: $third-breakpoint) {
-    min-width: 400px;
-  }
+  max-width: 1000px;
+  max-height: 750px;
+}
+.circle {
+  width: 30px;
+  height: 30px;
+  background-color: $primary-color;
+  border-radius: 50%;
+  user-select: none;
+}
+.circle:active {
+  box-shadow: 0 3px 6px rgba(59, 125, 189, 1);
 }
 
 .hide-scroll::-webkit-scrollbar {
@@ -77,30 +77,6 @@
   -ms-overflow-style: none;
 }
 
-.component-header {
-  margin-bottom: 31px;
-  width: 100%;
-  h2 {
-    @extend .undersea-font;
-    font-size: 32px;
-    color: white;
-    margin: 0;
-  }
-  .main-font-important {
-    font-size: 16px;
-    font-family: OpenSansBold;
-    margin: 0;
-    color: white;
-    
-    padding-top: 17px;
-  }
-  p {
-    font-size: 16px;
-    margin: 0;
-    font-family: OpenSansRegular;
-    color: white;
-  }
-}
 button {
   color: $secondary-color;
   text-align: center;
@@ -109,7 +85,7 @@ button {
   border-radius: 100px;
   min-width: 190px;
   border: none;
-  height: 50px;
+  min-height: 50px;
   box-shadow: 0 3px 6px rgba(59, 125, 189, 1);
   background-image: linear-gradient(
     to right,

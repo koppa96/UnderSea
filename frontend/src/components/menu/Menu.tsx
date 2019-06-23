@@ -11,6 +11,9 @@ export const Menu = () => {
         <Link to="/account/gyak">Gyakorlás</Link>
       </li>
       <li>
+        <Link to="/account/attack">Támadás</Link>
+      </li>
+      <li>
         <Link to="/account/development">Fejlesztések</Link>
       </li>
       <li>

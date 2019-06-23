@@ -3,7 +3,7 @@ import { BuildingProps } from "./Interface";
 import BuildingImg from "./../../../../assets/images/building-bg.png";
 
 export const BuildingItem = (props: BuildingProps) => {
-  const { title, description, price, amount, imageUrl } = props.building;
+  const { title, description, price, amount, imageUrl } = props;
 
   return (
     <div className="building-item">

@@ -4,6 +4,7 @@ import ProfileImg from "./../../assets/images/profile-bg.svg";
 
 export class ProfileContainer extends React.Component {
   render = () => {
+    console.log("profile container rendered");
     return (
       <div className="profile-bg">
         <div className="rectangle">

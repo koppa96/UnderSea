@@ -1,6 +1,8 @@
 import * as React from "react";
 import { NavBarIconProp } from "./Interface";
 
+import ProfileImg from "./../../assets/images/profile-bg.svg";
+
 export const NavBarIcon = (props: NavBarIconProp) => {
   const info = props.info && (
     <span className="navbaricon-info">{props.info}</span>
@@ -9,10 +11,11 @@ export const NavBarIcon = (props: NavBarIconProp) => {
   return (
     <div className="navbaricon-bg">
       <div className="navbaricon-rectangle">
-        <div>asd</div>
+        <img src={ProfileImg} alt="Icon" />
       </div>
       <div className="navbaricon-font">
         <span className="navbaricon-amount">{props.amount}</span>
+        <span className="navbaricon-amount">{props.id}</span>
         {info}
       </div>
     </div>

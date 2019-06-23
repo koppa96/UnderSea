@@ -4,7 +4,7 @@ import { IRequestParamState } from "./store/actions/buildingActions";
 interface NativeProps {}
 
 export interface MappedProps {
-  buildingState: BuildingState;
+  boughtBuildingState: BuildingState;
 }
 
 export interface DispachedProps {

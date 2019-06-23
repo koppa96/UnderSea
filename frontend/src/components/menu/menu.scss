@@ -1,0 +1,25 @@
+.menu-bg {
+  padding: 0;
+
+  > li {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 24px;
+    > a {
+      color: $secondary-color;
+      text-align: center;
+      font-family: Baloo;
+      font-size: 18px;
+      border-radius: 90px;
+      flex: 1;
+      padding-top: 12px;
+      padding-bottom: 12px;
+      box-shadow: 0 3px 6px rgba(59, 125, 189, 1);
+      background-image: linear-gradient(
+        to right,
+        rgba(15, 207, 222, 1),
+        rgba(159, 255, 240, 1)
+      );
+    }
+  }
+}

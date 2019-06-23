@@ -1,5 +1,3 @@
-@import "./variables.scss";
-
 .building-page {
   height: 380px;
   display: flex;
@@ -63,6 +61,10 @@
       }
     }
   }
+}
+.temptemp {
+  color: red;
+  font-size: 30px;
 }
 .building-item:hover {
   background-color: rgba(112, 112, 112, 0.12);

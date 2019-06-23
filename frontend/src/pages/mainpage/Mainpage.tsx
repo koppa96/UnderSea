@@ -8,26 +8,28 @@ import { Development } from "./development/Development";
 import { War } from "./war";
 import { Rank } from "./rank";
 import { Army } from "./army";
-import { Test } from "../gyakorlás";
 import { TestConnected } from "../gyakorlás/connect";
 import { BuildingsConnected } from "./buildings/connect";
+import { NavBarConnected } from "../../components/navBar/connect";
+import { Attack } from "./attack";
 
 export class MainPage extends React.Component {
-  componentWillMount() {
+  componentDidMount() {
     document.title = "Ország";
   }
 
   render() {
     return (
       <div className="main-page">
-        <NavBar />
+        <NavBarConnected />
         <div className="mainpage-content">
           <div className="side-menu">
             <Menu />
             <div>
               <ProfileContainer />
+
+              <h3 className="undersea-font-mainpage">UNDERSEA</h3>
             </div>
-            <h3 className="undersea-font-mainpage">UNDERSEA</h3>
           </div>
           <main>
             <Switch>
@@ -39,6 +41,9 @@ export class MainPage extends React.Component {
               </Route>
               <Route path="/account/war">
                 <War />
+              </Route>
+              <Route path="/account/attack">
+                <Attack />
               </Route>
               <Route path="/account/rank">
                 <Rank />

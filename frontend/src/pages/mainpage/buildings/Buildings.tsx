@@ -1,24 +1,35 @@
 import React from "react";
-import { ComponentHeader } from "../componentHeader";
+import { ComponentHeader } from "../../../components/componentHeader";
 import { BuildingItem } from "./buildingItem";
 import { BuildingProps } from "./Interface";
 
 export class Buildings extends React.Component<BuildingProps> {
-  componentWillMount() {
+  componentDidMount() {
     document.title = "Buildings";
   }
   state = {
     buildIDs: []
   };
-  /*
-addBuildingById = (e)=>{
-this.setState({
-  buildIDs:[...this.state.buildIDs, e.target.value]
-})
-}*/
+
+  addBuildingByID = (e: React.MouseEvent<HTMLInputElement>) => {
+    const iDs = this.state.buildIDs;
+    const currentValue = e.currentTarget.value;
+
+    if (iDs.find(x => x == currentValue)) {
+      const newIds = iDs.filter(x => x !== currentValue);
+
+      this.setState({
+        buildIDs: newIds
+      });
+    } else {
+      this.setState({
+        buildIDs: [...this.state.buildIDs, currentValue]
+      });
+    }
+  };
 
   render() {
-    const { addBuilding, buildingState } = this.props;
+    const { addBuilding, boughtBuildingState } = this.props;
     return (
       <div className="main-component">
         <ComponentHeader
@@ -27,48 +38,35 @@ this.setState({
           description={description}
         />
         <div className="building-page hide-scroll">
-          {mockData.length > 0 &&
-            mockData.map(item => (
+          {boughtBuildingState.buildings.length > 0 &&
+            boughtBuildingState.buildings.map(item => (
               <label key={item.id}>
-                <input value={item.id} className="sr-only" type="checkbox" />
-                <BuildingItem building={item} />
+                <input
+                  onClick={this.addBuildingByID}
+                  value={item.id}
+                  className="sr-only"
+                  type="checkbox"
+                />
+                <BuildingItem
+                  id={item.id}
+                  amount={item.amount}
+                  title={item.title}
+                  price={item.price}
+                  description={item.description}
+                  imageUrl={item.imageUrl}
+                />
               </label>
             ))}
         </div>
-        <button onClick={() => addBuilding({ buildingIDs: [1, 2, 3] })}>
+        <button
+          onClick={() => addBuilding({ buildingIDs: this.state.buildIDs })}
+        >
           Megveszem
         </button>
       </div>
     );
   }
 }
-
-const mockData = [
-  {
-    id: 1,
-    imageUrl: "asdasd",
-    title: "Zátorvány",
-    description: "50 ember-t ad a népességhez 200 krumplit termel körönként",
-    amount: "1 db",
-    price: "45 Gyöngy / db"
-  },
-  {
-    id: 2,
-    imageUrl: "Áramlásirányító",
-    title: "Áramlásirányító",
-    description: "200 egység nyújt szállást",
-    amount: "0 db",
-    price: "35 Gyöngy / db"
-  },
-  {
-    id: 3,
-    imageUrl: "asdasd",
-    title: "Áramlásirányító",
-    description: "50 ember-t ad a népességhez 200 krumplit termel körönként",
-    amount: "1 db",
-    price: "45 Gyöngy / db"
-  }
-];
 
 const title: string = "Épületek";
 const mainDescription: string = "Kattints rá, amelyiket szeretnéd megvenni.";

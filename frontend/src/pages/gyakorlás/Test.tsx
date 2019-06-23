@@ -4,7 +4,7 @@ import { TestProps } from "./Interface";
 export class Test extends React.Component<TestProps> {
   render() {
     const { addHuman, isNative, humanState, removeHUman } = this.props;
-
+    console.log("test rendered");
     return (
       <div>
         <h1>{humanState.name}</h1>

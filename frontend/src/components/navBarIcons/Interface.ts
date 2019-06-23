@@ -1,5 +1,6 @@
 export interface NavBarIconProp {
-  url: string;
-  amount: string;
-  info?: string | null;
+  id: number;
+  imageUrl: string;
+  amount: number;
+  info?: string;
 }

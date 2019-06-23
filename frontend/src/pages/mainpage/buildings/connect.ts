@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import { Buildings } from "./Buildings";
 
 const mapStateToProps = (state: IApllicationState): MappedProps => ({
-  buildingState: state.app.pages.buildingIds
+  boughtBuildingState: state.app.pages.buildingIds
 });
 
 const mapDispatchToProps = (dispatch: Dispatch): DispachedProps =>
