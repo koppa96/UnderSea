@@ -51,6 +51,7 @@ namespace StrategyGame.Api
                 .AddEntityFrameworkStores<UnderSeaDatabaseContext>();
 
             services.AddIdentityServer()
+                .AddCorsPolicyService<IdentityServerCorsPolicyService>()
                 .AddDeveloperSigningCredential()
                 .AddInMemoryPersistedGrants()
                 .AddInMemoryIdentityResources(IdentityServerConfig.GetIdentityResources())
