@@ -46,13 +46,23 @@ namespace StrategyGame.Api.Controllers
             catch (ArgumentOutOfRangeException e)
             {
                 return this.HandleNotFound(command, e);
-            } catch (ArgumentException)
+            }
+            catch (ArgumentException)
             {
                 return BadRequest(new ProblemDetails
                 {
                     Status = 400,
                     Title = ErrorMessages.BadRequest,
                     Detail = ErrorMessages.NotEnoughUnits
+                });
+            }
+            catch (InvalidOperationException e)
+            {
+                return BadRequest(new ProblemDetails
+                {
+                    Status = 400,
+                    Title = ErrorMessages.BadRequest,
+                    Detail = e.Message
                 });
             }
         }
@@ -77,7 +87,7 @@ namespace StrategyGame.Api.Controllers
                     Detail = ErrorMessages.NoSuchCommand
                 });
             }
-            catch (InvalidOperationException)
+            catch (UnauthorizedAccessException)
             {
                 return Unauthorized(new ProblemDetails
                 {
@@ -112,13 +122,22 @@ namespace StrategyGame.Api.Controllers
                     Detail = ErrorMessages.NotEnoughUnits
                 });
             }
-            catch (InvalidOperationException)
+            catch (UnauthorizedAccessException)
             {
                 return Unauthorized(new ProblemDetails
                 {
                     Status = 401,
                     Title = ErrorMessages.Unauthorized,
                     Detail = ErrorMessages.CannotChangeCommand
+                });
+            }
+            catch (InvalidOperationException e)
+            {
+                return BadRequest(new ProblemDetails
+                {
+                    Status = 400,
+                    Title = ErrorMessages.BadRequest,
+                    Detail = e.Message
                 });
             }
         }

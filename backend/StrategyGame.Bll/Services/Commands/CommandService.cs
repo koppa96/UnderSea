@@ -68,6 +68,11 @@ namespace StrategyGame.Bll.Services.Commands
                 _context.Divisions.Add(attackingDivision);
             }
 
+            if (!attackingCommand.Divisions.Any(d => d.Unit is LeaderType))
+            {
+                throw new InvalidOperationException("Every attack must contain a leader.");
+            }
+
             _context.Commands.Add(attackingCommand);
             await _context.SaveChangesAsync();
             return ToCommandInfo(attackingCommand, _mapper);
@@ -91,7 +96,7 @@ namespace StrategyGame.Bll.Services.Commands
 
             if (command.ParentCountry.ParentUser.UserName != username)
             {
-                throw new InvalidOperationException("Can not modify commands of others.");
+                throw new UnauthorizedAccessException("Can not modify commands of others.");
             }
 
             var defendingCommand = country.GetAllDefending();
@@ -142,12 +147,12 @@ namespace StrategyGame.Bll.Services.Commands
                             .ThenInclude(u => u.Content)
                 .SingleAsync(c => c.ParentUser.UserName == username);
 
-            var command = country.Commands.SingleOrDefault(c => c.Id == commandId);
-            if (command == null)
+            var attackingCommand = country.Commands.SingleOrDefault(c => c.Id == commandId);
+            if (attackingCommand == null)
             {
                 if (await _context.Commands.AnyAsync(c => c.Id == commandId))
                 {
-                    throw new InvalidOperationException("Can not modify commands of others.");
+                    throw new UnauthorizedAccessException("Can not modify commands of others.");
                 }
 
                 throw new ArgumentOutOfRangeException(nameof(commandId), "Invalid command id.");
@@ -160,11 +165,11 @@ namespace StrategyGame.Bll.Services.Commands
             }
 
             var defendingCommand = country.GetAllDefending();
-            command.TargetCountry = targetCountry;
+            attackingCommand.TargetCountry = targetCountry;
 
             foreach (var detail in details.Units)
             {
-                var division = command.Divisions.SingleOrDefault(d => d.Unit.Id == detail.UnitId);
+                var division = attackingCommand.Divisions.SingleOrDefault(d => d.Unit.Id == detail.UnitId);
                 var defendingDivision = defendingCommand.Divisions.SingleOrDefault(d => d.Unit.Id == detail.UnitId);
                 if (division == null)
                 {
@@ -181,7 +186,7 @@ namespace StrategyGame.Bll.Services.Commands
 
                     division = new Division
                     {
-                        ParentCommand = command,
+                        ParentCommand = attackingCommand,
                         Unit = unit,
                         Count = 0
                     };
@@ -198,8 +203,13 @@ namespace StrategyGame.Bll.Services.Commands
                 division.Count = detail.Amount;
             }
 
+            if (!attackingCommand.Divisions.Any(d => d.Unit is LeaderType))
+            {
+                throw new InvalidOperationException("Every attack must contain a leader.");
+            }
+
             await _context.SaveChangesAsync();
-            return ToCommandInfo(command, _mapper);
+            return ToCommandInfo(attackingCommand, _mapper);
         }
 
         public CommandInfo ToCommandInfo(Command command, IMapper mapper)
