@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace StrategyGame.Bll.EffectParsing
+﻿namespace StrategyGame.Bll.EffectParsing
 {
     /// <summary>
     /// Represents a parser that can parse effects that increase the barrack space (maximum unit limit) of a country.
@@ -13,7 +9,7 @@ namespace StrategyGame.Bll.EffectParsing
         /// Initializes a new instance of the <see cref="BarrackSpaceEffectParser"/>.
         /// </summary>
         public BarrackSpaceEffectParser()
-            : base("barrack-space-increase", (effect, builder) => builder.BarrackSpace += (int)effect.Value)
+            : base(KnownValues.BarrackSpaceIncrease, (effect, builder) => builder.BarrackSpace += (int)effect.Value)
         { }
     }
 }

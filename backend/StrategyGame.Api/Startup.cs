@@ -1,20 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using AutoMapper;
+using Hangfire;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+using NSwag.CodeGeneration.TypeScript;
+using StrategyGame.Api.Hubs;
+using StrategyGame.Bll;
+using StrategyGame.Bll.EffectParsing;
+using StrategyGame.Bll.Services.Buildings;
+using StrategyGame.Bll.Services.Commands;
+using StrategyGame.Bll.Services.Country;
+using StrategyGame.Bll.Services.Researches;
+using StrategyGame.Bll.Services.TurnHandling;
+using StrategyGame.Bll.Services.Units;
+using StrategyGame.Bll.Services.UserTracker;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
+using System.IO;
 
 namespace StrategyGame.Api
 {
@@ -35,12 +44,11 @@ namespace StrategyGame.Api
                 options.Password.RequireNonAlphanumeric = false;
             });
 
-            Action<DbContextOptionsBuilder> optionsAction = options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-            services.AddDbContext<UnderSeaDatabase>(optionsAction);
-            services.AddDbContext<ReadOnlyUnderSeaDatabase>(optionsAction);
+            services.AddHangfire(x => x.UseSqlServerStorage(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<UnderSeaDatabaseContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddDefaultIdentity<User>()
-                .AddEntityFrameworkStores<UnderSeaDatabase>();
+                .AddEntityFrameworkStores<UnderSeaDatabaseContext>();
 
             services.AddIdentityServer()
                 .AddDeveloperSigningCredential()
@@ -50,7 +58,7 @@ namespace StrategyGame.Api
                 .AddInMemoryClients(IdentityServerConfig.GetClients(Configuration))
                 .AddAspNetIdentity<User>();
 
-            services.AddAuthentication(options => 
+            services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -66,6 +74,57 @@ namespace StrategyGame.Api
                 });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddSignalR();
+
+            services.AddSwaggerDocument(options =>
+            {
+                options.PostProcess = document =>
+                {
+                    var settings = new TypeScriptClientGeneratorSettings
+                    {
+                        ClassName = "{controller}Client"
+                    };
+
+                    var generator = new TypeScriptClientGenerator(document, settings);
+                    var code = generator.GenerateFile();
+
+                    var path = Directory.GetCurrentDirectory();
+                    var directory = new DirectoryInfo(path + @"\TypeScript");
+                    if (!directory.Exists)
+                    {
+                        directory.Create();
+                    }
+
+                    var filePath = path + @"\TypeScript\Client.ts";
+                    File.WriteAllText(filePath, code);
+                };
+            });
+
+            services.AddAutoMapper(typeof(KnownValues).Assembly);
+
+            services.AddSingleton(new ModifierParserContainer(new AbstractEffectModifierParser[]
+                {
+                    new BarrackSpaceEffectParser(),
+                    new CoralProductionEffectParser(),
+                    new HarvestModifierEffectParser(),
+                    new PopulationEffectParser(),
+                    new TaxModifierEffectParser(),
+                    new UnitDefenseEffectParser(),
+                    new UnitAttackEffectParser()
+                }));
+
+            services.AddSingleton<IUserTracker, UserTracker>();
+
+            services.AddTransient<ITurnHandlingService, TurnHandlingService>();
+            services.AddTransient<ICountryService, CountryService>();
+            services.AddTransient<IResearchService, ResearchService>();
+            services.AddTransient<IBuildingService, BuildingService>();
+            services.AddTransient<IUnitService, UnitService>();
+            services.AddTransient<ICommandService, CommandService>();
+
+            // User ID provider for SignalR Hub
+            services.AddTransient<IUserIdProvider, UserIdProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -80,7 +139,17 @@ namespace StrategyGame.Api
             app.UseAuthentication();
             app.UseIdentityServer();
 
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
+
+            app.UseHangfireServer();
+            app.UseHangfireDashboard();
+
             app.UseMvc();
+
+            app.UseSignalR(route => route.MapHub<UnderSeaHub>("/hub"));
+
+            RecurringJob.AddOrUpdate<TurnEndingJob>(x => x.EndTurnAsync(), Cron.Hourly);
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace StrategyGame.Model.Entities.Frontend
+﻿namespace StrategyGame.Model.Entities.Frontend
 {
     /// <summary>
     /// Provides an abstract base for frontend content classes.
@@ -38,28 +36,5 @@ namespace StrategyGame.Model.Entities.Frontend
         /// Gets or sets the image URL for the content.
         /// </summary>
         public string ImageUrl { get; set; }
-
-
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AbstractFrontendContent{TParent, TEntity}"/>.
-        /// </summary>
-        protected AbstractFrontendContent()
-        { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AbstractFrontendContent{TParent, TEntity}"/>.
-        /// </summary>
-        /// <param name="parent">The object the content belongs to.</param>
-        /// <exception cref="ArgumentNullException">Thrown if an argument was null.</exception>
-        protected AbstractFrontendContent(TParent parent)
-        {
-            if (parent == null)
-            {
-                throw new ArgumentNullException(nameof(parent));
-            }
-
-            Parent = parent;
-        }
     }
 }

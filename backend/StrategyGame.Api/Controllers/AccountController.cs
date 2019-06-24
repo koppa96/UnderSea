@@ -1,43 +1,67 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using StrategyGame.Api.DTO;
-using StrategyGame.Dal;
+using StrategyGame.Bll.Dto.Sent;
+using StrategyGame.Bll.Dto.Sent.UserManagement;
+using StrategyGame.Bll.Services.Country;
 using StrategyGame.Model.Entities;
 
 namespace StrategyGame.Api.Controllers
 {
+    /// <summary>
+    /// API Endpoint for creating accounts and querying the currently logged in user's data.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class AccountController : ControllerBase
+    public class AccountsController : ControllerBase
     {
-        private readonly UnderSeaDatabase _context;
         private readonly UserManager<User> _userManager;
+        private readonly ICountryService _countryService;
 
-        public AccountController(UnderSeaDatabase context, UserManager<User> userManager)
+        public AccountsController(UserManager<User> userManager, ICountryService countryService)
         {
-            _context = context;
             _userManager = userManager;
+            _countryService = countryService;
+        }
+
+        [HttpGet]
+        [Route("me")]
+        [Authorize]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(401)]
+        public async Task<ActionResult<UserInfo>> GetAccountAsync()
+        {
+            var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
+            return Ok(new UserInfo
+            {
+                Username = currentUser.UserName,
+                Email = currentUser.Email
+            });
         }
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetAccountsAsync()
+        [ProducesResponseType(200)]
+        [ProducesResponseType(401)]
+        public async Task<ActionResult<IEnumerable<string>>> GetUsernamesAsync()
         {
-            var users = await _context.Users.Select(u => u.UserName).ToListAsync();
-
-            return Ok(users);
+            return Ok(await _userManager.Users.Select(u => u.UserName).ToListAsync());
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAccountAsnyc([FromBody] RegisterData data)
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
+        public async Task<ActionResult> CreateAccountAsnyc([FromBody] RegisterData data)
         {
+            if (await _userManager.FindByNameAsync(data.Username) != null)
+            {
+                return BadRequest("Duplicate username");
+            }
+
             var user = new User()
             {
                 UserName = data.Username,
@@ -47,10 +71,25 @@ namespace StrategyGame.Api.Controllers
             var result = await _userManager.CreateAsync(user, data.Password);
             if (!result.Succeeded)
             {
-                return BadRequest();
+                return BadRequest(result.Errors);
             }
 
-            return Ok();
+            await _countryService.CreateAsync(data.Username, data.CountryName);
+            return StatusCode(201, new UserInfo
+            {
+                Username = user.UserName,
+                Email = user.Email
+            });
+        }
+
+        [HttpGet]
+        [Authorize]
+        [Route("ranked")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(401)]
+        public async Task<ActionResult<IEnumerable<RankInfo>>> GetRankedListAsync()
+        {
+            return Ok(await _countryService.GetRankedListAsync());
         }
     }
 }

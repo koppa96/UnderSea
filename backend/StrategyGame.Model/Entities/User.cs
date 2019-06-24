@@ -15,6 +15,6 @@ namespace StrategyGame.Model.Entities
         /// <summary>
         /// The Id of the ruled country.
         /// </summary>
-        public int RuledCountryId { get; set; }
+        public int? RuledCountryId { get; set; }
     }
 }
