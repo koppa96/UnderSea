@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,6 +20,7 @@ using StrategyGame.Bll.Services.Country;
 using StrategyGame.Bll.Services.Researches;
 using StrategyGame.Bll.Services.TurnHandling;
 using StrategyGame.Bll.Services.Units;
+using StrategyGame.Bll.Services.UserTracker;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
 using System;
@@ -115,12 +117,17 @@ namespace StrategyGame.Api
                     new UnitAttackEffectParser()
                 }));
 
+            services.AddSingleton<IUserTracker, UserTracker>();
+
             services.AddTransient<ITurnHandlingService, TurnHandlingService>();
             services.AddTransient<ICountryService, CountryService>();
             services.AddTransient<IResearchService, ResearchService>();
             services.AddTransient<IBuildingService, BuildingService>();
             services.AddTransient<IUnitService, UnitService>();
             services.AddTransient<ICommandService, CommandService>();
+
+            // User ID provider for SignalR Hub
+            services.AddTransient<IUserIdProvider, UserIdProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
