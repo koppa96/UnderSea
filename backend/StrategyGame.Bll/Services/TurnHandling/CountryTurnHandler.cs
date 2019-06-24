@@ -241,6 +241,14 @@ namespace StrategyGame.Bll.Services.TurnHandling
         /// <param name="lostPercentage">The percentage of units lost.</param>
         protected void CullUnits(Command command, double lostPercentage)
         {
+            var totalLoss = (int)Math.Round(command.Divisions.Sum(d => d.Count) * lostPercentage);
+
+            while (totalLoss > 0)
+            {
+                var lossable = command.Divisions.Where(d => d.Count > 0).ToList();
+                lossable[rng.Next(lossable.Count)].Count--;
+            }
+
             foreach (var div in command.Divisions)
             {
                 div.Count -= (int)Math.Round(div.Count * lostPercentage);
