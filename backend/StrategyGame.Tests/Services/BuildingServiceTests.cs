@@ -63,7 +63,7 @@ namespace StrategyGame.Tests.Services
                 .ToListAsync();
 
             Assert.AreEqual(1, inProgressBuildings.Count);
-            Assert.AreEqual(buildingId, inProgressBuildings.First().Building.Id);
+            Assert.AreEqual(buildingId, inProgressBuildings.Single().Building.Id);
         }
 
         [TestMethod]

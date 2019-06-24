@@ -63,7 +63,7 @@ namespace StrategyGame.Bll.Services.Researches
             }
 
             var research = country.Researches.SingleOrDefault(cr => cr.Research.Id == researchId);
-            if (research != null && research.Count > research.Research.MaxCompletedAmount)
+            if (research != null && research.Count >= research.Research.MaxCompletedAmount)
             {
                 throw new LimitReachedException("The max research count has been reached.");
             }
