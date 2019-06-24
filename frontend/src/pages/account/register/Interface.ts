@@ -11,7 +11,8 @@ export interface RegisterState {
     name: string;
     password: string;
     repassword: string;
-    countryname: string;
+    countryName: string;
+    email: string;
   };
   error: string | null;
 }
