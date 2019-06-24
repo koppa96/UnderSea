@@ -267,6 +267,10 @@ namespace StrategyGame.Dal
                 .HasOne(ir => ir.Research)
                 .WithMany(r => r.InProgressResearches);
 
+            // Leader
+            builder.Entity<LeaderType>()
+                .HasBaseType<UnitType>();
+
             base.OnModelCreating(builder);
         }
     }
