@@ -8,7 +8,7 @@ export const DevelopmentItem = (props: DevelopmentProps) => {
   return (
     <div className="development-item">
       <div className="development-img">
-        {time && <p>még {time} kör</p>}
+        {(time !== undefined) && (+time[0] != 0) && <p> még {time} kör</p>}
         {isDeveloped && (
           <div>
             <span>a</span>
