@@ -576,7 +576,7 @@ export class CountryClient {
     }
 }
 
-export class DummyClient {
+export class MaintenanceClient {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -586,8 +586,8 @@ export class DummyClient {
         this.baseUrl = baseUrl ? baseUrl : "";
     }
 
-    index(): Promise<FileResponse | null> {
-        let url_ = this.baseUrl + "/api/Dummy/map";
+    endTurn(): Promise<FileResponse | null> {
+        let url_ = this.baseUrl + "/api/Maintenance/endturn";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <RequestInit>{
@@ -598,11 +598,11 @@ export class DummyClient {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processIndex(_response);
+            return this.processEndTurn(_response);
         });
     }
 
-    protected processIndex(response: Response): Promise<FileResponse | null> {
+    protected processEndTurn(response: Response): Promise<FileResponse | null> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200 || status === 206) {
@@ -1365,8 +1365,8 @@ export class CountryInfo implements ICountryInfo {
     armyInfo?: UnitInfo[] | undefined;
     pearls!: number;
     corals!: number;
-    buildings?: BriefCreationInfo | undefined;
-    researches?: BriefCreationInfo | undefined;
+    buildings?: BriefCreationInfo[] | undefined;
+    researches?: BriefCreationInfo[] | undefined;
 
     constructor(data?: ICountryInfo) {
         if (data) {
@@ -1388,8 +1388,16 @@ export class CountryInfo implements ICountryInfo {
             }
             this.pearls = data["pearls"];
             this.corals = data["corals"];
-            this.buildings = data["buildings"] ? BriefCreationInfo.fromJS(data["buildings"]) : <any>undefined;
-            this.researches = data["researches"] ? BriefCreationInfo.fromJS(data["researches"]) : <any>undefined;
+            if (Array.isArray(data["buildings"])) {
+                this.buildings = [] as any;
+                for (let item of data["buildings"])
+                    this.buildings!.push(BriefCreationInfo.fromJS(item));
+            }
+            if (Array.isArray(data["researches"])) {
+                this.researches = [] as any;
+                for (let item of data["researches"])
+                    this.researches!.push(BriefCreationInfo.fromJS(item));
+            }
         }
     }
 
@@ -1411,8 +1419,16 @@ export class CountryInfo implements ICountryInfo {
         }
         data["pearls"] = this.pearls;
         data["corals"] = this.corals;
-        data["buildings"] = this.buildings ? this.buildings.toJSON() : <any>undefined;
-        data["researches"] = this.researches ? this.researches.toJSON() : <any>undefined;
+        if (Array.isArray(this.buildings)) {
+            data["buildings"] = [];
+            for (let item of this.buildings)
+                data["buildings"].push(item.toJSON());
+        }
+        if (Array.isArray(this.researches)) {
+            data["researches"] = [];
+            for (let item of this.researches)
+                data["researches"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -1423,11 +1439,12 @@ export interface ICountryInfo {
     armyInfo?: UnitInfo[] | undefined;
     pearls: number;
     corals: number;
-    buildings?: BriefCreationInfo | undefined;
-    researches?: BriefCreationInfo | undefined;
+    buildings?: BriefCreationInfo[] | undefined;
+    researches?: BriefCreationInfo[] | undefined;
 }
 
 export class BriefCreationInfo implements IBriefCreationInfo {
+    id!: number;
     count!: number;
     inProgressCount!: number;
     imageUrl?: string | undefined;
@@ -1443,6 +1460,7 @@ export class BriefCreationInfo implements IBriefCreationInfo {
 
     init(data?: any) {
         if (data) {
+            this.id = data["id"];
             this.count = data["count"];
             this.inProgressCount = data["inProgressCount"];
             this.imageUrl = data["imageUrl"];
@@ -1458,6 +1476,7 @@ export class BriefCreationInfo implements IBriefCreationInfo {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
         data["count"] = this.count;
         data["inProgressCount"] = this.inProgressCount;
         data["imageUrl"] = this.imageUrl;
@@ -1466,6 +1485,7 @@ export class BriefCreationInfo implements IBriefCreationInfo {
 }
 
 export interface IBriefCreationInfo {
+    id: number;
     count: number;
     inProgressCount: number;
     imageUrl?: string | undefined;
