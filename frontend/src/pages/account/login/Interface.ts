@@ -2,9 +2,9 @@ export interface NativeProps {}
 
 export interface MappedProps {}
 
-export interface dispatchedProps {}
+export interface DispatchedProps {}
 
-export type LoginProps = NativeProps & MappedProps & dispatchedProps;
+export type LoginProps = NativeProps & MappedProps & DispatchedProps;
 
 export interface LoginState {
   model: { name: string; password: string };
