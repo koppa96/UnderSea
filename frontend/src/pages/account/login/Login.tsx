@@ -1,18 +1,44 @@
 import * as React from "react";
+import axios from "axios";
 
 import "./../../../assets/scss/forms.scss";
 
 import { Form } from "reactstrap";
-import { LoginProps, LoginState } from "./Interface";
+import { LoginProps, LoginState, LoginResponse } from "./Interface";
 import { Link } from "react-router-dom";
 
-export class Login extends React.Component<LoginProps, LoginState> {
+export class Login extends React.Component {
   state: LoginState = {
     model: {
       name: "",
       password: ""
     },
     error: null
+  };
+
+  handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    console.log(this.state);
+    e.preventDefault();
+    axios
+      .post("/connect/token", {
+        username: this.state.model.name,
+        password: this.state.model.password
+      })
+      .then(response => {
+        const resp: LoginResponse = response.data as LoginResponse;
+        const connectToken = resp.token_type + " " + resp.access_token;
+        const refreshToken = resp.refresh_token;
+
+        localStorage.setItem("connection_header", connectToken);
+        localStorage.setItem("refresh_token", refreshToken);
+      })
+      .catch(error => {
+        if (error.response.status === "408") {
+          this.setState({ error: "Connection timeout" });
+        } else {
+          this.setState({ error: "Helytelen jelszó, vagy felhasználó" });
+        }
+      });
   };
 
   render() {
@@ -50,7 +76,7 @@ export class Login extends React.Component<LoginProps, LoginState> {
                     ...this.state,
                     model: {
                       ...this.state.model,
-                      name: e.target.value
+                      password: e.target.value
                     }
                   })
                 }
@@ -61,7 +87,7 @@ export class Login extends React.Component<LoginProps, LoginState> {
                 <button className="form-button" type="submit">
                   Belépés
                 </button>
-                {error && <p>{error}</p>}
+                {error && <p className="form-error">{error}</p>}
               </div>
             </Form>
             <div className="button-container text-center">
@@ -74,12 +100,6 @@ export class Login extends React.Component<LoginProps, LoginState> {
       </div>
     );
   }
-
-  handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    console.log(this.state);
-  };
 
   //   handleChange = (e: React.FormEvent<HTMLInputElement>) => {
   //     e.preventDefault();

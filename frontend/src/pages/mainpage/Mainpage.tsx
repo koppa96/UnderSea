@@ -12,16 +12,23 @@ import { TestConnected } from "../gyakorlás/connect";
 import { BuildingsConnected } from "./buildings/connect";
 import { NavBarConnected } from "../../components/navBar/connect";
 import { Attack } from "./attack";
+import { NavBarIconProp } from "../../components/navBarIcons/Interface";
+import { NavBarIcon } from "../../components/navBarIcons";
+import { NavbarState } from "../../components/navBar/store";
 
 export class MainPage extends React.Component {
+  // constuct
   componentDidMount() {
-    document.title = "Ország";
+    // document.title = "Ország";
   }
 
   render() {
+    const asd: NavbarState = {
+      navBarIcons: []
+    };
     return (
       <div className="main-page">
-        <NavBarConnected />
+        <NavBar navbar={asd} />
         <div className="mainpage-content">
           <div className="side-menu">
             <Menu />

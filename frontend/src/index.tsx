@@ -7,7 +7,7 @@ import { Provider } from "react-redux";
 import { configureStore } from "./config/ConfigureStore";
 import { createBrowserHistory } from "history";
 
-const history = createBrowserHistory({ basename: "" });
+const history = createBrowserHistory({ basename: "/" });
 const { store } = configureStore(history);
 
 ReactDOM.render(

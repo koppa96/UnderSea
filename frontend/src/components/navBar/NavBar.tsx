@@ -3,14 +3,14 @@ import { NavBarIcon } from "./../navBarIcons/index";
 import { NavBarProps } from "./Interface";
 
 export class NavBar extends React.Component<NavBarProps> {
-  componentDidMount() {
-    const { navbar } = this.props;
-    console.log(navbar);
-  }
+  componentDidMount() {}
+
   render() {
     //2x render?
     const { navbar } = this.props;
-    console.log("navbar render", navbar);
+    console.log(this.props, "render");
+
+    // console.log("navbar render", navbar);
     return (
       <div className="navbar-bg">
         <div className="navbar-color ">

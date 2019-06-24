@@ -12,7 +12,12 @@
   font-size: 16px;
   color: rgba(28, 62, 118, 1);
 }
-
+.form-error {
+  font-size: 18px;
+  font-family: Baloo;
+  color: rgb(17, 0, 94);
+  border-bottom: 2px solid rgb(17, 0, 94);
+}
 .form-link {
   display: block;
   color: $primary-color;

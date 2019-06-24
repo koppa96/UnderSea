@@ -15,7 +15,7 @@ export const App = () => {
 
   //TODO: Router kiszervezés
   return (
-    <ConnectedRouter history={createBrowserHistory({ basename: "" })}>
+    <ConnectedRouter history={createBrowserHistory({ basename: "/" })}>
       <div className="App">
         <div className="bg-image">
           <Switch>

@@ -12,15 +12,7 @@ const mapStateToProps = (state: IApllicationState): MappedProps => ({
     navBarIcons: state.app.pages.buildingIds.buildings
   }
 });
-
-const mapDispatchToProps = (dispatch: Dispatch) =>
-  bindActionCreators(
-    {},
-
-    dispatch
-  );
-
 export const NavBarConnected = connect(
   mapStateToProps,
-  mapDispatchToProps
+  {}
 )(NavBar);

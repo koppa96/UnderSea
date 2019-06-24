@@ -6,7 +6,7 @@ export class LoginCheck extends React.Component<LogCheckProps> {
   render = () => {
     const { children, login } = this.props;
 
-    const mockedLogIn = true;
+    const mockedLogIn = false;
     return (login && mockedLogIn) || (!login && !mockedLogIn) ? (
       children
     ) : mockedLogIn ? (
