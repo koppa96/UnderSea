@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using StrategyGame.Api.Hubs;
 using StrategyGame.Bll.Services.Country;
 using StrategyGame.Bll.Services.TurnHandling;
+using StrategyGame.Bll.Services.UserTracker;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
 using System;
@@ -16,14 +17,15 @@ namespace StrategyGame.Api
     /// </summary>
     public class TurnEndingJob
     {
-        public TurnEndingJob(UnderSeaDatabaseContext context, ITurnHandlingService handler,
-            IHubContext<UnderSeaHub> hub, ICountryService service, UserManager<User> users)
+        public TurnEndingJob(UnderSeaDatabaseContext context, 
+            ITurnHandlingService handler, IHubContext<UnderSeaHub> hub,
+            ICountryService service, IUserTracker tracker)
         {
             Context = context ?? throw new ArgumentNullException(nameof(context));
             Handler = handler ?? throw new ArgumentNullException(nameof(handler));
             Hub = hub ?? throw new ArgumentNullException(nameof(hub));
             Service = service ?? throw new ArgumentNullException(nameof(service));
-            Users = users ?? throw new ArgumentNullException(nameof(users));
+            Tracker = tracker ?? throw new ArgumentNullException(nameof(tracker));
         }
 
         protected UnderSeaDatabaseContext Context { get; }
@@ -34,17 +36,17 @@ namespace StrategyGame.Api
 
         protected ICountryService Service { get; }
 
-        protected UserManager<User> Users { get; }
+        protected IUserTracker Tracker { get; }
 
         public async Task EndTurnAsync()
         {
             await Handler.EndTurnAsync(Context);
 
-            await Users.Users.ForEachAsync(async u =>
+            foreach (var user in Tracker.GetConnectedUsers())
             {
-                var info = await Service.GetCountryInfoAsync(u.UserName);
-                await Hub.Clients.User(u.UserName).SendAsync(nameof(IHubClient.ReceiveResultsAsync), info);
-            });
+                var info = await Service.GetCountryInfoAsync(user);
+                await Hub.Clients.User(user).SendAsync(nameof(IHubClient.ReceiveResultsAsync), info);
+            }
         }
     }
 }
