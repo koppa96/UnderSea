@@ -140,20 +140,7 @@ namespace StrategyGame.Api
 
             app.UseMvc();
 
-            RecurringJob.AddOrUpdate(() => EndTurnHourlyAsync(), Cron.Hourly);
-        }
-
-        public static async Task EndTurnHourlyAsync()
-        {
-            var srv = new ServiceCollection().BuildServiceProvider();
-            var serviceScopeFactory = srv.GetService<IServiceScopeFactory>();
-            using (var scope = serviceScopeFactory.CreateScope())
-            {                
-                var context = scope.ServiceProvider.GetService<UnderSeaDatabaseContext>();
-                var handlyboi = scope.ServiceProvider.GetService<ITurnHandlingService>();
-                await srv.GetService<ITurnHandlingService>().EndTurnAsync(
-                     srv.GetService<UnderSeaDatabaseContext>(), CancellationToken.None);
-            }
+            RecurringJob.AddOrUpdate<TurnEndingJob>(x => x.EndTurnASync(), Cron.Hourly);
         }
     }
 }
