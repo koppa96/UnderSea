@@ -1,0 +1,1 @@
+export { ArmyItem } from "./ArmyItem";

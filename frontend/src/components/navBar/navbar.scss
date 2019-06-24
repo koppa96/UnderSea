@@ -1,0 +1,51 @@
+$local-padding-horizontal: 29px;
+
+.navbar-bg {
+  padding-left: $total-padding-vertical;
+  padding-right: $total-padding-vertical;
+  padding-top: 25px;
+  padding-bottom: 36px;
+
+  .navbar-color {
+    background-color: rgba(255, 255, 255, 0.25);
+    min-height: 85px;
+    border-radius: 16px;
+    padding-right: $local-padding-horizontal;
+    padding-left: $local-padding-horizontal;
+    padding-top: $padding-vertical;
+    padding-bottom: $padding-vertical;
+    display: flex;
+    flex-direction: row;
+
+    div > {
+      span {
+        font-size: 32px;
+        color: $secondary-color;
+        text-align: center;
+        font-family: Baloo;
+      }
+    }
+    > div {
+      display: flex;
+      width: 262px;
+      flex-direction: row;
+      justify-content: space-between;
+      margin-right: 30px;
+      @media screen and (max-width: 1466px) {
+        width: 210px;
+      }
+    }
+    ul {
+      flex: 1;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+    li:first-child {
+      @media screen and (max-width: 1413px) {
+        margin-bottom: 10px;
+      }
+    }
+  }
+}

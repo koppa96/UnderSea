@@ -1,0 +1,40 @@
+$local-profilrect-size: 96px;
+
+.profile-bg {
+  flex: 1;
+  background-color: white;
+  border-radius: 16px;
+  background-color: rgba(#ffffff, $alpha: 0.25);
+  padding-top: 25px;
+  padding-bottom: 25px;
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  div {
+    margin-bottom: 22px;
+  }
+  a:hover {
+    text-decoration: none;
+    color: $primary-color;
+  }
+  .profile-margin {
+    margin-bottom: 6px;
+  }
+  img {
+    height: 100%;
+    width: 100%;
+    object-fit: fill;
+  }
+  .rectangle {
+    width: $local-profilrect-size;
+    height: $local-profilrect-size;
+  }
+}
+.profile-bg > * {
+  color: rgba(#ffffff, $alpha: 0.75);
+  font-family: Baloo;
+  font-weight: 14px;
+}

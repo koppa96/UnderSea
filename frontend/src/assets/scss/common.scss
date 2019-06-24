@@ -1,0 +1,95 @@
+@import "./variables.scss";
+
+.undersea-font-big {
+  font-size: 93px;
+}
+
+.undersea-font {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: Baloo;
+  color: $primary-color;
+}
+.undersea-font-form {
+  @extend .undersea-font-big;
+  @extend .undersea-font;
+  padding-top: 153px;
+
+  @media screen {
+  }
+}
+.rectangle {
+  width: $rectangle-size;
+  height: $rectangle-size;
+  background-color: $primary-color;
+  border: #428dff 2px solid;
+  border-radius: 14px;
+}
+
+.bg-image {
+  min-height: 100vh;
+  background-image: url("./assets/images/undersea-bg.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.mainpage-middle {
+  margin-left: auto;
+  margin-right: auto;
+}
+.mainpage-width {
+  @extend .mainpage-middle;
+  max-width: 460px;
+}
+
+.main-component {
+  padding-top: $maincomponents-padding;
+  padding-bottom: 40px;
+  padding-right: $maincomponents-padding;
+  padding-left: $maincomponents-padding;
+  background-color: $component-color;
+  border-radius: 16px;
+  box-shadow: 0 3px 34px $component-color;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 1000px;
+  max-height: 750px;
+}
+.circle {
+  width: 30px;
+  height: 30px;
+  background-color: $primary-color;
+  border-radius: 50%;
+  user-select: none;
+}
+.circle:active {
+  box-shadow: 0 3px 6px rgba(59, 125, 189, 1);
+}
+
+.hide-scroll::-webkit-scrollbar {
+  display: none;
+  width: 0;
+}
+.hide-scroll {
+  overflow: -moz-scrollbars-none;
+  -ms-overflow-style: none;
+}
+
+button {
+  color: $secondary-color;
+  text-align: center;
+  font-family: Baloo;
+  font-size: 18px;
+  border-radius: 100px;
+  min-width: 190px;
+  border: none;
+  min-height: 50px;
+  box-shadow: 0 3px 6px rgba(59, 125, 189, 1);
+  background-image: linear-gradient(
+    to right,
+    rgba(15, 207, 222, 1),
+    rgba(159, 255, 240, 1)
+  );
+}

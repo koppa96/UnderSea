@@ -1,0 +1,55 @@
+.war-component {
+ 
+  @media screen and (max-width: 1200px) {
+    max-width: 800px;
+  }
+
+  @media screen and (max-width: 1050px) {
+    max-width: 650px;
+  }
+  @media screen and (max-width: 880px) {
+    max-width: 500px;
+  }
+}
+.war-page::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  opacity: 0;
+}
+.war-page {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+  max-height: 450px;
+  overflow: scroll;
+  
+  li {
+    display: flex;
+    padding: 20px;
+    flex-direction: row;
+    justify-content: space-between;
+    border-bottom: 2px solid $underline-color;
+
+    span {
+      width: 200px;
+      padding-right: 10px;
+      color: white;
+      flex: 1;
+    }
+    .war-country{
+      padding-right: 50px;
+    }
+    .war-scroll {
+      display: flex;
+      flex-direction: row;
+      width: 400px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      
+    }
+    div {
+      display: inline;
+    }
+  }
+}

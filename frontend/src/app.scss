@@ -1,1 +1,15 @@
-@import './assets/scss/common.scss';
+@import "./assets/scss/fonts.scss";
+@import "./assets/scss/common.scss";
+@import "./assets/scss/variables.scss";
+@import "./components/navBar/navbar.scss";
+@import "./components/navBarIcons/navbaricon.scss";
+@import "./components/menu/menu.scss";
+@import "./components/profileContainer/profilcontainer.scss";
+@import "./pages/mainpage/mainpage.scss";
+@import "./pages/mainpage/buildings/buildings.scss";
+@import "./pages/mainpage/development/development.scss";
+@import "./pages/mainpage/war/war.scss";
+@import "./pages/mainpage/rank/rank.scss";
+@import "./pages/mainpage/army/army.scss";
+@import "./components/componentHeader/componentheader.scss";
+@import "./pages/mainpage/attack/Attack.scss";

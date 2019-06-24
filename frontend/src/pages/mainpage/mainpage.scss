@@ -1,0 +1,33 @@
+.side-menu {
+  width: 192px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.undersea-font-mainpage {
+  @extend .undersea-font;
+  font-size: 38px;
+  align-self: flex-end;
+}
+.main-page {
+  display: flex;
+  flex-direction: column;
+  min-height: inherit;
+
+  .mainpage-content {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    margin-left: $total-padding-vertical;
+    margin-right: $total-padding-vertical;
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-right: 30px;
+      padding-left: 30px;
+    }
+  }
+}

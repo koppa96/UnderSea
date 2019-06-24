@@ -1,0 +1,80 @@
+$local-circle-size: 22px;
+.development-item {
+  width: 240px;
+  min-height: 236px;
+  border-radius: 16px;
+  margin-left: 15px;
+  margin-right: 15px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 10px;
+  padding-bottom: 25px;
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  cursor: pointer;
+
+  .development-img {
+    position: relative;
+    width: 100%;
+    p {
+      color: $primary-color;
+      font-size: 14px;
+      font-family: OpenSansBold;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    div {
+      position: absolute;
+      top: 0;
+      left: 0;
+      border-radius: 50%;
+      width: $local-circle-size;
+      height: $local-circle-size;
+      background-color: $primary-color;
+    }
+  }
+
+  div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    .building-font-bold {
+      font-family: OpenSansBold;
+      padding-top: 10px;
+    }
+    p {
+      font-size: 16px;
+      font-family: OpenSansRegular;
+      margin: 0;
+      color: white;
+      text-align: center;
+    }
+  }
+}
+
+.development-item:hover {
+  background-color: rgba(112, 112, 112, 0.12);
+}
+
+.development-page {
+  max-height: 100%;
+  display: flex;
+  flex-direction: row;
+  border-bottom: 2px solid $underline-color;
+
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  label {
+    input:checked ~ .development-item {
+      background-color: rgba(112, 112, 112, 0.12);
+    }
+  }
+}

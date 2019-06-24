@@ -1,0 +1,53 @@
+.navbaricon-bg {
+  display: flex;
+  flex-direction: row;
+  margin-left: 50px;
+
+  @media screen and (max-width: 1650px) {
+    margin-left: 40px;
+  }
+
+  @media screen and (max-width: 1550px) {
+    margin-left: 30px;
+  }
+
+  > .navbaricon-font {
+    display: flex;
+    flex-direction: column;
+    height: 58px;
+
+    > .navbaricon-info {
+      @extend .navbaricon-font;
+      height: 31px;
+      font-size: 20px;
+    }
+  }
+}
+.navbaricon-rectangle {
+  @extend .rectangle;
+  margin-right: 19px;
+  > img {
+    width: 100%;
+    height: 100%;
+  }
+}
+.navbaricon-rectangle > div {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.navbaricon-font > span {
+  color: $secondary-color;
+  text-align: center;
+  font-family: Baloo;
+
+  display: inline-flex;
+  align-items: center;
+}
+
+.navbaricon-amount {
+  font-size: 32px;
+  flex: 1;
+  line-height: 1;
+}
