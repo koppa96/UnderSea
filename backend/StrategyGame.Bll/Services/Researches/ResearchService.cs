@@ -1,13 +1,13 @@
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using StrategyGame.Bll.Dto.Sent;
+using StrategyGame.Bll.Exceptions;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
-using StrategyGame.Bll.Exceptions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace StrategyGame.Bll.Services.Researches
 {

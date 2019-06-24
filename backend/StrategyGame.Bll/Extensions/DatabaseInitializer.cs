@@ -270,7 +270,7 @@ namespace StrategyGame.Bll.Extensions
             var d2 = new Command { ParentCountry = rc, TargetCountry = rc };
             var d3 = new Command { ParentCountry = cc, TargetCountry = cc };
             var d4 = new Command { ParentCountry = bc, TargetCountry = bc };
-            var d5 = new Command { ParentCountry = bc, TargetCountry = sc };
+            var d5 = new Command { ParentCountry = sc, TargetCountry = sc };
             context.Commands.AddRange(d1, d2, d3, d4, d5);
 
             var b1 = await context.BuildingTypes.FirstAsync();

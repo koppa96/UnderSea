@@ -1,18 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StrategyGame.Bll.EffectParsing;
+using StrategyGame.Bll.Exceptions;
 using StrategyGame.Bll.Services.Units;
 using StrategyGame.Dal;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace StrategyGame.Tests.Services
 {
     [TestClass]
-    public class UnitServiceTest
+    public class UnitServiceTests
     {
         private UnderSeaDatabaseContext context;
         private IUnitService unitService;
@@ -21,7 +20,7 @@ namespace StrategyGame.Tests.Services
         public async Task Initialize()
         {
             context = await UtilityFactory.CreateContextAsync();
-            unitService = new UnitService(UtilityFactory.CreateMapper(), context,
+            unitService = new UnitService(context,
                 new ModifierParserContainer(new AbstractEffectModifierParser[]
                 {
                     new BarrackSpaceEffectParser(),
@@ -31,7 +30,7 @@ namespace StrategyGame.Tests.Services
                     new TaxModifierEffectParser(),
                     new UnitDefenseEffectParser(),
                     new UnitAttackEffectParser()
-                }));
+                }), UtilityFactory.CreateMapper());
         }
 
         [TestMethod]
@@ -73,6 +72,16 @@ namespace StrategyGame.Tests.Services
             var id = (await context.UnitTypes.FirstAsync()).Id;
 
             await unitService.CreateUnitAsync(username, id, 10);
+        }
+
+        [TestMethod]
+        [DataRow("TheRich")]
+        [ExpectedException(typeof(LimitReachedException))]
+        public async Task TestBuyUnitNoSpace(string username)
+        {
+            var id = (await context.UnitTypes.FirstAsync()).Id;
+
+            await unitService.CreateUnitAsync(username, id, 200);
         }
 
         [TestCleanup]

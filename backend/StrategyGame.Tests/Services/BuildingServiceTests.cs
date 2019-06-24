@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StrategyGame.Bll.Exceptions;
-using StrategyGame.Bll.Extensions;
 using StrategyGame.Bll.Services.Buildings;
 using StrategyGame.Dal;
 using System;

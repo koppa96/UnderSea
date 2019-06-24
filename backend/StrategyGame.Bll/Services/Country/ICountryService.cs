@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using StrategyGame.Bll.Dto.Sent;
+﻿using StrategyGame.Bll.Dto.Sent;
 using StrategyGame.Bll.Dto.Sent.Country;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace StrategyGame.Bll.Services.Country
 {
@@ -17,7 +15,7 @@ namespace StrategyGame.Bll.Services.Country
         /// </summary>
         /// <param name="username">The name of the owner</param>
         /// <param name="countryName">The name of the country</param>
-        /// <returns></returns>
+        /// <returns>The task representing the operation.</returns>
         Task CreateAsync(string username, string countryName);
 
         /// <summary>

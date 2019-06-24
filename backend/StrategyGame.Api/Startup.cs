@@ -23,10 +23,7 @@ using StrategyGame.Bll.Services.Units;
 using StrategyGame.Bll.Services.UserTracker;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
-using System;
 using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace StrategyGame.Api
 {

@@ -18,7 +18,7 @@ namespace StrategyGame.Bll.Services.Country
 
         protected UnderSeaDatabaseContext Database { get; }
 
-        public CountryService(IMapper mapper, UnderSeaDatabaseContext database)
+        public CountryService(UnderSeaDatabaseContext database, IMapper mapper)
         {
             Mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             Database = database ?? throw new ArgumentNullException(nameof(database));

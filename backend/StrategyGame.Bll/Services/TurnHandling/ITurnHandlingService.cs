@@ -1,6 +1,6 @@
-﻿using System.Threading;
+﻿using StrategyGame.Dal;
+using System.Threading;
 using System.Threading.Tasks;
-using StrategyGame.Dal;
 
 namespace StrategyGame.Bll.Services.TurnHandling
 {

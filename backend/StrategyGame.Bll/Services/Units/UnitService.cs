@@ -21,7 +21,8 @@ namespace StrategyGame.Bll.Services.Units
 
         protected ModifierParserContainer Parsers { get; }
 
-        public UnitService(IMapper mapper, UnderSeaDatabaseContext database, ModifierParserContainer container)
+        public UnitService(UnderSeaDatabaseContext database,
+            ModifierParserContainer container, IMapper mapper)
         {
             Mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             Database = database ?? throw new ArgumentNullException(nameof(database));
