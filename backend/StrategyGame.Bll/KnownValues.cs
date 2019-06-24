@@ -105,7 +105,7 @@
         /// <summary>
         /// The chance for a random event to occur.
         /// </summary>
-        public const double RandomEventChance = 1.0;
+        public const double RandomEventChance = 0.1;
 
         /// <summary>
         /// The amount of turns before a random event can occur.

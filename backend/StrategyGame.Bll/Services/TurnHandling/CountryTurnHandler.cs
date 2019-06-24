@@ -345,7 +345,6 @@ namespace StrategyGame.Bll.Services.TurnHandling
                     else
                     {
                         existing.Count += building.Count();
-
                     }
                 }
             }

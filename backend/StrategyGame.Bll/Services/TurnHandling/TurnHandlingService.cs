@@ -105,9 +105,17 @@ namespace StrategyGame.Bll.Services.TurnHandling
 
             await context.SaveChangesAsync();
 
-            // TODO Remove invalid in progress stuff
-            //    context2.InProgressBuildings.RemoveRange(context.InProgressBuildings.Where(b => b.TimeLeft <= 0));
-            //    context2.InProgressResearches.RemoveRange(context.InProgressResearches.Where(r => r.TimeLeft <= 0));
+            //TODO: investigate why EF produces null bdgs in the below code (this is why there is a save above)
+            //var first = context.CountryBuildings.First();
+            //first.Count = 10;
+            ////context.CountryBuildings.First().Count = 10;
+            //var count = context.CountryBuildings.First().Count;
+            //var bdgs = context.CountryBuildings.FirstOrDefault(x => x.Count == 10);
+
+            context.InProgressBuildings.RemoveRange(context.InProgressBuildings.Where(b => b.TimeLeft <= 0));
+            context.InProgressResearches.RemoveRange(context.InProgressResearches.Where(r => r.TimeLeft <= 0));
+
+            await context.SaveChangesAsync();
         }
     }
 }

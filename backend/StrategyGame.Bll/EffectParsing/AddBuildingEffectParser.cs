@@ -21,13 +21,22 @@ namespace StrategyGame.Bll.EffectParsing
 
                     if (count > 0)
                     {
+                        var existing = country.Buildings.SingleOrDefault(b => b.Building.Id == effect.TargetId);
 
-                        country.Buildings.Add(new CountryBuilding
+                        if (existing == null)
                         {
-                            // TODO async effect parsing?
-                            Building = context.BuildingTypes.Find(effect.TargetId),
-                            Count = (int)effect.Value,
-                        });
+                            context.CountryBuildings.Add(new CountryBuilding
+                            {
+                                ParentCountry = country,
+                                // TODO async effect parsing?
+                                Building = context.BuildingTypes.Find(effect.TargetId),
+                                Count = (int)effect.Value,
+                            });
+                        }
+                        else
+                        {
+                            existing.Count += (int)effect.Value;
+                        }
                     }
                     else if (count < 0)
                     {
