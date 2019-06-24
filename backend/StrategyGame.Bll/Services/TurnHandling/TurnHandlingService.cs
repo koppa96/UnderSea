@@ -28,15 +28,25 @@ namespace StrategyGame.Bll.Services.TurnHandling
                 .Include(c => c.Buildings)
                     .ThenInclude(b => b.Building)
                         .ThenInclude(b => b.Effects)
+                            .ThenInclude(b => b.Effect)
                 .Include(c => c.Researches)
                     .ThenInclude(r => r.Research)
                         .ThenInclude(r => r.Effects)
+                            .ThenInclude(r => r.Effect)
                 .Include(c => c.InProgressBuildings)
                     .ThenInclude(b => b.Building)
                 .Include(c => c.InProgressResearches)
-                    .ThenInclude(r => r.Research);
+                    .ThenInclude(r => r.Research)
+                .Include(c => c.CurrentEvent)
+                    .ThenInclude(e => e.Effects)
+                            .ThenInclude(e => e.Effect);
 
-            await preCombat.ForEachAsync(c => Handler.HandlePreCombat(context, c, globals));
+            var events = await context.RandomEvents
+                .Include(e => e.Effects)
+                    .ThenInclude(e => e.Effect)
+                .ToListAsync();
+
+            await preCombat.ForEachAsync(c => Handler.HandlePreCombat(context, c, globals, events));
 
             var combat = context.Countries
                 .Include(c => c.Commands)
@@ -45,9 +55,11 @@ namespace StrategyGame.Bll.Services.TurnHandling
                 .Include(c => c.Buildings)
                     .ThenInclude(b => b.Building)
                         .ThenInclude(b => b.Effects)
+                            .ThenInclude(b => b.Effect)
                 .Include(c => c.Researches)
                     .ThenInclude(r => r.Research)
                         .ThenInclude(r => r.Effects)
+                            .ThenInclude(r => r.Effect)
                 .Include(c => c.IncomingAttacks)
                     .ThenInclude(a => a.Divisions)
                         .ThenInclude(d => d.Unit)
@@ -56,11 +68,16 @@ namespace StrategyGame.Bll.Services.TurnHandling
                         .ThenInclude(pc => pc.Buildings)
                             .ThenInclude(pb => pb.Building)
                                 .ThenInclude(pb => pb.Effects)
+                                    .ThenInclude(pb => pb.Effect)
                 .Include(c => c.IncomingAttacks)
                     .ThenInclude(a => a.ParentCountry)
                         .ThenInclude(pc => pc.Researches)
                             .ThenInclude(pr => pr.Research)
-                                .ThenInclude(pr => pr.Effects);
+                                .ThenInclude(pr => pr.Effects)
+                                    .ThenInclude(pr => pr.Effect)
+                .Include(c => c.CurrentEvent)
+                    .ThenInclude(e => e.Effects)
+                            .ThenInclude(e => e.Effect);
 
             await combat.ForEachAsync(c => Handler.HandleCombat(context, c, globals));
 
@@ -69,8 +86,15 @@ namespace StrategyGame.Bll.Services.TurnHandling
                     .ThenInclude(c => c.Divisions)
                 .Include(c => c.Buildings)
                     .ThenInclude(b => b.Building)
+                        .ThenInclude(b => b.Effects)
+                            .ThenInclude(b => b.Effect)
                 .Include(c => c.Researches)
-                    .ThenInclude(r => r.Research);
+                    .ThenInclude(r => r.Research)
+                        .ThenInclude(r => r.Effects)
+                            .ThenInclude(r => r.Effect)
+                .Include(c => c.CurrentEvent)
+                    .ThenInclude(e => e.Effects)
+                        .ThenInclude(e => e.Effect);
 
             await postCombat.ForEachAsync(c => Handler.HandlePostCombat(context, c, globals));
 

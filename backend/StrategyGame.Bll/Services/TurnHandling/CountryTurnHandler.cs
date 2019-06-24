@@ -1,4 +1,5 @@
-﻿using StrategyGame.Bll.EffectParsing;
+﻿using Microsoft.EntityFrameworkCore;
+using StrategyGame.Bll.EffectParsing;
 using StrategyGame.Bll.Extensions;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
@@ -34,12 +35,13 @@ namespace StrategyGame.Bll.Services.TurnHandling
         /// </summary>
         /// <param name="context">The <see cref="UnderSeaDatabaseContext"/> that is used to access the database.</param>
         /// <param name="country">The country to handle. The following must be included: Buildings, In progress buildings,
-        /// researches, in progress researches, the buildings and researches of these, and the corresponding effects, commands, divisions and units.</param>
+        /// researches, in progress researches, the buildings and researches of these, events, and the corresponding effects, commands, divisions and units.</param>
         /// <param name="globals">The <see cref="GlobalValue"/>s to use.</param>
+        /// <param name="allEvents">The collection of all events that may occur.</param>
         /// <param name="cancel">The <see cref="CancellationToken"/> that can be used to cancel the operation.</param>
         /// <exception cref="ArgumentNullException">Thrown if an argument was null.</exception>
-        public void HandlePreCombat(UnderSeaDatabaseContext context,
-            Model.Entities.Country country, GlobalValue globals, CancellationToken cancel = default)
+        public void HandlePreCombat(UnderSeaDatabaseContext context, Model.Entities.Country country, 
+            GlobalValue globals, IList<RandomEvent> allEvents, CancellationToken cancel = default)
         {
             if (context == null)
             {
@@ -55,19 +57,37 @@ namespace StrategyGame.Bll.Services.TurnHandling
             {
                 throw new ArgumentNullException(nameof(globals));
             }
+            
+            // #1: Add a random event
+            if (country.CreatedRound + KnownValues.RandomEventGraceTimer < globals.Round 
+                && rng.NextDouble() <= KnownValues.RandomEventChance)
+            {
+                country.CurrentEvent = allEvents[rng.Next(allEvents.Count)];
+            }
+            else if (country.CurrentEvent != null)
+            {
+                country.CurrentEvent = null;
+            }
+            
+            // Apply permanent effects here
+            var builder = country.ParseAllEffectForCountry(context, globals, Parsers, true);
 
-            var builder = country.ParseAllEffectForCountry(globals, Parsers);
+            if (builder.WasEventIgnored)
+            {
+                country.CurrentEvent = null;
+            }
 
-            // #1: Tax
-            country.Pearls += (long)Math.Round(builder.Population * globals.BaseTaxation * builder.TaxModifier);
+            // #2: Tax
+            country.Pearls += (long)Math.Round(builder.Population * globals.BaseTaxation * builder.TaxModifier
+                + builder.PearlProduction);
 
-            // #2: Coral (harvest)
+            // #3: Coral (harvest)
             country.Corals += (long)Math.Round(builder.CoralProduction * builder.HarvestModifier);
 
-            // #3: Pay soldiers
+            // #4: Pay soldiers
             DesertUnits(country);
 
-            // #4: Advance research and buildings
+            // #5: Advance research and buildings
             foreach (var b in country.InProgressBuildings)
             {
                 if (b.TimeLeft >= 0)
@@ -84,7 +104,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
                 }
             }
 
-            // #5: Add buildings that are completed
+            // #6: Add buildings that are completed
             CheckAddCompleted(context, country);
         }
 
@@ -93,7 +113,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
         /// </summary>
         /// <param name="context">The <see cref="UnderSeaDatabaseContext"/> that is used to access the database.</param>
         /// <param name="country">The country to handle. The commands, incoming attacks, the attack's divisions, parent country, 
-        /// parent country builidings, researches and effects must be loaded.</param>
+        /// parent country builidings, researches, events, and effects must be loaded.</param>
         /// <param name="globals">The <see cref="GlobalValue"/>s to use.</param>
         /// <exception cref="ArgumentNullException">Thrown if an argument was null.</exception>
         public void HandleCombat(UnderSeaDatabaseContext context, Model.Entities.Country country, GlobalValue globals)
@@ -122,12 +142,13 @@ namespace StrategyGame.Bll.Services.TurnHandling
                 .ToList();
 
             var defenders = country.GetAllDefending();
-            var builder = country.ParseAllEffectForCountry(globals, Parsers);
+            var builder = country.ParseAllEffectForCountry(context, globals, Parsers, false);
 
             foreach (var attack in incomingAttacks)
             {
 
-                double attackPower = GetCurrentUnitPower(attack, true, attack.ParentCountry.ParseAllEffectForCountry(globals, Parsers));
+                double attackPower = GetCurrentUnitPower(attack, true,
+                    attack.ParentCountry.ParseAllEffectForCountry(context, globals, Parsers, false));
                 double defensePower = GetCurrentUnitPower(defenders, false, builder);
 
                 if (attackPower > defensePower)
@@ -152,7 +173,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
         /// Handles post-combat calculations for a country, like calculating the score, and merging commands into the defense command.
         /// </summary>
         /// <param name="context">The <see cref="UnderSeaDatabaseContext"/> that is used to access the database.</param>
-        /// <param name="country">The country to handle. The commands, their divisions and units, buildings and researches must be loaded.</param>
+        /// <param name="country">The country to handle. The commands, their divisions and units, buildings and researches, events, and their effects must be loaded.</param>
         /// <param name="globals">The <see cref="GlobalValue"/>s to use.</param>
         /// <exception cref="ArgumentNullException">Thrown if an argument was null.</exception>
         public void HandlePostCombat(UnderSeaDatabaseContext context, Model.Entities.Country country, GlobalValue globals)
@@ -172,7 +193,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
                 throw new ArgumentNullException(nameof(globals));
             }
 
-            var builder = country.ParseAllEffectForCountry(globals, Parsers);
+            var builder = country.ParseAllEffectForCountry(context, globals, Parsers, false);
 
             long divisionScore = 0;
             foreach (var comm in country.Commands)
@@ -225,8 +246,8 @@ namespace StrategyGame.Bll.Services.TurnHandling
         {
             if (doGetAttack)
             {
-                return command.Divisions.Sum(d => d.Count * d.Unit.AttackPower * builder.AttackModifier)
-                    * (rng.NextDouble() / 10 + 0.95);
+                return command.Divisions.Sum(d => d.Count * (d.Unit.AttackPower + builder.AttackIncrease)
+                    * builder.AttackModifier) * (rng.NextDouble() / 10 + 0.95);
             }
             else
             {

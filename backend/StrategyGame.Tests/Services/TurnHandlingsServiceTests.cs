@@ -21,11 +21,15 @@ namespace StrategyGame.Tests.Services
                 {
                     new BarrackSpaceEffectParser(),
                     new CoralProductionEffectParser(),
+                    new PearlProductionEffectParser(),
                     new HarvestModifierEffectParser(),
                     new PopulationEffectParser(),
                     new TaxModifierEffectParser(),
                     new UnitDefenseEffectParser(),
-                    new UnitAttackEffectParser()
+                    new UnitAttackEffectParser(),
+                    new AddBuildingEffectParser(),
+                    new IncreaseUnitAttackEffectParser(),
+                    new BuildingCoralProductionEffectParser()
                 }));
         }
 

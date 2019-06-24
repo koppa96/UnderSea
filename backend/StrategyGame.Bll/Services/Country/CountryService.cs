@@ -35,13 +35,15 @@ namespace StrategyGame.Bll.Services.Country
                 Corals = globals.StartingCorals,
                 Pearls = globals.StartingPearls,
                 Score = -1,
-                Rank = -1
+                Rank = -1,
+                CreatedRound = globals.Round
             };
 
             var defenders = new Command { ParentCountry = country, TargetCountry = country };
 
             Database.Countries.Add(country);
             Database.Commands.Add(defenders);
+            
             await Database.SaveChangesAsync();
         }
 

@@ -36,18 +36,40 @@ namespace StrategyGame.Bll.Extensions
         /// <summary>
         /// Parses all effects of a country into a <see cref="CountryModifierBuilder"/>.
         /// </summary>
-        /// <param name="country">The country to parse effects for. Its buildings, researches and their effects must be included.</param>
+        /// <param name="country">The country to parse effects for. Its buildings, researches, events and their effects must be included.</param>
+        /// <param name="context">The database to use.</param>
         /// <param name="globals">The <see cref="GlobalValue"/> to use.</param>
         /// <param name="Parsers">The collection of parsers to use.</param>
-        /// <returns></returns>
-        public static CountryModifierBuilder ParseAllEffectForCountry(this Country country,
-            GlobalValue globals, ModifierParserContainer Parsers)
+        /// <param name="doApplyPermanent">If effects that have permanenet effects should be applied.</param>
+        /// <returns>The builder containing the modifiers for the country</returns>
+        public static CountryModifierBuilder ParseAllEffectForCountry(this Country country, UnderSeaDatabaseContext context,
+            GlobalValue globals, ModifierParserContainer Parsers, bool doApplyPermanent = false)
         {
             if (country == null)
             {
                 throw new ArgumentNullException(nameof(country));
             }
 
+            // Set up builder
+            var builder = new CountryModifierBuilder
+            {
+                BarrackSpace = globals.StartingBarrackSpace,
+                Population = globals.StartingPopulation
+            };
+
+            // First handle events
+            if (country.CurrentEvent != null)
+            {
+                foreach (var e in country.CurrentEvent.Effects)
+                {
+                    if (!Parsers.TryParse(e.Effect, country, context, builder, doApplyPermanent))
+                    {
+                        Debug.WriteLine("Event effect with name {0} could not be handled by the provided parsers.", e.Effect.Name);
+                    }
+                }
+            }
+
+            // Then regular effects
             var effectparents = country.Buildings.Select(b => new
             {
                 count = b.Count,
@@ -58,21 +80,13 @@ namespace StrategyGame.Bll.Extensions
                 effects = r.Research.Effects.Select(e => e.Effect)
             })).ToList();
 
-            // Set up builder
-            var builder = new CountryModifierBuilder
-            {
-                BarrackSpace = globals.StartingBarrackSpace,
-                Population = globals.StartingPopulation
-            };
-
-            // Calculate the effects
             foreach (var effectParent in effectparents)
             {
                 for (int iii = 0; iii < effectParent.count; iii++)
                 {
                     foreach (var e in effectParent.effects)
                     {
-                        if (!Parsers.TryParse(e, builder))
+                        if (!Parsers.TryParse(e, country, context, builder, doApplyPermanent))
                         {
                             Debug.WriteLine("Effect with name {0} could not be handled by the provided parsers.", e.Name);
                         }

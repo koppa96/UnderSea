@@ -9,7 +9,8 @@
         /// Initializes a new instance of the <see cref="UnitDefenseEffectParser"/>.
         /// </summary>
         public UnitDefenseEffectParser()
-            : base(KnownValues.UnitDefenseModifier, (effect, builder) => builder.DefenseModifier += effect.Value)
+            : base(KnownValues.UnitDefenseModifier, (effect, country, context, builder, doApply)
+                  => builder.DefenseModifier += effect.Value)
         { }
     }
 }

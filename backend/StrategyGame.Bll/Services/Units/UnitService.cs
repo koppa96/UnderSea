@@ -80,7 +80,7 @@ namespace StrategyGame.Bll.Services.Units
                 throw new InvalidOperationException("Units too expensive");
             }
 
-            var builder = country.ParseAllEffectForCountry(globals, Parsers);
+            var builder = country.ParseAllEffectForCountry(Database, globals, Parsers, false);
             var totalUnits = country.Commands.Sum(c => c.Divisions.Sum(d => d.Count));
 
             // Check pop-space
