@@ -93,8 +93,8 @@ namespace StrategyGame.Bll.Services.Units
 
             if (targetDiv == null)
             {
-                targetDiv = new Division { Count = count, ParentCommand = defenders, Unit = unit };
-                defenders.Divisions.Add(targetDiv);
+                Database.Divisions.Add(new Division
+                { Count = count, ParentCommand = defenders, Unit = unit });
             }
             else
             {
