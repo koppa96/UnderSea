@@ -6,11 +6,58 @@ import { Link } from "react-router-dom";
 
 export class Register extends React.Component<RegisterProps, RegisterState> {
   state: RegisterState = {
-    name: "",
-    password: "",
-    repassword: "",
-    countryname: ""
+    model: {
+      name: "",
+      password: "",
+      repassword: "",
+      countryname: ""
+    },
+    error: null
   };
+
+  /* handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const config = {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
+      }
+    };
+
+    const requestBody = qs.stringify({
+      username: this.state.model.name,
+      password: this.state.model.password,
+      email: "undersea_client",
+      client_secret: "undersea_client_secret",
+      scope: "offline_access undersea_api",
+      grant_type: "password"
+    });
+    const url = "https://localhost:44355/api/accounts/me";
+
+    axios
+      .post(url, requestBody, config)
+      .then(response => {
+        console.log(response);
+        const resp: LoginResponse = response.data as LoginResponse;
+        const connectToken = resp.token_type + " " + resp.access_token;
+        const refreshToken = resp.refresh_token;
+
+        localStorage.setItem("connection_header", connectToken);
+        localStorage.setItem("refresh_token", refreshToken);
+        console.log(localStorage.getItem("refresh_token"));
+      })
+      .catch(error => {
+        if (error.response.status === "408") {
+          this.setState({ error: "Connection timeout" });
+        } else {
+          this.setState({ error: "Helytelen jelszó, vagy felhasználó" });
+        }
+      });
+  };
+
+  */
 
   render() {
     return (
@@ -25,8 +72,8 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
               required
               onChange={e =>
                 this.setState({
-                  ...this.state,
-                  name: e.target.value
+                  ...this.state
+                  // name: e.target.value
                 })
               }
               placeholder="Felhasználó"
@@ -38,8 +85,8 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
               required
               onChange={e =>
                 this.setState({
-                  ...this.state,
-                  name: e.target.value
+                  ...this.state
+                  // name: e.target.value
                 })
               }
               placeholder="Jelszó"
@@ -50,8 +97,8 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
               required
               onChange={e =>
                 this.setState({
-                  ...this.state,
-                  repassword: e.target.value
+                  ...this.state
+                  //  repassword: e.target.value
                 })
               }
               placeholder="Jelszó megerősítése"
@@ -62,8 +109,8 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
               required
               onChange={e =>
                 this.setState({
-                  ...this.state,
-                  countryname: e.target.value
+                  ...this.state
+                  //  countryname: e.target.value
                 })
               }
               placeholder="A városod neve, amit építesz"

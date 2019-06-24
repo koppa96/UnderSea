@@ -1,6 +1,7 @@
 import * as React from "react";
 import axios from "axios";
 
+import qs from "qs";
 import "./../../../assets/scss/forms.scss";
 
 import { Form } from "reactstrap";
@@ -17,20 +18,37 @@ export class Login extends React.Component {
   };
 
   handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    console.log(this.state);
     e.preventDefault();
+
+    const config = {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token"
+      }
+    };
+
+    const requestBody = qs.stringify({
+      username: this.state.model.name,
+      password: this.state.model.password,
+      client_id: "undersea_client",
+      client_secret: "undersea_client_secret",
+      scope: "offline_access undersea_api",
+      grant_type: "password"
+    });
+    const url = "https://localhost:44355/connect/token";
+
     axios
-      .post("/connect/token", {
-        username: this.state.model.name,
-        password: this.state.model.password
-      })
+      .post(url, requestBody, config)
       .then(response => {
+        console.log(response.data);
         const resp: LoginResponse = response.data as LoginResponse;
         const connectToken = resp.token_type + " " + resp.access_token;
         const refreshToken = resp.refresh_token;
 
         localStorage.setItem("connection_header", connectToken);
         localStorage.setItem("refresh_token", refreshToken);
+        console.log(localStorage.getItem("refresh_token"));
       })
       .catch(error => {
         if (error.response.status === "408") {
@@ -40,6 +58,15 @@ export class Login extends React.Component {
         }
       });
   };
+
+  /*handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const token =
+      "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6ImMyMWMzYzQxMjgyMmY0MmVjZDcxYmY0ZDhiY2I5OWUwIiwidHlwIjoiSldUIn0.eyJuYmYiOjE1NjEzODM2MTMsImV4cCI6MTU2MTM4NzIxMywiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzNTUiLCJhdWQiOlsiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzNTUvcmVzb3VyY2VzIiwidW5kZXJzZWFfYXBpIl0sImNsaWVudF9pZCI6InVuZGVyc2VhX2NsaWVudCIsInN1YiI6IjAyNmE0MDlmLTZlYjMtNDI5Mi1hZDViLWRlOWJmMDBlMjMyMyIsImF1dGhfdGltZSI6MTU2MTM4MzYxMywiaWRwIjoibG9jYWwiLCJuYW1lIjoiYXNkIiwiZW1haWwiOiJhc2RAYXNkLmFzZCIsInNjb3BlIjpbInVuZGVyc2VhX2FwaSIsIm9mZmxpbmVfYWNjZXNzIl0sImFtciI6WyJwd2QiXX0.rv1QdyVPHuwE5kQZIYf-95b5hkSAcVan9mZu-8KPga4EO1J1wQuq0v4sSoaBIqcstyZytOLbvuu9M264tElhmTABZG8imSF-6MykCf2Lcq1Af9AHq0tk25pIoJ2nBEWxl0aWtap1sHpnm27TAooKW2OeHHquUvbQHyhAe6mDfUfiaN0K_ykG0zya9_pGm4mquPhwfETVrvKT_7tOWkcFb1QGpWYRxPK8ntXCsOThE0th43rlNeBoCOg0XRXIN3-TX5gOY5A8a32uqAsvaDOrOPIx5W0MFUj6mxOlh3raPJvuvDSbPB6ST2x401J3LCw4C6Iy7iGQGYeDjo_7cWeABA";
+  const header={
+
+  }*/
 
   render() {
     const { error } = this.state;
@@ -71,6 +98,7 @@ export class Login extends React.Component {
               <input
                 className="form-input"
                 required
+                type="password"
                 onChange={e =>
                   this.setState({
                     ...this.state,
