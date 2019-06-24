@@ -68,7 +68,7 @@ namespace StrategyGame.Bll.Services.Commands
                 _context.Divisions.Add(attackingDivision);
             }
 
-            if (!attackingCommand.Divisions.Any(d => d.Unit is LeaderType))
+            if (!attackingCommand.Divisions.Any(d => d.Unit is LeaderType && d.Count > 0))
             {
                 throw new InvalidOperationException("Every attack must contain a leader.");
             }
@@ -203,7 +203,7 @@ namespace StrategyGame.Bll.Services.Commands
                 division.Count = detail.Amount;
             }
 
-            if (!attackingCommand.Divisions.Any(d => d.Unit is LeaderType))
+            if (!attackingCommand.Divisions.Any(d => d.Unit is LeaderType && d.Count > 0))
             {
                 throw new InvalidOperationException("Every attack must contain a leader.");
             }
