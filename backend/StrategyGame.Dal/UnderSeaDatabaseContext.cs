@@ -209,7 +209,7 @@ namespace StrategyGame.Dal
                 .WithMany(c => c.IncomingAttacks);
 
             builder.Entity<Command>()
-                .HasMany(c => c.Divisons)
+                .HasMany(c => c.Divisions)
                 .WithOne(d => d.ParentCommand);
 
             // Divisions

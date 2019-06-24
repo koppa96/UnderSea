@@ -1,15 +1,14 @@
-using System;
-using System.Security.Cryptography;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using StrategyGame.Bll.Dto.Received;
 using StrategyGame.Bll.Dto.Sent;
+using StrategyGame.Bll.Extensions;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
-using StrategyGame.Bll.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace StrategyGame.Bll.Services.Commands
 {
@@ -27,7 +26,7 @@ namespace StrategyGame.Bll.Services.Commands
         public async Task<CommandInfo> AttackTargetAsync(string username, CommandDetails details)
         {
             var country = await _context.Countries.Include(c => c.Commands)
-                .ThenInclude(c => c.Divisons)
+                .ThenInclude(c => c.Divisions)
                     .ThenInclude(d => d.Unit)
                         .ThenInclude(u => u.Content)
                 .SingleAsync(c => c.ParentUser.UserName == username);
@@ -47,7 +46,7 @@ namespace StrategyGame.Bll.Services.Commands
 
             foreach (var detail in details.Units)
             {
-                var defendingDivision = defendingCommand.Divisons.SingleOrDefault(d => d.Unit.Id == detail.UnitId);
+                var defendingDivision = defendingCommand.Divisions.SingleOrDefault(d => d.Unit.Id == detail.UnitId);
                 if (defendingDivision == null)
                 {
                     throw new ArgumentOutOfRangeException(nameof(detail.UnitId), "Invalid unit id.");
@@ -71,13 +70,13 @@ namespace StrategyGame.Bll.Services.Commands
 
             _context.Commands.Add(attackingCommand);
             await _context.SaveChangesAsync();
-            return attackingCommand.ToCommandInfo(_mapper);
+            return ToCommandInfo(attackingCommand, _mapper);
         }
 
         public async Task DeleteCommandAsync(string username, int commandId)
         {
             var country = await _context.Countries.Include(c => c.Commands)
-                .ThenInclude(c => c.Divisons)
+                .ThenInclude(c => c.Divisions)
                     .ThenInclude(d => d.Unit)
                 .Include(c => c.Commands)
                     .ThenInclude(c => c.TargetCountry)
@@ -96,9 +95,9 @@ namespace StrategyGame.Bll.Services.Commands
             }
 
             var defendingCommand = country.GetAllDefending();
-            foreach (var division in command.Divisons)
+            foreach (var division in command.Divisions)
             {
-                var defendingDivision = defendingCommand.Divisons.SingleOrDefault(d => d.Unit.Id == division.Unit.Id);
+                var defendingDivision = defendingCommand.Divisions.SingleOrDefault(d => d.Unit.Id == division.Unit.Id);
                 if (defendingDivision == null)
                 {
                     defendingDivision = new Division
@@ -122,14 +121,14 @@ namespace StrategyGame.Bll.Services.Commands
         public async Task<IEnumerable<CommandInfo>> GetCommandsAsync(string username)
         {
             var commands = await _context.Commands
-                .Include(c => c.Divisons)
+                .Include(c => c.Divisions)
                     .ThenInclude(d => d.Unit)
                         .ThenInclude(u => u.Content)
                 .Include(c => c.TargetCountry)
                 .Where(c => c.ParentCountry.ParentUser.UserName == username)
                 .ToListAsync();
-            
-            var commandInfos = commands.Select(c => c.ToCommandInfo(_mapper));
+
+            var commandInfos = commands.Select(c => ToCommandInfo(c, _mapper));
             return commandInfos;
         }
 
@@ -138,7 +137,7 @@ namespace StrategyGame.Bll.Services.Commands
             var country = await _context.Countries.Include(c => c.Commands)
                     .ThenInclude(c => c.TargetCountry)
                 .Include(c => c.Commands)
-                    .ThenInclude(c => c.Divisons)
+                    .ThenInclude(c => c.Divisions)
                         .ThenInclude(d => d.Unit)
                             .ThenInclude(u => u.Content)
                 .SingleAsync(c => c.ParentUser.UserName == username);
@@ -162,10 +161,11 @@ namespace StrategyGame.Bll.Services.Commands
 
             var defendingCommand = country.GetAllDefending();
             command.TargetCountry = targetCountry;
+
             foreach (var detail in details.Units)
             {
-                var division = command.Divisons.SingleOrDefault(d => d.Unit.Id == detail.UnitId);
-                var defendingDivision = defendingCommand.Divisons.SingleOrDefault(d => d.Unit.Id == detail.UnitId);
+                var division = command.Divisions.SingleOrDefault(d => d.Unit.Id == detail.UnitId);
+                var defendingDivision = defendingCommand.Divisions.SingleOrDefault(d => d.Unit.Id == detail.UnitId);
                 if (division == null)
                 {
                     var unit = defendingDivision?.Unit;
@@ -199,7 +199,20 @@ namespace StrategyGame.Bll.Services.Commands
             }
 
             await _context.SaveChangesAsync();
-            return command.ToCommandInfo(_mapper);
+            return ToCommandInfo(command, _mapper);
+        }
+
+        public CommandInfo ToCommandInfo(Command command, IMapper mapper)
+        {
+            var commandInfo = mapper.Map<Command, CommandInfo>(command);
+            commandInfo.Units = command.Divisions.Select(d =>
+            {
+                var unitInfo = mapper.Map<UnitType, UnitInfo>(d.Unit);
+                unitInfo.Count = d.Count;
+                return unitInfo;
+            });
+
+            return commandInfo;
         }
     }
 }

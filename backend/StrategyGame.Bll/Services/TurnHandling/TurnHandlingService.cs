@@ -2,7 +2,6 @@
 using StrategyGame.Bll.EffectParsing;
 using StrategyGame.Dal;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,38 +19,64 @@ namespace StrategyGame.Bll.Services.TurnHandling
 
         public async Task EndTurnAsync(UnderSeaDatabaseContext context, CancellationToken cancel = default)
         {
-            // Turndata contains the builders for all countries. The builder containes the live updated modifications
-            // along with the loot acquired by the countries. When below HandleLoot method adds the looted amounts to the builder.
-            var turnData = new Dictionary<int, CountryModifierBuilder>();
+            var globals = await context.GlobalValues.SingleAsync(cancel);
 
-            void HandleLoot(object sender, CountryLootedEventArgs Args)
-            {
-                turnData[Args.LooterId].CurrentPearlLoot += Args.LootedPearls;
-                turnData[Args.LooterId].CurrentCoralLoot += Args.LootedCorals;
-            }
+            var preCombat = context.Countries
+                .Include(c => c.Commands)
+                    .ThenInclude(c => c.Divisions)
+                        .ThenInclude(d => d.Unit)
+                .Include(c => c.Buildings)
+                    .ThenInclude(b => b.Building)
+                        .ThenInclude(b => b.Effects)
+                .Include(c => c.Researches)
+                    .ThenInclude(r => r.Research)
+                        .ThenInclude(r => r.Effects)
+                .Include(c => c.InProgressBuildings)
+                    .ThenInclude(b => b.Building)
+                .Include(c => c.InProgressResearches)
+                    .ThenInclude(r => r.Research);
 
-            foreach (var c in context.Countries)
-            {
-                var builder = await Handler.HandlePreCombatAsync(context, c.Id, cancel);
-                turnData.Add(c.Id, builder);
-            }
+            await preCombat.ForEachAsync(c => Handler.HandlePreCombat(context, c, globals));
 
-            Handler.CountryLooted += HandleLoot;
-            foreach (var c in context.Countries)
-            {
-                await Handler.HandleCombatAsync(context, c.Id, turnData[c.Id], id => turnData[id], cancel);
-            }
-            Handler.CountryLooted -= HandleLoot;
+            var combat = context.Countries
+                .Include(c => c.Commands)
+                    .ThenInclude(c => c.Divisions)
+                        .ThenInclude(d => d.Unit)
+                .Include(c => c.Buildings)
+                    .ThenInclude(b => b.Building)
+                        .ThenInclude(b => b.Effects)
+                .Include(c => c.Researches)
+                    .ThenInclude(r => r.Research)
+                        .ThenInclude(r => r.Effects)
+                .Include(c => c.IncomingAttacks)
+                    .ThenInclude(a => a.Divisions)
+                        .ThenInclude(d => d.Unit)
+                .Include(c => c.IncomingAttacks)
+                    .ThenInclude(a => a.ParentCountry)
+                        .ThenInclude(pc => pc.Buildings)
+                            .ThenInclude(pb => pb.Building)
+                                .ThenInclude(pb => pb.Effects)
+                .Include(c => c.IncomingAttacks)
+                    .ThenInclude(a => a.ParentCountry)
+                        .ThenInclude(pc => pc.Researches)
+                            .ThenInclude(pr => pr.Research)
+                                .ThenInclude(pr => pr.Effects);
 
-            foreach (var c in context.Countries)
-            {
-                await Handler.HandlePostCombatAsync(context, c.Id, turnData[c.Id], cancel);
-            }
+            await combat.ForEachAsync(c => Handler.HandleCombat(context, c, globals));
+
+            var postCombat = context.Countries
+                .Include(c => c.Commands)
+                    .ThenInclude(c => c.Divisions)
+                .Include(c => c.Buildings)
+                    .ThenInclude(b => b.Building)
+                .Include(c => c.Researches)
+                    .ThenInclude(r => r.Research);
+
+            await postCombat.ForEachAsync(c => Handler.HandlePostCombat(context, c, globals));
 
             int index = 0;
             await context.Countries.OrderByDescending(c => c.Score).ForEachAsync(c => c.Rank = ++index);
 
-            var globals = await context.GlobalValues.SingleAsync();
             globals.Round++;
 
             await context.SaveChangesAsync();

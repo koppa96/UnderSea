@@ -1,4 +1,4 @@
-﻿namespace StrategyGame.Bll.Services.TurnHandling
+﻿namespace StrategyGame.Bll.EffectParsing
 {
     /// <summary>
     /// Provides a container for temporary, modifiable information about a country.
@@ -39,15 +39,5 @@
         /// Gets or sets the country's base coral production.
         /// </summary>
         public int CoralProduction { get; set; }
-
-        /// <summary>
-        /// Gets or sets the pearl loot the country acquired.
-        /// </summary>
-        public long CurrentPearlLoot { get; set; }
-
-        /// <summary>
-        /// Gets or sets the coral loot the country acquired.
-        /// </summary>
-        public long CurrentCoralLoot { get; set; }
     }
 }

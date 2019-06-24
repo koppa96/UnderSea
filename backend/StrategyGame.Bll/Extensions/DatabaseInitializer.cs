@@ -68,28 +68,28 @@ namespace StrategyGame.Bll.Extensions
 
             // Iszaptraktor
             var harvMod1 = new Effect { Name = KnownValues.HarvestModifier, Value = 0.1 };
-            var mudT = new ResearchType { CostPearl = 0, CostCoral = 0, ResearchTime = 15, MaxCompletedAmount = 1 };
+            var mudT = new ResearchType { CostPearl = 1000, CostCoral = 0, ResearchTime = 15, MaxCompletedAmount = 1 };
 
             // Iszapkombájn
             var harvMod2 = new Effect { Name = KnownValues.HarvestModifier, Value = 0.15 };
-            var mudC = new ResearchType { CostPearl = 0, CostCoral = 0, ResearchTime = 15, MaxCompletedAmount = 1 };
+            var mudC = new ResearchType { CostPearl = 1000, CostCoral = 0, ResearchTime = 15, MaxCompletedAmount = 1 };
 
             // korallfal
             var defMod1 = new Effect { Name = KnownValues.UnitDefenseModifier, Value = 0.2 };
-            var wall = new ResearchType { CostPearl = 0, CostCoral = 0, ResearchTime = 15, MaxCompletedAmount = 1 };
+            var wall = new ResearchType { CostPearl = 1000, CostCoral = 0, ResearchTime = 15, MaxCompletedAmount = 1 };
 
             // Szonárágyú
             var attMod1 = new Effect { Name = KnownValues.UnitAttackModifier, Value = 0.2 };
-            var canon = new ResearchType { CostPearl = 0, CostCoral = 0, ResearchTime = 15, MaxCompletedAmount = 1 };
+            var canon = new ResearchType { CostPearl = 1000, CostCoral = 0, ResearchTime = 15, MaxCompletedAmount = 1 };
 
             // Harcművészet
             var combModA = new Effect { Name = KnownValues.UnitAttackModifier, Value = 0.1 };
             var combModD = new Effect { Name = KnownValues.UnitDefenseModifier, Value = 0.1 };
-            var martialArts = new ResearchType { CostPearl = 0, CostCoral = 0, ResearchTime = 15, MaxCompletedAmount = 1 };
+            var martialArts = new ResearchType { CostPearl = 1000, CostCoral = 0, ResearchTime = 15, MaxCompletedAmount = 1 };
 
             // Alchemy
             var taxMod1 = new Effect { Name = KnownValues.TaxationModifier, Value = 0.3 };
-            var alchemy = new ResearchType { CostPearl = 0, CostCoral = 0, ResearchTime = 15, MaxCompletedAmount = 1 };
+            var alchemy = new ResearchType { CostPearl = 1000, CostCoral = 0, ResearchTime = 15, MaxCompletedAmount = 1 };
 
 
             // Add effects, buildings, researches

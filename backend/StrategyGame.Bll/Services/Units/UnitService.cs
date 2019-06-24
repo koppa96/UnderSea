@@ -32,7 +32,7 @@ namespace StrategyGame.Bll.Services.Units
         {
             var country = await Database.Countries
               .Include(c => c.Commands)
-              .ThenInclude(comm => comm.Divisons)
+              .ThenInclude(comm => comm.Divisions)
               .ThenInclude(d => d.Unit)
               .ThenInclude(u => u.Content)
               .SingleAsync(c => c.ParentUser.UserName == username);
@@ -47,8 +47,11 @@ namespace StrategyGame.Bll.Services.Units
                 throw new ArgumentException();
             }
 
-            var unit = await Database.UnitTypes.FindAsync(unitId);
-            await Database.Entry(unit).Reference(u => u.Content).LoadAsync();
+            var globals = await Database.GlobalValues.SingleAsync();
+
+            var unit = await Database.UnitTypes
+                .Include(u => u.Content)
+                .SingleOrDefaultAsync(u => u.Id == unitId);
 
             if (unit == null)
             {
@@ -57,8 +60,14 @@ namespace StrategyGame.Bll.Services.Units
 
             var country = await Database.Countries
                .Include(c => c.Commands)
-               .ThenInclude(comm => comm.Divisons)
-               .ThenInclude(d => d.Unit)
+                    .ThenInclude(comm => comm.Divisions)
+                        .ThenInclude(d => d.Unit)
+                .Include(c => c.Buildings)
+                    .ThenInclude(b => b.Building)
+                        .ThenInclude(b => b.Effects)
+                .Include(c => c.Researches)
+                    .ThenInclude(r => r.Research)
+                        .ThenInclude(r => r.Effects)
                .SingleAsync(c => c.ParentUser.UserName == username);
 
             // Check cost
@@ -70,8 +79,8 @@ namespace StrategyGame.Bll.Services.Units
                 throw new InvalidOperationException("Units too expensive");
             }
 
-            var builder = await Database.ParseAllEffectForCountryAsync(country.Id, Parsers);
-            var totalUnits = country.Commands.Sum(c => c.Divisons.Sum(d => d.Count));
+            var builder = country.ParseAllEffectForCountry(globals, Parsers);
+            var totalUnits = country.Commands.Sum(c => c.Divisions.Sum(d => d.Count));
 
             // Check pop-space
             if (builder.BarrackSpace < totalUnits + count)
@@ -80,12 +89,12 @@ namespace StrategyGame.Bll.Services.Units
             }
 
             var defenders = country.GetAllDefending();
-            var targetDiv = defenders.Divisons.SingleOrDefault(d => d.Unit.Id == unitId);
+            var targetDiv = defenders.Divisions.SingleOrDefault(d => d.Unit.Id == unitId);
 
             if (targetDiv == null)
             {
-                targetDiv = new Division() { Count = count, ParentCommand = defenders, Unit = unit };
-                defenders.Divisons.Add(targetDiv);
+                targetDiv = new Division { Count = count, ParentCommand = defenders, Unit = unit };
+                defenders.Divisions.Add(targetDiv);
             }
             else
             {
@@ -118,12 +127,12 @@ namespace StrategyGame.Bll.Services.Units
 
             var country = await Database.Countries
                .Include(c => c.Commands)
-               .ThenInclude(comm => comm.Divisons)
+               .ThenInclude(comm => comm.Divisions)
                .ThenInclude(d => d.Unit)
                .SingleAsync(c => c.ParentUser.UserName == username);
 
             var defenders = country.GetAllDefending();
-            var targetDiv = defenders.Divisons.SingleOrDefault(d => d.Unit.Id == unitId);
+            var targetDiv = defenders.Divisions.SingleOrDefault(d => d.Unit.Id == unitId);
 
             if (targetDiv == null || targetDiv.Count < count)
             {

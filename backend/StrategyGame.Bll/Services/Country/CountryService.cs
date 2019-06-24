@@ -38,10 +38,10 @@ namespace StrategyGame.Bll.Services.Country
                 Rank = -1
             };
 
-            var defenders = new Command() { ParentCountry = country, TargetCountry = country };
+            var defenders = new Command { ParentCountry = country, TargetCountry = country };
 
-            await Database.Countries.AddAsync(country);
-            await Database.Commands.AddAsync(defenders);
+            Database.Countries.Add(country);
+            Database.Commands.Add(defenders);
             await Database.SaveChangesAsync();
         }
 
@@ -49,7 +49,7 @@ namespace StrategyGame.Bll.Services.Country
         {
             var country = await Database.Countries
                .Include(c => c.Commands)
-                    .ThenInclude(comm => comm.Divisons)
+                    .ThenInclude(comm => comm.Divisions)
                         .ThenInclude(d => d.Unit)
                             .ThenInclude(u => u.Content)
                .Include(c => c.Buildings)
