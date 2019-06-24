@@ -127,8 +127,11 @@ namespace StrategyGame.Bll.Extensions
             // lézercápa
             var lazor = new UnitType
             { AttackPower = 5, DefensePower = 5, CostPearl = 100, CostCoral = 0, MaintenancePearl = 3, MaintenanceCoral = 2 };
+            // hadvezér
+            var leader = new LeaderType
+            { AttackPower = 0, DefensePower = 0, CostPearl = 400, CostCoral = 0, MaintenancePearl = 4, MaintenanceCoral = 2 };
 
-            context.UnitTypes.AddRange(seal, pony, lazor);
+            context.UnitTypes.AddRange(seal, pony, lazor, leader);
             await context.SaveChangesAsync();
 
 
@@ -307,6 +310,7 @@ namespace StrategyGame.Bll.Extensions
             var u1 = await context.UnitTypes.FirstAsync();
             var u2 = await context.UnitTypes.Skip(1).FirstAsync();
             var u3 = await context.UnitTypes.Skip(2).FirstAsync();
+            var leader = await context.UnitTypes.FirstAsync(u => u is LeaderType);
 
             context.Divisions.AddRange(new Division
             {
@@ -323,6 +327,11 @@ namespace StrategyGame.Bll.Extensions
                 Count = 1,
                 ParentCommand = d3,
                 Unit = u3
+            }, new Division
+            {
+                Count = 1,
+                ParentCommand = d3,
+                Unit = leader
             });
 
             await context.SaveChangesAsync();
