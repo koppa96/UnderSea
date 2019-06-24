@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NSwag.CodeGeneration.TypeScript;
+using StrategyGame.Api.Hubs;
 using StrategyGame.Bll;
 using StrategyGame.Bll.EffectParsing;
 using StrategyGame.Bll.Services.Buildings;
@@ -75,6 +76,8 @@ namespace StrategyGame.Api
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
+            services.AddSignalR();
+
             services.AddSwaggerDocument(options =>
             {
                 options.PostProcess = document =>
@@ -139,6 +142,8 @@ namespace StrategyGame.Api
             app.UseHangfireDashboard();
 
             app.UseMvc();
+
+            app.UseSignalR(route => route.MapHub<UnderSeaHub>("/hub"));
 
             RecurringJob.AddOrUpdate<TurnEndingJob>(x => x.EndTurnASync(), Cron.Hourly);
         }
