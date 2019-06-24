@@ -73,6 +73,16 @@ namespace StrategyGame.Api
                     };
                 });
 
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(policy =>
+                {
+                    policy.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                });
+            });
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddSignalR();
@@ -145,6 +155,7 @@ namespace StrategyGame.Api
             app.UseHangfireServer();
             app.UseHangfireDashboard();
 
+            app.UseCors();
             app.UseMvc();
 
             app.UseSignalR(route => route.MapHub<UnderSeaHub>("/hub"));
