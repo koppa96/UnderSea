@@ -128,26 +128,51 @@ namespace StrategyGame.Bll.Services.TurnHandling
 
             foreach (var attack in incomingAttacks)
             {
-
-                double attackPower = GetCurrentUnitPower(attack, true,
+                (double attackPower, double attackMods, double attackBase) = GetCurrentUnitPower(attack, globals, true,
                     attack.ParentCountry.ParseAllEffectForCountry(context, globals, Parsers, false));
-                double defensePower = GetCurrentUnitPower(defenders, false, builder);
+                (double defensePower, double defenseMods, double defenseBase) = GetCurrentUnitPower(defenders, globals,
+                    false, builder);
+
+                var losses = attackPower > defensePower
+                    ? CullUnits(defenders, globals.UnitLossOnLostBatle)
+                    : CullUnits(attack, globals.UnitLossOnLostBatle);
+
+                var report = new CombatReport
+                {
+                    Attacker = attack.ParentCountry,
+                    Defender = country,
+                    Attackers = attack.Divisions.Select(d => new Division
+                    { Count = d.Count, Unit = d.Unit }).ToList(),
+                    Defenders = defenders.Divisions.Select(d => new Division
+                    { Count = d.Count, Unit = d.Unit }).ToList(),
+                    TotalAttackPower = attackPower,
+                    TotalDefensePower = defensePower,
+                    AttackModifier = attackMods,
+                    DefenseModifier = defenseMods,
+                    BaseAttackPower = attackBase,
+                    BaseDefensePower = defenseBase,
+                    Round = globals.Round,
+                    DidAttackerWin = false,
+                    PearlLoot = 0,
+                    CoralLoot = 0,
+                    Losses = losses
+                };
 
                 if (attackPower > defensePower)
                 {
-                    CullUnits(defenders, globals.UnitLossOnLostBatle);
-
                     var pearlLoot = (long)Math.Round(country.Pearls * globals.LootPercentage);
                     var coralLoot = (long)Math.Round(country.Corals * globals.LootPercentage);
                     country.Pearls -= pearlLoot;
                     country.Corals -= coralLoot;
                     attack.AcquiredPearlLoot += pearlLoot;
                     attack.AcquiredCoralLoot += coralLoot;
+
+                    report.DidAttackerWin = true;
+                    report.CoralLoot = coralLoot;
+                    report.PearlLoot = pearlLoot;
                 }
-                else
-                {
-                    CullUnits(attack, globals.UnitLossOnLostBatle);
-                }
+
+                context.Reports.Add(report);
             }
         }
 
@@ -221,19 +246,24 @@ namespace StrategyGame.Bll.Services.TurnHandling
         /// Attack power is modified randomly by 5%.
         /// </summary>
         /// <param name="command">The command to get the combat power of.</param>
+        /// <param name="globals">The global values.</param>
         /// <param name="doGetAttack">If attack or defense power should be calculated.</param>
         /// <param name="builder">The builder that contains the stat modifiers.</param>
         /// <returns>The combat power of the command.</returns>
-        protected double GetCurrentUnitPower(Command command, bool doGetAttack, CountryModifierBuilder builder)
+        protected (double TotalPower, double Modifiers, double BasePower) GetCurrentUnitPower(Command command,
+            GlobalValue globals, bool doGetAttack, CountryModifierBuilder builder)
         {
             if (doGetAttack)
             {
-                return command.Divisions.Sum(d => d.Count * (d.Unit.AttackPower + builder.AttackIncrease)
-                    * builder.AttackModifier) * (rng.NextDouble() / 10 + 0.95);
+                var totalModifier = builder.AttackModifier * 
+                    (rng.NextDouble() * globals.RandomAttackModifier + 1 - globals.RandomAttackModifier / 2);
+                var basePower = command.Divisions.Sum(d => d.Count * (d.Unit.AttackPower + builder.AttackIncrease));
+                return (basePower * totalModifier, totalModifier, basePower);
             }
             else
             {
-                return command.Divisions.Sum(d => d.Count * d.Unit.DefensePower * builder.DefenseModifier);
+                var basePower = command.Divisions.Sum(d => d.Count * d.Unit.DefensePower);
+                return (basePower * builder.DefenseModifier, builder.DefenseModifier, basePower);
             }
         }
 
@@ -242,9 +272,11 @@ namespace StrategyGame.Bll.Services.TurnHandling
         /// </summary>
         /// <param name="command">The command to cull.</param>
         /// <param name="lostPercentage">The percentage of units lost.</param>
-        protected void CullUnits(Command command, double lostPercentage)
+        protected List<Division> CullUnits(Command command, double lostPercentage)
         {
             var totalLoss = (int)Math.Round(command.Divisions.Sum(d => d.Count) * lostPercentage);
+
+            var losses = new Dictionary<int, Division>();
 
             // TODO: Optimize
             if (totalLoss > 0)
@@ -252,10 +284,22 @@ namespace StrategyGame.Bll.Services.TurnHandling
                 while (totalLoss > 0)
                 {
                     var lossable = command.Divisions.Where(d => d.Count > 0).ToList();
-                    lossable[rng.Next(lossable.Count)].Count--;
+                    var targetDiv = lossable[rng.Next(lossable.Count)];
+                    targetDiv.Count--;
                     totalLoss--;
+
+                    if (losses.ContainsKey(targetDiv.Unit.Id))
+                    {
+                        losses[targetDiv.Unit.Id].Count++;
+                    }
+                    else
+                    {
+                        losses.Add(targetDiv.Unit.Id, new Division { Count = 1, Unit = targetDiv.Unit });
+                    }
                 }
             }
+
+            return losses.Values.ToList();
         }
 
         /// <summary>

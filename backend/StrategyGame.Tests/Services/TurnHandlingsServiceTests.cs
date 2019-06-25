@@ -97,7 +97,14 @@ namespace StrategyGame.Tests.Services
 
             var unitCount = country.Commands.Sum(c => c.Divisions.Sum(d => d.Count));
 
+            Assert.IsFalse(poorCountry.Attacks.Any());
+            Assert.IsFalse(country.Defenses.Any());
+
             await turnService.EndTurnAsync(context);
+
+            Assert.IsTrue(poorCountry.Attacks.Any());
+            Assert.IsTrue(country.Defenses.Any());
+            Assert.IsTrue(poorCountry.Attacks.First().DidAttackerWin);
 
             Assert.IsTrue(unitCount > country.Commands.Sum(c => c.Divisions.Sum(d => d.Count)));
         }

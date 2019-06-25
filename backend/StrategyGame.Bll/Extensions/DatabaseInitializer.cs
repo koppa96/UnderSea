@@ -229,8 +229,15 @@ namespace StrategyGame.Bll.Extensions
                 Description = "lazers man",
                 ImageUrl = "https://vignette.wikia.nocookie.net/venturian-battle-headquarters/images/6/69/Flyinglasershark.jpg/revision/latest?cb=20160714220743"
             };
+            var leaderCont = new UnitContent
+            {
+                Parent = leader,
+                Name = "Parancsnok",
+                Description = "Támadást csak parancsnok tud vezetni",
+                ImageUrl = "https://vignette.wikia.nocookie.net/venturian-battle-headquarters/images/6/69/Flyinglasershark.jpg/revision/latest?cb=20160714220743"
+            };
 
-            context.UnitContents.AddRange(sealCont, ponyCont, lazorCont);
+            context.UnitContents.AddRange(sealCont, ponyCont, lazorCont, leaderCont);
 
             var mudTCont = new ResearchContent
             {
@@ -364,7 +371,8 @@ namespace StrategyGame.Bll.Extensions
                 ScorePopulationMultiplier = 1,
                 ScoreUnitMultiplier = 5,
                 FirstStartingBuilding = reefCastle,
-                SecondStartingBuilding = currentController
+                SecondStartingBuilding = currentController,
+                RandomAttackModifier = 0.1
             });
             await context.SaveChangesAsync();
         }
