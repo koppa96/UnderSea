@@ -19,7 +19,20 @@ namespace StrategyGame.Bll.Services.TurnHandling
 
         public async Task EndTurnAsync(UnderSeaDatabaseContext context, CancellationToken cancel = default)
         {
+            // The below code is capable of producing an error in EF (latest at 2019.06)
+            // "bdgs" becomes null, while "bdgs2" is the expectd value. EF appears to not track changes when querying
+            // the context directly, only when accessing things through nav properties.
+            //var first = context.CountryBuildings.Include(b => b.ParentCountry).First();
+            //first.Count = 10;
+            //var count = context.CountryBuildings.First().Count;
+            //var bdgs = context.CountryBuildings.FirstOrDefault(x => x.Count == 10);
+            //var cnt = context.Countries.Include(c => c.Buildings).FirstOrDefault(x => x.Id == first.ParentCountry.Id);
+            //var bdgs2 = cnt.Buildings.FirstOrDefault(x => x.Count == 10);
+
             var globals = await context.GlobalValues.SingleAsync(cancel);
+
+            await context.InProgressBuildings.ForEachAsync(b => b.TimeLeft--);
+            await context.InProgressResearches.ForEachAsync(r => r.TimeLeft--);
 
             var preCombat = context.Countries
                 .Include(c => c.Commands)
@@ -98,19 +111,13 @@ namespace StrategyGame.Bll.Services.TurnHandling
 
             await postCombat.ForEachAsync(c => Handler.HandlePostCombat(context, c, globals));
 
-            int index = 0;
+            long index = 0;
             await context.Countries.OrderByDescending(c => c.Score).ForEachAsync(c => c.Rank = ++index);
 
             globals.Round++;
 
+            // See comment block at the start of the method as to why a save is needed here
             await context.SaveChangesAsync();
-
-            //TODO: investigate why EF produces null bdgs in the below code (this is why there is a save above)
-            //var first = context.CountryBuildings.First();
-            //first.Count = 10;
-            ////context.CountryBuildings.First().Count = 10;
-            //var count = context.CountryBuildings.First().Count;
-            //var bdgs = context.CountryBuildings.FirstOrDefault(x => x.Count == 10);
 
             context.InProgressBuildings.RemoveRange(context.InProgressBuildings.Where(b => b.TimeLeft <= 0));
             context.InProgressResearches.RemoveRange(context.InProgressResearches.Where(r => r.TimeLeft <= 0));

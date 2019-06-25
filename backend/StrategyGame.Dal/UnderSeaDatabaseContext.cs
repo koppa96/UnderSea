@@ -158,7 +158,6 @@ namespace StrategyGame.Dal
 
             // Effect
             builder.Entity<Effect>().Property(e => e.Name).IsRequired().HasMaxLength(200);
-            builder.Entity<Effect>().Property(e => e.Value).IsRequired();
             builder.Entity<Effect>().Property(e => e.TargetId).IsRequired(false);
 
             //Building - BuildingEffect - Effect
@@ -189,9 +188,6 @@ namespace StrategyGame.Dal
                 .WithMany(e => e.AffectedEvents);
 
             // Country            
-            builder.Entity<Country>().Property(x => x.Pearls).IsRequired();
-            builder.Entity<Country>().Property(x => x.Corals).IsRequired();
-            builder.Entity<Country>().Property(x => x.CreatedRound).IsRequired();
             builder.Entity<Country>().HasMany(x => x.Researches).WithOne(x => x.ParentCountry);
             builder.Entity<Country>().HasMany(x => x.Commands).WithOne(x => x.ParentCountry);
 
@@ -203,35 +199,15 @@ namespace StrategyGame.Dal
             builder.Entity<Country>()
                 .HasOne(c => c.CurrentEvent)
                 .WithMany(e => e.ParentCountries);
-
-            // BuildingType
-            builder.Entity<BuildingType>().Property(x => x.CostPearl).IsRequired();
-            builder.Entity<BuildingType>().Property(x => x.CostCoral).IsRequired();
-            builder.Entity<BuildingType>().Property(x => x.BuildTime).IsRequired();
-            builder.Entity<BuildingType>().Property(x => x.MaxCount).IsRequired();
-
+            
             // BuildingType - BuildingContent
             builder.Entity<BuildingType>().HasOne(b => b.Content).WithOne(c => c.Parent)
                 .HasForeignKey<BuildingContent>(c => c.ParentId);
-
-            // ResearchType
-            builder.Entity<ResearchType>().Property(x => x.CostPearl).IsRequired();
-            builder.Entity<ResearchType>().Property(x => x.CostCoral).IsRequired();
-            builder.Entity<ResearchType>().Property(x => x.ResearchTime).IsRequired();
-            builder.Entity<ResearchType>().Property(x => x.MaxCompletedAmount).IsRequired();
-
+            
             // BuildingType - BuildingContent
             builder.Entity<ResearchType>().HasOne(r => r.Content).WithOne(c => c.Parent)
                 .HasForeignKey<ResearchContent>(c => c.ParentId);
-
-            // UnitType
-            builder.Entity<UnitType>().Property(x => x.AttackPower).IsRequired();
-            builder.Entity<UnitType>().Property(x => x.DefensePower).IsRequired();
-            builder.Entity<UnitType>().Property(x => x.CostPearl).IsRequired();
-            builder.Entity<UnitType>().Property(x => x.CostCoral).IsRequired();
-            builder.Entity<UnitType>().Property(x => x.MaintenancePearl).IsRequired();
-            builder.Entity<UnitType>().Property(x => x.MaintenanceCoral).IsRequired();
-
+            
             // BuildingType - BuildingContent
             builder.Entity<UnitType>().HasOne(u => u.Content).WithOne(c => c.Parent)
                 .HasForeignKey<UnitContent>(c => c.ParentId);
@@ -250,15 +226,10 @@ namespace StrategyGame.Dal
                 .WithOne(d => d.ParentCommand);
 
             // Divisions
-            builder.Entity<Division>().Property(x => x.Count).IsRequired();
-
             builder.Entity<Division>()
                 .HasOne(d => d.Unit)
                 .WithMany(u => u.ContainingDivisions);
-
-            // CountryBuilding
-            builder.Entity<CountryBuilding>().Property(x => x.Count).IsRequired();
-
+            
             //Country - CountryBuilding - BuildingType
             builder.Entity<CountryBuilding>()
                 .HasOne(cb => cb.ParentCountry)
@@ -267,10 +238,7 @@ namespace StrategyGame.Dal
             builder.Entity<CountryBuilding>()
                 .HasOne(cb => cb.Building)
                 .WithMany(b => b.CompletedBuildings);
-
-            // CountryResearch
-            builder.Entity<CountryResearch>().Property(x => x.Count).IsRequired();
-
+            
             //Country - CountryResearch - ResearchType
             builder.Entity<CountryResearch>()
                 .HasOne(cr => cr.ParentCountry)
@@ -279,10 +247,7 @@ namespace StrategyGame.Dal
             builder.Entity<CountryResearch>()
                 .HasOne(cr => cr.Research)
                 .WithMany(r => r.CompletedResearches);
-
-            // InProgressBuilding
-            builder.Entity<InProgressBuilding>().Property(x => x.TimeLeft).IsRequired();
-
+            
             //Country - InProgressBuilding - BuildingType
             builder.Entity<InProgressBuilding>()
                 .HasOne(ib => ib.ParentCountry)
@@ -291,10 +256,7 @@ namespace StrategyGame.Dal
             builder.Entity<InProgressBuilding>()
                 .HasOne(ib => ib.Building)
                 .WithMany(b => b.InProgressBuildings);
-
-            // InProgressResearch
-            builder.Entity<InProgressResearch>().Property(x => x.TimeLeft).IsRequired();
-
+            
             //Country - InProgressResearch - ResearchType
             builder.Entity<InProgressResearch>()
                 .HasOne(ir => ir.ParentCountry)

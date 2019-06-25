@@ -40,8 +40,8 @@ namespace StrategyGame.Bll.Services.TurnHandling
         /// <param name="allEvents">The collection of all events that may occur.</param>
         /// <param name="cancel">The <see cref="CancellationToken"/> that can be used to cancel the operation.</param>
         /// <exception cref="ArgumentNullException">Thrown if an argument was null.</exception>
-        public void HandlePreCombat(UnderSeaDatabaseContext context, Model.Entities.Country country, 
-            GlobalValue globals, IList<RandomEvent> allEvents, CancellationToken cancel = default)
+        public void HandlePreCombat(UnderSeaDatabaseContext context, Model.Entities.Country country,
+            GlobalValue globals, IList<RandomEvent> allEvents)
         {
             if (context == null)
             {
@@ -57,9 +57,9 @@ namespace StrategyGame.Bll.Services.TurnHandling
             {
                 throw new ArgumentNullException(nameof(globals));
             }
-            
+
             // #1: Add a random event
-            if (country.CreatedRound + KnownValues.RandomEventGraceTimer < globals.Round 
+            if (country.CreatedRound + KnownValues.RandomEventGraceTimer < globals.Round
                 && rng.NextDouble() <= KnownValues.RandomEventChance)
             {
                 country.CurrentEvent = allEvents[rng.Next(allEvents.Count)];
@@ -68,7 +68,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
             {
                 country.CurrentEvent = null;
             }
-            
+
             // Apply permanent effects here
             var builder = country.ParseAllEffectForCountry(context, globals, Parsers, true);
 
@@ -87,25 +87,8 @@ namespace StrategyGame.Bll.Services.TurnHandling
             // #4: Pay soldiers
             DesertUnits(country);
 
-            // #5: Advance research and buildings
-            foreach (var b in country.InProgressBuildings)
-            {
-                if (b.TimeLeft >= 0)
-                {
-                    b.TimeLeft--;
-                }
-            }
-
-            foreach (var r in country.InProgressResearches)
-            {
-                if (r.TimeLeft >= 0)
-                {
-                    r.TimeLeft--;
-                }
-            }
-
-            // #6: Add buildings that are completed
-            CheckAddCompleted(context, country);
+            // #5: Add buildings that are completed
+            CheckAddCompleted(country);
         }
 
         /// <summary>
@@ -286,11 +269,10 @@ namespace StrategyGame.Bll.Services.TurnHandling
         /// and adds any completed ones to it. Does not delete in progress values that are completed.
         /// This method does not perform any safety check regarding the amount of buildings or researches!
         /// </summary>
-        /// <param name="context">The <see cref="UnderSeaDatabaseContext"/> to use.</param>
         /// <param name="country">The country to build in. The buildings, researches, 
         /// in progress buildings, researches, and their buildings and researches, must be included.</param>
         /// <returns>If the building could be started.</returns>
-        protected void CheckAddCompleted(UnderSeaDatabaseContext context, Model.Entities.Country country)
+        protected void CheckAddCompleted(Model.Entities.Country country)
         {
             var researches = country.InProgressResearches
                 .Where(r => r.TimeLeft == 0)
@@ -306,9 +288,8 @@ namespace StrategyGame.Bll.Services.TurnHandling
                     // Add a new research, or update an existing one
                     if (existing == null)
                     {
-                        context.CountryResearches.Add(new CountryResearch
+                        country.Researches.Add(new CountryResearch
                         {
-                            ParentCountry = country,
                             Research = research.Key,
                             Count = research.Count()
                         });
@@ -335,9 +316,8 @@ namespace StrategyGame.Bll.Services.TurnHandling
                     // Add a new building, or update an existing one
                     if (existing == null)
                     {
-                        context.CountryBuildings.Add(new CountryBuilding()
+                        country.Buildings.Add(new CountryBuilding()
                         {
-                            ParentCountry = country,
                             Building = building.Key,
                             Count = building.Count()
                         });
