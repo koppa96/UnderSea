@@ -60,7 +60,7 @@ namespace StrategyGame.Api.Controllers
             }
         }
 
-        [HttpDelete("{id]")]
+        [HttpDelete("{id}")]
         [ProducesResponseType(401)]
         [ProducesResponseType(404)]
         [ProducesResponseType(204)]
