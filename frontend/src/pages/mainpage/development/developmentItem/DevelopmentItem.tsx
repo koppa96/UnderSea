@@ -11,7 +11,7 @@ export const DevelopmentItem = (props: DevelopmentProps) => {
         {(time !== undefined) && (+time[0] != 0) && <p> még {time} kör</p>}
         {isDeveloped && (
           <div>
-            <span>a</span>
+            <img src="src\assets\images\check_mark.png"/>
           </div>
         )}
         <img alt="building" src={BuildingImg} />
