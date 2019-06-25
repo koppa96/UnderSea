@@ -5,11 +5,11 @@ import { Login } from "./pages/account/login/index";
 
 import "./app.scss";
 import { NotFound } from "./pages/notFound/index";
-import { LoginCheck } from "./components/LoginCheck/LoginCheck";
 import { MainPage } from "./pages/mainpage";
 import { ConnectedRouter } from "connected-react-router";
 import { createBrowserHistory } from "history";
 import { LoginConnected } from "./pages/account/login/connect";
+import { LoginCheckConnected } from "./components/LoginCheck/connect";
 
 export const App = () => {
   const loggedin = true;
@@ -20,21 +20,21 @@ export const App = () => {
       <div className="bg-image">
         <Switch>
           <Route exact path="/">
-            <LoginCheck login={loggedin}>
+            <LoginCheckConnected login={loggedin}>
               <MainPage />
-            </LoginCheck>
+            </LoginCheckConnected>
           </Route>
           <Route path="/account">
-            <LoginCheck login={loggedin}>
+            <LoginCheckConnected login={loggedin}>
               <MainPage />
-            </LoginCheck>
+            </LoginCheckConnected>
           </Route>
           <Route path="/register" component={Register} />
 
           <Route path="/login">
-            <LoginCheck login={!loggedin}>
+            <LoginCheckConnected login={!loggedin}>
               <LoginConnected />
-            </LoginCheck>
+            </LoginCheckConnected>
           </Route>
           <Route component={NotFound} />
         </Switch>

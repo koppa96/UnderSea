@@ -4,12 +4,11 @@ import { Redirect } from "react-router";
 
 export class LoginCheck extends React.Component<LogCheckProps> {
   render = () => {
-    const { children, login } = this.props;
+    const { children, login, serverLogin } = this.props;
 
-    const mockedLogIn = true;
-    return (login && mockedLogIn) || (!login && !mockedLogIn) ? (
+    return (login && serverLogin) || (!login && !serverLogin) ? (
       children
-    ) : mockedLogIn ? (
+    ) : serverLogin ? (
       <Redirect to="/" />
     ) : (
       <Redirect to="/login" />

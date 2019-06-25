@@ -18,6 +18,12 @@
   color: rgb(17, 0, 94);
   border-bottom: 2px solid rgb(17, 0, 94);
 }
+.form-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+}
 .form-link {
   display: block;
   color: $primary-color;
