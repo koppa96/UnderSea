@@ -76,5 +76,15 @@ namespace StrategyGame.Model.Entities
         /// Gets the collection of commands targetting the country.
         /// </summary>
         public virtual ICollection<Command> IncomingAttacks { get; set; } = new HashSet<Command>();
+
+        /// <summary>
+        /// Gets the collection of combat reports about offensive actions of the country.
+        /// </summary>
+        public virtual ICollection<CombatReport> Attacks { get; set; } = new HashSet<CombatReport>();
+
+        /// <summary>
+        /// Gets the collection of combat reports about defensive actions of the country.
+        /// </summary>
+        public virtual ICollection<CombatReport> Defenses { get; set; } = new HashSet<CombatReport>();
     }
 }

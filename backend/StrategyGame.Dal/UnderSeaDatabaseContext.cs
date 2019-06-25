@@ -90,6 +90,11 @@ namespace StrategyGame.Dal
         public DbSet<Effect> Effects { get; }
 
         /// <summary>
+        /// Gets the collection of <see cref="Effect"/> in the database.
+        /// </summary>
+        public DbSet<CombatReport> Reports { get; }
+
+        /// <summary>
         /// Gets the collection of <see cref="GlobalValue"/> in the database.
         /// </summary>
         public DbSet<GlobalValue> GlobalValues { get; set; }
@@ -139,6 +144,7 @@ namespace StrategyGame.Dal
             Effects = Set<Effect>();
             RandomEvents = Set<RandomEvent>();
             EventEffects = Set<EventEffect>();
+            Reports = Set<CombatReport>();
 
             BuildingContents = Set<BuildingContent>();
             ResearchContents = Set<ResearchContent>();
