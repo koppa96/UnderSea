@@ -21,6 +21,7 @@ export class Army extends React.Component {
   };
 
   render() {
+    console.log("Army rendered")
     return (
       <div className="main-component army-component">
         <ComponentHeader title={title} mainDescription={mainDescription} />

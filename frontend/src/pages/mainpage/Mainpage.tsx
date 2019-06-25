@@ -38,7 +38,6 @@ export class MainPage extends React.Component {
             <Menu />
             <div>
               <ProfileContainer />
-
               <h3 className="undersea-font-mainpage">UNDERSEA</h3>
             </div>
           </div>

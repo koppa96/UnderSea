@@ -1,4 +1,3 @@
-import { alma } from "../../mainpage/buildings/store/store";
 
 export interface ManState {
   name: string;
