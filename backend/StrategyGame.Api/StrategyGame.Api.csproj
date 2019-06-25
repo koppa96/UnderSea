@@ -28,4 +28,9 @@
     <ProjectReference Include="..\StrategyGame.Dal\StrategyGame.Dal.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\static\" />
+    <Folder Include="wwwroot\images\profile\" />
+  </ItemGroup>
+
 </Project>
