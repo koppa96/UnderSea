@@ -281,8 +281,13 @@ namespace StrategyGame.Bll.Services.TurnHandling
             {
                 while (totalLoss > 0)
                 {
-                    var lossable = command.Divisions.Where(d => d.Count > 0).ToList();
-                    var targetDiv = lossable[rng.Next(lossable.Count)];
+                    // To ensure proper distribution, the divisions are sorted into a dictionary based on their total counts
+                    // then a random number is generated, and the first division that contain that unit position is selected.
+                    int count = 0;
+                    var lossable = command.Divisions.Where(d => d.Count > 0).ToDictionary(x => count += x.Count, x => x);
+                    int target = rng.Next(lossable.Keys.Last());
+                    var targetDiv = lossable.First(x => x.Key >= target).Value;
+
                     targetDiv.Count--;
                     totalLoss--;
 
