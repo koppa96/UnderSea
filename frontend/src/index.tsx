@@ -2,11 +2,14 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
 import ReactDOM from "react-dom";
 import { App } from "./App";
+import axios from "axios";
 import * as serviceWorker from "./serviceWorker";
 import { Provider } from "react-redux";
 import { configureStore } from "./config/ConfigureStore";
 import { createBrowserHistory } from "history";
 import { ConnectedRouter } from "connected-react-router";
+
+axios.defaults.baseURL = "https://localhost:44355/";
 
 const history = createBrowserHistory({ basename: "/" });
 const { store } = configureStore(history);

@@ -77,18 +77,19 @@ export class Login extends React.Component<LoginProps> {
                 placeholder="Jelszó"
                 name="password"
               />
-              <div className="button-container text-center">
-                <button className="form-button" type="submit">
-                  {loading ? (
-                    <div className="loading-circle">.</div>
-                  ) : (
-                    "Belépés"
-                  )}
-                </button>
+              <div className=" form-center">
+                {loading ? (
+                  <div className="loading-circle" />
+                ) : (
+                  <button className="form-button" type="submit">
+                    Belépés
+                  </button>
+                )}
+
                 {error && <p className="form-error">{error}</p>}
               </div>
             </Form>
-            <div className="button-container text-center">
+            <div className=" text-center">
               <Link className="form-link" to="/register">
                 Regisztráció
               </Link>
