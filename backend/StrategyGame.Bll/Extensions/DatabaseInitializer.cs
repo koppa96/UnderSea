@@ -469,6 +469,7 @@ namespace StrategyGame.Bll.Extensions
                 ParentCommand = d6,
                 Unit = u3
             }, new Division
+            { 
                 Count = 1,
                 ParentCommand = d3,
                 Unit = leader
