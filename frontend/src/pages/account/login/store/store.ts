@@ -5,12 +5,12 @@ export interface LoginResponseState {
     token_type: string;
     expires_in: string;
   };
-  error: string | null;
+  error?: string;
   loading: boolean;
 }
 
 export const initialLoginResponseState: LoginResponseState = {
-  error: null,
+  error: undefined,
   loading: false,
   model: {
     access_token: "",

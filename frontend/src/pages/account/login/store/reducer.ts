@@ -16,25 +16,24 @@ export const LoginReducer = (
     case LoginActions.SUCCES:
       return {
         ...state,
-        loading: false
-        /*  model: {
-          access_token: action.params.access_token,
-          expires_in: action.params.expires_in,
-          refresh_token: action.params.refresh_token,
-          token_type: action.params.token_type
+        loading: false,
+        model: {
+          access_token: action.params.data.access_token,
+          expires_in: action.params.data.expires_in,
+          refresh_token: action.params.data.refresh_token,
+          token_type: action.params.data.token_type
         },
         error: ""
-      */
       };
     case LoginActions.ERROR:
       return {
         ...state,
         loading: false,
-        error: "Hiba történt"
+        error: action.params
       };
 
     default:
-      const check: never = action.type;
+      const check: never = action;
       return state;
   }
 };

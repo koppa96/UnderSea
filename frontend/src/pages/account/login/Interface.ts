@@ -1,8 +1,15 @@
+import { IRequestParamState } from "./store/actions/post";
+
 export interface NativeProps {}
 
-export interface MappedProps {}
+export interface MappedProps {
+  error?: string;
+  loading: boolean;
+}
 
-export interface DispatchedProps {}
+export interface DispatchedProps {
+  beginlogin: (params: IRequestParamState) => void;
+}
 
 export type LoginProps = NativeProps & MappedProps & DispatchedProps;
 

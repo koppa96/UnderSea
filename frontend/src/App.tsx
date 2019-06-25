@@ -9,6 +9,7 @@ import { LoginCheck } from "./components/LoginCheck/LoginCheck";
 import { MainPage } from "./pages/mainpage";
 import { ConnectedRouter } from "connected-react-router";
 import { createBrowserHistory } from "history";
+import { LoginConnected } from "./pages/account/login/connect";
 
 export const App = () => {
   const loggedin = true;
@@ -32,7 +33,7 @@ export const App = () => {
 
           <Route path="/login">
             <LoginCheck login={!loggedin}>
-              <Login />
+              <LoginConnected />
             </LoginCheck>
           </Route>
           <Route component={NotFound} />
