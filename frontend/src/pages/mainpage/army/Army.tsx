@@ -1,7 +1,7 @@
 import React from "react";
 import { ComponentHeader } from "../../../components/componentHeader";
 import { ArmyItem } from "./ArmyItem";
-import { initialItems } from "./Interface";
+import { initialItems } from "./store/store";
 
 export class Army extends React.Component {
   componentDidMount() {
@@ -12,9 +12,9 @@ export class Army extends React.Component {
     trops: initialItems
   };
 
-  currentSoliders = (id: string, trop: number) => {
+  currentSoliders = (id: number, trop: number) => {
     const asd = this.state.trops;
-    const filtered = asd.filter(x => x.id !== id);
+    const filtered = asd.units.filter(x => x.id !== id);
     this.setState({ trops: [...filtered, { id: id, amount: trop }] });
   };
 

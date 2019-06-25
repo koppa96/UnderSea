@@ -1,5 +1,14 @@
-export interface passArmyItemDevProps {
-  id: string;
-  amount: number;
+import { ArmyState } from "./store/store";
+
+interface NativeProps {}
+
+export interface MappedProps {
+  ownedUnitState: ArmyState;
 }
-export const initialItems: passArmyItemDevProps[] = [];
+
+export interface DispachedProps {
+  //addTroops: (params: IRequestParamState) => void;
+}
+
+export type ArmyProps = NativeProps & MappedProps & DispachedProps;
+
