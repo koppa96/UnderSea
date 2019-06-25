@@ -15,6 +15,8 @@ import { Attack } from "./attack";
 import { NavBarIconProp } from "../../components/navBarIcons/Interface";
 import { NavBarIcon } from "../../components/navBarIcons";
 import { NavbarState } from "../../components/navBar/store";
+import { ArmyConnected } from "./army/connect";
+//import { ArmyConnected } from "./army/connect";
 
 export class MainPage extends React.Component {
   // constuct
@@ -59,7 +61,7 @@ export class MainPage extends React.Component {
                 <Rank />
               </Route>
               <Route path="/account/army">
-                <Army />
+                <ArmyConnected isNative/>
               </Route>
               <Route path="/account/gyak">
                 <TestConnected isNative />

@@ -1,19 +1,26 @@
 import React from "react";
 import { ArmyItemProps } from "./Interface";
 
-export class ArmyItem extends React.Component<ArmyItemProps> {
+interface ArmyProps{
+  unit:ArmyItemProps
+  currentTroops:Function
+}
+
+export class ArmyItem extends React.Component<ArmyProps> {
   state = {
-    currentTrop: 0
+    currentTroop: 0
   };
 
-  addTrop = () =>
-    this.setState({ currentTrop: this.state.currentTrop + 1 }, () =>
-      this.props.currentTrops(this.props.solider.id, this.state.currentTrop)
+  addTroop = () =>
+    this.setState({ currentTroop: this.state.currentTroop + 1 }, () =>
+      this.props.currentTroops(this.props.unit.id, this.state.currentTroop)
     );
-  removeTrop = () =>
-    this.setState({ currentTrop: this.state.currentTrop - 1 }, () =>
-      this.props.currentTrops(this.props.solider.id, this.state.currentTrop)
-    );
+  removeTroop = () =>{
+    if(this.state.currentTroop>0)
+      this.setState({ currentTroop: this.state.currentTroop - 1 }, () =>
+        this.props.currentTroops(this.props.unit.id, this.state.currentTroop)
+      );
+  }
   render() {
     const {
       imageUrl,
@@ -23,8 +30,8 @@ export class ArmyItem extends React.Component<ArmyItemProps> {
       price2,
       price3,
       stat
-    } = this.props.solider;
-    const { currentTrop } = this.state;
+    } = this.props.unit;
+    const { currentTroop } = this.state;
     return (
       <div className="solider-item">
         <div className="rectangle army-rectangle">
@@ -52,11 +59,11 @@ export class ArmyItem extends React.Component<ArmyItemProps> {
           <span>{price3}</span>
         </div>
         <div className="army-circle">
-          <div onClick={this.removeTrop} className="circle">
+          <div onClick={this.removeTroop} className="circle">
             <p>-</p>
           </div>
-          <span>{currentTrop}</span>
-          <div onClick={this.addTrop} className="circle">
+          <span>{currentTroop}</span>
+          <div onClick={this.addTroop} className="circle">
             <p>+</p>
           </div>
         </div>

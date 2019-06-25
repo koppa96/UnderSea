@@ -7,11 +7,11 @@ export class NavBar extends React.Component<NavBarProps> {
 
   componentDidUpdate() {
     console.log("Navbar Updated");
-    console.log(this.props.navbar.navBarIcons);
+    // console.log(this.props.navbar.navBarIcons);
   }
   componentWillUpdate() {
     console.log("Navbar will Update");
-    console.log(this.props.navbar.navBarIcons);
+    // console.log(this.props.navbar.navBarIcons);
   }
 
   render() {

@@ -1,13 +1,16 @@
 import { ArmyState } from "./store/store";
+import { IRequestParamState } from "./store/actions/ArmyActions";
 
-interface NativeProps {}
+interface NativeProps {
+  isNative: boolean
+}
 
 export interface MappedProps {
   ownedUnitState: ArmyState;
 }
 
 export interface DispachedProps {
-  //addTroops: (params: IRequestParamState) => void;
+  addUnits: (params: IRequestParamState) => void;
 }
 
 export type ArmyProps = NativeProps & MappedProps & DispachedProps;

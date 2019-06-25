@@ -1,3 +1,4 @@
+import { ArmyItemProps } from "../ArmyItem/Interface";
 
 export interface ArmyUnit{
     id: number;
@@ -5,22 +6,40 @@ export interface ArmyUnit{
 }
 
 export interface ArmyState {
-    units:ArmyUnit[]
+    units: ArmyItemProps[];
 }
-
-export const initialItems: ArmyState = {
-  units: [
+export const ArmyInitialState: ArmyState = {
+    units: [{ 
+        id: 1,
+        imageUrl: "asdasd",
+        title: "Lézercápa",
+        amount: 10,
+        stat: "1/2",
+        price: "45 Gyöngy / db",
+        price2: "45 Gyöngy / db",
+        price3: "45 Gyöngy / db",
+      },
     {
-        id:1,
-        amount: 10
+      id: 2,
+      imageUrl: "Rohamfóka",
+      title: "Áramlásirányító",
+      amount: 25,
+      stat: "1/2",
+      price: "45 Gyöngy / db",
+      price2: "45 Gyöngy / db",
+      price3: "45 Gyöngy / db"
     },
     {
-        id:2,
-        amount: 25
-    },
-    {
-        id:3,
-        amount: 20
+      id: 3,
+      imageUrl: "asdasd",
+      title: "Csatacsikó",
+      amount: 20,
+      stat: "1/2",
+      price: "45 Gyöngy / db",
+      price2: "45 Gyöngy / db",
+      price3: "45 Gyöngy / db"
     }
-]
-  };
+  ]
+};
+
+
