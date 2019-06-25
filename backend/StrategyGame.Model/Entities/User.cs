@@ -16,5 +16,10 @@ namespace StrategyGame.Model.Entities
         /// The Id of the ruled country.
         /// </summary>
         public int? RuledCountryId { get; set; }
+
+        /// <summary>
+        /// The relative url of the profile image.
+        /// </summary>
+        public string ImageUrl { get; set; }
     }
 }
