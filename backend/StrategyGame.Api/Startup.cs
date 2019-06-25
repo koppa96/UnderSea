@@ -51,6 +51,7 @@ namespace StrategyGame.Api
                 .AddEntityFrameworkStores<UnderSeaDatabaseContext>();
 
             services.AddIdentityServer()
+                .AddCorsPolicyService<IdentityServerCorsPolicyService>()
                 .AddDeveloperSigningCredential()
                 .AddInMemoryPersistedGrants()
                 .AddInMemoryIdentityResources(IdentityServerConfig.GetIdentityResources())
@@ -72,6 +73,16 @@ namespace StrategyGame.Api
                         NameClaimType = JwtClaimTypes.Name
                     };
                 });
+
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(policy =>
+                {
+                    policy.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                });
+            });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
@@ -149,6 +160,7 @@ namespace StrategyGame.Api
             app.UseHangfireServer();
             app.UseHangfireDashboard();
 
+            app.UseCors();
             app.UseMvc();
 
             app.UseSignalR(route => route.MapHub<UnderSeaHub>("/hub"));
