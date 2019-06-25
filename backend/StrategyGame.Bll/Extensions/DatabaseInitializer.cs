@@ -26,11 +26,13 @@ namespace StrategyGame.Bll.Extensions
             context.InProgressResearches.RemoveRange(context.InProgressResearches);
             context.CountryBuildings.RemoveRange(context.CountryBuildings);
             context.CountryResearches.RemoveRange(context.CountryResearches);
+            context.EventEffects.RemoveRange(context.EventEffects);
 
             // Purge contents
             context.BuildingContents.RemoveRange(context.BuildingContents);
             context.ResearchContents.RemoveRange(context.ResearchContents);
             context.UnitContents.RemoveRange(context.UnitContents);
+            context.EventContents.RemoveRange(context.EventContents);
 
             // Purge commands, divisions, and units
             context.Commands.RemoveRange(context.Commands);
@@ -43,6 +45,7 @@ namespace StrategyGame.Bll.Extensions
             context.Effects.RemoveRange(context.Effects);
             context.GlobalValues.RemoveRange(context.GlobalValues);
             context.ResearchTypes.RemoveRange(context.ResearchTypes);
+            context.RandomEvents.RemoveRange(context.RandomEvents);
 
             // Purge users
             context.Users.RemoveRange(context.Users);
@@ -135,6 +138,57 @@ namespace StrategyGame.Bll.Extensions
             await context.SaveChangesAsync();
 
 
+            // Add events
+            var plague = new RandomEvent();
+            var removeCurrent = new Effect
+            { TargetId = currentController.Id, Name = KnownValues.AddBuildingEffect, Value = -1 };
+
+            var fire = new RandomEvent();
+            var removeCastle = new Effect
+            { TargetId = reefCastle.Id, Name = KnownValues.AddBuildingEffect, Value = -1 };
+
+            var mine = new RandomEvent();
+            var addPearl = new Effect
+            { Value = 1000, Name = KnownValues.PearlProductionIncrease };
+
+            var goodHarvest = new RandomEvent();
+            var extraCoral = new Effect
+            { Name = KnownValues.BuildingProductionIncrease, Value = 50 };
+
+            var badHarvest = new RandomEvent();
+            var lessCoral = new Effect
+            { Name = KnownValues.BuildingProductionIncrease, Value = -50 };
+
+            var contentPopulation = new RandomEvent();
+            var addCurrent = new Effect
+            { Name = KnownValues.AddBuildingEffect, TargetId = currentController.Id, Value = 1 };
+            var discontentPopulation = new RandomEvent();
+
+            var contentSoldiers = new RandomEvent();
+            var addAttack = new Effect
+            { Name = KnownValues.IncreaseUnitAttack, Value = 1 };
+
+            var discontentSoldiers = new RandomEvent();
+            var removeAttack = new Effect
+            { Name = KnownValues.IncreaseUnitAttack, Value = -1 };
+
+            await context.SaveChangesAsync();
+
+            // Add event effects
+            context.EventEffects.AddRange(
+                new EventEffect { Effect = removeCurrent, Event = plague },
+                new EventEffect { Effect = removeCastle, Event = fire },
+                new EventEffect { Effect = addPearl, Event = mine },
+                new EventEffect { Effect = extraCoral, Event = goodHarvest },
+                new EventEffect { Effect = lessCoral, Event = badHarvest },
+                new EventEffect { Effect = addCurrent, Event = contentPopulation },
+                new EventEffect { Effect = removeCurrent, Event = discontentPopulation },
+                new EventEffect { Effect = addAttack, Event = contentSoldiers },
+                new EventEffect { Effect = removeAttack, Event = discontentSoldiers }
+            );
+            await context.SaveChangesAsync();
+
+
             // Add contents
             var currentCont = new BuildingContent
             {
@@ -222,6 +276,73 @@ namespace StrategyGame.Bll.Extensions
             };
 
             context.ResearchContents.AddRange(mudTCont, mudCCont, defCont, attCont, cCont, taxCont);
+
+            var plagueCont = new EventContent
+            {
+                Parent = plague,
+                Name = "Pestis",
+                Description = "Az országodban kitört a pestis, elveszítesz 50 embert és egy áramlásirányítót.",
+                FlavourText = "Hozzátok a halottakat!"
+            };
+            var fireCont = new EventContent
+            {
+                Parent = fire,
+                Name = "Víz alatti tűz",
+                Description = "Az országodban tűz ütött ki és leégett egy zátonyvár.",
+                FlavourText = "Tűz víz alatt? Micsoda?!"
+            };
+            var mineCont = new EventContent
+            {
+                Parent = mine,
+                Name = "Aranybánya",
+                Description = "Az embereid felfedeztek egy új aranybányát, kapsz 1000 bónusz aranyat.",
+                FlavourText = "Nagyon fényes"
+            };
+            var goodhvCont = new EventContent
+            {
+                Parent = goodHarvest,
+                Name = "Jó termés",
+                Description = "Minden áramlásirányító +50 korallt ad ebben a körben.",
+                FlavourText = "A termés egy stabil ország alapja"
+            };
+            var badhvCont = new EventContent
+            {
+                Parent = badHarvest,
+                Name = "Rossz termés",
+                Description = "Minden áramlásirányító -50 korallt ad ebben a körben.",
+                FlavourText = "A király lakomázik, a paraszt éhezik"
+            };
+            var contPopCont = new EventContent
+            {
+                Parent = contentPopulation,
+                Name = "Elégedett emberek",
+                Description = "Az országodban elégedettek az emberek, ezért extra 50 ember költözött be és építettek maguknak egy áramlásirányítót.",
+                FlavourText = "Nő a nép, nő a felelősség"
+            };
+            var discontPopCont = new EventContent
+            {
+                Parent = discontentPopulation,
+                Name = "Elégedetlen emberek",
+                Description = "Az országodban elégedetlenek az emberek, ezért 50 ember elköltözött és az áramlásirányítójukat lerombolták.",
+                FlavourText = "A paraszt elmegy, pusztítást hagy maga után"
+            };
+            var contSolCont = new EventContent
+            {
+                Parent = contentSoldiers,
+                Name = "Elégedett katonák",
+                Description = "Katonáid elégedettek ebben a körben, minden katona támadása nő eggyel.",
+                FlavourText = "Elégedett katona motivált katona"
+            };
+            var disconSolCont = new EventContent
+            {
+                Parent = discontentSoldiers,
+                Name = "Elégedetlen katonák",
+                Description = "Katonáid elégedetlenek ebben a körben, minden katona támadása csökken eggyel.",
+                FlavourText = "Elsőnek a morál, utána a hűség"
+            };
+
+            context.EventContents.AddRange(plagueCont, mineCont, fireCont, goodhvCont, badhvCont,
+                contPopCont, contSolCont, disconSolCont, discontPopCont);
             await context.SaveChangesAsync();
 
 
@@ -230,10 +351,20 @@ namespace StrategyGame.Bll.Extensions
             {
                 BaseTaxation = 25,
                 Round = 1,
-                StartingBarrackSpace = 100,
-                StartingCorals = 500,
-                StartingPearls = 500,
-                StartingPopulation = 10
+                StartingBarrackSpace = 0,
+                StartingCorals = 2000,
+                StartingPearls = 2000,
+                StartingPopulation = 0,
+                LootPercentage = 0.5,
+                UnitLossOnLostBatle = 0.1,
+                RandomEventChance = 0.1,
+                RandomEventGraceTimer = 10,
+                ScoreBuildingMultiplier = 50,
+                ScoreResearchMultiplier = 100,
+                ScorePopulationMultiplier = 1,
+                ScoreUnitMultiplier = 5,
+                FirstStartingBuilding = reefCastle,
+                SecondStartingBuilding = currentController
             });
             await context.SaveChangesAsync();
         }
@@ -258,7 +389,7 @@ namespace StrategyGame.Bll.Extensions
             context.AddRange(thePoor, theRich, theCommander, theBuilder, theResearcher);
 
             var pc = new Country
-            { Name = "poor", Corals = 10, Pearls = 10, ParentUser = thePoor };
+            { Name = "poor", Corals = 0, Pearls = 0, ParentUser = thePoor };
             var rc = new Country
             { Name = "rich", Corals = 1000000, Pearls = 1000000, ParentUser = theRich };
             var cc = new Country
@@ -274,7 +405,8 @@ namespace StrategyGame.Bll.Extensions
             var d3 = new Command { ParentCountry = cc, TargetCountry = cc };
             var d4 = new Command { ParentCountry = bc, TargetCountry = bc };
             var d5 = new Command { ParentCountry = sc, TargetCountry = sc };
-            context.Commands.AddRange(d1, d2, d3, d4, d5);
+            var d6 = new Command { ParentCountry = pc, TargetCountry = cc };
+            context.Commands.AddRange(d1, d2, d3, d4, d5, d6);
 
             var b1 = await context.BuildingTypes.FirstAsync();
             var b2 = await context.BuildingTypes.Skip(1).FirstAsync();
@@ -291,6 +423,10 @@ namespace StrategyGame.Bll.Extensions
                 ParentCountry = bc
             });
 
+            context.InProgressBuildings.Add(new InProgressBuilding
+            { Building = context.BuildingTypes.First(), ParentCountry = cc, TimeLeft = 1 });
+            context.InProgressResearches.Add(new InProgressResearch
+            { Research = context.ResearchTypes.First(), ParentCountry = cc, TimeLeft = 1 });
 
             var r1 = await context.ResearchTypes.FirstAsync();
             var r2 = await context.ResearchTypes.Skip(3).FirstAsync();
@@ -329,6 +465,10 @@ namespace StrategyGame.Bll.Extensions
                 Unit = u3
             }, new Division
             {
+                Count = 500,
+                ParentCommand = d6,
+                Unit = u3
+            }, new Division
                 Count = 1,
                 ParentCommand = d3,
                 Unit = leader

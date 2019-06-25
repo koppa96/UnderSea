@@ -1365,6 +1365,7 @@ export class CountryInfo implements ICountryInfo {
     armyInfo?: UnitInfo[] | undefined;
     pearls!: number;
     corals!: number;
+    event?: EventInfo | undefined;
     buildings?: BriefCreationInfo[] | undefined;
     researches?: BriefCreationInfo[] | undefined;
 
@@ -1388,6 +1389,7 @@ export class CountryInfo implements ICountryInfo {
             }
             this.pearls = data["pearls"];
             this.corals = data["corals"];
+            this.event = data["event"] ? EventInfo.fromJS(data["event"]) : <any>undefined;
             if (Array.isArray(data["buildings"])) {
                 this.buildings = [] as any;
                 for (let item of data["buildings"])
@@ -1419,6 +1421,7 @@ export class CountryInfo implements ICountryInfo {
         }
         data["pearls"] = this.pearls;
         data["corals"] = this.corals;
+        data["event"] = this.event ? this.event.toJSON() : <any>undefined;
         if (Array.isArray(this.buildings)) {
             data["buildings"] = [];
             for (let item of this.buildings)
@@ -1439,8 +1442,61 @@ export interface ICountryInfo {
     armyInfo?: UnitInfo[] | undefined;
     pearls: number;
     corals: number;
+    event?: EventInfo | undefined;
     buildings?: BriefCreationInfo[] | undefined;
     researches?: BriefCreationInfo[] | undefined;
+}
+
+export class EventInfo implements IEventInfo {
+    id!: number;
+    name?: string | undefined;
+    description?: string | undefined;
+    flavourtext?: string | undefined;
+    imageUrl?: string | undefined;
+
+    constructor(data?: IEventInfo) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.id = data["id"];
+            this.name = data["name"];
+            this.description = data["description"];
+            this.flavourtext = data["flavourtext"];
+            this.imageUrl = data["imageUrl"];
+        }
+    }
+
+    static fromJS(data: any): EventInfo {
+        data = typeof data === 'object' ? data : {};
+        let result = new EventInfo();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        data["flavourtext"] = this.flavourtext;
+        data["imageUrl"] = this.imageUrl;
+        return data; 
+    }
+}
+
+export interface IEventInfo {
+    id: number;
+    name?: string | undefined;
+    description?: string | undefined;
+    flavourtext?: string | undefined;
+    imageUrl?: string | undefined;
 }
 
 export class BriefCreationInfo implements IBriefCreationInfo {

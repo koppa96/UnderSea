@@ -33,9 +33,19 @@ namespace StrategyGame.Model.Entities
         public long Rank { get; set; }
 
         /// <summary>
+        /// Gets or sets the turn when the country was created.
+        /// </summary>
+        public ulong CreatedRound { get; set; }
+
+        /// <summary>
         /// Gets the user to whom the country belongs.
         /// </summary>
         public virtual User ParentUser { get; set; }
+
+        /// <summary>
+        /// Gets or sets the event that has happened in the country at the end of the last turn.
+        /// </summary>
+        public virtual RandomEvent CurrentEvent { get; set; }
 
         /// <summary>
         /// Gets the collection of buildings that are within the country.

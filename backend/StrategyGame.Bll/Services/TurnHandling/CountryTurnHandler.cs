@@ -34,12 +34,13 @@ namespace StrategyGame.Bll.Services.TurnHandling
         /// </summary>
         /// <param name="context">The <see cref="UnderSeaDatabaseContext"/> that is used to access the database.</param>
         /// <param name="country">The country to handle. The following must be included: Buildings, In progress buildings,
-        /// researches, in progress researches, the buildings and researches of these, and the corresponding effects, commands, divisions and units.</param>
+        /// researches, in progress researches, the buildings and researches of these, events, and the corresponding effects, commands, divisions and units.</param>
         /// <param name="globals">The <see cref="GlobalValue"/>s to use.</param>
+        /// <param name="allEvents">The collection of all events that may occur.</param>
         /// <param name="cancel">The <see cref="CancellationToken"/> that can be used to cancel the operation.</param>
         /// <exception cref="ArgumentNullException">Thrown if an argument was null.</exception>
-        public void HandlePreCombat(UnderSeaDatabaseContext context,
-            Model.Entities.Country country, GlobalValue globals, CancellationToken cancel = default)
+        public void HandlePreCombat(UnderSeaDatabaseContext context, Model.Entities.Country country,
+            GlobalValue globals, IList<RandomEvent> allEvents)
         {
             if (context == null)
             {
@@ -56,36 +57,37 @@ namespace StrategyGame.Bll.Services.TurnHandling
                 throw new ArgumentNullException(nameof(globals));
             }
 
-            var builder = country.ParseAllEffectForCountry(globals, Parsers);
+            // #1: Add a random event
+            if (country.CreatedRound + globals.RandomEventGraceTimer <= globals.Round
+                && rng.NextDouble() <= globals.RandomEventChance)
+            {
+                country.CurrentEvent = allEvents[rng.Next(allEvents.Count)];
+            }
+            else if (country.CurrentEvent != null)
+            {
+                country.CurrentEvent = null;
+            }
 
-            // #1: Tax
-            country.Pearls += (long)Math.Round(builder.Population * globals.BaseTaxation * builder.TaxModifier);
+            // Apply permanent effects here
+            var builder = country.ParseAllEffectForCountry(context, globals, Parsers, true);
 
-            // #2: Coral (harvest)
+            if (builder.WasEventIgnored)
+            {
+                country.CurrentEvent = null;
+            }
+
+            // #2: Tax
+            country.Pearls += (long)Math.Round(builder.Population * globals.BaseTaxation * builder.TaxModifier
+                + builder.PearlProduction);
+
+            // #3: Coral (harvest)
             country.Corals += (long)Math.Round(builder.CoralProduction * builder.HarvestModifier);
 
-            // #3: Pay soldiers
+            // #4: Pay soldiers
             DesertUnits(country);
 
-            // #4: Advance research and buildings
-            foreach (var b in country.InProgressBuildings)
-            {
-                if (b.TimeLeft >= 0)
-                {
-                    b.TimeLeft--;
-                }
-            }
-
-            foreach (var r in country.InProgressResearches)
-            {
-                if (r.TimeLeft >= 0)
-                {
-                    r.TimeLeft--;
-                }
-            }
-
             // #5: Add buildings that are completed
-            CheckAddCompleted(context, country);
+            CheckAddCompleted(country);
         }
 
         /// <summary>
@@ -93,7 +95,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
         /// </summary>
         /// <param name="context">The <see cref="UnderSeaDatabaseContext"/> that is used to access the database.</param>
         /// <param name="country">The country to handle. The commands, incoming attacks, the attack's divisions, parent country, 
-        /// parent country builidings, researches and effects must be loaded.</param>
+        /// parent country builidings, researches, events, and effects must be loaded.</param>
         /// <param name="globals">The <see cref="GlobalValue"/>s to use.</param>
         /// <exception cref="ArgumentNullException">Thrown if an argument was null.</exception>
         public void HandleCombat(UnderSeaDatabaseContext context, Model.Entities.Country country, GlobalValue globals)
@@ -122,20 +124,21 @@ namespace StrategyGame.Bll.Services.TurnHandling
                 .ToList();
 
             var defenders = country.GetAllDefending();
-            var builder = country.ParseAllEffectForCountry(globals, Parsers);
+            var builder = country.ParseAllEffectForCountry(context, globals, Parsers, false);
 
             foreach (var attack in incomingAttacks)
             {
 
-                double attackPower = GetCurrentUnitPower(attack, true, attack.ParentCountry.ParseAllEffectForCountry(globals, Parsers));
+                double attackPower = GetCurrentUnitPower(attack, true,
+                    attack.ParentCountry.ParseAllEffectForCountry(context, globals, Parsers, false));
                 double defensePower = GetCurrentUnitPower(defenders, false, builder);
 
                 if (attackPower > defensePower)
                 {
-                    CullUnits(defenders, KnownValues.UnitLossOnDefense);
+                    CullUnits(defenders, globals.UnitLossOnLostBatle);
 
-                    var pearlLoot = (long)Math.Round(country.Pearls * KnownValues.LootPercentage);
-                    var coralLoot = (long)Math.Round(country.Corals * KnownValues.LootPercentage);
+                    var pearlLoot = (long)Math.Round(country.Pearls * globals.LootPercentage);
+                    var coralLoot = (long)Math.Round(country.Corals * globals.LootPercentage);
                     country.Pearls -= pearlLoot;
                     country.Corals -= coralLoot;
                     attack.AcquiredPearlLoot += pearlLoot;
@@ -143,7 +146,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
                 }
                 else
                 {
-                    CullUnits(attack, KnownValues.UnitLossOnDefense);
+                    CullUnits(attack, globals.UnitLossOnLostBatle);
                 }
             }
         }
@@ -152,7 +155,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
         /// Handles post-combat calculations for a country, like calculating the score, and merging commands into the defense command.
         /// </summary>
         /// <param name="context">The <see cref="UnderSeaDatabaseContext"/> that is used to access the database.</param>
-        /// <param name="country">The country to handle. The commands, their divisions and units, buildings and researches must be loaded.</param>
+        /// <param name="country">The country to handle. The commands, their divisions and units, buildings and researches, events, and their effects must be loaded.</param>
         /// <param name="globals">The <see cref="GlobalValue"/>s to use.</param>
         /// <exception cref="ArgumentNullException">Thrown if an argument was null.</exception>
         public void HandlePostCombat(UnderSeaDatabaseContext context, Model.Entities.Country country, GlobalValue globals)
@@ -172,7 +175,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
                 throw new ArgumentNullException(nameof(globals));
             }
 
-            var builder = country.ParseAllEffectForCountry(globals, Parsers);
+            var builder = country.ParseAllEffectForCountry(context, globals, Parsers, false);
 
             long divisionScore = 0;
             foreach (var comm in country.Commands)
@@ -181,10 +184,10 @@ namespace StrategyGame.Bll.Services.TurnHandling
             }
 
             country.Score = (long)Math.Round(
-                builder.Population * KnownValues.ScorePopulationMultiplier
-                + country.Buildings.Count * KnownValues.ScoreBuildingMultiplier
-                + divisionScore * KnownValues.ScoreUnitMultiplier
-                + country.Researches.Count * KnownValues.ScoreResearchMultiplier);
+                builder.Population * globals.ScorePopulationMultiplier
+                + country.Buildings.Count * globals.ScoreBuildingMultiplier
+                + divisionScore * globals.ScoreUnitMultiplier
+                + country.Researches.Count * globals.ScoreResearchMultiplier);
 
             // Merge all attacking commands into the defense command, delete attacking commands, and add the loot
             var defenders = country.GetAllDefending();
@@ -225,8 +228,8 @@ namespace StrategyGame.Bll.Services.TurnHandling
         {
             if (doGetAttack)
             {
-                return command.Divisions.Sum(d => d.Count * d.Unit.AttackPower * builder.AttackModifier)
-                    * (rng.NextDouble() / 10 + 0.95);
+                return command.Divisions.Sum(d => d.Count * (d.Unit.AttackPower + builder.AttackIncrease)
+                    * builder.AttackModifier) * (rng.NextDouble() / 10 + 0.95);
             }
             else
             {
@@ -241,13 +244,16 @@ namespace StrategyGame.Bll.Services.TurnHandling
         /// <param name="lostPercentage">The percentage of units lost.</param>
         protected void CullUnits(Command command, double lostPercentage)
         {
-            foreach (var div in command.Divisions)
-            {
-                div.Count -= (int)Math.Round(div.Count * lostPercentage);
+            var totalLoss = (int)Math.Round(command.Divisions.Sum(d => d.Count) * lostPercentage);
 
-                if (div.Count < 0)
+            // TODO: Optimize
+            if (totalLoss > 0)
+            {
+                while (totalLoss > 0)
                 {
-                    div.Count = 0;
+                    var lossable = command.Divisions.Where(d => d.Count > 0).ToList();
+                    lossable[rng.Next(lossable.Count)].Count--;
+                    totalLoss--;
                 }
             }
         }
@@ -257,11 +263,10 @@ namespace StrategyGame.Bll.Services.TurnHandling
         /// and adds any completed ones to it. Does not delete in progress values that are completed.
         /// This method does not perform any safety check regarding the amount of buildings or researches!
         /// </summary>
-        /// <param name="context">The <see cref="UnderSeaDatabaseContext"/> to use.</param>
         /// <param name="country">The country to build in. The buildings, researches, 
         /// in progress buildings, researches, and their buildings and researches, must be included.</param>
         /// <returns>If the building could be started.</returns>
-        protected void CheckAddCompleted(UnderSeaDatabaseContext context, Model.Entities.Country country)
+        protected void CheckAddCompleted(Model.Entities.Country country)
         {
             var researches = country.InProgressResearches
                 .Where(r => r.TimeLeft == 0)
@@ -277,9 +282,8 @@ namespace StrategyGame.Bll.Services.TurnHandling
                     // Add a new research, or update an existing one
                     if (existing == null)
                     {
-                        context.CountryResearches.Add(new CountryResearch
+                        country.Researches.Add(new CountryResearch
                         {
-                            ParentCountry = country,
                             Research = research.Key,
                             Count = research.Count()
                         });
@@ -306,9 +310,8 @@ namespace StrategyGame.Bll.Services.TurnHandling
                     // Add a new building, or update an existing one
                     if (existing == null)
                     {
-                        context.CountryBuildings.Add(new CountryBuilding()
+                        country.Buildings.Add(new CountryBuilding()
                         {
-                            ParentCountry = country,
                             Building = building.Key,
                             Count = building.Count()
                         });
@@ -316,7 +319,6 @@ namespace StrategyGame.Bll.Services.TurnHandling
                     else
                     {
                         existing.Count += building.Count();
-
                     }
                 }
             }
@@ -335,15 +337,15 @@ namespace StrategyGame.Bll.Services.TurnHandling
             {
                 foreach (var div in comm.Divisions)
                 {
-                    pearlUpkeep += div.Count * div.Unit.CostPearl;
-                    coralUpkeep += div.Count * div.Unit.CostCoral;
+                    pearlUpkeep += div.Count * div.Unit.MaintenancePearl;
+                    coralUpkeep += div.Count * div.Unit.MaintenanceCoral;
                 }
             }
 
             if (coralUpkeep > country.Corals || pearlUpkeep > country.Pearls)
             {
-                long pearlDeficit = pearlUpkeep - country.Pearls;
-                long coralDeficit = coralUpkeep - country.Corals;
+                long pearlDeficit = Math.Max(pearlUpkeep - country.Pearls, 0);
+                long coralDeficit = Math.Max(coralUpkeep - country.Corals, 0);
 
                 foreach (var div in country.Commands.SelectMany(c => c.Divisions).OrderBy(d => d.Unit.CostPearl))
                 {
@@ -355,14 +357,19 @@ namespace StrategyGame.Bll.Services.TurnHandling
                     div.Count -= desertedAmount;
 
                     pearlDeficit -= desertedAmount * div.Unit.MaintenancePearl;
+                    pearlUpkeep -= desertedAmount * div.Unit.MaintenancePearl;
                     coralDeficit -= desertedAmount * div.Unit.MaintenanceCoral;
+                    coralUpkeep -= desertedAmount * div.Unit.MaintenanceCoral;
 
-                    if (coralUpkeep <= country.Corals || pearlUpkeep <= country.Pearls)
+                    if (coralUpkeep <= country.Corals && pearlUpkeep <= country.Pearls)
                     {
                         break;
                     }
                 }
             }
+
+            pearlUpkeep = Math.Max(0, pearlUpkeep);
+            coralUpkeep = Math.Max(0, coralUpkeep);
 
             country.Pearls -= pearlUpkeep;
             country.Corals -= coralUpkeep;

@@ -25,11 +25,15 @@ namespace StrategyGame.Tests.Services
                 {
                     new BarrackSpaceEffectParser(),
                     new CoralProductionEffectParser(),
+                    new PearlProductionEffectParser(),
                     new HarvestModifierEffectParser(),
                     new PopulationEffectParser(),
                     new TaxModifierEffectParser(),
                     new UnitDefenseEffectParser(),
-                    new UnitAttackEffectParser()
+                    new UnitAttackEffectParser(),
+                    new AddBuildingEffectParser(),
+                    new IncreaseUnitAttackEffectParser(),
+                    new BuildingCoralProductionEffectParser()
                 }), UtilityFactory.CreateMapper());
         }
 
@@ -42,7 +46,7 @@ namespace StrategyGame.Tests.Services
         }
 
         [TestMethod]
-        [DataRow("TheRich")]
+        [DataRow("TheBuilder")]
         public async Task TestBuyUnit(string username)
         {
             var id = (await context.UnitTypes.FirstAsync()).Id;
@@ -53,7 +57,7 @@ namespace StrategyGame.Tests.Services
         }
 
         [TestMethod]
-        [DataRow("TheRich")]
+        [DataRow("TheBuilder")]
         public async Task TestDeleteUnit(string username)
         {
             var id = (await context.UnitTypes.FirstAsync()).Id;

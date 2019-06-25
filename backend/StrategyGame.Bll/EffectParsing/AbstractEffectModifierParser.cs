@@ -1,4 +1,5 @@
 ﻿using StrategyGame.Bll.Services.TurnHandling;
+using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
 using System;
 
@@ -16,11 +17,11 @@ namespace StrategyGame.Bll.EffectParsing
         /// Gets the name of the <see cref="Effect"/> that can be handled by the parser.
         /// </summary>
         public string HandledEffectName { get; }
-
+        
         /// <summary>
         /// Gets the action run by the <see cref="TryParse(Effect, CountryModifierBuilder)"/> when the effect's name matches the <see cref="HandledEffectName"/>.
         /// </summary>
-        protected Action<Effect, CountryModifierBuilder> OnParse { get; }
+        protected Action<Effect, Country, UnderSeaDatabaseContext, CountryModifierBuilder, bool> OnParse { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AbstractEffectModifierParser"/>.
@@ -32,7 +33,8 @@ namespace StrategyGame.Bll.EffectParsing
         /// <paramref name="onParse"/> may be null, however in that case the <see cref="TryParse(Effect, CountryModifierBuilder)"/>
         /// method must be overridden in the inheriting class, otherwise a <see cref="NullReferenceException"/> will occur.
         /// </remarks>
-        protected AbstractEffectModifierParser(string handledEffectName, Action<Effect, CountryModifierBuilder> onParse)
+        protected AbstractEffectModifierParser(string handledEffectName,
+            Action<Effect, Country, UnderSeaDatabaseContext, CountryModifierBuilder, bool> onParse)
         {
             HandledEffectName = handledEffectName ?? throw new ArgumentNullException(nameof(handledEffectName));
             OnParse = onParse;
@@ -42,14 +44,23 @@ namespace StrategyGame.Bll.EffectParsing
         /// Attempts to parse an <see cref="Effect"/>, and add its modifier to the provided <see cref="CountryModifierBuilder"/>.
         /// </summary>
         /// <param name="effect">The <see cref="Effect"/> to parse.</param>
+        /// <param name="country">The country to parse the effect for.</param>
+        /// <param name="context">The database to use.</param>
         /// <param name="builder">The <see cref="CountryModifierBuilder"/> to add modifiers to.</param>
+        /// <param name="doApplyPermanent">If effects that have permanenet effects should be applied.</param>
         /// <returns>If the effect was parsed by the parser.</returns>
         /// <exception cref="ArgumentNullException">Thrown if an argument was null.</exception>
-        public virtual bool TryParse(Effect effect, CountryModifierBuilder builder)
+        public virtual bool TryParse(Effect effect, Country country, UnderSeaDatabaseContext context,
+            CountryModifierBuilder builder, bool doApplyPermanent)
         {
             if (effect == null)
             {
                 throw new ArgumentNullException(nameof(effect));
+            }
+
+            if (country == null)
+            {
+                throw new ArgumentNullException(nameof(country));
             }
 
             if (builder == null)
@@ -59,7 +70,7 @@ namespace StrategyGame.Bll.EffectParsing
 
             if (effect.Name.Equals(HandledEffectName, StringComparison.OrdinalIgnoreCase))
             {
-                OnParse(effect, builder);
+                OnParse(effect, country, context, builder, doApplyPermanent);
                 return true;
             }
             else
