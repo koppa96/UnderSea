@@ -1,15 +1,5 @@
 import { NavBarIconProp } from "../navBarIcons/Interface";
-
+import { BuildingProps } from "../../pages/mainpage/buildings/buildingItem/Interface";
 export interface NavbarState {
-  navBarIcons: NavBarIconProp[];
+  navBarIcons: BuildingProps[];
 }
-
-export const initialNabarState: NavbarState = {
-  navBarIcons: [
-    {
-      id: 0,
-      amount: 0,
-      imageUrl: "asd"
-    }
-  ]
-};

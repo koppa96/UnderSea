@@ -19,6 +19,32 @@
   @media screen {
   }
 }
+.loading-circle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid $secondary-color;
+  background-image: linear-gradient(
+    to right,
+    rgba(15, 207, 222, 1),
+    rgba(159, 255, 240, 1)
+  );
+
+  animation-name: spin;
+  animation-duration: 5000ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .rectangle {
   width: $rectangle-size;
   height: $rectangle-size;

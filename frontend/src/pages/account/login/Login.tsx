@@ -8,7 +8,7 @@ import { Form } from "reactstrap";
 import { LoginProps, LoginState, LoginResponse } from "./Interface";
 import { Link } from "react-router-dom";
 
-export class Login extends React.Component {
+export class Login extends React.Component<LoginProps> {
   state: LoginState = {
     model: {
       name: "",
@@ -19,44 +19,10 @@ export class Login extends React.Component {
 
   handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    const config = {
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token"
-      }
-    };
-
-    const requestBody = qs.stringify({
-      username: this.state.model.name,
-      password: this.state.model.password,
-      client_id: "undersea_client",
-      client_secret: "undersea_client_secret",
-      scope: "offline_access undersea_api",
-      grant_type: "password"
+    this.props.beginlogin({
+      name: this.state.model.name,
+      password: this.state.model.password
     });
-    const url = "https://localhost:44355/connect/token";
-
-    axios
-      .post(url, requestBody, config)
-      .then(response => {
-        console.log(response.data);
-        const resp: LoginResponse = response.data as LoginResponse;
-        const connectToken = resp.token_type + " " + resp.access_token;
-        const refreshToken = resp.refresh_token;
-
-        localStorage.setItem("connection_header", connectToken);
-        localStorage.setItem("refresh_token", refreshToken);
-        console.log(localStorage.getItem("refresh_token"));
-      })
-      .catch(error => {
-        if (error.response.status === "408") {
-          this.setState({ error: "Connection timeout" });
-        } else {
-          this.setState({ error: "Helytelen jelszó, vagy felhasználó" });
-        }
-      });
   };
 
   /*handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -69,7 +35,7 @@ export class Login extends React.Component {
   }*/
 
   render() {
-    const { error } = this.state;
+    const { error, loading } = this.props;
     return (
       <div className="mainpage-width">
         <h1 className="undersea-font-form">UNDERSEA</h1>
@@ -113,7 +79,11 @@ export class Login extends React.Component {
               />
               <div className="button-container text-center">
                 <button className="form-button" type="submit">
-                  Belépés
+                  {loading ? (
+                    <div className="loading-circle">.</div>
+                  ) : (
+                    "Belépés"
+                  )}
                 </button>
                 {error && <p className="form-error">{error}</p>}
               </div>

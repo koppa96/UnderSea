@@ -9,10 +9,8 @@ export const BuildingReducer = (
 ): BuildingState => {
   switch (action.type) {
     case BuildingActions.REQUEST:
-      console.log("added");
       const tempState = state.buildings;
       tempState.forEach(item => {
-        console.log("item: ", item);
         action.params.buildingIDs.forEach(element => {
           console.log("elementer: ", element);
           console.log("item.id: ", item.id);
@@ -21,14 +19,12 @@ export const BuildingReducer = (
           }
         });
       });
-      console.log(tempState);
       return {
         ...state,
         buildings: tempState
       };
 
     default:
-      //Mé nem teccik nekije
       const check: never = action.type;
       return state;
   }

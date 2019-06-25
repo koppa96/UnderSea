@@ -15,7 +15,9 @@ export class Army extends React.Component {
   currentSoliders = (id: string, trop: number) => {
     const asd = this.state.trops;
     const filtered = asd.filter(x => x.id !== id);
-    this.setState({ trops: [...filtered, { id: id, amount: trop }] });
+    this.setState({ trops: [...filtered, { id: id, amount: trop }] }, () => {
+      console.log(this.state);
+    });
   };
 
   render() {

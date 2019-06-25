@@ -20,6 +20,10 @@ export class MainPage extends React.Component {
   // constuct
   componentDidMount() {
     // document.title = "Ország";
+    console.log("MainPage mount");
+  }
+  componentDidUpdate() {
+    console.log("MainPage Update");
   }
 
   render() {
