@@ -8,9 +8,13 @@ namespace StrategyGame.Model.Entities
 
         public bool IsSeenByAttacker { get; set; }
 
+        public bool IsDeletedByAttacker { get; set; }
+
         public Country Defender { get; set; }
 
         public bool IsSeenByDefender { get; set; }
+
+        public bool IsDeletedByDefender { get; set; }
 
         public bool DidAttackerWin { get; set; }
 
