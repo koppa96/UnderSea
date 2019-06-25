@@ -348,10 +348,20 @@ namespace StrategyGame.Bll.Extensions
             {
                 BaseTaxation = 25,
                 Round = 1,
-                StartingBarrackSpace = 100,
-                StartingCorals = 5000,
-                StartingPearls = 5000,
-                StartingPopulation = 10
+                StartingBarrackSpace = 0,
+                StartingCorals = 2000,
+                StartingPearls = 2000,
+                StartingPopulation = 0,
+                LootPercentage = 0.5,
+                UnitLossOnLostBatle = 0.1,
+                RandomEventChance = 0.1,
+                RandomEventGraceTimer = 10,
+                ScoreBuildingMultiplier = 50,
+                ScoreResearchMultiplier = 100,
+                ScorePopulationMultiplier = 1,
+                ScoreUnitMultiplier = 5,
+                FirstStartingBuilding = reefCastle,
+                SecondStartingBuilding = currentController
             });
             await context.SaveChangesAsync();
         }
@@ -376,7 +386,7 @@ namespace StrategyGame.Bll.Extensions
             context.AddRange(thePoor, theRich, theCommander, theBuilder, theResearcher);
 
             var pc = new Country
-            { Name = "poor", Corals = 10, Pearls = 10, ParentUser = thePoor };
+            { Name = "poor", Corals = 0, Pearls = 0, ParentUser = thePoor };
             var rc = new Country
             { Name = "rich", Corals = 1000000, Pearls = 1000000, ParentUser = theRich };
             var cc = new Country
@@ -392,7 +402,8 @@ namespace StrategyGame.Bll.Extensions
             var d3 = new Command { ParentCountry = cc, TargetCountry = cc };
             var d4 = new Command { ParentCountry = bc, TargetCountry = bc };
             var d5 = new Command { ParentCountry = sc, TargetCountry = sc };
-            context.Commands.AddRange(d1, d2, d3, d4, d5);
+            var d6 = new Command { ParentCountry = pc, TargetCountry = cc };
+            context.Commands.AddRange(d1, d2, d3, d4, d5, d6);
 
             var b1 = await context.BuildingTypes.FirstAsync();
             var b2 = await context.BuildingTypes.Skip(1).FirstAsync();
@@ -409,6 +420,10 @@ namespace StrategyGame.Bll.Extensions
                 ParentCountry = bc
             });
 
+            context.InProgressBuildings.Add(new InProgressBuilding
+            { Building = context.BuildingTypes.First(), ParentCountry = cc, TimeLeft = 1 });
+            context.InProgressResearches.Add(new InProgressResearch
+            { Research = context.ResearchTypes.First(), ParentCountry = cc, TimeLeft = 1 });
 
             var r1 = await context.ResearchTypes.FirstAsync();
             var r2 = await context.ResearchTypes.Skip(3).FirstAsync();
@@ -443,6 +458,11 @@ namespace StrategyGame.Bll.Extensions
             {
                 Count = 1,
                 ParentCommand = d3,
+                Unit = u3
+            }, new Division
+            {
+                Count = 500,
+                ParentCommand = d6,
                 Unit = u3
             });
 

@@ -46,7 +46,7 @@ namespace StrategyGame.Tests.Services
         }
 
         [TestMethod]
-        [DataRow("TheRich")]
+        [DataRow("TheBuilder")]
         public async Task TestBuyUnit(string username)
         {
             var id = (await context.UnitTypes.FirstAsync()).Id;
@@ -57,7 +57,7 @@ namespace StrategyGame.Tests.Services
         }
 
         [TestMethod]
-        [DataRow("TheRich")]
+        [DataRow("TheBuilder")]
         public async Task TestDeleteUnit(string username)
         {
             var id = (await context.UnitTypes.FirstAsync()).Id;

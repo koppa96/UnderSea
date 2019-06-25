@@ -71,45 +71,5 @@
         /// The default time to research things, in turns.
         /// </summary>
         public const int DefaultResearchTime = 15;
-
-        /// <summary>
-        /// The percentage of units lost in a lost battle.
-        /// </summary>
-        public const double UnitLossOnDefense = 0.1;
-
-        /// <summary>
-        /// The percentage of resources lost when the country is looted.
-        /// </summary>
-        public const double LootPercentage = 0.5;
-
-        /// <summary>
-        /// The multiplier for population during score calculation.
-        /// </summary>
-        public const double ScorePopulationMultiplier = 1;
-
-        /// <summary>
-        /// The multiplier for units during score calculation.
-        /// </summary>
-        public const double ScoreUnitMultiplier = 5;
-
-        /// <summary>
-        /// The multiplier for buildings during score calculation.
-        /// </summary>
-        public const double ScoreBuildingMultiplier = 50;
-
-        /// <summary>
-        /// The multiplier for researches during score calculation.
-        /// </summary>
-        public const double ScoreResearchMultiplier = 100;
-
-        /// <summary>
-        /// The chance for a random event to occur.
-        /// </summary>
-        public const double RandomEventChance = 0.1;
-
-        /// <summary>
-        /// The amount of turns before a random event can occur.
-        /// </summary>
-        public const int RandomEventGraceTimer = 10;
     }
 }

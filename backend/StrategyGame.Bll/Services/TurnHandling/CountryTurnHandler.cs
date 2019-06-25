@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using StrategyGame.Bll.EffectParsing;
+﻿using StrategyGame.Bll.EffectParsing;
 using StrategyGame.Bll.Extensions;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
@@ -59,8 +58,8 @@ namespace StrategyGame.Bll.Services.TurnHandling
             }
 
             // #1: Add a random event
-            if (country.CreatedRound + KnownValues.RandomEventGraceTimer < globals.Round
-                && rng.NextDouble() <= KnownValues.RandomEventChance)
+            if (country.CreatedRound + globals.RandomEventGraceTimer <= globals.Round
+                && rng.NextDouble() <= globals.RandomEventChance)
             {
                 country.CurrentEvent = allEvents[rng.Next(allEvents.Count)];
             }
@@ -136,10 +135,10 @@ namespace StrategyGame.Bll.Services.TurnHandling
 
                 if (attackPower > defensePower)
                 {
-                    CullUnits(defenders, KnownValues.UnitLossOnDefense);
+                    CullUnits(defenders, globals.UnitLossOnLostBatle);
 
-                    var pearlLoot = (long)Math.Round(country.Pearls * KnownValues.LootPercentage);
-                    var coralLoot = (long)Math.Round(country.Corals * KnownValues.LootPercentage);
+                    var pearlLoot = (long)Math.Round(country.Pearls * globals.LootPercentage);
+                    var coralLoot = (long)Math.Round(country.Corals * globals.LootPercentage);
                     country.Pearls -= pearlLoot;
                     country.Corals -= coralLoot;
                     attack.AcquiredPearlLoot += pearlLoot;
@@ -147,7 +146,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
                 }
                 else
                 {
-                    CullUnits(attack, KnownValues.UnitLossOnDefense);
+                    CullUnits(attack, globals.UnitLossOnLostBatle);
                 }
             }
         }
@@ -185,10 +184,10 @@ namespace StrategyGame.Bll.Services.TurnHandling
             }
 
             country.Score = (long)Math.Round(
-                builder.Population * KnownValues.ScorePopulationMultiplier
-                + country.Buildings.Count * KnownValues.ScoreBuildingMultiplier
-                + divisionScore * KnownValues.ScoreUnitMultiplier
-                + country.Researches.Count * KnownValues.ScoreResearchMultiplier);
+                builder.Population * globals.ScorePopulationMultiplier
+                + country.Buildings.Count * globals.ScoreBuildingMultiplier
+                + divisionScore * globals.ScoreUnitMultiplier
+                + country.Researches.Count * globals.ScoreResearchMultiplier);
 
             // Merge all attacking commands into the defense command, delete attacking commands, and add the loot
             var defenders = country.GetAllDefending();
@@ -247,19 +246,14 @@ namespace StrategyGame.Bll.Services.TurnHandling
         {
             var totalLoss = (int)Math.Round(command.Divisions.Sum(d => d.Count) * lostPercentage);
 
-            while (totalLoss > 0)
+            // TODO: Optimize
+            if (totalLoss > 0)
             {
-                var lossable = command.Divisions.Where(d => d.Count > 0).ToList();
-                lossable[rng.Next(lossable.Count)].Count--;
-            }
-
-            foreach (var div in command.Divisions)
-            {
-                div.Count -= (int)Math.Round(div.Count * lostPercentage);
-
-                if (div.Count < 0)
+                while (totalLoss > 0)
                 {
-                    div.Count = 0;
+                    var lossable = command.Divisions.Where(d => d.Count > 0).ToList();
+                    lossable[rng.Next(lossable.Count)].Count--;
+                    totalLoss--;
                 }
             }
         }
@@ -343,15 +337,15 @@ namespace StrategyGame.Bll.Services.TurnHandling
             {
                 foreach (var div in comm.Divisions)
                 {
-                    pearlUpkeep += div.Count * div.Unit.CostPearl;
-                    coralUpkeep += div.Count * div.Unit.CostCoral;
+                    pearlUpkeep += div.Count * div.Unit.MaintenancePearl;
+                    coralUpkeep += div.Count * div.Unit.MaintenanceCoral;
                 }
             }
 
             if (coralUpkeep > country.Corals || pearlUpkeep > country.Pearls)
             {
-                long pearlDeficit = pearlUpkeep - country.Pearls;
-                long coralDeficit = coralUpkeep - country.Corals;
+                long pearlDeficit = Math.Max(pearlUpkeep - country.Pearls, 0);
+                long coralDeficit = Math.Max(coralUpkeep - country.Corals, 0);
 
                 foreach (var div in country.Commands.SelectMany(c => c.Divisions).OrderBy(d => d.Unit.CostPearl))
                 {
@@ -363,14 +357,19 @@ namespace StrategyGame.Bll.Services.TurnHandling
                     div.Count -= desertedAmount;
 
                     pearlDeficit -= desertedAmount * div.Unit.MaintenancePearl;
+                    pearlUpkeep -= desertedAmount * div.Unit.MaintenancePearl;
                     coralDeficit -= desertedAmount * div.Unit.MaintenanceCoral;
+                    coralUpkeep -= desertedAmount * div.Unit.MaintenanceCoral;
 
-                    if (coralUpkeep <= country.Corals || pearlUpkeep <= country.Pearls)
+                    if (coralUpkeep <= country.Corals && pearlUpkeep <= country.Pearls)
                     {
                         break;
                     }
                 }
             }
+
+            pearlUpkeep = Math.Max(0, pearlUpkeep);
+            coralUpkeep = Math.Max(0, coralUpkeep);
 
             country.Pearls -= pearlUpkeep;
             country.Corals -= coralUpkeep;

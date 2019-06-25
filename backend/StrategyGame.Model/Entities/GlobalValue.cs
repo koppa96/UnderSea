@@ -34,5 +34,55 @@
         /// Gets or sets the base taxation (pearl production / population) of a country.
         /// </summary>
         public int BaseTaxation { get; set; }
+
+        /// <summary>
+        /// Gets or sets the percentage of units lost in a lost battle.
+        /// </summary>
+        public double UnitLossOnLostBatle { get; set; }
+
+        /// <summary>
+        /// Gets or sets the percentage of resources lost when the country is looted.
+        /// </summary>
+        public double LootPercentage { get; set; }
+
+        /// <summary>
+        /// Gets or sets the multiplier for population during score calculation.
+        /// </summary>
+        public double ScorePopulationMultiplier { get; set; }
+
+        /// <summary>
+        /// Gets or sets the multiplier for units during score calculation.
+        /// </summary>
+        public double ScoreUnitMultiplier { get; set; }
+
+        /// <summary>
+        /// Gets or sets the multiplier for buildings during score calculation.
+        /// </summary>
+        public double ScoreBuildingMultiplier { get; set; }
+
+        /// <summary>
+        /// Gets or sets the multiplier for researches during score calculation.
+        /// </summary>
+        public double ScoreResearchMultiplier { get; set; }
+
+        /// <summary>
+        /// Gets or sets the chance for a random event to occur.
+        /// </summary>
+        public double RandomEventChance { get; set; }
+
+        /// <summary>
+        /// Gets or sets the amount of turns before a random event can occur.
+        /// </summary>
+        public ulong RandomEventGraceTimer { get; set; }
+
+        /// <summary>
+        /// Gets or sets the first starting building for a new country.
+        /// </summary>
+        public BuildingType FirstStartingBuilding { get; set; }
+
+        /// <summary>
+        /// Gets or sets the second starting building for a new country.
+        /// </summary>
+        public BuildingType SecondStartingBuilding { get; set; }
     }
 }

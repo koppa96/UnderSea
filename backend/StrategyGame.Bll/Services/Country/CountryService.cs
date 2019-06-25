@@ -27,7 +27,11 @@ namespace StrategyGame.Bll.Services.Country
         public async Task CreateAsync(string username, string countryName)
         {
             var user = await Database.Users.SingleAsync(u => u.UserName == username);
-            var globals = await Database.GlobalValues.SingleAsync();
+            var globals = await Database.GlobalValues
+                .Include(g => g.FirstStartingBuilding)
+                .Include(g => g.SecondStartingBuilding)
+                .SingleAsync();
+
             var country = new Model.Entities.Country()
             {
                 Name = countryName,
@@ -43,7 +47,10 @@ namespace StrategyGame.Bll.Services.Country
 
             Database.Countries.Add(country);
             Database.Commands.Add(defenders);
-            
+            Database.CountryBuildings.AddRange(
+                new CountryBuilding { ParentCountry = country, Count = 1, Building = globals.FirstStartingBuilding },
+                new CountryBuilding { ParentCountry = country, Count = 1, Building = globals.SecondStartingBuilding });
+
             await Database.SaveChangesAsync();
         }
 
