@@ -6,7 +6,11 @@ namespace StrategyGame.Model.Entities
     {
         public Country Attacker { get; set; }
 
+        public bool IsSeenByAttacker { get; set; }
+
         public Country Defender { get; set; }
+
+        public bool IsSeenByDefender { get; set; }
 
         public bool DidAttackerWin { get; set; }
 
