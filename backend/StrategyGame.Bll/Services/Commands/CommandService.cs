@@ -91,12 +91,12 @@ namespace StrategyGame.Bll.Services.Commands
             var command = country.Commands.SingleOrDefault(c => c.Id == commandId);
             if (command == null || command.ParentCountry.Id == command.TargetCountry.Id)
             {
-                throw new ArgumentOutOfRangeException("Invalid command id.");
-            }
+                if (await _context.Commands.AnyAsync(c => c.Id == commandId))
+                {
+                    throw new UnauthorizedAccessException("Can not modify commands of others.");
+                }
 
-            if (command.ParentCountry.ParentUser.UserName != username)
-            {
-                throw new UnauthorizedAccessException("Can not modify commands of others.");
+                throw new ArgumentOutOfRangeException("Invalid command id.");
             }
 
             var defendingCommand = country.GetAllDefending();
