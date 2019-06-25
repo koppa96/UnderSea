@@ -165,6 +165,8 @@ namespace StrategyGame.Api
 
             app.UseSignalR(route => route.MapHub<UnderSeaHub>("/hub"));
 
+            app.UseStaticFiles();
+
             RecurringJob.AddOrUpdate<TurnEndingJob>(x => x.EndTurnAsync(), Cron.Hourly);
         }
     }
