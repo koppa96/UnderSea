@@ -5,13 +5,13 @@ export interface ManState {
   age?: number;
   isOld: boolean;
   gender: string;
-  asd: alma;
+  //  asd: alma;
 }
 
 export const testInitialState: ManState = {
   name: "",
   age: undefined,
   isOld: false,
-  gender: "",
-  asd: { asd: { ka: "asdasd" } }
+  gender: ""
+  //  asd: { asd: { ka: "asdasd" } }
 };

@@ -28,7 +28,7 @@ export class MainPage extends React.Component {
     };
     return (
       <div className="main-page">
-        <NavBar navbar={asd} />
+        <NavBarConnected />
         <div className="mainpage-content">
           <div className="side-menu">
             <Menu />

@@ -15,31 +15,29 @@ export const App = () => {
 
   //TODO: Router kiszervezés
   return (
-    <ConnectedRouter history={createBrowserHistory({ basename: "/" })}>
-      <div className="App">
-        <div className="bg-image">
-          <Switch>
-            <Route exact path="/">
-              <LoginCheck login={loggedin}>
-                <MainPage />
-              </LoginCheck>
-            </Route>
-            <Route path="/account">
-              <LoginCheck login={loggedin}>
-                <MainPage />
-              </LoginCheck>
-            </Route>
-            <Route path="/register" component={Register} />
+    <div className="App">
+      <div className="bg-image">
+        <Switch>
+          <Route exact path="/">
+            <LoginCheck login={loggedin}>
+              <MainPage />
+            </LoginCheck>
+          </Route>
+          <Route path="/account">
+            <LoginCheck login={loggedin}>
+              <MainPage />
+            </LoginCheck>
+          </Route>
+          <Route path="/register" component={Register} />
 
-            <Route path="/login">
-              <LoginCheck login={!loggedin}>
-                <Login />
-              </LoginCheck>
-            </Route>
-            <Route component={NotFound} />
-          </Switch>
-        </div>
+          <Route path="/login">
+            <LoginCheck login={!loggedin}>
+              <Login />
+            </LoginCheck>
+          </Route>
+          <Route component={NotFound} />
+        </Switch>
       </div>
-    </ConnectedRouter>
+    </div>
   );
 };

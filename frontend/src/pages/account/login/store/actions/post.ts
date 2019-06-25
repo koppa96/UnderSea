@@ -2,14 +2,12 @@ export interface ILoginActionsTypes {
   REQUEST: "LOGIN_REQUEST_LOGIN_LOGIN";
   SUCCES: "LOGIN_REQUEST_LOGIN_LOGIN";
   ERROR: "LOGIN_REQUEST_LOGIN_LOGIN";
-  LOAD: "LOGIN_REQUEST_LOGIN_LOGIN";
 }
 
 export const LoginActions: ILoginActionsTypes = {
   REQUEST: "LOGIN_REQUEST_LOGIN_LOGIN",
   SUCCES: "LOGIN_REQUEST_LOGIN_LOGIN",
-  ERROR: "LOGIN_REQUEST_LOGIN_LOGIN",
-  LOAD: "LOGIN_REQUEST_LOGIN_LOGIN"
+  ERROR: "LOGIN_REQUEST_LOGIN_LOGIN"
 };
 
 export interface IRequestParamState {
@@ -29,16 +27,11 @@ export interface IActionLoginSucces {
 export interface IActionLoginError {
   type: ILoginActionsTypes["ERROR"];
 }
-export interface IActionLoginLoad {
-  type: ILoginActionsTypes["LOAD"];
-}
-
 //Reducerhez
 export type IActions =
   | IActionLoginRequest
   | IActionLoginSucces
-  | IActionLoginError
-  | IActionLoginLoad;
+  | IActionLoginError;
 
 //ActionCreators
 
@@ -47,8 +40,4 @@ export const TestAddActionCreator = (
 ): IActionLoginRequest => ({
   type: LoginActions.REQUEST,
   params
-});
-
-export const TestDeleteActionCreator = (): IActionDeleteMan => ({
-  type: LoginActions.DELETE
 });
