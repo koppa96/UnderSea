@@ -169,10 +169,7 @@ namespace StrategyGame.Tests.Services
                 c.Divisions.Sum(d => d.Count * d.Unit.MaintenanceCoral));
             var pearlMaintenance = country.Commands.Sum(c =>
                 c.Divisions.Sum(d => d.Count * d.Unit.MaintenancePearl));
-
-            Assert.IsTrue(country.Commands.All(c => c.AcquiredCoralLoot == 0));
-            Assert.IsTrue(country.Commands.All(c => c.AcquiredPearlLoot == 0));
-
+            
             country.Corals = 50000;
             country.Pearls = 50000;
 

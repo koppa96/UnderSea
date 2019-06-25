@@ -152,7 +152,6 @@ namespace StrategyGame.Bll.Services.TurnHandling
                     BaseAttackPower = attackBase,
                     BaseDefensePower = defenseBase,
                     Round = globals.Round,
-                    DidAttackerWin = false,
                     PearlLoot = 0,
                     CoralLoot = 0,
                     Losses = losses
@@ -164,10 +163,6 @@ namespace StrategyGame.Bll.Services.TurnHandling
                     var coralLoot = (long)Math.Round(country.Corals * globals.LootPercentage);
                     country.Pearls -= pearlLoot;
                     country.Corals -= coralLoot;
-                    attack.AcquiredPearlLoot += pearlLoot;
-                    attack.AcquiredCoralLoot += coralLoot;
-
-                    report.DidAttackerWin = true;
                     report.CoralLoot = coralLoot;
                     report.PearlLoot = pearlLoot;
                 }
@@ -217,11 +212,14 @@ namespace StrategyGame.Bll.Services.TurnHandling
             // Merge all attacking commands into the defense command, delete attacking commands, and add the loot
             var defenders = country.GetAllDefending();
 
+            foreach (var attack in country.Attacks.Where(x => x.DidAttackerWin && x.Round == globals.Round))
+            {
+                country.Pearls += attack.PearlLoot;
+                country.Corals += attack.CoralLoot;
+            }
+
             foreach (var attack in country.Commands.Where(c => c.Id != defenders.Id).ToList())
             {
-                country.Pearls += attack.AcquiredPearlLoot;
-                country.Corals += attack.AcquiredCoralLoot;
-
                 foreach (var div in attack.Divisions)
                 {
                     var existing = defenders.Divisions.SingleOrDefault(d => d.Unit.Id == div.Unit.Id);
@@ -255,8 +253,8 @@ namespace StrategyGame.Bll.Services.TurnHandling
         {
             if (doGetAttack)
             {
-                var totalModifier = builder.AttackModifier * 
-                    (rng.NextDouble() * globals.RandomAttackModifier + 1 - globals.RandomAttackModifier / 2);
+                var totalModifier = builder.AttackModifier *
+                    ((rng.NextDouble() * globals.RandomAttackModifier) + 1 - (globals.RandomAttackModifier / 2));
                 var basePower = command.Divisions.Sum(d => d.Count * (d.Unit.AttackPower + builder.AttackIncrease));
                 return (basePower * totalModifier, totalModifier, basePower);
             }
