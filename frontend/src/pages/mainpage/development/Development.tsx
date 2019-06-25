@@ -6,6 +6,9 @@ export class Development extends React.Component {
   componentDidMount() {
     document.title = "Development";
   }
+  onChecked(e: React.ChangeEvent<HTMLInputElement>){
+    console.log("sd")
+  }
 
   render() {
     return (
@@ -19,7 +22,7 @@ export class Development extends React.Component {
           {mockData.length > 0 &&
             mockData.map(item => (
               <label key={item.id}>
-                <input value={item.id} className="sr-only" type="checkbox" />
+                <input value={item.id} className="sr-only" type="checkbox" onChange={(e)=>this.onChecked(e)}/>
                 <DevelopmentItem development={item} />
               </label>
             ))}
