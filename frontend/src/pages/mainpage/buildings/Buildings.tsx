@@ -5,7 +5,7 @@ import { BuildingProps } from "./Interface";
 
 export class Buildings extends React.Component<BuildingProps> {
   componentDidMount() {
-    document.title = "Buildings";
+    document.title = title;
   }
   state = {
     buildIDs: []
