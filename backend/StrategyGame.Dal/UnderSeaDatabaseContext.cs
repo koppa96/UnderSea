@@ -162,6 +162,15 @@ namespace StrategyGame.Dal
             // User
             builder.Entity<User>().Property(u => u.RuledCountryId).IsRequired(false);
 
+            // Combat report
+            builder.Entity<CombatReport>()
+                .HasOne(c => c.Attacker)
+                .WithMany(c => c.Attacks);
+
+            builder.Entity<CombatReport>()
+                .HasOne(c => c.Defender)
+                .WithMany(c => c.Defenses);
+                       
             // Effect
             builder.Entity<Effect>().Property(e => e.Name).IsRequired().HasMaxLength(200);
             builder.Entity<Effect>().Property(e => e.TargetId).IsRequired(false);

@@ -11,7 +11,7 @@
         public virtual UnitType Unit { get; set; }
 
         /// <summary>
-        /// Gets the command the division belongs to.
+        /// Gets the command the division belongs to. May be null if the division belongs to a report.
         /// </summary>
         public virtual Command ParentCommand { get; set; }
 
