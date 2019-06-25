@@ -2,6 +2,7 @@
 using StrategyGame.Bll.EffectParsing;
 using StrategyGame.Dal;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -28,6 +29,8 @@ namespace StrategyGame.Bll.Services.TurnHandling
             //var bdgs = context.CountryBuildings.FirstOrDefault(x => x.Count == 10);
             //var cnt = context.Countries.Include(c => c.Buildings).FirstOrDefault(x => x.Id == first.ParentCountry.Id);
             //var bdgs2 = cnt.Buildings.FirstOrDefault(x => x.Count == 10);
+
+            var timer = Stopwatch.StartNew();
 
             var globals = await context.GlobalValues.SingleAsync(cancel);
 
@@ -123,6 +126,9 @@ namespace StrategyGame.Bll.Services.TurnHandling
             context.InProgressResearches.RemoveRange(context.InProgressResearches.Where(r => r.TimeLeft <= 0));
 
             await context.SaveChangesAsync();
+
+            timer.Stop();
+            Debug.WriteLine("Turn completed, elapsed time: {0} ms", timer.ElapsedMilliseconds);
         }
     }
 }
