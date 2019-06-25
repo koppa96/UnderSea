@@ -141,7 +141,7 @@ namespace StrategyGame.Bll.Extensions
                 Parent = currentController,
                 Name = "Áramlásirányító",
                 Description = "+50 lakos, 200 korall / kör",
-                ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTpStWdiTJFGARYo6i93yeO0pHA0EQYJelOifiWIPmP7qveLS6n"
+                ImageUrl = "images/static/buildings/aramlasiranyito-lg.png"
             };
 
             var reefCastCont = new BuildingContent
@@ -149,7 +149,7 @@ namespace StrategyGame.Bll.Extensions
                 Parent = reefCastle,
                 Name = "Zátonyvár",
                 Description = "+200 szállás",
-                ImageUrl = "https://media-cdn.tripadvisor.com/media/photo-s/02/72/f4/54/filename-pict0458-jpg.jpg"
+                ImageUrl = "images/static/buildings/zatonyvar-lg.png"
             };
 
             context.BuildingContents.AddRange(currentCont, reefCastCont);
@@ -159,21 +159,21 @@ namespace StrategyGame.Bll.Extensions
                 Parent = seal,
                 Name = "Rohamfóka",
                 Description = "Jól támad de rosszul véd",
-                ImageUrl = "https://resources.stuff.co.nz/content/dam/images/1/t/a/s/4/o/image.related.StuffLandscapeSixteenByNine.710x400.1tankf.png/1546211918775.jpg"
+                ImageUrl = "images/static/units/rohamfoka.svg"
             };
             var ponyCont = new UnitContent
             {
                 Parent = pony,
                 Name = "Csatacsikó",
                 Description = "Jól véd de rosszul támad",
-                ImageUrl = "http://www2.padi.com/blog/wp-content/uploads/2013/08/seahorse.jpg"
+                ImageUrl = "images/static/units/csatacsiko.png"
             };
             var lazorCont = new UnitContent
             {
                 Parent = lazor,
                 Name = "Lézercápa",
                 Description = "lazers man",
-                ImageUrl = "https://vignette.wikia.nocookie.net/venturian-battle-headquarters/images/6/69/Flyinglasershark.jpg/revision/latest?cb=20160714220743"
+                ImageUrl = "images/static/units/lezercapa.png"
             };
 
             context.UnitContents.AddRange(sealCont, ponyCont, lazorCont);
@@ -183,14 +183,14 @@ namespace StrategyGame.Bll.Extensions
                 Parent = mudT,
                 Name = "Iszap traktor",
                 Description = "Iszapozza a korallt (amitől amúgy IRL meghalna, korall nem növény nem kell neki föld), +10% korall termelés",
-                ImageUrl = "https://cdn.pixabay.com/photo/2017/10/09/09/55/mud-2832910_960_720.jpg"
+                ImageUrl = "images/static/researches/iszaptraktor-lg.png"
             };
             var mudCCont = new ResearchContent
             {
                 Parent = mudC,
                 Name = "Iszap kombájn",
                 Description = "Nagyon iszapozza a korallt, +15% korall termelés",
-                ImageUrl = "https://secure.i.telegraph.co.uk/multimedia/archive/03350/glastonbury-mud-sp_3350460k.jpg"
+                ImageUrl = "images/static/researches/iszapkombajn-lg.png"
             };
             var defCont = new ResearchContent
             {
@@ -204,7 +204,7 @@ namespace StrategyGame.Bll.Extensions
                 Parent = canon,
                 Name = "Szonárágyú",
                 Description = "Mint a denevér, echo-lokáció. +20% támadás",
-                ImageUrl = "https://media-cdn.tripadvisor.com/media/photo-s/07/24/69/da/dive-abaco.jpg"
+                ImageUrl = "images/static/researches/szonaragyu-lg.png"
             };
             var cCont = new ResearchContent
             {
