@@ -27,7 +27,7 @@ namespace StrategyGame.Tests.Services
         public async Task TestGetCountry(string username)
         {
             var info = await countryService.GetCountryInfoAsync(username);
-            Assert.IsTrue(info.Pearls > 1000);
+            Assert.IsTrue(info.Any(x => x.Pearls > 1000));
         }
 
         [TestMethod]

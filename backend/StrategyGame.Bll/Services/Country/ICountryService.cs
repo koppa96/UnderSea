@@ -1,5 +1,6 @@
 ﻿using StrategyGame.Bll.Dto.Sent;
 using StrategyGame.Bll.Dto.Sent.Country;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,8 +26,17 @@ namespace StrategyGame.Bll.Services.Country
         /// Gets the general information about a user's country.
         /// </summary>
         /// <param name="username">The name of the user</param>
+        /// <param name="countryId">The ID of the country to get the information on.</param>
         /// <returns>The information about the country</returns>
-        Task<CountryInfo> GetCountryInfoAsync(string username);
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when the <paramref name="countryId"/> is invalid</exception>
+        Task<CountryInfo> GetCountryInfoAsync(string username, int countryId);
+
+        /// <summary>
+        /// Gets the general information about all countries a user has.
+        /// </summary>
+        /// <param name="username">The name of the user</param>
+        /// <returns>The information about the countries of the user.</returns>
+        Task<IEnumerable<CountryInfo>> GetCountryInfoAsync(string username);
 
         /// <summary>
         /// Gets a list of players, their countries' score and rank. 
