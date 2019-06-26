@@ -24,8 +24,6 @@ export class Attack extends React.Component {
           <div>
             <span>2. Állítsd be, kiket küldesz harcba:</span>
             <AttackItem />
-            <AttackItem />
-            <AttackItem />
           </div>
         </div>
         <button>Megtámadom!</button>
@@ -34,6 +32,21 @@ export class Attack extends React.Component {
   }
 }
 const title: string = "Támadás";
+
+const mockedUnits = [
+  {
+    id: 1,
+    name: "Lézercápa",
+    imageUrl: "asd",
+    attackPower: 5,
+    defensePower: 5,
+    count: 10,
+    maintenancePearl: 45,
+    maintenanceCoral: 10,
+    costPearl: 200
+  }
+]
+
 const mockData = [
   {
     id: 1,

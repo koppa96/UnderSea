@@ -24,12 +24,13 @@ export class ArmyItem extends React.Component<ArmyProps> {
   render() {
     const {
       imageUrl,
-      title,
-      amount,
-      price,
-      price2,
-      price3,
-      stat
+      name,
+      count,
+      maintenanceCoral,
+      maintenancePearl,
+      costPearl,
+      attackPower,
+      defensePower
     } = this.props.unit;
     const { currentTroop } = this.state;
     return (
@@ -37,26 +38,26 @@ export class ArmyItem extends React.Component<ArmyProps> {
         <div className="rectangle army-rectangle">
           <img alt="solider" src={imageUrl} />
         </div>
-        <h3>{title}</h3>
+        <h3>{name}</h3>
         <div>
           <span>Birtokodban:</span>
-          <span>{amount}</span>
+          <span>{count}</span>
         </div>
         <div>
           <span>Támadás/Védekezés</span>
-          <span>{stat}</span>
+          <span>{attackPower+"/"+defensePower}</span>
         </div>
         <div>
           <span>Zsold(/kör/példány)</span>
-          <span>{price}</span>
+          <span>{maintenancePearl}</span>
         </div>
         <div>
           <span>Ellátmány(/kör/példány)</span>
-          <span>{price2}</span>
+          <span>{maintenanceCoral}</span>
         </div>
         <div>
           <span>Ár</span>
-          <span>{price3}</span>
+          <span>{costPearl}</span>
         </div>
         <div className="army-circle">
           <div onClick={this.removeTroop} className="circle">

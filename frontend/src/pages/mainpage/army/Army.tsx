@@ -4,38 +4,44 @@ import { ArmyItem } from "./ArmyItem";
 import {  ArmyInitialState, ArmyUnit } from "./store/store";
 import { ArmyProps } from "./Interface";
 
+const initialState = {
+  troopsToAdd: [
+    {
+        id:1,
+        amount: 0
+    },
+    {
+        id:2,
+        amount: 0
+    },
+    {
+        id:3,
+        amount: 0
+    }
+  ]
+}
+
 
 export class Army extends React.Component<ArmyProps> {
   componentDidMount() {
     document.title = title;
   }
   state = {
-    troopsToAdd: [
-      {
-          id:1,
-          amount: 0
-      },
-      {
-          id:2,
-          amount: 0
-      },
-      {
-          id:3,
-          amount: 0
-      }
-    ]
+    ...initialState
     //troops: ArmyInitialState
   }
 
   currentSoldiers = (id: number, troop: number) => {
-    var temp = this.state.troopsToAdd;
-    temp.map(
+    const newtTemp = this.state.troopsToAdd.map(
       unit => {
-        if(unit.id == id)
-          unit.amount = troop
+        if(unit.id == id){
+          return {...unit, amount: troop}
+        }
+        return unit;
+         
       }
     )
-    this.setState({troopsToAdd: temp}, () => {
+    this.setState({troopsToAdd: newtTemp}, () => {
       console.log(this.state.troopsToAdd);
     });
   };

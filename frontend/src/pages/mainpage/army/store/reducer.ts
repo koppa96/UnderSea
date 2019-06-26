@@ -11,7 +11,7 @@ export const ArmyReducer = (
             temp.forEach(unit => {
                 action.params.unitsToAdd.forEach(element => {
                     if(unit.id == element.id)
-                        unit.amount+=element.amount
+                        unit.count += element.amount
                 }); 
             });
             return {

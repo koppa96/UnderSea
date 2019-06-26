@@ -1,14 +1,11 @@
 export interface ArmyItemProps {
-
-    id: number;
-    imageUrl: string;
-    title: string;
-    amount: number;
-    stat: string;
-    price: string;
-    price2: string;
-    price3: string;
-
-
-  //currentTroops: Function;
+  id: number,
+  name: string,
+  imageUrl: string,
+  attackPower: number,
+  defensePower: number,
+  count: number,
+  maintenancePearl: number,
+  maintenanceCoral: number,
+  costPearl: number
 }
