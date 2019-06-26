@@ -90,11 +90,16 @@ namespace StrategyGame.Api
 
             services.AddSwaggerDocument(options =>
             {
+                options.Title = "Undersea API";
+                options.Version = "1.0";
+                options.Description = "API for the game called Under sea, which is a turn based online multiplayer strategy game.";
+
                 options.PostProcess = document =>
                 {
                     var settings = new TypeScriptClientGeneratorSettings
                     {
-                        ClassName = "{controller}Client"
+                        ClassName = "{controller}Client",
+                        Template = TypeScriptTemplate.Axios
                     };
 
                     var generator = new TypeScriptClientGenerator(document, settings);

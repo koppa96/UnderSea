@@ -71,10 +71,16 @@
         public double RandomEventChance { get; set; }
 
         /// <summary>
+        /// Gets or sets the random attack power modifier.
+        /// </summary>
+        public double RandomAttackModifier { get; set; }
+
+        /// <summary>
         /// Gets or sets the amount of turns before a random event can occur.
         /// </summary>
         public ulong RandomEventGraceTimer { get; set; }
 
+        // TODO: Use a linking table that allows multiple starting buildings
         /// <summary>
         /// Gets or sets the first starting building for a new country.
         /// </summary>

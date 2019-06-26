@@ -16,6 +16,7 @@ namespace StrategyGame.Bll.Dto.Sent.Country
         public long Pearls { get; set; }
         public long Corals { get; set; }
         public EventInfo Event { get; set; }
+        public int UnseenReports { get; set; }
         public IEnumerable<BriefCreationInfo> Buildings { get; set; }
         public IEnumerable<BriefCreationInfo> Researches { get; set; }
     }

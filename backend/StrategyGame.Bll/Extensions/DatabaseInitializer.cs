@@ -35,6 +35,7 @@ namespace StrategyGame.Bll.Extensions
             context.EventContents.RemoveRange(context.EventContents);
 
             // Purge commands, divisions, and units
+            context.Reports.RemoveRange(context.Reports);
             context.Commands.RemoveRange(context.Commands);
             context.Divisions.RemoveRange(context.Divisions);
             context.UnitTypes.RemoveRange(context.UnitTypes);
@@ -229,8 +230,15 @@ namespace StrategyGame.Bll.Extensions
                 Description = "lazers man",
                 ImageUrl = "images/static/units/lezercapa.png"
             };
+            var leaderCont = new UnitContent
+            {
+                Parent = leader,
+                Name = "Parancsnok",
+                Description = "Támadást csak parancsnok tud vezetni",
+                ImageUrl = "https://vignette.wikia.nocookie.net/venturian-battle-headquarters/images/6/69/Flyinglasershark.jpg/revision/latest?cb=20160714220743"
+            };
 
-            context.UnitContents.AddRange(sealCont, ponyCont, lazorCont);
+            context.UnitContents.AddRange(sealCont, ponyCont, lazorCont, leaderCont);
 
             var mudTCont = new ResearchContent
             {
@@ -364,7 +372,8 @@ namespace StrategyGame.Bll.Extensions
                 ScorePopulationMultiplier = 1,
                 ScoreUnitMultiplier = 5,
                 FirstStartingBuilding = reefCastle,
-                SecondStartingBuilding = currentController
+                SecondStartingBuilding = currentController,
+                RandomAttackModifier = 0.1
             });
             await context.SaveChangesAsync();
         }
@@ -473,6 +482,42 @@ namespace StrategyGame.Bll.Extensions
                 Count = 1,
                 ParentCommand = d3,
                 Unit = leader
+            });
+
+            var attackers = new Division
+            {
+                Count = 20,
+                Unit = await context.UnitTypes.FirstAsync()
+            };
+
+            var defenders = new Division
+            {
+                Count = 10,
+                Unit = await context.UnitTypes.FirstAsync()
+            };
+
+            var losses = new Division
+            {
+                Count = 1,
+                Unit = await context.UnitTypes.FirstAsync()
+            };
+
+            context.Reports.Add(new CombatReport
+            {
+                Attacker = sc,
+                Defender = bc,
+                Attackers = new[] { attackers },
+                Defenders = new[] { defenders },
+                Losses = new[] { losses }, 
+                AttackModifier = 1.1,
+                DefenseModifier = 1,
+                BaseAttackPower = 20,
+                BaseDefensePower = 10,
+                TotalAttackPower = 1337,
+                TotalDefensePower = 60,
+                PearlLoot = 50,
+                CoralLoot = 1731,
+                Round = 0                
             });
 
             await context.SaveChangesAsync();

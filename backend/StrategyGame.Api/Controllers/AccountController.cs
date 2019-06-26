@@ -16,7 +16,7 @@ using StrategyGame.Model.Entities;
 namespace StrategyGame.Api.Controllers
 {
     /// <summary>
-    /// API Endpoint for creating accounts and querying the currently logged in user's data.
+    /// API Endpoint for managing the accounts of the user.
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
@@ -107,9 +107,15 @@ namespace StrategyGame.Api.Controllers
         [Authorize]
         [ProducesResponseType(200)]
         [ProducesResponseType(401)]
-        public async Task<ActionResult<IEnumerable<string>>> GetUsernamesAsync()
+        public async Task<ActionResult<IEnumerable<TargetInfo>>> GetUsernamesAsync()
         {
-            return Ok(await _userManager.Users.Select(u => u.UserName).ToListAsync());
+            return Ok(await _userManager.Users.Where(u => u.UserName != User.Identity.Name)
+                .Select(u => new TargetInfo
+                {
+                    Username = u.UserName,
+                    CountryId = u.RuledCountry.Id,
+                    CountryName = u.RuledCountry.Name
+                }).ToListAsync());
         }
 
         [HttpPost]
