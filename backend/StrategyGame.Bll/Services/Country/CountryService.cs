@@ -73,8 +73,10 @@ namespace StrategyGame.Bll.Services.Country
                .Include(c => c.InProgressResearches)
                     .ThenInclude(r => r.Research)
                         .ThenInclude(r => r.Content)
-                .Include(c => c.CurrentEvent)
+               .Include(c => c.CurrentEvent)
                     .ThenInclude(e => e.Content)
+               .Include(c => c.Attacks)
+               .Include(c => c.Defenses)
                .SingleAsync(c => c.ParentUser.UserName == username);
 
             var info = Mapper.Map<Model.Entities.Country, CountryInfo>(country);
@@ -126,6 +128,7 @@ namespace StrategyGame.Bll.Services.Country
             info.Buildings = totalBuildings.Select(x => x.Value).ToList();
             info.Researches = totalResearches.Select(x => x.Value).ToList();
             info.ArmyInfo = await country.GetAllUnitInfoAsync(Database, Mapper);
+            info.UnseenReports = country.Attacks.Count(r => !r.IsSeenByAttacker) + country.Defenses.Count(r => !r.IsSeenByDefender);
 
             // Add event info
             if (country.CurrentEvent != null)

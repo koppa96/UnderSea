@@ -619,6 +619,156 @@ export class MaintenanceClient {
     }
 }
 
+export class ReportsClient {
+    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        this.http = http ? http : <any>window;
+        this.baseUrl = baseUrl ? baseUrl : "";
+    }
+
+    getBattleInfo(): Promise<CombatInfo[]> {
+        let url_ = this.baseUrl + "/api/Reports";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetBattleInfo(_response);
+        });
+    }
+
+    protected processGetBattleInfo(response: Response): Promise<CombatInfo[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("A server error occurred.", status, _responseText, _headers, result401);
+            });
+        } else if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(CombatInfo.fromJS(item));
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<CombatInfo[]>(<any>null);
+    }
+
+    setSeen(id: number): Promise<void> {
+        let url_ = this.baseUrl + "/api/Reports/seen/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "POST",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processSetSeen(_response);
+        });
+    }
+
+    protected processSetSeen(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("A server error occurred.", status, _responseText, _headers, result401);
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ProblemDetails.fromJS(resultData404);
+            return throwException("A server error occurred.", status, _responseText, _headers, result404);
+            });
+        } else if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(<any>null);
+    }
+
+    deleteReport(id: number): Promise<void> {
+        let url_ = this.baseUrl + "/api/Reports/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "DELETE",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processDeleteReport(_response);
+        });
+    }
+
+    protected processDeleteReport(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("A server error occurred.", status, _responseText, _headers, result401);
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ProblemDetails.fromJS(resultData404);
+            return throwException("A server error occurred.", status, _responseText, _headers, result404);
+            });
+        } else if (status === 204) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(<any>null);
+    }
+}
+
 export class ResearchesClient {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
@@ -1366,6 +1516,7 @@ export class CountryInfo implements ICountryInfo {
     pearls!: number;
     corals!: number;
     event?: EventInfo | undefined;
+    unseenReports!: number;
     buildings?: BriefCreationInfo[] | undefined;
     researches?: BriefCreationInfo[] | undefined;
 
@@ -1390,6 +1541,7 @@ export class CountryInfo implements ICountryInfo {
             this.pearls = data["pearls"];
             this.corals = data["corals"];
             this.event = data["event"] ? EventInfo.fromJS(data["event"]) : <any>undefined;
+            this.unseenReports = data["unseenReports"];
             if (Array.isArray(data["buildings"])) {
                 this.buildings = [] as any;
                 for (let item of data["buildings"])
@@ -1422,6 +1574,7 @@ export class CountryInfo implements ICountryInfo {
         data["pearls"] = this.pearls;
         data["corals"] = this.corals;
         data["event"] = this.event ? this.event.toJSON() : <any>undefined;
+        data["unseenReports"] = this.unseenReports;
         if (Array.isArray(this.buildings)) {
             data["buildings"] = [];
             for (let item of this.buildings)
@@ -1443,6 +1596,7 @@ export interface ICountryInfo {
     pearls: number;
     corals: number;
     event?: EventInfo | undefined;
+    unseenReports: number;
     buildings?: BriefCreationInfo[] | undefined;
     researches?: BriefCreationInfo[] | undefined;
 }
@@ -1545,6 +1699,110 @@ export interface IBriefCreationInfo {
     count: number;
     inProgressCount: number;
     imageUrl?: string | undefined;
+}
+
+export class CombatInfo implements ICombatInfo {
+    id!: number;
+    round!: number;
+    isAttack!: boolean;
+    isWon!: boolean;
+    enemyCountryId!: number;
+    enemyCountryName?: string | undefined;
+    yourUnits?: UnitInfo[] | undefined;
+    enemyUnits?: UnitInfo[] | undefined;
+    lostUnits?: UnitInfo[] | undefined;
+    pealLoot!: number;
+    coralLoot!: number;
+    isSeen!: boolean;
+
+    constructor(data?: ICombatInfo) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.id = data["id"];
+            this.round = data["round"];
+            this.isAttack = data["isAttack"];
+            this.isWon = data["isWon"];
+            this.enemyCountryId = data["enemyCountryId"];
+            this.enemyCountryName = data["enemyCountryName"];
+            if (Array.isArray(data["yourUnits"])) {
+                this.yourUnits = [] as any;
+                for (let item of data["yourUnits"])
+                    this.yourUnits!.push(UnitInfo.fromJS(item));
+            }
+            if (Array.isArray(data["enemyUnits"])) {
+                this.enemyUnits = [] as any;
+                for (let item of data["enemyUnits"])
+                    this.enemyUnits!.push(UnitInfo.fromJS(item));
+            }
+            if (Array.isArray(data["lostUnits"])) {
+                this.lostUnits = [] as any;
+                for (let item of data["lostUnits"])
+                    this.lostUnits!.push(UnitInfo.fromJS(item));
+            }
+            this.pealLoot = data["pealLoot"];
+            this.coralLoot = data["coralLoot"];
+            this.isSeen = data["isSeen"];
+        }
+    }
+
+    static fromJS(data: any): CombatInfo {
+        data = typeof data === 'object' ? data : {};
+        let result = new CombatInfo();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["round"] = this.round;
+        data["isAttack"] = this.isAttack;
+        data["isWon"] = this.isWon;
+        data["enemyCountryId"] = this.enemyCountryId;
+        data["enemyCountryName"] = this.enemyCountryName;
+        if (Array.isArray(this.yourUnits)) {
+            data["yourUnits"] = [];
+            for (let item of this.yourUnits)
+                data["yourUnits"].push(item.toJSON());
+        }
+        if (Array.isArray(this.enemyUnits)) {
+            data["enemyUnits"] = [];
+            for (let item of this.enemyUnits)
+                data["enemyUnits"].push(item.toJSON());
+        }
+        if (Array.isArray(this.lostUnits)) {
+            data["lostUnits"] = [];
+            for (let item of this.lostUnits)
+                data["lostUnits"].push(item.toJSON());
+        }
+        data["pealLoot"] = this.pealLoot;
+        data["coralLoot"] = this.coralLoot;
+        data["isSeen"] = this.isSeen;
+        return data; 
+    }
+}
+
+export interface ICombatInfo {
+    id: number;
+    round: number;
+    isAttack: boolean;
+    isWon: boolean;
+    enemyCountryId: number;
+    enemyCountryName?: string | undefined;
+    yourUnits?: UnitInfo[] | undefined;
+    enemyUnits?: UnitInfo[] | undefined;
+    lostUnits?: UnitInfo[] | undefined;
+    pealLoot: number;
+    coralLoot: number;
+    isSeen: boolean;
 }
 
 export interface FileResponse {
