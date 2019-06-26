@@ -95,7 +95,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
         /// </summary>
         /// <param name="context">The <see cref="UnderSeaDatabaseContext"/> that is used to access the database.</param>
         /// <param name="country">The country to handle. The commands, incoming attacks, the attack's divisions, parent country, 
-        /// parent country builidings, researches, events, and effects must be loaded.</param>
+        /// parent country builidings, researches, events, and effects and the parent user must be loaded.</param>
         /// <param name="globals">The <see cref="GlobalValue"/>s to use.</param>
         /// <exception cref="ArgumentNullException">Thrown if an argument was null.</exception>
         public void HandleCombat(UnderSeaDatabaseContext context, Model.Entities.Country country, GlobalValue globals)
@@ -115,21 +115,44 @@ namespace StrategyGame.Bll.Services.TurnHandling
                 throw new ArgumentNullException(nameof(globals));
             }
 
-            // Randomize the incoming attacks, excluding the defending forces
+            // Randomize the incoming attacks, excluding the defending forces and reinforcements, separate the reinforcements
             var incomingAttacks = country.IncomingAttacks
-                .Where(c => !c.ParentCountry.Equals(country))
+                .Where(c => !c.ParentCountry.Equals(country) && !c.ParentCountry.ParentUser.Equals(country.ParentUser))
                 .Select(c => new { Order = rng.Next(), Command = c })
                 .OrderBy(x => x.Order)
                 .Select(x => x.Command)
                 .ToList();
 
+            var reinforcements = country.IncomingAttacks
+                .Where(c => !c.ParentCountry.Equals(country) && c.ParentCountry.ParentUser.Equals(country.ParentUser))
+                .ToList();
+
             var defenders = country.GetAllDefending();
             var builder = country.ParseAllEffectForCountry(context, globals, Parsers, false);
+
+            foreach (var reinforcement in reinforcements)
+            {
+                foreach (var div in reinforcement.Divisions)
+                {
+                    var existing = defenders.Divisions.SingleOrDefault(d => d.Unit.Equals(div.Unit));
+
+                    if (existing == null)
+                    {
+                        defenders.Divisions.Add(new Division { Unit = div.Unit, Count = div.Count });
+                    }
+                    else
+                    {
+                        existing.Count += div.Count;
+                    }
+
+                    div.Count = 0;
+                }
+            }
 
             foreach (var attack in incomingAttacks)
             {
                 (double attackPower, double attackMods, double attackBase) = GetCurrentUnitPower(attack, globals, true,
-                    attack.ParentCountry.ParseAllEffectForCountry(context, globals, Parsers, false));
+               attack.ParentCountry.ParseAllEffectForCountry(context, globals, Parsers, false));
                 (double defensePower, double defenseMods, double defenseBase) = GetCurrentUnitPower(defenders, globals,
                     false, builder);
 
