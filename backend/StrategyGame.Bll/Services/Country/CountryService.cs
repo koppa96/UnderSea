@@ -76,31 +76,37 @@ namespace StrategyGame.Bll.Services.Country
         public async Task<CountryInfo> GetCountryInfoAsync(string username, int countryId)
         {
             var country = await Database.Countries
-              .Include(c => c.Commands)
-                   .ThenInclude(comm => comm.Divisions)
-                       .ThenInclude(d => d.Unit)
-                           .ThenInclude(u => u.Content)
-              .Include(c => c.Buildings)
-                   .ThenInclude(b => b.Building)
-                       .ThenInclude(b => b.Content)
-              .Include(c => c.Researches)
-                   .ThenInclude(r => r.Research)
-                       .ThenInclude(r => r.Content)
-              .Include(c => c.InProgressBuildings)
-                   .ThenInclude(b => b.Building)
-                       .ThenInclude(b => b.Content)
-              .Include(c => c.InProgressResearches)
-                   .ThenInclude(r => r.Research)
-                       .ThenInclude(r => r.Content)
-              .Include(c => c.CurrentEvent)
-                   .ThenInclude(e => e.Content)
-              .Include(c => c.Attacks)
-              .Include(c => c.Defenses)
-              .SingleOrDefaultAsync(c => c.Id == countryId);
+               .Include(c => c.Commands)
+                    .ThenInclude(comm => comm.Divisions)
+                        .ThenInclude(d => d.Unit)
+                            .ThenInclude(u => u.Content)
+               .Include(c => c.Buildings)
+                    .ThenInclude(b => b.Building)
+                        .ThenInclude(b => b.Content)
+               .Include(c => c.Researches)
+                    .ThenInclude(r => r.Research)
+                        .ThenInclude(r => r.Content)
+               .Include(c => c.InProgressBuildings)
+                    .ThenInclude(b => b.Building)
+                        .ThenInclude(b => b.Content)
+               .Include(c => c.InProgressResearches)
+                    .ThenInclude(r => r.Research)
+                        .ThenInclude(r => r.Content)
+               .Include(c => c.CurrentEvent)
+                    .ThenInclude(e => e.Content)
+               .Include(c => c.Attacks)
+               .Include(c => c.Defenses)
+               .Include(c => c.ParentUser)
+               .SingleOrDefaultAsync(c => c.Id == countryId);
 
-            if (country == null || country.ParentUser.UserName != username)
+            if (country == null)
             {
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException("Invalid country id.");
+            }
+
+            if (country.ParentUser.UserName != username)
+            {
+                throw new UnauthorizedAccessException("Can not view country info of others.");
             }
 
             var info = Mapper.Map<Model.Entities.Country, CountryInfo>(country);
@@ -228,6 +234,21 @@ namespace StrategyGame.Bll.Services.Country
                 .OrderBy(c => c.Rank)
                 .Select(c => Mapper.Map<Model.Entities.Country, RankInfo>(c))
                 .ToListAsync();
+        }
+
+        public async Task<IEnumerable<BriefCountryInfo>> GetCountriesAsync(string username)
+        {
+            return await Database.Countries
+                .Where(c => c.ParentUser.UserName == username)
+                .Select(c => new BriefCountryInfo { CountryId = c.Id, CountryName = c.Name })
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<CountryInfo>> GetAllCountryInfoAsync(string username)
+        {
+            var countries = await GetCountriesAsync(username);
+            return countries.Select(c => GetCountryInfoAsync(username, c.CountryId))
+                .Select(t => t.Result);
         }
     }
 }

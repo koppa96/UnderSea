@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using System;
 
 namespace StrategyGame.Bll.Services.Country
 {
@@ -23,20 +24,28 @@ namespace StrategyGame.Bll.Services.Country
         Task CreateAsync(string username, string countryName, CancellationToken turnEndWaitToken = default);
 
         /// <summary>
+        /// Gets a short info about all of the countries of the user.
+        /// </summary>
+        /// <param name="username">The name of the user</param>
+        /// <returns>The list of countries</returns>
+        Task<IEnumerable<BriefCountryInfo>> GetCountriesAsync(string username);
+
+        /// <summary>
         /// Gets the general information about a user's country.
         /// </summary>
         /// <param name="username">The name of the user</param>
-        /// <param name="countryId">The ID of the country to get the information on.</param>
+        /// <param name="countryId">The id of the country</param>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when the country id is invalid</exception>
+        /// <exception cref="UnauthorizedAccessException">Thrown when the country id is not the user's country</exception>
         /// <returns>The information about the country</returns>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown when the <paramref name="countryId"/> is invalid</exception>
         Task<CountryInfo> GetCountryInfoAsync(string username, int countryId);
 
         /// <summary>
-        /// Gets the general information about all countries a user has.
+        /// Gets the detailed country information about all of the countries of the user.
         /// </summary>
         /// <param name="username">The name of the user</param>
-        /// <returns>The information about the countries of the user.</returns>
-        Task<IEnumerable<CountryInfo>> GetCountryInfoAsync(string username);
+        /// <returns>The detailed infos</returns>
+        Task<IEnumerable<CountryInfo>> GetAllCountryInfoAsync(string username);
 
         /// <summary>
         /// Gets a list of players, their countries' score and rank. 
