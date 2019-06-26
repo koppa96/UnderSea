@@ -98,7 +98,8 @@ namespace StrategyGame.Api
                 {
                     var settings = new TypeScriptClientGeneratorSettings
                     {
-                        ClassName = "{controller}Client"
+                        ClassName = "{controller}Client",
+                        Template = TypeScriptTemplate.Axios
                     };
 
                     var generator = new TypeScriptClientGenerator(document, settings);
