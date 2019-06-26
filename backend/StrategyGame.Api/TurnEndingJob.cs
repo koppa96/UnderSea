@@ -42,11 +42,7 @@ namespace StrategyGame.Api
         {
             await Handler.EndTurnAsync(Context);
 
-            foreach (var user in Tracker.GetConnectedUsers())
-            {
-                var info = await Service.GetCountryInfoAsync(user);
-                await Hub.Clients.User(user).SendAsync(nameof(IHubClient.ReceiveResultsAsync), info);
-            }
+            await Hub.Clients.All.SendAsync(nameof(IHubClient.NotifyTurnEnded));
         }
     }
 }

@@ -11,6 +11,6 @@ namespace StrategyGame.Api.Hubs
     /// </summary>
     public interface IHubClient
     {
-        Task ReceiveResultsAsync(CountryInfo countryInfo);
+        Task NotifyTurnEnded();
     }
 }
