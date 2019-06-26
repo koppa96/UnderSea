@@ -127,7 +127,15 @@ namespace StrategyGame.Bll.Services.Country
 
             info.Buildings = totalBuildings.Select(x => x.Value).ToList();
             info.Researches = totalResearches.Select(x => x.Value).ToList();
-            info.ArmyInfo = await country.GetAllUnitInfoAsync(Database, Mapper);
+
+            info.ArmyInfo = (await country.GetAllUnitInfoAsync(Database, Mapper))
+                .Select(ui => new BriefUnitInfo
+                {
+                    Id = ui.Id,
+                    ImageUrl = ui.ImageUrl,
+                    Count = ui.Count
+                });
+
             info.UnseenReports = country.Attacks.Count(r => !r.IsSeenByAttacker) + country.Defenses.Count(r => !r.IsSeenByDefender);
 
             // Add event info

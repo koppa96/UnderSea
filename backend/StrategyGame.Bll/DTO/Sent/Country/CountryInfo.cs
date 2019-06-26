@@ -12,7 +12,7 @@ namespace StrategyGame.Bll.Dto.Sent.Country
     {
         public ulong Round { get; set; }
         public int Rank { get; set; }
-        public IEnumerable<UnitInfo> ArmyInfo { get; set; }
+        public IEnumerable<BriefUnitInfo> ArmyInfo { get; set; }
         public long Pearls { get; set; }
         public long Corals { get; set; }
         public EventInfo Event { get; set; }
