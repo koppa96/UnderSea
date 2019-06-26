@@ -67,25 +67,43 @@ namespace StrategyGame.Tests.Services
         [DataRow("TheResearcher", "TheBuilder")]
         public async Task TestDeleteReport(string attacker, string defender)
         {
+            var reportId = (await context.Reports.FirstAsync()).Id;
 
+            await reportService.DeleteAsync(attacker, reportId);
+
+            Assert.AreEqual(0, (await reportService.GetCombatInfoAsync(attacker)).Count());
+            Assert.AreEqual(1, (await reportService.GetCombatInfoAsync(defender)).Count());
         }
 
         [TestMethod]
-        public async Task TestBothDeleteReport()
+        [DataRow("TheResearcher", "TheBuilder")]
+        public async Task TestBothDeleteReport(string attacker, string defender)
         {
+            var reportId = (await context.Reports.FirstAsync()).Id;
 
+            await reportService.DeleteAsync(attacker, reportId);
+            await reportService.DeleteAsync(defender, reportId);
+
+            Assert.AreEqual(0, (await reportService.GetCombatInfoAsync(defender)).Count());
+            Assert.AreEqual(0, await context.Reports.CountAsync());
         }
 
         [TestMethod]
-        public async Task TestDeleteOthersReport()
+        [DataRow("ThePoor")]
+        [ExpectedException(typeof(UnauthorizedAccessException))]
+        public async Task TestDeleteOthersReport(string username)
         {
+            var reportId = (await context.Reports.FirstAsync()).Id;
 
+            await reportService.DeleteAsync(username, reportId);
         }
 
         [TestMethod]
-        public async Task TestDeleteNotExistingReport()
+        [DataRow("ThePoor")]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public async Task TestDeleteNotExistingReport(string username)
         {
-
+            await reportService.DeleteAsync(username, -1);
         }
 
         [TestCleanup]
