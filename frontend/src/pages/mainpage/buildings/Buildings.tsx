@@ -6,6 +6,8 @@ import { BuildingProps } from "./Interface";
 export class Buildings extends React.Component<BuildingProps> {
   componentDidMount() {
     document.title = title;
+    console.log("Building mounted");
+    this.props.getAllBuilding();
   }
   state = {
     buildIDs: []
@@ -38,8 +40,8 @@ export class Buildings extends React.Component<BuildingProps> {
           description={description}
         />
         <div className="building-page hide-scroll">
-          {boughtBuildingState.buildings.length > 0 &&
-            boughtBuildingState.buildings.map(item => (
+          {boughtBuildingState &&
+            boughtBuildingState.map(item => (
               <label key={item.id}>
                 <input
                   onClick={this.addBuildingByID}
@@ -47,14 +49,7 @@ export class Buildings extends React.Component<BuildingProps> {
                   className="sr-only"
                   type="checkbox"
                 />
-                <BuildingItem
-                  id={item.id}
-                  amount={item.amount}
-                  title={item.title}
-                  price={item.price}
-                  description={item.description}
-                  imageUrl={item.imageUrl}
-                />
+                ideideidieidieideidieid
               </label>
             ))}
         </div>
@@ -67,6 +62,15 @@ export class Buildings extends React.Component<BuildingProps> {
     );
   }
 }
+/*
+                <BuildingItem
+                  id={item.id}
+                  amount={item.amount}
+                  title={item.title}
+                  price={item.price}
+                  description={item.description}
+                  imageUrl={item.imageUrl}
+                />*/
 
 const title: string = "Épületek";
 const mainDescription: string = "Kattints rá, amelyiket szeretnéd megvenni.";

@@ -164,7 +164,7 @@ export class AccountsClient {
         });
     }
 
-    protected processGetUsernames(response: AxiosResponse): Promise<TargetInfo[]> 
+    protected processGetUsernames(response: AxiosResponse): Promise<TargetInfo[]> {
         const status = response.status;
         let _headers: any = {}; 
         if (response.headers && response.headers.forEach) { 

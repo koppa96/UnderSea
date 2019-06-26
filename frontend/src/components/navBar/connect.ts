@@ -9,7 +9,9 @@ import { NavbarState } from "./store";
 
 const mapStateToProps = (state: IApllicationState): MappedProps => ({
   navbar: {
-    navBarIcons: state.app.pages.buildingIds.buildings
+    navBarIcons: state.app.pages.mainpage.model
+      ? state.app.pages.mainpage.model.buildings
+      : []
   }
 });
 export const NavBarConnected = connect(

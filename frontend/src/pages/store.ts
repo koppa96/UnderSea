@@ -13,7 +13,6 @@ import { MainpageReducer } from "./mainpage/store/reduce";
 
 export interface PagesState {
   gyakorlas: ManState;
-  buildingIds: BuildingState;
   loginDetails: LoginResponseState;
   Army: ArmyState;
   mainpage: MainpageResponseState;
@@ -21,7 +20,6 @@ export interface PagesState {
 
 export const PagesReducer = combineReducers<PagesState>({
   gyakorlas: ManReducer,
-  buildingIds: BuildingReducer,
   loginDetails: LoginReducer,
   Army: ArmyReducer,
   mainpage: MainpageReducer

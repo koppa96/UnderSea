@@ -1,6 +1,6 @@
 import { buildingInitialState, BuildingState } from "./store";
-import { IActions, BuildingActions } from "./actions/buildingActions";
 import { BuildingProps } from "../Interface";
+import { GetBuildingActions, IActions } from "./actions/get";
 
 //Rename to reducer
 export const BuildingReducer = (
@@ -8,24 +8,26 @@ export const BuildingReducer = (
   action: IActions
 ): BuildingState => {
   switch (action.type) {
-    case BuildingActions.REQUEST:
-      const tempState = state.buildings;
-      tempState.forEach(item => {
-        action.params.buildingIDs.forEach(element => {
-          console.log("elementer: ", element);
-          console.log("item.id: ", item.id);
-          if (item.id == element) {
-            item.amount = item.amount + 1;
-          }
-        });
-      });
+    case GetBuildingActions.REQUEST:
       return {
         ...state,
-        buildings: tempState
+        loading: true
+      };
+    case GetBuildingActions.SUCCES:
+      return {
+        ...state,
+        loading: false,
+        buildings: action.params.buildings
+      };
+    case GetBuildingActions.ERROR:
+      return {
+        ...state,
+        loading: false,
+        error: action.params ? action.params : "Ismeretlen hiba"
       };
 
     default:
-      const check: never = action.type;
+      const check: never = action;
       return state;
   }
 };

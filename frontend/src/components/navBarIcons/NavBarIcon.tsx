@@ -2,6 +2,7 @@ import * as React from "react";
 import { NavBarIconProp } from "./Interface";
 
 import ProfileImg from "./../../assets/images/profile-bg.svg";
+import { BasePortUrl } from "../..";
 
 export const NavBarIcon = (props: NavBarIconProp) => {
   const info = props.info && (
@@ -11,12 +12,11 @@ export const NavBarIcon = (props: NavBarIconProp) => {
   return (
     <div className="navbaricon-bg">
       <div className="navbaricon-rectangle">
-        <img src={ProfileImg} alt="Icon" />
+        <img src={BasePortUrl + "/" + props.imageUrl} alt="Icon" />
       </div>
       <div className="navbaricon-font">
-        <span className="navbaricon-amount">{props.amount}</span>
-        <span className="navbaricon-amount">{props.id}</span>
-        {info}
+        <span className="navbaricon-amount">{props.count}</span>
+        <span className="navbaricon-amount">{props.info}</span>
       </div>
     </div>
   );
