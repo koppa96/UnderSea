@@ -58,7 +58,7 @@ export class AccountsClient {
         return Promise.resolve<UserInfo>(<any>null);
     }
 
-    getUsernames(): Promise<string[]> {
+    getUsernames(): Promise<TargetInfo[]> {
         let url_ = this.baseUrl + "/api/Accounts";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -74,7 +74,7 @@ export class AccountsClient {
         });
     }
 
-    protected processGetUsernames(response: Response): Promise<string[]> {
+    protected processGetUsernames(response: Response): Promise<TargetInfo[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -84,7 +84,7 @@ export class AccountsClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(item);
+                    result200!.push(TargetInfo.fromJS(item));
             }
             return result200;
             });
@@ -100,7 +100,7 @@ export class AccountsClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<string[]>(<any>null);
+        return Promise.resolve<TargetInfo[]>(<any>null);
     }
 
     createAccountAsnyc(data: RegisterData): Promise<void> {
@@ -1147,6 +1147,50 @@ export interface IProblemDetails {
     status?: number | undefined;
     detail?: string | undefined;
     instance?: string | undefined;
+}
+
+export class TargetInfo implements ITargetInfo {
+    username?: string | undefined;
+    countryId!: number;
+    countryName?: string | undefined;
+
+    constructor(data?: ITargetInfo) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.username = data["username"];
+            this.countryId = data["countryId"];
+            this.countryName = data["countryName"];
+        }
+    }
+
+    static fromJS(data: any): TargetInfo {
+        data = typeof data === 'object' ? data : {};
+        let result = new TargetInfo();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["username"] = this.username;
+        data["countryId"] = this.countryId;
+        data["countryName"] = this.countryName;
+        return data; 
+    }
+}
+
+export interface ITargetInfo {
+    username?: string | undefined;
+    countryId: number;
+    countryName?: string | undefined;
 }
 
 export class RegisterData implements IRegisterData {
