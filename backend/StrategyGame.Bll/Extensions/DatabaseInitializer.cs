@@ -2,6 +2,8 @@
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
 using StrategyGame.Model.Entities.Frontend;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -520,6 +522,71 @@ namespace StrategyGame.Bll.Extensions
                 Round = 0                
             });
 
+            await context.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Fills the database with some test users, armies, buildings.
+        /// </summary>
+        /// <param name="context">The dbcontext to use.</param>
+        /// <param name="count">The amount of users that should be generated.</param>
+        /// <returns>The task representing the operation.</returns>
+        public static async Task GenerateRandomTestUsersAsync(this UnderSeaDatabaseContext context, int count)
+        {
+            var globals = await context.GlobalValues.SingleAsync();
+            globals.Round += globals.RandomEventGraceTimer + 1;
+            var rng = new Random();
+
+            var users = Enumerable.Range(1, count).Select(x => new User { UserName = Guid.NewGuid().ToString() }).ToList();
+            var countries = users.Select(x => new Country
+            {
+                Corals = rng.Next(0, 50000),
+                Pearls = rng.Next(0, 50000),
+                ParentUser = x,
+                Name = x.UserName,
+                InProgressResearches = context.ResearchTypes.Where(r => rng.NextDouble() < 0.5)
+                    .Select(r => new InProgressResearch { TimeLeft = 1, Research = r }).ToList(),
+                InProgressBuildings = context.BuildingTypes.Where(b => rng.NextDouble() < 0.5)
+                    .Select(b => new InProgressBuilding { TimeLeft = 1, Building = b }).ToList(),
+                Buildings = context.BuildingTypes.Where(b => rng.NextDouble() < 0.5)
+                    .Select(b => new CountryBuilding { Count = rng.Next(1, 5), Building = b }).ToList()                
+            }).ToList();
+
+            foreach (var country in countries)
+            {
+                var attackCount = rng.Next(0, 5);
+                var attacks = new List<Command>
+                {
+                    new Command
+                    {
+                        TargetCountry = country,
+                        Divisions = context.UnitTypes.Select(u => new Division { Count = rng.Next(1, 100), Unit = u }).ToList()
+                    }
+                };
+
+                for (int iii = 0; iii < attackCount; iii++)
+                {
+                    var target = countries[rng.Next(countries.Count)];
+
+                    if (attacks.Any(x => x.TargetCountry.Name.Equals(target.Name)))
+                    {
+                        iii--;
+                    }
+                    else
+                    {
+                        attacks.Add(new Command
+                        {
+                            TargetCountry = target,
+                            Divisions = context.UnitTypes.Select(u => new Division { Count = rng.Next(1, 100), Unit = u }).ToList()
+                        });
+                    }
+                }
+
+                country.Commands = attacks;
+            }
+
+            context.Users.AddRange(users);
+            context.Countries.AddRange(countries);
             await context.SaveChangesAsync();
         }
     }
