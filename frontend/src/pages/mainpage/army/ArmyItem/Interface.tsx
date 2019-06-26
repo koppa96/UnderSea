@@ -1,5 +1,5 @@
 export interface ArmyItemProps {
-  solider: {
+
     id: number;
     imageUrl: string;
     title: string;
@@ -8,7 +8,7 @@ export interface ArmyItemProps {
     price: string;
     price2: string;
     price3: string;
-  };
 
-  currentTrops: Function;
+
+  //currentTroops: Function;
 }

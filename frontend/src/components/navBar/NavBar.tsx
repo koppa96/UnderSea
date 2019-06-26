@@ -5,10 +5,18 @@ import { NavBarProps } from "./Interface";
 export class NavBar extends React.Component<NavBarProps> {
   componentDidMount() {}
 
+  componentDidUpdate() {
+    console.log("Navbar Updated");
+    // console.log(this.props.navbar.navBarIcons);
+  }
+  componentWillUpdate() {
+    console.log("Navbar will Update");
+    // console.log(this.props.navbar.navBarIcons);
+  }
+
   render() {
     //2x render?
     const { navbar } = this.props;
-    console.log(this.props, "render");
 
     // console.log("navbar render", navbar);
     return (

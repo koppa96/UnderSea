@@ -61,7 +61,7 @@ export class AccountsClient {
         return Promise.resolve<UserInfo>(<any>null);
     }
 
-    getUsernames(): Promise<TargetInfo[]> {
+    getUsernames(): Promise<string[]> {
         let url_ = this.baseUrl + "/api/Accounts";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -78,7 +78,7 @@ export class AccountsClient {
         });
     }
 
-    protected processGetUsernames(response: AxiosResponse): Promise<TargetInfo[]> 
+    protected processGetUsernames(response: AxiosResponse): Promise<string[]> {
         const status = response.status;
         let _headers: any = {}; 
         if (response.headers && response.headers.forEach) { 
@@ -91,7 +91,7 @@ export class AccountsClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(TargetInfo.fromJS(item));
+                    result200!.push(item);
             }
             return result200;
         } else if (status === 401) {
@@ -104,7 +104,7 @@ export class AccountsClient {
             const _responseText = response.data;
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-        return Promise.resolve<TargetInfo[]>(<any>null);
+        return Promise.resolve<string[]>(<any>null);
     }
 
     createAccountAsnyc(data: RegisterData): Promise<void> {
@@ -629,157 +629,6 @@ export class MaintenanceClient {
     }
 }
 
-export class ReportsClient {
-    private instance: AxiosInstance;
-    private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
-
-    constructor(baseUrl?: string, instance?: AxiosInstance) {
-        this.instance = instance ? instance : axios.create();
-        this.baseUrl = baseUrl ? baseUrl : "";
-    }
-
-    getBattleInfo(): Promise<CombatInfo[]> {
-        let url_ = this.baseUrl + "/api/Reports";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ = <AxiosRequestConfig>{
-            method: "GET",
-            url: url_,
-            headers: {
-                "Accept": "application/json"
-            }
-        };
-
-        return this.instance.request(options_).then((_response: AxiosResponse) => {
-            return this.processGetBattleInfo(_response);
-        });
-    }
-
-    protected processGetBattleInfo(response: AxiosResponse): Promise<CombatInfo[]> {
-        const status = response.status;
-        let _headers: any = {}; 
-        if (response.headers && response.headers.forEach) { 
-            response.headers.forEach((v: any, k: any) => _headers[k] = v);
-        };
-        if (status === 401) {
-            const _responseText = response.data;
-            let result401: any = null;
-            let resultData401  = _responseText;
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("A server error occurred.", status, _responseText, _headers, result401);
-        } else if (status === 200) {
-            const _responseText = response.data;
-            let result200: any = null;
-            let resultData200  = _responseText;
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(CombatInfo.fromJS(item));
-            }
-            return result200;
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<CombatInfo[]>(<any>null);
-    }
-
-    setSeen(id: number): Promise<void> {
-        let url_ = this.baseUrl + "/api/Reports/seen/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ = <AxiosRequestConfig>{
-            method: "POST",
-            url: url_,
-            headers: {
-            }
-        };
-
-        return this.instance.request(options_).then((_response: AxiosResponse) => {
-            return this.processSetSeen(_response);
-        });
-    }
-
-    protected processSetSeen(response: AxiosResponse): Promise<void> {
-        const status = response.status;
-        let _headers: any = {}; 
-        if (response.headers && response.headers.forEach) { 
-            response.headers.forEach((v: any, k: any) => _headers[k] = v);
-        };
-        if (status === 401) {
-            const _responseText = response.data;
-            let result401: any = null;
-            let resultData401  = _responseText;
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("A server error occurred.", status, _responseText, _headers, result401);
-        } else if (status === 404) {
-            const _responseText = response.data;
-            let result404: any = null;
-            let resultData404  = _responseText;
-            result404 = ProblemDetails.fromJS(resultData404);
-            return throwException("A server error occurred.", status, _responseText, _headers, result404);
-        } else if (status === 200) {
-            const _responseText = response.data;
-            return Promise.resolve<void>(<any>null);
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<void>(<any>null);
-    }
-
-    deleteReport(id: number): Promise<void> {
-        let url_ = this.baseUrl + "/api/Reports/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ = <AxiosRequestConfig>{
-            method: "DELETE",
-            url: url_,
-            headers: {
-            }
-        };
-
-        return this.instance.request(options_).then((_response: AxiosResponse) => {
-            return this.processDeleteReport(_response);
-        });
-    }
-
-    protected processDeleteReport(response: AxiosResponse): Promise<void> {
-        const status = response.status;
-        let _headers: any = {}; 
-        if (response.headers && response.headers.forEach) { 
-            response.headers.forEach((v: any, k: any) => _headers[k] = v);
-        };
-        if (status === 401) {
-            const _responseText = response.data;
-            let result401: any = null;
-            let resultData401  = _responseText;
-            result401 = ProblemDetails.fromJS(resultData401);
-            return throwException("A server error occurred.", status, _responseText, _headers, result401);
-        } else if (status === 404) {
-            const _responseText = response.data;
-            let result404: any = null;
-            let resultData404  = _responseText;
-            result404 = ProblemDetails.fromJS(resultData404);
-            return throwException("A server error occurred.", status, _responseText, _headers, result404);
-        } else if (status === 204) {
-            const _responseText = response.data;
-            return Promise.resolve<void>(<any>null);
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-        }
-        return Promise.resolve<void>(<any>null);
-    }
-}
-
 export class ResearchesClient {
     private instance: AxiosInstance;
     private baseUrl: string;
@@ -1159,50 +1008,6 @@ export interface IProblemDetails {
     instance?: string | undefined;
 }
 
-export class TargetInfo implements ITargetInfo {
-    username?: string | undefined;
-    countryId!: number;
-    countryName?: string | undefined;
-
-    constructor(data?: ITargetInfo) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(data?: any) {
-        if (data) {
-            this.username = data["username"];
-            this.countryId = data["countryId"];
-            this.countryName = data["countryName"];
-        }
-    }
-
-    static fromJS(data: any): TargetInfo {
-        data = typeof data === 'object' ? data : {};
-        let result = new TargetInfo();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["username"] = this.username;
-        data["countryId"] = this.countryId;
-        data["countryName"] = this.countryName;
-        return data; 
-    }
-}
-
-export interface ITargetInfo {
-    username?: string | undefined;
-    countryId: number;
-    countryName?: string | undefined;
-}
-
 export class RegisterData implements IRegisterData {
     username?: string | undefined;
     password?: string | undefined;
@@ -1569,8 +1374,6 @@ export class CountryInfo implements ICountryInfo {
     armyInfo?: UnitInfo[] | undefined;
     pearls!: number;
     corals!: number;
-    event?: EventInfo | undefined;
-    unseenReports!: number;
     buildings?: BriefCreationInfo[] | undefined;
     researches?: BriefCreationInfo[] | undefined;
 
@@ -1594,8 +1397,6 @@ export class CountryInfo implements ICountryInfo {
             }
             this.pearls = data["pearls"];
             this.corals = data["corals"];
-            this.event = data["event"] ? EventInfo.fromJS(data["event"]) : <any>undefined;
-            this.unseenReports = data["unseenReports"];
             if (Array.isArray(data["buildings"])) {
                 this.buildings = [] as any;
                 for (let item of data["buildings"])
@@ -1627,8 +1428,6 @@ export class CountryInfo implements ICountryInfo {
         }
         data["pearls"] = this.pearls;
         data["corals"] = this.corals;
-        data["event"] = this.event ? this.event.toJSON() : <any>undefined;
-        data["unseenReports"] = this.unseenReports;
         if (Array.isArray(this.buildings)) {
             data["buildings"] = [];
             for (let item of this.buildings)
@@ -1649,62 +1448,8 @@ export interface ICountryInfo {
     armyInfo?: UnitInfo[] | undefined;
     pearls: number;
     corals: number;
-    event?: EventInfo | undefined;
-    unseenReports: number;
     buildings?: BriefCreationInfo[] | undefined;
     researches?: BriefCreationInfo[] | undefined;
-}
-
-export class EventInfo implements IEventInfo {
-    id!: number;
-    name?: string | undefined;
-    description?: string | undefined;
-    flavourtext?: string | undefined;
-    imageUrl?: string | undefined;
-
-    constructor(data?: IEventInfo) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(data?: any) {
-        if (data) {
-            this.id = data["id"];
-            this.name = data["name"];
-            this.description = data["description"];
-            this.flavourtext = data["flavourtext"];
-            this.imageUrl = data["imageUrl"];
-        }
-    }
-
-    static fromJS(data: any): EventInfo {
-        data = typeof data === 'object' ? data : {};
-        let result = new EventInfo();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        data["description"] = this.description;
-        data["flavourtext"] = this.flavourtext;
-        data["imageUrl"] = this.imageUrl;
-        return data; 
-    }
-}
-
-export interface IEventInfo {
-    id: number;
-    name?: string | undefined;
-    description?: string | undefined;
-    flavourtext?: string | undefined;
-    imageUrl?: string | undefined;
 }
 
 export class BriefCreationInfo implements IBriefCreationInfo {
@@ -1753,110 +1498,6 @@ export interface IBriefCreationInfo {
     count: number;
     inProgressCount: number;
     imageUrl?: string | undefined;
-}
-
-export class CombatInfo implements ICombatInfo {
-    id!: number;
-    round!: number;
-    isAttack!: boolean;
-    isWon!: boolean;
-    enemyCountryId!: number;
-    enemyCountryName?: string | undefined;
-    yourUnits?: UnitInfo[] | undefined;
-    enemyUnits?: UnitInfo[] | undefined;
-    lostUnits?: UnitInfo[] | undefined;
-    pealLoot!: number;
-    coralLoot!: number;
-    isSeen!: boolean;
-
-    constructor(data?: ICombatInfo) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(data?: any) {
-        if (data) {
-            this.id = data["id"];
-            this.round = data["round"];
-            this.isAttack = data["isAttack"];
-            this.isWon = data["isWon"];
-            this.enemyCountryId = data["enemyCountryId"];
-            this.enemyCountryName = data["enemyCountryName"];
-            if (Array.isArray(data["yourUnits"])) {
-                this.yourUnits = [] as any;
-                for (let item of data["yourUnits"])
-                    this.yourUnits!.push(UnitInfo.fromJS(item));
-            }
-            if (Array.isArray(data["enemyUnits"])) {
-                this.enemyUnits = [] as any;
-                for (let item of data["enemyUnits"])
-                    this.enemyUnits!.push(UnitInfo.fromJS(item));
-            }
-            if (Array.isArray(data["lostUnits"])) {
-                this.lostUnits = [] as any;
-                for (let item of data["lostUnits"])
-                    this.lostUnits!.push(UnitInfo.fromJS(item));
-            }
-            this.pealLoot = data["pealLoot"];
-            this.coralLoot = data["coralLoot"];
-            this.isSeen = data["isSeen"];
-        }
-    }
-
-    static fromJS(data: any): CombatInfo {
-        data = typeof data === 'object' ? data : {};
-        let result = new CombatInfo();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["round"] = this.round;
-        data["isAttack"] = this.isAttack;
-        data["isWon"] = this.isWon;
-        data["enemyCountryId"] = this.enemyCountryId;
-        data["enemyCountryName"] = this.enemyCountryName;
-        if (Array.isArray(this.yourUnits)) {
-            data["yourUnits"] = [];
-            for (let item of this.yourUnits)
-                data["yourUnits"].push(item.toJSON());
-        }
-        if (Array.isArray(this.enemyUnits)) {
-            data["enemyUnits"] = [];
-            for (let item of this.enemyUnits)
-                data["enemyUnits"].push(item.toJSON());
-        }
-        if (Array.isArray(this.lostUnits)) {
-            data["lostUnits"] = [];
-            for (let item of this.lostUnits)
-                data["lostUnits"].push(item.toJSON());
-        }
-        data["pealLoot"] = this.pealLoot;
-        data["coralLoot"] = this.coralLoot;
-        data["isSeen"] = this.isSeen;
-        return data; 
-    }
-}
-
-export interface ICombatInfo {
-    id: number;
-    round: number;
-    isAttack: boolean;
-    isWon: boolean;
-    enemyCountryId: number;
-    enemyCountryName?: string | undefined;
-    yourUnits?: UnitInfo[] | undefined;
-    enemyUnits?: UnitInfo[] | undefined;
-    lostUnits?: UnitInfo[] | undefined;
-    pealLoot: number;
-    coralLoot: number;
-    isSeen: boolean;
 }
 
 export interface FileResponse {
