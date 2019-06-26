@@ -164,7 +164,7 @@ export class AccountsClient {
         });
     }
 
-    protected processGetUsernames(response: AxiosResponse): Promise<TargetInfo[]> 
+    protected processGetUsernames(response: AxiosResponse): Promise<TargetInfo[]> {
         const status = response.status;
         let _headers: any = {}; 
         if (response.headers && response.headers.forEach) { 
@@ -1694,7 +1694,7 @@ export interface IUnitDetails {
 export class CountryInfo implements ICountryInfo {
     round!: number;
     rank!: number;
-    armyInfo?: UnitInfo[] | undefined;
+    armyInfo?: BriefUnitInfo[] | undefined;
     pearls!: number;
     corals!: number;
     event?: EventInfo | undefined;
@@ -1718,7 +1718,7 @@ export class CountryInfo implements ICountryInfo {
             if (Array.isArray(data["armyInfo"])) {
                 this.armyInfo = [] as any;
                 for (let item of data["armyInfo"])
-                    this.armyInfo!.push(UnitInfo.fromJS(item));
+                    this.armyInfo!.push(BriefUnitInfo.fromJS(item));
             }
             this.pearls = data["pearls"];
             this.corals = data["corals"];
@@ -1774,13 +1774,57 @@ export class CountryInfo implements ICountryInfo {
 export interface ICountryInfo {
     round: number;
     rank: number;
-    armyInfo?: UnitInfo[] | undefined;
+    armyInfo?: BriefUnitInfo[] | undefined;
     pearls: number;
     corals: number;
     event?: EventInfo | undefined;
     unseenReports: number;
     buildings?: BriefCreationInfo[] | undefined;
     researches?: BriefCreationInfo[] | undefined;
+}
+
+export class BriefUnitInfo implements IBriefUnitInfo {
+    id!: number;
+    count!: number;
+    imageUrl?: string | undefined;
+
+    constructor(data?: IBriefUnitInfo) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.id = data["id"];
+            this.count = data["count"];
+            this.imageUrl = data["imageUrl"];
+        }
+    }
+
+    static fromJS(data: any): BriefUnitInfo {
+        data = typeof data === 'object' ? data : {};
+        let result = new BriefUnitInfo();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["count"] = this.count;
+        data["imageUrl"] = this.imageUrl;
+        return data; 
+    }
+}
+
+export interface IBriefUnitInfo {
+    id: number;
+    count: number;
+    imageUrl?: string | undefined;
 }
 
 export class EventInfo implements IEventInfo {
