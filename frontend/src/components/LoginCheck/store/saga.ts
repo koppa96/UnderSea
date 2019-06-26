@@ -32,7 +32,8 @@ export const beginToLogin = (
   });
   const url = "https://localhost:44355/connect/token";
 
-  const resp = axios
+  const instance = axios.create();
+  const resp = instance
     .post(url, requestBody, config)
     .then(response => {
       const access_token =
