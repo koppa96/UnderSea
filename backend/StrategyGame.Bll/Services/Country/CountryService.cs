@@ -58,38 +58,44 @@ namespace StrategyGame.Bll.Services.Country
             await Context.SaveChangesAsync();
         }
 
-        public async Task<CountryInfo> GetCountryInfoAsync(string username)
+        public async Task<IEnumerable<RankInfo>> GetRankedListAsync()
         {
-            var country = await Context.Countries
-               .Include(c => c.Commands)
-                    .ThenInclude(comm => comm.Divisions)
-                        .ThenInclude(d => d.Unit)
-                            .ThenInclude(u => u.Content)
-               .Include(c => c.Buildings)
-                    .ThenInclude(b => b.Building)
-                        .ThenInclude(b => b.Content)
-               .Include(c => c.Buildings)
-                    .ThenInclude(b => b.Building)
-                        .ThenInclude(b => b.Effects)
-                            .ThenInclude(bf => bf.Effect)
-               .Include(c => c.Researches)
-                    .ThenInclude(r => r.Research)
-                        .ThenInclude(r => r.Content)
-               .Include(c => c.Researches)
-                    .ThenInclude(r => r.Research)
-                        .ThenInclude(r => r.Effects)
-                            .ThenInclude(rf => rf.Effect)
-               .Include(c => c.InProgressBuildings)
-                    .ThenInclude(b => b.Building)
-                        .ThenInclude(b => b.Content)
-               .Include(c => c.InProgressResearches)
-                    .ThenInclude(r => r.Research)
-                        .ThenInclude(r => r.Content)
-               .Include(c => c.CurrentEvent)
-                    .ThenInclude(e => e.Content)
-               .Include(c => c.Attacks)
-               .Include(c => c.Defenses)
-               .SingleAsync(c => c.ParentUser.UserName == username);
+            return await Database.Countries
+                .Where(c => c.Rank > 0)
+                .OrderBy(c => c.Rank)
+                .Select(c => Mapper.Map<Model.Entities.Country, RankInfo>(c))
+                .ToListAsync();
+        }
+
+        public async Task<CountryInfo> GetCountryInfoAsync(string username, int countryId)
+        {
+            var country = await Database.Countries
+              .Include(c => c.Commands)
+                   .ThenInclude(comm => comm.Divisions)
+                       .ThenInclude(d => d.Unit)
+                           .ThenInclude(u => u.Content)
+              .Include(c => c.Buildings)
+                   .ThenInclude(b => b.Building)
+                       .ThenInclude(b => b.Content)
+              .Include(c => c.Researches)
+                   .ThenInclude(r => r.Research)
+                       .ThenInclude(r => r.Content)
+              .Include(c => c.InProgressBuildings)
+                   .ThenInclude(b => b.Building)
+                       .ThenInclude(b => b.Content)
+              .Include(c => c.InProgressResearches)
+                   .ThenInclude(r => r.Research)
+                       .ThenInclude(r => r.Content)
+              .Include(c => c.CurrentEvent)
+                   .ThenInclude(e => e.Content)
+              .Include(c => c.Attacks)
+              .Include(c => c.Defenses)
+              .SingleOrDefaultAsync(c => c.Id == countryId);
+
+            if (country == null || country.ParentUser.UserName != username)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
 
             var info = Mapper.Map<Model.Entities.Country, CountryInfo>(country);
             var globals = await Context.GlobalValues.SingleAsync();
@@ -98,6 +104,50 @@ namespace StrategyGame.Bll.Services.Country
             info.Round = globals.Round;
             info.CoralsPerRound = (long)Math.Round(mods.CoralProduction * mods.HarvestModifier);
             info.PearlsPerRound = (long)Math.Round(mods.PearlProduction * mods.TaxModifier);
+
+            return await GatherInfoAsync(country, globals.Round);
+        }
+
+        public async Task<IEnumerable<CountryInfo>> GetCountryInfoAsync(string username)
+        {
+            var countries = await Database.Countries
+                  .Include(c => c.Commands)
+                       .ThenInclude(comm => comm.Divisions)
+                           .ThenInclude(d => d.Unit)
+                               .ThenInclude(u => u.Content)
+                  .Include(c => c.Buildings)
+                       .ThenInclude(b => b.Building)
+                           .ThenInclude(b => b.Content)
+                  .Include(c => c.Researches)
+                       .ThenInclude(r => r.Research)
+                           .ThenInclude(r => r.Content)
+                  .Include(c => c.InProgressBuildings)
+                       .ThenInclude(b => b.Building)
+                           .ThenInclude(b => b.Content)
+                  .Include(c => c.InProgressResearches)
+                       .ThenInclude(r => r.Research)
+                           .ThenInclude(r => r.Content)
+                  .Include(c => c.CurrentEvent)
+                       .ThenInclude(e => e.Content)
+                  .Include(c => c.Attacks)
+                  .Include(c => c.Defenses)
+                  .Where(c => c.ParentUser.UserName == username).ToListAsync();
+
+            var infos = new List<CountryInfo>(countries.Count);
+            var globals = await Database.GlobalValues.SingleAsync();
+
+            foreach (var c in countries)
+            {
+                infos.Add(await GatherInfoAsync(c, globals.Round));
+            }
+
+            return infos;
+        }
+
+        protected async Task<CountryInfo> GatherInfoAsync(Model.Entities.Country country, ulong round)
+        {
+            var info = Mapper.Map<Model.Entities.Country, CountryInfo>(country);
+            info.Round = round;
 
             // Start with all buildings and researches
             var totalBuildings = await Context.BuildingTypes.Include(r => r.Content)
