@@ -1,7 +1,10 @@
-import { all, fork } from "redux-saga/effects";
+import { all, fork, call } from "redux-saga/effects";
 import { watchLoginFetchRequest } from "./pages/account/login/saga";
-import { watchMainPageFetchRequest } from "./pages/mainpage/store/saga";
+import {
+  watchMainPageFetchRequest,
+  mainpageSaga
+} from "./pages/mainpage/store/saga";
 
 export function* rootSaga() {
-  yield all([fork(watchLoginFetchRequest), fork(watchMainPageFetchRequest)]);
+  yield all([call(watchLoginFetchRequest), call(mainpageSaga)]);
 }

@@ -625,7 +625,7 @@ export class CountryClient {
         this.baseUrl = baseUrl ? baseUrl : "";
     }
 
-    getCurrentState(): Promise<CountryInfo> {
+     getCurrentState(): Promise<CountryInfo> {
         let url_ = this.baseUrl + "/api/Country";
         url_ = url_.replace(/[?&]$/, "");
 
