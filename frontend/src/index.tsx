@@ -10,7 +10,9 @@ import { createBrowserHistory } from "history";
 import { ConnectedRouter } from "connected-react-router";
 
 axios.defaults.baseURL = "https://localhost:44355/";
-
+axios.defaults.headers.common["Authorization"] = localStorage.getItem(
+  "access_token"
+);
 const history = createBrowserHistory({ basename: "/" });
 const { store } = configureStore(history);
 

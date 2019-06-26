@@ -16,13 +16,15 @@ import { NavBarIconProp } from "../../components/navBarIcons/Interface";
 import { NavBarIcon } from "../../components/navBarIcons";
 import { NavbarState } from "../../components/navBar/store";
 import { ArmyConnected } from "./army/connect";
+import { MainPageProps } from "./Interface";
 //import { ArmyConnected } from "./army/connect";
 
-export class MainPage extends React.Component {
+export class MainPage extends React.Component<MainPageProps> {
   // constuct
   componentDidMount() {
     // document.title = "Ország";
     console.log("MainPage mount");
+    this.props.beginFetchMainpage();
   }
   componentDidUpdate() {
     console.log("MainPage Update");
@@ -61,7 +63,7 @@ export class MainPage extends React.Component {
                 <Rank />
               </Route>
               <Route path="/account/army">
-                <ArmyConnected isNative/>
+                <ArmyConnected isNative />
               </Route>
               <Route path="/account/gyak">
                 <TestConnected isNative />

@@ -10,6 +10,7 @@ import { ConnectedRouter } from "connected-react-router";
 import { createBrowserHistory } from "history";
 import { LoginConnected } from "./pages/account/login/connect";
 import { LoginCheckConnected } from "./components/LoginCheck/connect";
+import { MainPageConnected } from "./pages/mainpage/connect";
 
 export const App = () => {
   const loggedin = true;
@@ -21,12 +22,12 @@ export const App = () => {
         <Switch>
           <Route exact path="/">
             <LoginCheckConnected login={loggedin}>
-              <MainPage />
+              <MainPageConnected />
             </LoginCheckConnected>
           </Route>
           <Route path="/account">
             <LoginCheckConnected login={loggedin}>
-              <MainPage />
+              <MainPageConnected />
             </LoginCheckConnected>
           </Route>
           <Route path="/register" component={Register} />

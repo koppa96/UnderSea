@@ -7,12 +7,13 @@ import {
   IActionMainpageRequest,
   ISuccesParamState,
   fetchSucces,
-  fetchError
+  fetchError,
+  MainpageActions
 } from "./actions";
-import { CountryClient } from "../../../api/Client";
+import { CountryClient, CountryInfo } from "../../../api/Client";
 
-export const beginToFetchMainpage = (): Promise<IActions> => {
-  const config = {
+export const beginToFetchMainpage = (): Promise<CountryInfo> => {
+  /* const config = {
     headers: {
       "Content-Type": "application/json",
       Authorization: localStorage.getItem("access_token")
@@ -20,18 +21,9 @@ export const beginToFetchMainpage = (): Promise<IActions> => {
   };
 
   const url = "api/country";
-
+*/
   const getCountry = new CountryClient();
-
-  const resp = axios
-    .get(url, config)
-    .then(response => {
-      return response;
-    })
-    .catch(error => {
-      return error;
-    });
-  return resp;
+  return getCountry.getCurrentState();
 };
 
 function* handleLogin(action: IActionMainpageRequest) {
@@ -48,6 +40,6 @@ function* handleLogin(action: IActionMainpageRequest) {
   }
 }
 
-export function* watchLoginFetchRequest() {
-  yield takeEvery(LoginActions.REQUEST, handleLogin);
+export function* watchMainPageFetchRequest() {
+  yield takeEvery(MainpageActions.REQUEST, handleLogin);
 }

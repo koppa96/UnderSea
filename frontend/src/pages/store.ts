@@ -8,17 +8,21 @@ import { LoginReducer } from "./account/login/store/reducer";
 import { LoginResponseState } from "./account/login/store/store";
 import { ArmyState } from "./mainpage/army/store/store";
 import { ArmyReducer } from "./mainpage/army/store/reducer";
+import { MainpageResponseState } from "./mainpage/store/store";
+import { MainpageReducer } from "./mainpage/store/reduce";
 
 export interface PagesState {
   gyakorlas: ManState;
   buildingIds: BuildingState;
   loginDetails: LoginResponseState;
-  Army: ArmyState
+  Army: ArmyState;
+  mainpage: MainpageResponseState;
 }
 
 export const PagesReducer = combineReducers<PagesState>({
   gyakorlas: ManReducer,
   buildingIds: BuildingReducer,
   loginDetails: LoginReducer,
-  Army: ArmyReducer
+  Army: ArmyReducer,
+  mainpage: MainpageReducer
 });
