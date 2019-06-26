@@ -7,16 +7,16 @@ import { ArmyProps } from "./Interface";
 const initialState = {
   troopsToAdd: [
     {
-        id:1,
-        amount: 0
+        unitId:1,
+        count: 0
     },
     {
-        id:2,
-        amount: 0
+        unitId:2,
+        count: 0
     },
     {
-        id:3,
-        amount: 0
+        unitId:3,
+        count: 0
     }
   ]
 }
@@ -27,18 +27,19 @@ export class Army extends React.Component<ArmyProps> {
     document.title = title;
   }
   state = {
-    ...initialState
+    ...initialState,
+    unitsAdded: false
     //troops: ArmyInitialState
   }
 
   currentSoldiers = (id: number, troop: number) => {
     const newtTemp = this.state.troopsToAdd.map(
       unit => {
-        if(unit.id == id){
-          return {...unit, amount: troop}
+        
+        if(unit.unitId == id){
+          return {...unit, count: troop}
         }
         return unit;
-         
       }
     )
     this.setState({troopsToAdd: newtTemp}, () => {
@@ -59,7 +60,7 @@ export class Army extends React.Component<ArmyProps> {
             ))}
         </div>
         <button
-        onClick = {() => addUnits({unitsToAdd:this.state.troopsToAdd})}>Megveszem</button>
+        onClick = {() => addUnits({unitsToAdd: this.state.troopsToAdd})}>Megveszem</button>
       </div>
     );
   }

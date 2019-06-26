@@ -10,8 +10,8 @@ export const ArmyReducer = (
             const temp = state.units
             temp.forEach(unit => {
                 action.params.unitsToAdd.forEach(element => {
-                    if(unit.id == element.id)
-                        unit.count += element.amount
+                    if(unit.id == element.unitId)
+                        unit.count += element.count
                 }); 
             });
             return {

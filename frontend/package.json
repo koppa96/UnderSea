@@ -25,13 +25,15 @@
     "reactstrap": "^8.0.0",
     "redux": "^4.0.1",
     "redux-saga": "^1.0.3",
+    "swagger-axios-codegen": "^0.5.6",
     "typescript": "3.5.2"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "build-api": ""
   },
   "eslintConfig": {
     "extends": "react-app"

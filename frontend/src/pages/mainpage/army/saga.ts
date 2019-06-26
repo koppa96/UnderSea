@@ -2,10 +2,10 @@ import {IActionAddArmyUnitRequest, ArmyActions, IActionAddArmyUnitSucces, IReque
 import { call, put, takeEvery } from "redux-saga/effects";
 import { ArmyUnit } from './store/store';
 import  axios  from 'axios'
-import {UnitsClient} from './../../../api/Client'
+import {UnitsClient, PurchaseDetails} from './../../../api/Client'
 export const asd=0;
 
-/*const beginAddUnits = (unitsToAdd:ArmyUnit[]):Promise<IActions> => {
+const beginAddUnits = (unitsToAdd:ArmyUnit[]):Promise<IActions> => {
     const config = {
         headers: {
             "Authorization": localStorage.getItem("access_token"),
@@ -14,9 +14,13 @@ export const asd=0;
         }
       };
     const url = "api/Units"
-    const axiosClient:UnitsClient = new UnitsClient
-    const resp = axiosClient.create()
-    return resp;
+    return axios.post(url,unitsToAdd)
+            .then(response => { console.log(response);return response})
+            .catch(error => { return error })
+
+    //         const axiosClient = new UnitsClient
+    // const data = new PurchaseDetails(unit)
+    // return axiosClient.create(unitsToAdd)
 }
 
 function* handleArmyAddUnits(action: IActionAddArmyUnitRequest) {
@@ -33,4 +37,4 @@ function* handleArmyAddUnits(action: IActionAddArmyUnitRequest) {
 
 export function* watchArmyAddUnitsRequest(){
     yield takeEvery(ArmyActions.REQUEST, handleArmyAddUnits)
-}*/
+}

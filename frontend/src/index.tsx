@@ -8,13 +8,22 @@ import { Provider } from "react-redux";
 import { configureStore } from "./config/ConfigureStore";
 import { createBrowserHistory } from "history";
 import { ConnectedRouter } from "connected-react-router";
-
+import { codegen } from 'swagger-axios-codegen';
 axios.defaults.baseURL = "https://localhost:44355/";
 axios.defaults.headers.common["Authorization"] = localStorage.getItem(
   "access_token"
 );
 const history = createBrowserHistory({ basename: "/" });
 const { store } = configureStore(history);
+
+
+// codegen({
+
+//   methodNameMode: 'operationId',
+//   source:require('./config/swagger.json'),
+//   outputDir: '.',
+//   useStaticMethod:true
+// });
 
 ReactDOM.render(
   <Provider store={store}>

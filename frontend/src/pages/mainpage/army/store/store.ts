@@ -1,8 +1,8 @@
 import { ArmyItemProps } from "../ArmyItem/Interface";
 
 export interface ArmyUnit{
-    id: number;
-    amount: number;
+    unitId: number;
+    count: number;
 }
 
 export interface ArmyState {

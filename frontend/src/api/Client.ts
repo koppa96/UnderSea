@@ -1032,7 +1032,7 @@ export class UnitsClient {
         return Promise.resolve<UnitInfo[]>(<any>null);
     }
 
-    create(purchases: PurchaseDetails[]): Promise<UnitInfo[]> {
+    create(purchases: IPurchaseDetails[]): Promise<UnitInfo[]> {
         let url_ = this.baseUrl + "/api/Units";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -2014,7 +2014,7 @@ export class PurchaseDetails implements IPurchaseDetails {
         return result;
     }
 
-    toJSON(data?: any) {
+    toJSON(data?: any): any {
         data = typeof data === 'object' ? data : {};
         data["unitId"] = this.unitId;
         data["count"] = this.count;
