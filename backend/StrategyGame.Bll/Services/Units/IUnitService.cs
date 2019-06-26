@@ -1,4 +1,5 @@
 ﻿using StrategyGame.Bll.Dto.Sent;
+using StrategyGame.Bll.DTO.Received;
 using StrategyGame.Bll.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -22,14 +23,13 @@ namespace StrategyGame.Bll.Services.Units
         /// Creates the desired amount of units of the given type to the user.
         /// </summary>
         /// <param name="username">The name of the user</param>
-        /// <param name="unitId">The identifier of the unit</param>
-        /// <param name="count">The amount of units to be created</param>
+        /// <param name="purchases">The details of the purchases</param>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the unitId is invalid</exception>
         /// <exception cref="ArgumentException">Thrown when the count is not a valid amount</exception>
         /// <exception cref="LimitReachedException">Thrown when the unit would be exceeded by the creation of units</exception>
         /// <exception cref="InvalidOperationException">Thrown when there is not enough money to hire the units</exception>
         /// <returns>A UnitInfo containing the new amount of units</returns>
-        Task<UnitInfo> CreateUnitAsync(string username, int unitId, int count);
+        Task<IEnumerable<UnitInfo>> CreateUnitAsync(string username, IEnumerable<PurchaseDetails> purchases);
 
         /// <summary>
         /// Deletes the desired amount of units of the given type.

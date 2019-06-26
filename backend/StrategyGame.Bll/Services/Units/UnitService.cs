@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using StrategyGame.Bll.Dto.Sent;
+using StrategyGame.Bll.DTO.Received;
 using StrategyGame.Bll.EffectParsing;
 using StrategyGame.Bll.Exceptions;
 using StrategyGame.Bll.Extensions;
@@ -41,23 +42,13 @@ namespace StrategyGame.Bll.Services.Units
             return await country.GetAllUnitInfoAsync(Database, Mapper);
         }
 
-        public async Task<UnitInfo> CreateUnitAsync(string username, int unitId, int count)
+        public async Task<IEnumerable<UnitInfo>> CreateUnitAsync(string username, IEnumerable<PurchaseDetails> purchases)
         {
-            if (count < 1)
-            {
-                throw new ArgumentException();
-            }
-
             var globals = await Database.GlobalValues.SingleAsync();
 
-            var unit = await Database.UnitTypes
+            var unitTypes = await Database.UnitTypes
                 .Include(u => u.Content)
-                .SingleOrDefaultAsync(u => u.Id == unitId);
-
-            if (unit == null)
-            {
-                throw new ArgumentOutOfRangeException();
-            }
+                .ToListAsync();
 
             var country = await Database.Countries
                .Include(c => c.Commands)
@@ -71,45 +62,62 @@ namespace StrategyGame.Bll.Services.Units
                         .ThenInclude(r => r.Effects)
                .SingleAsync(c => c.ParentUser.UserName == username);
 
-            // Check cost
-            long costPearl = unit.CostPearl * count;
-            long costCoral = unit.CostCoral * count;
-
-            if (costPearl > country.Pearls || costCoral > country.Corals)
+            var unitInfos = new List<UnitInfo>();
+            foreach (var purchase in purchases)
             {
-                throw new InvalidOperationException("Units too expensive");
+                var unit = unitTypes.Single(u => u.Id == purchase.UnitId);
+
+                if (unit == null)
+                {
+                    throw new ArgumentOutOfRangeException("Invalid unit id.");
+                }
+
+                if (purchase.Count < 0)
+                {
+                    throw new ArgumentException("Invalid amount.");
+                }
+                
+                // Check cost
+                long costPearl = unit.CostPearl * purchase.Count;
+                long costCoral = unit.CostCoral * purchase.Count;
+
+                if (costPearl > country.Pearls || costCoral > country.Corals)
+                {
+                    throw new InvalidOperationException("Units too expensive");
+                }
+
+                var builder = country.ParseAllEffectForCountry(Database, globals, Parsers, false);
+                var totalUnits = country.Commands.Sum(c => c.Divisions.Sum(d => d.Count));
+
+                // Check pop-space
+                if (builder.BarrackSpace < totalUnits + purchase.Count)
+                {
+                    throw new LimitReachedException();
+                }
+
+                var defenders = country.GetAllDefending();
+                var targetDiv = defenders.Divisions.SingleOrDefault(d => d.Unit.Id == purchase.UnitId);
+
+                if (targetDiv == null)
+                {
+                    targetDiv = new Division { Count = purchase.Count, ParentCommand = defenders, Unit = unit };
+                    Database.Divisions.Add(targetDiv);
+                }
+                else
+                {
+                    targetDiv.Count += purchase.Count;
+                }
+
+                country.Pearls -= costPearl;
+                country.Corals -= costCoral;
+
+                var info = Mapper.Map<UnitType, UnitInfo>(unit);
+                info.Count = targetDiv.Count;
+                unitInfos.Add(info);
             }
-
-            var builder = country.ParseAllEffectForCountry(Database, globals, Parsers, false);
-            var totalUnits = country.Commands.Sum(c => c.Divisions.Sum(d => d.Count));
-
-            // Check pop-space
-            if (builder.BarrackSpace < totalUnits + count)
-            {
-                throw new LimitReachedException();
-            }
-
-            var defenders = country.GetAllDefending();
-            var targetDiv = defenders.Divisions.SingleOrDefault(d => d.Unit.Id == unitId);
-
-            if (targetDiv == null)
-            {
-                Database.Divisions.Add(new Division
-                { Count = count, ParentCommand = defenders, Unit = unit });
-            }
-            else
-            {
-                targetDiv.Count += count;
-            }
-
-            country.Pearls -= costPearl;
-            country.Corals -= costCoral;
 
             await Database.SaveChangesAsync();
-
-            var info = Mapper.Map<UnitType, UnitInfo>(unit);
-            info.Count = count;
-            return info;
+            return unitInfos;
         }
 
         public async Task DeleteUnitsAsync(string username, int unitId, int count)

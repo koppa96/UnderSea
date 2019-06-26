@@ -61,6 +61,92 @@ export class AccountsClient {
         return Promise.resolve<UserInfo>(<any>null);
     }
 
+    saveProvileImage(): Promise<void> {
+        let url_ = this.baseUrl + "/api/Accounts/me/image";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <AxiosRequestConfig>{
+            method: "PUT",
+            url: url_,
+            headers: {
+            }
+        };
+
+        return this.instance.request(options_).then((_response: AxiosResponse) => {
+            return this.processSaveProvileImage(_response);
+        });
+    }
+
+    protected processSaveProvileImage(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; 
+        if (response.headers && response.headers.forEach) { 
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        };
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(<any>null);
+        } else if (status === 401) {
+            const _responseText = response.data;
+            let result401: any = null;
+            let resultData401  = _responseText;
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("A server error occurred.", status, _responseText, _headers, result401);
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(<any>null);
+    }
+
+    changePassword(data: PasswordChangeData): Promise<void> {
+        let url_ = this.baseUrl + "/api/Accounts/me/password";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(data);
+
+        let options_ = <AxiosRequestConfig>{
+            data: content_,
+            method: "POST",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json", 
+            }
+        };
+
+        return this.instance.request(options_).then((_response: AxiosResponse) => {
+            return this.processChangePassword(_response);
+        });
+    }
+
+    protected processChangePassword(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; 
+        if (response.headers && response.headers.forEach) { 
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        };
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(<any>null);
+        } else if (status === 401) {
+            const _responseText = response.data;
+            let result401: any = null;
+            let resultData401  = _responseText;
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("A server error occurred.", status, _responseText, _headers, result401);
+        } else if (status === 400) {
+            const _responseText = response.data;
+            let result400: any = null;
+            let resultData400  = _responseText;
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("A server error occurred.", status, _responseText, _headers, result400);
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(<any>null);
+    }
+
     getUsernames(): Promise<TargetInfo[]> {
         let url_ = this.baseUrl + "/api/Accounts";
         url_ = url_.replace(/[?&]$/, "");
@@ -946,20 +1032,18 @@ export class UnitsClient {
         return Promise.resolve<UnitInfo[]>(<any>null);
     }
 
-    create(id: number, count: number): Promise<UnitInfo> {
-        let url_ = this.baseUrl + "/api/Units/{id}/{count}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
-        if (count === undefined || count === null)
-            throw new Error("The parameter 'count' must be defined.");
-        url_ = url_.replace("{count}", encodeURIComponent("" + count)); 
+    create(purchases: PurchaseDetails[]): Promise<UnitInfo[]> {
+        let url_ = this.baseUrl + "/api/Units";
         url_ = url_.replace(/[?&]$/, "");
 
+        const content_ = JSON.stringify(purchases);
+
         let options_ = <AxiosRequestConfig>{
+            data: content_,
             method: "POST",
             url: url_,
             headers: {
+                "Content-Type": "application/json", 
                 "Accept": "application/json"
             }
         };
@@ -969,7 +1053,7 @@ export class UnitsClient {
         });
     }
 
-    protected processCreate(response: AxiosResponse): Promise<UnitInfo> {
+    protected processCreate(response: AxiosResponse): Promise<UnitInfo[]> {
         const status = response.status;
         let _headers: any = {}; 
         if (response.headers && response.headers.forEach) { 
@@ -997,13 +1081,17 @@ export class UnitsClient {
             const _responseText = response.data;
             let result201: any = null;
             let resultData201  = _responseText;
-            result201 = UnitInfo.fromJS(resultData201);
+            if (Array.isArray(resultData201)) {
+                result201 = [] as any;
+                for (let item of resultData201)
+                    result201!.push(UnitInfo.fromJS(item));
+            }
             return result201;
         } else if (status !== 200 && status !== 204) {
             const _responseText = response.data;
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-        return Promise.resolve<UnitInfo>(<any>null);
+        return Promise.resolve<UnitInfo[]>(<any>null);
     }
 
     delete(id: number, count: number): Promise<void> {
@@ -1157,6 +1245,46 @@ export interface IProblemDetails {
     status?: number | undefined;
     detail?: string | undefined;
     instance?: string | undefined;
+}
+
+export class PasswordChangeData implements IPasswordChangeData {
+    oldPassword?: string | undefined;
+    newPassword?: string | undefined;
+
+    constructor(data?: IPasswordChangeData) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.oldPassword = data["oldPassword"];
+            this.newPassword = data["newPassword"];
+        }
+    }
+
+    static fromJS(data: any): PasswordChangeData {
+        data = typeof data === 'object' ? data : {};
+        let result = new PasswordChangeData();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["oldPassword"] = this.oldPassword;
+        data["newPassword"] = this.newPassword;
+        return data; 
+    }
+}
+
+export interface IPasswordChangeData {
+    oldPassword?: string | undefined;
+    newPassword?: string | undefined;
 }
 
 export class TargetInfo implements ITargetInfo {
@@ -1857,6 +1985,46 @@ export interface ICombatInfo {
     pealLoot: number;
     coralLoot: number;
     isSeen: boolean;
+}
+
+export class PurchaseDetails implements IPurchaseDetails {
+    unitId!: number;
+    count!: number;
+
+    constructor(data?: IPurchaseDetails) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.unitId = data["unitId"];
+            this.count = data["count"];
+        }
+    }
+
+    static fromJS(data: any): PurchaseDetails {
+        data = typeof data === 'object' ? data : {};
+        let result = new PurchaseDetails();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["unitId"] = this.unitId;
+        data["count"] = this.count;
+        return data; 
+    }
+}
+
+export interface IPurchaseDetails {
+    unitId: number;
+    count: number;
 }
 
 export interface FileResponse {
