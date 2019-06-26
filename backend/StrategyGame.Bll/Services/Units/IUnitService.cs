@@ -17,19 +17,23 @@ namespace StrategyGame.Bll.Services.Units
         /// </summary>
         /// <param name="username">The name of the player</param>
         /// <returns>An IEnumerable containing the UnitInfos</returns>
-        Task<IEnumerable<UnitInfo>> GetUnitInfoAsync(string username);
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when the country is invalid</exception>
+        /// <exception cref="UnauthorizedAccessException">Thrown when the country id is not the user's country</exception>
+        Task<IEnumerable<UnitInfo>> GetUnitInfoAsync(string username, int countryId);
 
         /// <summary>
         /// Creates the desired amount of units of the given type to the user.
         /// </summary>
         /// <param name="username">The name of the user</param>
         /// <param name="purchases">The details of the purchases</param>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown when the unitId is invalid</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when the unit id is invalid</exception>
+        /// <exception cref="KeyNotFoundException">Thrown when the country is invalid</exception>
+        /// <exception cref="UnauthorizedAccessException">Thrown when the country id is not the user's country</exception>
         /// <exception cref="ArgumentException">Thrown when the count is not a valid amount</exception>
         /// <exception cref="LimitReachedException">Thrown when the unit would be exceeded by the creation of units</exception>
         /// <exception cref="InvalidOperationException">Thrown when there is not enough money to hire the units</exception>
         /// <returns>A UnitInfo containing the new amount of units</returns>
-        Task<IEnumerable<UnitInfo>> CreateUnitAsync(string username, IEnumerable<PurchaseDetails> purchases);
+        Task<IEnumerable<UnitInfo>> CreateUnitAsync(string username, int countryId, IEnumerable<PurchaseDetails> purchases);
 
         /// <summary>
         /// Deletes the desired amount of units of the given type.
@@ -37,9 +41,11 @@ namespace StrategyGame.Bll.Services.Units
         /// <param name="username">The name of the user</param>
         /// <param name="unitId">The identifier of the unit</param>
         /// <param name="count">The amount of units to be deleted</param>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown when the unitId is invalid</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when the unit id is invalid</exception>
+        /// <exception cref="KeyNotFoundException">Thrown when the country is invalid</exception>
+        /// <exception cref="UnauthorizedAccessException">Thrown when the country id is not the user's country</exception>
         /// <exception cref="ArgumentException">Thrown when the count is not a valid amount</exception>
         /// <returns>A task that can be awaited</returns>
-        Task DeleteUnitsAsync(string username, int unitId, int count);
+        Task DeleteUnitsAsync(string username, int countryId, int unitId, int count);
     }
 }

@@ -30,19 +30,29 @@ namespace StrategyGame.Bll.Services.Units
             Parsers = container ?? throw new ArgumentNullException(nameof(container));
         }
 
-        public async Task<IEnumerable<UnitInfo>> GetUnitInfoAsync(string username)
+        public async Task<IEnumerable<UnitInfo>> GetUnitInfoAsync(string username, int countryId)
         {
             var country = await Context.Countries
               .Include(c => c.Commands)
               .ThenInclude(comm => comm.Divisions)
               .ThenInclude(d => d.Unit)
               .ThenInclude(u => u.Content)
-              .SingleAsync(c => c.ParentUser.UserName == username);
+              .SingleOrDefaultAsync(c => c.Id == countryId);
 
-            return await country.GetAllUnitInfoAsync(Context, Mapper);
+            if (country == null)
+            {
+                throw new ArgumentOutOfRangeException("Invalid country id.");
+            }
+
+            if (country.ParentUser.UserName != username)
+            {
+                throw new UnauthorizedAccessException("Can not view country info of others.");
+            }
+
+            return await country.GetAllUnitInfoAsync(Database, Mapper);
         }
 
-        public async Task<IEnumerable<UnitInfo>> CreateUnitAsync(string username, IEnumerable<PurchaseDetails> purchases)
+        public async Task<IEnumerable<UnitInfo>> CreateUnitAsync(string username, int countryId, IEnumerable<PurchaseDetails> purchases)
         {
             var globals = await Context.GlobalValues.SingleAsync();
 
@@ -61,8 +71,17 @@ namespace StrategyGame.Bll.Services.Units
                 .Include(c => c.Researches)
                     .ThenInclude(r => r.Research)
                         .ThenInclude(r => r.Effects)
-                            .ThenInclude(rf => rf.Effect)
-               .SingleAsync(c => c.ParentUser.UserName == username);
+               .SingleOrDefaultAsync(c => c.Id == countryId);
+
+            if (country == null)
+            {
+                throw new KeyNotFoundException("Invalid country id.");
+            }
+
+            if (country.ParentUser.UserName != username)
+            {
+                throw new UnauthorizedAccessException("Can not view country info of others.");
+            }
 
             var unitInfos = new List<UnitInfo>();
             foreach (var purchase in purchases)
@@ -122,7 +141,7 @@ namespace StrategyGame.Bll.Services.Units
             return unitInfos;
         }
 
-        public async Task DeleteUnitsAsync(string username, int unitId, int count)
+        public async Task DeleteUnitsAsync(string username, int countryId, int unitId, int count)
         {
             if (count < 1)
             {
@@ -140,7 +159,17 @@ namespace StrategyGame.Bll.Services.Units
                .Include(c => c.Commands)
                .ThenInclude(comm => comm.Divisions)
                .ThenInclude(d => d.Unit)
-               .SingleAsync(c => c.ParentUser.UserName == username);
+               .SingleOrDefaultAsync(c => c.Id == countryId);
+
+            if (country == null)
+            {
+                throw new KeyNotFoundException("Invalid country id.");
+            }
+
+            if (country.ParentUser.UserName != username)
+            {
+                throw new UnauthorizedAccessException("Can not view country info of others.");
+            }
 
             var defenders = country.GetAllDefending();
             var targetDiv = defenders.Divisions.SingleOrDefault(d => d.Unit.Id == unitId);

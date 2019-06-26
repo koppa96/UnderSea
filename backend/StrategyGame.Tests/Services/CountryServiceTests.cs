@@ -1,5 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using StrategyGame.Bll.EffectParsing;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StrategyGame.Bll.Services.Country;
 using StrategyGame.Dal;
 using System.Linq;
@@ -38,16 +38,19 @@ namespace StrategyGame.Tests.Services
         [DataRow("TheRich")]
         public async Task TestGetCountry(string username)
         {
-            var info = await countryService.GetCountryInfoAsync(username);
-            Assert.IsTrue(info.Any(x => x.Pearls > 1000));
+            var info = await countryService.GetCountryInfoAsync(username,
+                (await context.Countries.FirstAsync(c => c.ParentUser.UserName == username)).Id);
+
+            Assert.IsTrue(info.Pearls > 1000);
         }
 
         [TestMethod]
-        [DataRow("TheBuilder")]
-        public async Task TestGetCountryEffects(string username)
+        public async Task TestGetAllBriefCountries()
         {
-            var info = await countryService.GetCountryInfoAsync(username);
-            Assert.IsTrue(info.CoralsPerRound > 0);
+            foreach (var u in context.Users)
+            {
+                await countryService.GetCountriesAsync(u.UserName);
+            }
         }
 
         [TestMethod]
@@ -55,7 +58,7 @@ namespace StrategyGame.Tests.Services
         {
             foreach (var u in context.Users)
             {
-                await countryService.GetCountryInfoAsync(u.UserName);
+                await countryService.GetAllCountryInfoAsync(u.UserName);
             }
         }
 
