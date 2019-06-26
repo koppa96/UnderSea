@@ -110,11 +110,11 @@ namespace StrategyGame.Api.Controllers
         public async Task<ActionResult<IEnumerable<TargetInfo>>> GetUsernamesAsync()
         {
             return Ok(await _userManager.Users.Where(u => u.UserName != User.Identity.Name)
-                .Select(u => new TargetInfo
+                .SelectMany(u => u.RuledCountries, (u, c) => new TargetInfo
                 {
                     Username = u.UserName,
-                    CountryId = u.RuledCountry.Id,
-                    CountryName = u.RuledCountry.Name
+                    CountryId = c.Id,
+                    CountryName = c.Name
                 }).ToListAsync());
         }
 

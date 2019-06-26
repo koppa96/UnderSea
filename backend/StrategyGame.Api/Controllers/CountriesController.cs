@@ -12,11 +12,11 @@ namespace StrategyGame.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class CountryController : ControllerBase
+    public class CountriesController : ControllerBase
     {
         private readonly ICountryService _countryService;
 
-        public CountryController(ICountryService countryService)
+        public CountriesController(ICountryService countryService)
         {
             _countryService = countryService;
         }
@@ -24,28 +24,36 @@ namespace StrategyGame.Api.Controllers
         [HttpGet]
         [ProducesResponseType(401)]
         [ProducesResponseType(200)]
-        public async Task<ActionResult<IEnumerable<CountryInfo>>> GetCurrentStateAsync()
+        public async Task<ActionResult<IEnumerable<BriefCountryInfo>>> GetCountriesAsync()
         {
-            return Ok(await _countryService.GetCountryInfoAsync(User.Identity.Name));
+            return Ok(await _countryService.GetCountriesAsync(User.Identity.Name));
         }
 
         [HttpGet("{id}")]
         [ProducesResponseType(401)]
         [ProducesResponseType(200)]
-        [ProducesResponseType(404)]
         public async Task<ActionResult<CountryInfo>> GetCurrentStateAsync(int id)
         {
             try
             {
                 return Ok(await _countryService.GetCountryInfoAsync(User.Identity.Name, id));
             }
-            catch (ArgumentOutOfRangeException)
+            catch (ArgumentOutOfRangeException e)
             {
-                return NotFound(new ProblemDetails
+                return BadRequest(new ProblemDetails
                 {
-                    Status = 404,
+                    Status = 400,
                     Title = ErrorMessages.BadRequest,
-                    Detail = ErrorMessages.NoCountryOrUnauthorized
+                    Detail = e.Message
+                });
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                return Unauthorized(new ProblemDetails
+                {
+                    Status = 401,
+                    Title = ErrorMessages.Unauthorized,
+                    Detail = e.Message
                 });
             }
         }
