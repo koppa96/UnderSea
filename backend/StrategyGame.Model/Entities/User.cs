@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
 
 namespace StrategyGame.Model.Entities
 {
@@ -10,12 +11,7 @@ namespace StrategyGame.Model.Entities
         /// <summary>
         /// Get or sets the country that is ruled by the user.
         /// </summary>
-        public Country RuledCountry { get; set; }
-
-        /// <summary>
-        /// The Id of the ruled country.
-        /// </summary>
-        public int? RuledCountryId { get; set; }
+        public ICollection<Country> RuledCountries { get; set; }
 
         /// <summary>
         /// The relative url of the profile image.
