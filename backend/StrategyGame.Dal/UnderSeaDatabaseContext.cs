@@ -168,9 +168,6 @@ namespace StrategyGame.Dal
         /// <param name="Builder">The <see cref="ModelBuilder"/> to use.</param>
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            // User
-            builder.Entity<User>().Property(u => u.RuledCountryId).IsRequired(false);
-
             // Combat report
             builder.Entity<CombatReport>()
                 .HasOne(c => c.Attacker)
@@ -217,8 +214,7 @@ namespace StrategyGame.Dal
 
             builder.Entity<Country>()
                 .HasOne(c => c.ParentUser)
-                .WithOne(u => u.RuledCountry)
-                .HasForeignKey<User>(u => u.RuledCountryId);
+                .WithMany(u => u.RuledCountries);
 
             builder.Entity<Country>()
                 .HasOne(c => c.CurrentEvent)
