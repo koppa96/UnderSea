@@ -21,6 +21,11 @@
         public double AttackModifier { get; set; } = 1;
 
         /// <summary>
+        /// Gets or sets the dynamic increase of unit stats.
+        /// </summary>
+        public int AttackIncrease { get; set; }
+
+        /// <summary>
         /// Gets or sets the defense modifier for units of the country.
         /// </summary>
         public double DefenseModifier { get; set; } = 1;
@@ -39,5 +44,15 @@
         /// Gets or sets the country's base coral production.
         /// </summary>
         public int CoralProduction { get; set; }
+
+        /// <summary>
+        /// Gets or sets the country's base pearl production.
+        /// </summary>
+        public int PearlProduction { get; set; }
+
+        /// <summary>
+        /// Gets or sets if the current event of the country was ignored because it could not be applied.
+        /// </summary>
+        public bool WasEventIgnored { get; set; } = false;
     }
 }

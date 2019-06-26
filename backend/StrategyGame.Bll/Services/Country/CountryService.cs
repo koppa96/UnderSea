@@ -27,7 +27,11 @@ namespace StrategyGame.Bll.Services.Country
         public async Task CreateAsync(string username, string countryName)
         {
             var user = await Database.Users.SingleAsync(u => u.UserName == username);
-            var globals = await Database.GlobalValues.SingleAsync();
+            var globals = await Database.GlobalValues
+                .Include(g => g.FirstStartingBuilding)
+                .Include(g => g.SecondStartingBuilding)
+                .SingleAsync();
+
             var country = new Model.Entities.Country()
             {
                 Name = countryName,
@@ -35,13 +39,18 @@ namespace StrategyGame.Bll.Services.Country
                 Corals = globals.StartingCorals,
                 Pearls = globals.StartingPearls,
                 Score = -1,
-                Rank = -1
+                Rank = -1,
+                CreatedRound = globals.Round
             };
 
             var defenders = new Command { ParentCountry = country, TargetCountry = country };
 
             Database.Countries.Add(country);
             Database.Commands.Add(defenders);
+            Database.CountryBuildings.AddRange(
+                new CountryBuilding { ParentCountry = country, Count = 1, Building = globals.FirstStartingBuilding },
+                new CountryBuilding { ParentCountry = country, Count = 1, Building = globals.SecondStartingBuilding });
+
             await Database.SaveChangesAsync();
         }
 
@@ -64,6 +73,10 @@ namespace StrategyGame.Bll.Services.Country
                .Include(c => c.InProgressResearches)
                     .ThenInclude(r => r.Research)
                         .ThenInclude(r => r.Content)
+               .Include(c => c.CurrentEvent)
+                    .ThenInclude(e => e.Content)
+               .Include(c => c.Attacks)
+               .Include(c => c.Defenses)
                .SingleAsync(c => c.ParentUser.UserName == username);
 
             var info = Mapper.Map<Model.Entities.Country, CountryInfo>(country);
@@ -115,6 +128,13 @@ namespace StrategyGame.Bll.Services.Country
             info.Buildings = totalBuildings.Select(x => x.Value).ToList();
             info.Researches = totalResearches.Select(x => x.Value).ToList();
             info.ArmyInfo = await country.GetAllUnitInfoAsync(Database, Mapper);
+            info.UnseenReports = country.Attacks.Count(r => !r.IsSeenByAttacker) + country.Defenses.Count(r => !r.IsSeenByDefender);
+
+            // Add event info
+            if (country.CurrentEvent != null)
+            {
+                info.Event = Mapper.Map<RandomEvent, EventInfo>(country.CurrentEvent);
+            }
 
             return info;
         }

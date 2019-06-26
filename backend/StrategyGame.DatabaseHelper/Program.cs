@@ -23,6 +23,7 @@ namespace StrategyGame.DatabaseHelper
                 Console.WriteLine("Connected to the database.");
                 context.PurgeDatabaseAsync().Wait();
                 context.FillWithDefaultAsync().Wait();
+                //context.AddTestUsersAsync().Wait();
             }
 
             Console.Write("Finished, press any key to exit...");

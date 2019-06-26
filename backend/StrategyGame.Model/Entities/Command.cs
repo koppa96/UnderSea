@@ -21,16 +21,6 @@ namespace StrategyGame.Model.Entities
         public virtual Country TargetCountry { get; set; }
 
         /// <summary>
-        /// Gets or sets the amount of coral loot the <see cref="ParentCountry"/> acquired as the result of the command.
-        /// </summary>
-        public long AcquiredCoralLoot { get; set; }
-
-        /// <summary>
-        /// Gets or sets the amount of pearl loot the <see cref="ParentCountry"/> acquired as the result of the command.
-        /// </summary>
-        public long AcquiredPearlLoot { get; set; }
-
-        /// <summary>
         /// Gets the collection of divisions assigned to this command.
         /// </summary>
         public virtual ICollection<Division> Divisions { get; set; } = new HashSet<Division>();

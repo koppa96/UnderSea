@@ -30,6 +30,12 @@ namespace StrategyGame.Bll.Mapping
             CreateMap<ResearchType, BriefCreationInfo>()
                 .ForMember(dest => dest.ImageUrl, conf => conf.MapFrom(src => src.Content.ImageUrl))
                 .ForMember(dest => dest.Count, conf => conf.MapFrom(src => 0));
+
+            CreateMap<RandomEvent, EventInfo>()
+                .ForMember(dest => dest.Name, conf => conf.MapFrom(src => src.Content.Name))
+                .ForMember(dest => dest.Description, conf => conf.MapFrom(src => src.Content.Description))
+                .ForMember(dest => dest.ImageUrl, conf => conf.MapFrom(src => src.Content.ImageUrl))
+                .ForMember(dest => dest.Flavourtext, conf => conf.MapFrom(src => src.Content.FlavourText));
         }
     }
 }

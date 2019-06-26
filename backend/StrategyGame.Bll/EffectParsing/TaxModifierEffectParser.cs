@@ -9,7 +9,8 @@
         /// Initializes a new instance of the <see cref="TaxModifierEffectParser"/>.
         /// </summary>
         public TaxModifierEffectParser()
-            : base(KnownValues.TaxationModifier, (effect, builder) => builder.TaxModifier += effect.Value)
+            : base(KnownValues.TaxationModifier, (effect, country, context, builder, doApply) 
+                  => builder.TaxModifier += effect.Value)
         { }
     }
 }

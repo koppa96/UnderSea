@@ -90,11 +90,16 @@ namespace StrategyGame.Api
 
             services.AddSwaggerDocument(options =>
             {
+                options.Title = "Undersea API";
+                options.Version = "1.0";
+                options.Description = "API for the game called Under sea, which is a turn based online multiplayer strategy game.";
+
                 options.PostProcess = document =>
                 {
                     var settings = new TypeScriptClientGeneratorSettings
                     {
-                        ClassName = "{controller}Client", Template = TypeScriptTemplate.Axios
+                        ClassName = "{controller}Client",
+                        Template = TypeScriptTemplate.Axios
                     };
 
                     var generator = new TypeScriptClientGenerator(document, settings);
@@ -118,11 +123,15 @@ namespace StrategyGame.Api
                 {
                     new BarrackSpaceEffectParser(),
                     new CoralProductionEffectParser(),
+                    new PearlProductionEffectParser(),
                     new HarvestModifierEffectParser(),
                     new PopulationEffectParser(),
                     new TaxModifierEffectParser(),
                     new UnitDefenseEffectParser(),
-                    new UnitAttackEffectParser()
+                    new UnitAttackEffectParser(),
+                    new AddBuildingEffectParser(),
+                    new IncreaseUnitAttackEffectParser(),
+                    new BuildingCoralProductionEffectParser()
                 }));
 
             services.AddSingleton<IUserTracker, UserTracker>();
@@ -160,6 +169,8 @@ namespace StrategyGame.Api
             app.UseMvc();
 
             app.UseSignalR(route => route.MapHub<UnderSeaHub>("/hub"));
+
+            app.UseStaticFiles();
 
             RecurringJob.AddOrUpdate<TurnEndingJob>(x => x.EndTurnAsync(), Cron.Hourly);
         }

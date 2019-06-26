@@ -1,4 +1,5 @@
 ﻿using StrategyGame.Bll.Services.TurnHandling;
+using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
 using System;
 using System.Collections.Generic;
@@ -58,17 +59,26 @@ namespace StrategyGame.Bll.EffectParsing
         /// Tries to parse the provided <see cref="Effect"/> with the parsers in the container.
         /// </summary>
         /// <param name="effect">The <see cref="Effect"/> to parse.</param>
+        /// <param name="country">The country to parse the effect for.</param>
+        /// <param name="context">The database to use.</param>
         /// <param name="builder">The <see cref="CountryModifierBuilder"/> to store the effect's effects in.</param>
+        /// <param name="doApplyPermanent">If effects that have permanenet effects should be applied.</param>
         /// <returns>If the effect was parsed by any parsers.</returns>
         /// <exception cref="ArgumentNullException"> Thrown if an argument was null.</exception>
         /// <remarks>
         /// If multiple parsers match the effect only the first matching parser is executed.
         /// </remarks>
-        public bool TryParse(Effect effect, CountryModifierBuilder builder)
+        public bool TryParse(Effect effect, Country country, UnderSeaDatabaseContext context, CountryModifierBuilder builder,
+            bool doApplyPermanent)
         {
             if (effect == null)
             {
                 throw new ArgumentNullException(nameof(effect));
+            }
+
+            if (country == null)
+            {
+                throw new ArgumentNullException(nameof(country));
             }
 
             if (builder == null)
@@ -78,7 +88,7 @@ namespace StrategyGame.Bll.EffectParsing
 
             foreach (var p in Parsers)
             {
-                if (p.TryParse(effect, builder))
+                if (p.TryParse(effect, country, context, builder, doApplyPermanent))
                 {
                     return true;
                 }
