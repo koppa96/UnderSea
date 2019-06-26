@@ -108,7 +108,8 @@ namespace StrategyGame.Bll.Services.TurnHandling
                                         .ThenInclude(pr => pr.Effect)
                     .Include(c => c.CurrentEvent)
                         .ThenInclude(e => e.Effects)
-                                .ThenInclude(e => e.Effect);
+                                .ThenInclude(e => e.Effect)
+                    .Include(c => c.ParentUser);
 
                 await combat.ForEachAsync(c => Handler.HandleCombat(context, c, globals));
 
