@@ -37,13 +37,11 @@ namespace StrategyGame.Bll.Services.Units
 
         public async Task<IEnumerable<UnitInfo>> GetUnitInfoAsync()
         {
-            return (await Context.UnitTypes
-                .Include(u => u.Content)
-                .ToListAsync())
+            return (await Context.UnitTypes.Include(u => u.Content).ToListAsync())
                 .Select(u => Mapper.Map<UnitType, UnitInfo>(u));
         }
 
-        public async Task<IEnumerable<BriefUnitInfo>> CreateUnitAsync(string username, 
+        public async Task<IEnumerable<BriefUnitInfo>> CreateUnitAsync(string username, int countryId,
             IEnumerable<PurchaseDetails> purchases, CancellationToken turnEndWaitToken)
         {
             using (var lck = await TurnEndLock.ReaderLockAsync(turnEndWaitToken))
@@ -65,8 +63,17 @@ namespace StrategyGame.Bll.Services.Units
                     .Include(c => c.Researches)
                         .ThenInclude(r => r.Research)
                             .ThenInclude(r => r.Effects)
-                                .ThenInclude(rf => rf.Effect)
-                   .SingleAsync(c => c.ParentUser.UserName == username);
+                   .SingleOrDefaultAsync(c => c.Id == countryId);
+
+                if (country == null)
+                {
+                    throw new KeyNotFoundException("Invalid country id.");
+                }
+
+                if (country.ParentUser.UserName != username)
+                {
+                    throw new UnauthorizedAccessException("Can not view country info of others.");
+                }
 
                 var unitInfos = new List<BriefUnitInfo>();
                 foreach (var purchase in purchases)
@@ -113,7 +120,8 @@ namespace StrategyGame.Bll.Services.Units
             }
         }
 
-        public async Task DeleteUnitsAsync(string username, int unitId, int count, CancellationToken turnEndWaitToken)
+        public async Task DeleteUnitsAsync(string username, int countryId, int unitId, int count,
+            CancellationToken turnEndWaitToken)
         {
             using (var lck = await TurnEndLock.ReaderLockAsync(turnEndWaitToken))
             {
@@ -133,7 +141,17 @@ namespace StrategyGame.Bll.Services.Units
                    .Include(c => c.Commands)
                    .ThenInclude(comm => comm.Divisions)
                    .ThenInclude(d => d.Unit)
-                   .SingleAsync(c => c.ParentUser.UserName == username);
+                   .SingleOrDefaultAsync(c => c.Id == countryId);
+
+                if (country == null)
+                {
+                    throw new KeyNotFoundException("Invalid country id.");
+                }
+
+                if (country.ParentUser.UserName != username)
+                {
+                    throw new UnauthorizedAccessException("Can not view country info of others.");
+                }
 
                 var defenders = country.GetAllDefending();
                 var targetDiv = defenders.Divisions.SingleOrDefault(d => d.Unit.Id == unitId);

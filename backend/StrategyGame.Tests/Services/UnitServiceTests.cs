@@ -27,13 +27,26 @@ namespace StrategyGame.Tests.Services
         }
 
         [TestMethod]
+        [DataRow("TheCommander")]
+        public async Task TestGetUnitInfo(string username)
+        {
+            var units = await unitService.GetUnitInfoAsync(username, 
+                (await context.Countries.FirstAsync(c => c.ParentUser.UserName == username)).Id);
+            Assert.IsTrue(units.All(u => u.Count > 0));
+        }
+
+        [TestMethod]
         [DataRow("TheBuilder")]
         public async Task TestBuyUnit(string username)
         {
             var id = (await context.UnitTypes.FirstAsync()).Id;
 
-            var units = await unitService.CreateUnitAsync(username, new[] { new PurchaseDetails { UnitId = id, Count = 10 } });
-            Assert.AreEqual(units.Single(u => u.Id == id).TotalCount, 10);
+            await unitService.CreateUnitAsync(username,
+                (await context.Countries.FirstAsync(c => c.ParentUser.UserName == username)).Id,
+                new[] { new PurchaseDetails { UnitId = id, Count = 10 } });
+            var units = await unitService.GetUnitInfoAsync(username,
+                (await context.Countries.FirstAsync(c => c.ParentUser.UserName == username)).Id);
+            Assert.AreEqual(units.Single(u => u.Id == id).Count, 10);
         }
 
         [TestMethod]
@@ -42,8 +55,14 @@ namespace StrategyGame.Tests.Services
         {
             var id = (await context.UnitTypes.FirstAsync()).Id;
 
-            await unitService.CreateUnitAsync(username, new[] { new PurchaseDetails { UnitId = id, Count = 10 } });
-            await unitService.DeleteUnitsAsync(username, id, 10);
+            await unitService.CreateUnitAsync(username, 
+                (await context.Countries.FirstAsync(c => c.ParentUser.UserName == username)).Id,
+                new[] { new PurchaseDetails { UnitId = id, Count = 10 } });
+            await unitService.DeleteUnitsAsync(username, 
+                (await context.Countries.FirstAsync(c => c.ParentUser.UserName == username)).Id, id, 10);
+            var units = await unitService.GetUnitInfoAsync(username,
+                (await context.Countries.FirstAsync(c => c.ParentUser.UserName == username)).Id);
+            Assert.AreEqual(units.Single(u => u.Id == id).Count, 0);
         }
 
         [TestMethod]
@@ -53,7 +72,9 @@ namespace StrategyGame.Tests.Services
         {
             var id = (await context.UnitTypes.FirstAsync()).Id;
 
-            await unitService.CreateUnitAsync(username, new[] { new PurchaseDetails { UnitId = id, Count = 10 } });
+            await unitService.CreateUnitAsync(username,
+                (await context.Countries.FirstAsync(c => c.ParentUser.UserName == username)).Id,
+                new[] { new PurchaseDetails { UnitId = id, Count = 10 } });
         }
 
         [TestMethod]
@@ -63,7 +84,9 @@ namespace StrategyGame.Tests.Services
         {
             var id = (await context.UnitTypes.FirstAsync()).Id;
 
-            await unitService.CreateUnitAsync(username, new[] { new PurchaseDetails { UnitId = id, Count = 200 } });
+            await unitService.CreateUnitAsync(username,
+                (await context.Countries.FirstAsync(c => c.ParentUser.UserName == username)).Id,
+                new[] { new PurchaseDetails { UnitId = id, Count = 200 } });
         }
 
         [TestCleanup]

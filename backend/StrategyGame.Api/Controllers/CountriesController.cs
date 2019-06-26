@@ -31,6 +31,7 @@ namespace StrategyGame.Api.Controllers
 
         [HttpGet("{id}")]
         [ProducesResponseType(401)]
+        [ProducesResponseType(400)]
         [ProducesResponseType(200)]
         public async Task<ActionResult<CountryInfo>> GetCurrentStateAsync(int id)
         {
