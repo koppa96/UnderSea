@@ -11,7 +11,7 @@ namespace StrategyGame.Bll.EffectParsing
         /// Initializes a new instance of the <see cref="BuildingCoralProductionEffectParser"/>.
         /// </summary>
         public BuildingCoralProductionEffectParser()
-            : base(KnownValues.AddBuildingEffect, (effect, country, context, builder, doApply) =>
+            : base(KnownValues.BuildingProductionIncrease, (effect, country, context, builder, doApply) =>
                 builder.CoralProduction +=
                     country.Buildings.Count(b => b.Building.Id == effect.TargetId) * (int)effect.Value)
         { }
