@@ -38,38 +38,8 @@ namespace StrategyGame.Api.Controllers
         [ProducesResponseType(200)]
         public async Task<ActionResult> StartBuildingAsync(int id)
         {
-            try
-            {
-                await _buildingService.StartBuildingAsync(User.Identity.Name, id);
-                return Ok();
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-                return NotFound(new ProblemDetails
-                {
-                    Status = 404,
-                    Title = ErrorMessages.NotFound,
-                    Detail = ErrorMessages.NoSuchBuilding
-                });
-            }
-            catch (InvalidOperationException)
-            {
-                return BadRequest(new ProblemDetails
-                {
-                    Status = 400,
-                    Title = ErrorMessages.BadRequest,
-                    Detail = ErrorMessages.NotEnoughMoney
-                });
-            }
-            catch (InProgressException)
-            {
-                return BadRequest(new ProblemDetails
-                {
-                    Status = 400,
-                    Title = ErrorMessages.BadRequest,
-                    Detail = ErrorMessages.InProgress
-                });
-            }
+            await _buildingService.StartBuildingAsync(User.Identity.Name, id);
+            return Ok();
         }
     }
 }

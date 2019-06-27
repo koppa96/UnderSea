@@ -17,6 +17,7 @@ using StrategyGame.Bll.EffectParsing;
 using StrategyGame.Bll.Services.Buildings;
 using StrategyGame.Bll.Services.Commands;
 using StrategyGame.Bll.Services.Country;
+using StrategyGame.Bll.Services.Logger;
 using StrategyGame.Bll.Services.Researches;
 using StrategyGame.Bll.Services.TurnHandling;
 using StrategyGame.Bll.Services.Units;
@@ -142,6 +143,7 @@ namespace StrategyGame.Api
             services.AddTransient<IBuildingService, BuildingService>();
             services.AddTransient<IUnitService, UnitService>();
             services.AddTransient<ICommandService, CommandService>();
+            services.AddTransient<IExceptionLogger, ExceptionLogger>();
 
             // User ID provider for SignalR Hub
             services.AddTransient<IUserIdProvider, UserIdProvider>();
@@ -154,6 +156,8 @@ namespace StrategyGame.Api
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
 
             app.UseHttpsRedirection();
             app.UseAuthentication();

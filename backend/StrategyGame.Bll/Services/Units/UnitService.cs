@@ -57,9 +57,11 @@ namespace StrategyGame.Bll.Services.Units
                 .Include(c => c.Buildings)
                     .ThenInclude(b => b.Building)
                         .ThenInclude(b => b.Effects)
+                            .ThenInclude(bf => bf.Effect)
                 .Include(c => c.Researches)
                     .ThenInclude(r => r.Research)
                         .ThenInclude(r => r.Effects)
+                            .ThenInclude(rf => rf.Effect)
                .SingleAsync(c => c.ParentUser.UserName == username);
 
             var unitInfos = new List<UnitInfo>();
