@@ -93,6 +93,11 @@ namespace StrategyGame.Bll.Services.Units
                     throw new ArgumentOutOfRangeException(nameof(purchase.UnitId), "No unit found by the provided ID.");
                 }
 
+                if (!unit.IsPurchasable)
+                {
+                    throw new InvalidOperationException("Can not purchase ranked up unit.");
+                }
+
                 if (purchase.Count < 0)
                 {
                     throw new ArgumentException("Purchase amount must be positive.");

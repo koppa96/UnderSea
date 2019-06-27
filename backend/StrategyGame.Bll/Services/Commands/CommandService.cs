@@ -58,26 +58,33 @@ namespace StrategyGame.Bll.Services.Commands
 
             foreach (var detail in details.Units)
             {
-                var defendingDivision = defendingCommand.Divisions.SingleOrDefault(d => d.Unit.Id == detail.UnitId);
-                if (defendingDivision == null)
+                var defendingDivisions = defendingCommand.Divisions.Where(d => d.Id == detail.UnitId).ToList();
+                if (defendingDivisions.Sum(d => d.Count) < detail.Amount)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(detail.UnitId), "No unit found by the provided ID.");
+                    throw new ArgumentException("Not enough units.");
                 }
 
-                if (defendingDivision.Count < detail.Amount)
+                var newDivisions = new List<Division>();
+                while (newDivisions.Sum(d => d.Count) + defendingDivisions[newDivisions.Count].Count < detail.Amount)
                 {
-                    throw new ArgumentException("There were not enough units to create the command.");
+                    var division = defendingDivisions[newDivisions.Count];
+                    division.ParentCommand = attackingCommand;
+                    newDivisions.Add(division);                    
                 }
 
-                defendingDivision.Count -= detail.Amount;
-                var attackingDivision = new Division
+                if (newDivisions.Sum(d => d.Count) < detail.Amount)
                 {
-                    Unit = defendingDivision.Unit,
-                    ParentCommand = attackingCommand,
-                    Count = detail.Amount
-                };
-
-                _context.Divisions.Add(attackingDivision);
+                    var division = defendingDivisions[newDivisions.Count];
+                    var newDivision = new Division
+                    {
+                        ParentCommand = attackingCommand,
+                        Unit = division.Unit,
+                        BattleCount = division.BattleCount,
+                        Count = newDivisions.Sum(d => d.Count) - detail.Amount
+                    };
+                    division.Count -= newDivision.Count;
+                    _context.Divisions.Add(newDivision);
+                }
             }
 
             if (!attackingCommand.Divisions.Any(d => d.Unit is LeaderType && d.Count > 0))
@@ -201,38 +208,7 @@ namespace StrategyGame.Bll.Services.Commands
 
             foreach (var detail in details.Units)
             {
-                var division = command.Divisions.SingleOrDefault(d => d.Unit.Id == detail.UnitId);
-                var defendingDivision = defendingCommand.Divisions.SingleOrDefault(d => d.Unit.Id == detail.UnitId);
-                if (division == null)
-                {
-                    var unit = defendingDivision?.Unit;
-                    if (unit == null)
-                    {
-                        if (await _context.UnitTypes.AnyAsync(u => u.Id == detail.UnitId))
-                        {
-                            throw new ArgumentException("There were not enough units to modify the command.");
-                        }
-
-                        throw new ArgumentOutOfRangeException(nameof(detail.UnitId), "No unit found by the provided ID.");
-                    }
-
-                    division = new Division
-                    {
-                        ParentCommand = command,
-                        Unit = unit,
-                        Count = 0
-                    };
-
-                    _context.Divisions.Add(division);
-                }
-
-                if (detail.Amount - division.Count > defendingDivision.Count)
-                {
-                    throw new ArgumentException("There were not enough units to modify the command.");
-                }
-
-                defendingDivision.Count -= detail.Amount - division.Count;
-                division.Count = detail.Amount;
+                
             }
 
             if (!command.Divisions.Any(d => d.Unit is LeaderType && d.Count > 0))
