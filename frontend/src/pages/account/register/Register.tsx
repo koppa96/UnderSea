@@ -64,7 +64,7 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
 
   handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("registered");
+    console.log(this.state);
     var validation = false;
 
     validation = this.handleValidation();
@@ -81,10 +81,10 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
         username: this.state.model.name,
         password: this.state.model.password,
         email: this.state.model.email,
-        contryName: this.state.model.countryName
+        countryName: this.state.model.countryName
       };
       const url = "https://localhost:44355/api/accounts";
-
+      console.log(requestBody, "requestBody");
       axios.post(url, requestBody, config).catch(error => {
         console.log(error, "error");
         if (error.response.status === "408") {
