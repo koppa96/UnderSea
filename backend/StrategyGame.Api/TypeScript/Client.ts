@@ -1694,9 +1694,11 @@ export interface IUnitDetails {
 export class CountryInfo implements ICountryInfo {
     round!: number;
     rank!: number;
-    armyInfo?: UnitInfo[] | undefined;
+    armyInfo?: BriefUnitInfo[] | undefined;
     pearls!: number;
     corals!: number;
+    pearlsPerRound!: number;
+    coralsPerRound!: number;
     event?: EventInfo | undefined;
     unseenReports!: number;
     buildings?: BriefCreationInfo[] | undefined;
@@ -1718,10 +1720,12 @@ export class CountryInfo implements ICountryInfo {
             if (Array.isArray(data["armyInfo"])) {
                 this.armyInfo = [] as any;
                 for (let item of data["armyInfo"])
-                    this.armyInfo!.push(UnitInfo.fromJS(item));
+                    this.armyInfo!.push(BriefUnitInfo.fromJS(item));
             }
             this.pearls = data["pearls"];
             this.corals = data["corals"];
+            this.pearlsPerRound = data["pearlsPerRound"];
+            this.coralsPerRound = data["coralsPerRound"];
             this.event = data["event"] ? EventInfo.fromJS(data["event"]) : <any>undefined;
             this.unseenReports = data["unseenReports"];
             if (Array.isArray(data["buildings"])) {
@@ -1755,6 +1759,8 @@ export class CountryInfo implements ICountryInfo {
         }
         data["pearls"] = this.pearls;
         data["corals"] = this.corals;
+        data["pearlsPerRound"] = this.pearlsPerRound;
+        data["coralsPerRound"] = this.coralsPerRound;
         data["event"] = this.event ? this.event.toJSON() : <any>undefined;
         data["unseenReports"] = this.unseenReports;
         if (Array.isArray(this.buildings)) {
@@ -1774,13 +1780,59 @@ export class CountryInfo implements ICountryInfo {
 export interface ICountryInfo {
     round: number;
     rank: number;
-    armyInfo?: UnitInfo[] | undefined;
+    armyInfo?: BriefUnitInfo[] | undefined;
     pearls: number;
     corals: number;
+    pearlsPerRound: number;
+    coralsPerRound: number;
     event?: EventInfo | undefined;
     unseenReports: number;
     buildings?: BriefCreationInfo[] | undefined;
     researches?: BriefCreationInfo[] | undefined;
+}
+
+export class BriefUnitInfo implements IBriefUnitInfo {
+    id!: number;
+    count!: number;
+    imageUrl?: string | undefined;
+
+    constructor(data?: IBriefUnitInfo) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.id = data["id"];
+            this.count = data["count"];
+            this.imageUrl = data["imageUrl"];
+        }
+    }
+
+    static fromJS(data: any): BriefUnitInfo {
+        data = typeof data === 'object' ? data : {};
+        let result = new BriefUnitInfo();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["count"] = this.count;
+        data["imageUrl"] = this.imageUrl;
+        return data; 
+    }
+}
+
+export interface IBriefUnitInfo {
+    id: number;
+    count: number;
+    imageUrl?: string | undefined;
 }
 
 export class EventInfo implements IEventInfo {

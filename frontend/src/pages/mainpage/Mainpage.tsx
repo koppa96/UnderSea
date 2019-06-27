@@ -14,7 +14,7 @@ import { NavBarConnected } from "../../components/navBar/connect";
 import { Attack } from "./attack";
 import { NavBarIconProp } from "../../components/navBarIcons/Interface";
 import { NavBarIcon } from "../../components/navBarIcons";
-import { NavbarState } from "../../components/navBar/store";
+import { NavbarState } from "../../components/navBar/store/store";
 import { ArmyConnected } from "./army/connect";
 import { MainPageProps } from "./Interface";
 //import { ArmyConnected } from "./army/connect";
@@ -31,9 +31,6 @@ export class MainPage extends React.Component<MainPageProps> {
   }
 
   render() {
-    const asd: NavbarState = {
-      navBarIcons: []
-    };
     return (
       <div className="main-page">
         <NavBarConnected />

@@ -1,5 +1,5 @@
 import { NavBarIconProp } from "../navBarIcons/Interface";
-import { NavbarState } from "./store";
+import { NavbarState } from "./store/store";
 
 interface NativeProps {}
 

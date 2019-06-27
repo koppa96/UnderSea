@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StrategyGame.Bll.EffectParsing;
 using StrategyGame.Bll.Services.TurnHandling;
 using StrategyGame.Dal;
+using StrategyGame.Model.Entities;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -40,6 +41,27 @@ namespace StrategyGame.Tests.Services
             var currentTurn = (await context.GlobalValues.SingleAsync()).Round;
             await turnService.EndTurnAsync(context);
             Assert.AreEqual(currentTurn + 1, (await context.GlobalValues.SingleAsync()).Round);
+        }
+
+        [TestMethod]
+        [DataRow("TheCommander")]
+        public async Task TestRandomEvent(string username)
+        {
+            var globals = await context.GlobalValues.SingleAsync();
+            globals.Round = 50;
+            globals.RandomEventChance = 1.0;
+
+            var country = await context.Countries
+                .Include(c => c.ParentUser)
+                .SingleAsync(x => x.ParentUser.UserName == username);
+
+            await turnService.EndTurnAsync(context);
+
+            globals.Round = 50;
+            globals.RandomEventChance = 0.0;
+            await turnService.EndTurnAsync(context);
+
+            Assert.AreEqual(country.CurrentEvent, null);
         }
 
         [TestMethod]
@@ -177,6 +199,26 @@ namespace StrategyGame.Tests.Services
 
             Assert.IsTrue(country.Corals > 50000 - coralMaintenance);
             Assert.IsTrue(country.Pearls > 50000 - pearlMaintenance);
+        }
+
+
+        [TestMethod]
+        [DataRow("ThePoor")]
+        public async Task TestAllEffect(string username)
+        {
+            var magicBuilding = new BuildingType
+            { Effects = context.Effects.Select(x => new BuildingEffect { Effect = x }).ToList() };
+            context.BuildingTypes.Add(magicBuilding);
+
+            var country = await context.Countries
+                .Include(c => c.ParentUser)
+                .Include(c => c.Buildings)
+                .Include(c => c.InProgressBuildings)
+                .SingleAsync(x => x.ParentUser.UserName == username);
+
+            country.Buildings.Add(new CountryBuilding { Building = magicBuilding, Count = 1 });
+
+            await turnService.EndTurnAsync(context);
         }
 
         [TestCleanup]
