@@ -1694,15 +1694,15 @@ export interface IUnitDetails {
 export class CountryInfo implements ICountryInfo {
     round!: number;
     rank!: number;
-    armyInfo?: BriefUnitInfo[] | undefined;
+    armyInfo?: BriefUnitInfo[] ;
     pearls!: number;
     corals!: number;
     pearlsPerRound!: number;
     coralsPerRound!: number;
     event?: EventInfo | undefined;
     unseenReports!: number;
-    buildings?: BriefCreationInfo[] | undefined;
-    researches?: BriefCreationInfo[] | undefined;
+    buildings?: BriefCreationInfo[] ;
+    researches?: BriefCreationInfo[] ;
 
     constructor(data?: ICountryInfo) {
         if (data) {
@@ -1780,15 +1780,15 @@ export class CountryInfo implements ICountryInfo {
 export interface ICountryInfo {
     round: number;
     rank: number;
-    armyInfo?: BriefUnitInfo[] | undefined;
+    armyInfo?: BriefUnitInfo[] ;
     pearls: number;
     corals: number;
     pearlsPerRound: number;
     coralsPerRound: number;
     event?: EventInfo | undefined;
     unseenReports: number;
-    buildings?: BriefCreationInfo[] | undefined;
-    researches?: BriefCreationInfo[] | undefined;
+    buildings?: BriefCreationInfo[] ;
+    researches?: BriefCreationInfo[] ;
 }
 
 export class BriefUnitInfo implements IBriefUnitInfo {
@@ -1881,10 +1881,9 @@ export class EventInfo implements IEventInfo {
 
 export interface IEventInfo {
     id: number;
-    name?: string | undefined;
-    description?: string | undefined;
-    flavourtext?: string | undefined;
-    imageUrl?: string | undefined;
+    name?: string;
+    flavourtext?: string;
+    imageUrl?: string;
 }
 
 export class BriefCreationInfo implements IBriefCreationInfo {

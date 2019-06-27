@@ -1,5 +1,4 @@
 import { BuildingState } from "./store/store";
-import { IRequestParamState } from "./store/actions/buildingActions";
 import {
   IBriefCreationInfo,
   BriefCreationInfo,
@@ -9,11 +8,18 @@ import {
 interface NativeProps {}
 
 export interface MappedProps {
-  boughtBuildingState?: BriefCreationInfo[];
+  boughtBuildingState?: ICreationInfo[];
+  buildingCount?: countProp[];
+  totalpearl: number;
+  totalcoral: number;
+}
+export interface countProp {
+  id: number;
+  count: number;
 }
 
 export interface DispachedProps {
-  addBuilding: (params: IRequestParamState) => void;
+  addBuilding: (params: number) => void;
   getAllBuilding: () => void;
 }
 

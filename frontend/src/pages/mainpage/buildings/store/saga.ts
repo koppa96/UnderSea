@@ -1,6 +1,6 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 
-import { BuildingsClient } from "../../../../api/Client";
+import { BuildingsClient, ICreationInfo } from "../../../../api/Client";
 import {
   IRequestActionGetBuilding,
   ISuccesParamState,
@@ -18,12 +18,12 @@ export const beginFetchBuilding = () => {
 function* handleLogin(action: IRequestActionGetBuilding) {
   console.log("SAGA-BUILDING");
   try {
-    const caller: ISuccesParamState = yield call(beginFetchBuilding);
-    console.log(caller);
-    yield put(fetchSucces(caller));
+    const data: ICreationInfo[] = yield call(beginFetchBuilding);
+    const response: ISuccesParamState = { buildings: data };
+    yield put(fetchSucces(response));
   } catch (err) {
     if (err) {
-      yield put(fetchError("Rossz jelszó, vagy felhasználó"));
+      yield put(fetchError("Hiba történt"));
     } else {
       yield put(fetchError("An unknown error occured."));
     }

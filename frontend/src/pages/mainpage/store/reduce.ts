@@ -1,10 +1,15 @@
-import { IActions, MainpageActions } from "./actions";
+import { IActions, MainpageActions } from "./actions/get/actions";
 import { MainpageResponseState, initialMainpageResponseState } from "./store";
+import {
+  IAddBuildingActions,
+  AddBuildingActions
+} from "./actions/post/addBuilding";
+import { ICountryInfo } from "../../../api/Client";
 
 //Rename to reducer
 export const MainpageReducer = (
   state = initialMainpageResponseState,
-  action: IActions
+  action: IActions | IAddBuildingActions
 ): MainpageResponseState => {
   switch (action.type) {
     case MainpageActions.REQUEST:
@@ -25,6 +30,42 @@ export const MainpageReducer = (
         ...state,
         loading: false,
         error: action.params
+      };
+    case AddBuildingActions.REQUEST:
+      return {
+        ...state,
+        loading: true,
+        lastBuilding: action.params
+      };
+    case AddBuildingActions.SUCCES:
+      const newBuilding = state.model
+        ? state.model.buildings
+          ? state.model.buildings
+          : []
+        : [];
+      for (let index = 0; index < newBuilding.length; index++) {
+        if (newBuilding[index].id === state.lastBuilding) {
+          newBuilding[index].count = newBuilding[index].count + 1;
+        }
+      }
+
+      return {
+        ...state,
+        loading: false,
+        model: state.model
+          ? {
+              ...state.model,
+              buildings: newBuilding
+            }
+          : undefined
+      };
+    case AddBuildingActions.ERROR:
+      return {
+        ...state,
+        loading: false,
+        error: action.params
+          ? action.params
+          : "Ismeretlen hiba" + state.lastBuilding + " hozzáadásnál"
       };
 
     default:

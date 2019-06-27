@@ -2,11 +2,16 @@ import { all, fork, call } from "redux-saga/effects";
 import { watchLoginFetchRequest } from "./pages/account/login/saga";
 import { watchArmyAddUnitsRequest } from "./pages/mainpage/army/saga";
 
-import {
-  watchMainPageFetchRequest,
-  mainpageSaga
-} from "./pages/mainpage/store/saga";
+import { watchMainPageFetchRequest } from "./pages/mainpage/store/saga";
+import { watchBuildingFetchRequest } from "./pages/mainpage/buildings/store/saga";
+import { watchAddBuildingRequest } from "./pages/mainpage/store/actions/post/saga";
 
 export function* rootSaga() {
-  yield all([call(watchLoginFetchRequest), call(mainpageSaga),call(watchArmyAddUnitsRequest)]);
+  yield all([
+    call(watchLoginFetchRequest),
+    call(watchMainPageFetchRequest),
+    call(watchArmyAddUnitsRequest),
+    call(watchBuildingFetchRequest),
+    call(watchAddBuildingRequest)
+  ]);
 }

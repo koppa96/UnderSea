@@ -8,6 +8,7 @@ export interface MainpageResponseState {
   model?: ICountryInfo;
   error?: string;
   loading: boolean;
+  lastBuilding?: number;
 }
 
 export const initialMainpageResponseState: MainpageResponseState = {

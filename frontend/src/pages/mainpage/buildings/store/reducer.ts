@@ -14,6 +14,7 @@ export const BuildingReducer = (
         loading: true
       };
     case GetBuildingActions.SUCCES:
+      console.log("action.param.building", action.params.buildings);
       return {
         ...state,
         loading: false,

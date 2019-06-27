@@ -9,7 +9,7 @@ import {
   fetchSucces,
   fetchError,
   MainpageActions
-} from "./actions";
+} from "./actions/get/actions";
 import { CountryClient, CountryInfo, ICountryInfo } from "../../../api/Client";
 import { async } from "q";
 import { watchBuildingFetchRequest } from "../buildings/store/saga";
@@ -37,8 +37,4 @@ function* handleLogin(action: IActionMainpageRequest) {
 
 export function* watchMainPageFetchRequest() {
   yield takeEvery(MainpageActions.REQUEST, handleLogin);
-}
-
-export function* mainpageSaga() {
-  yield all([call(watchBuildingFetchRequest), call(watchMainPageFetchRequest)]);
 }

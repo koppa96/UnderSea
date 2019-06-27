@@ -16,11 +16,13 @@ export interface PagesState {
   loginDetails: LoginResponseState;
   Army: ArmyState;
   mainpage: MainpageResponseState;
+  buildings: BuildingState;
 }
 
 export const PagesReducer = combineReducers<PagesState>({
   gyakorlas: ManReducer,
   loginDetails: LoginReducer,
   Army: ArmyReducer,
-  mainpage: MainpageReducer
+  mainpage: MainpageReducer,
+  buildings: BuildingReducer
 });
