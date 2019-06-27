@@ -9,7 +9,6 @@ import {
   ArmyActions
 } from "../army/store/actions/ArmyActions.post";
 
-//Rename to reducer
 export const MainpageReducer = (
   state = initialMainpageResponseState,
   action: IActions | IAddBuildingActions | IArmyActions
@@ -77,9 +76,10 @@ export const MainpageReducer = (
         loading: true
       };
     case ArmyActions.SUCCESS:
+      let temp;
       if (state.model) {
         if (state.model.armyInfo) {
-          const temp = state.model.armyInfo;
+          temp = { ...state.model.armyInfo };
           temp.forEach(armyunit => {
             action.data.unitsToAdd.forEach(unit => {
               if (unit.unitId == armyunit.id) {
@@ -95,8 +95,8 @@ export const MainpageReducer = (
         loading: false,
         model: state.model
           ? {
-              ...state.model
-              //armyInfo:
+              ...state.model,
+              armyInfo: temp
             }
           : undefined
       };
