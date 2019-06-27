@@ -243,20 +243,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
 
             foreach (var attack in country.Commands.Where(c => c.Id != defenders.Id).ToList())
             {
-                foreach (var div in attack.Divisions)
-                {
-                    var existing = defenders.Divisions.SingleOrDefault(d => d.Unit.Id == div.Unit.Id);
-                    if (existing == null)
-                    {
-                        div.ParentCommand = defenders;
-                    }
-                    else
-                    {
-                        existing.Count += div.Count;
-                    }
-                }
-
-                context.Commands.Remove(attack);
+                attack.MergeInto(defenders, context);
             }
         }
 

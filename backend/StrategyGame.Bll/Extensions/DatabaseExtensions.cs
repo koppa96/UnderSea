@@ -141,9 +141,41 @@ namespace StrategyGame.Bll.Extensions
             }).ToList();
         }
 
-        public static void MergeInto(this Division division, Command command)
+        /// <summary>
+        /// Merges the division into the provided command.
+        /// </summary>
+        /// <param name="division">The <see cref="Division"/> to merge.</param>
+        /// <param name="target">The <see cref="Command"/> to merge into.</param>
+        /// <param name="context">The database to use to remove the division if necessary.</param>
+        public static void MergeInto(this Division division, Command target, UnderSeaDatabaseContext context)
         {
-            throw new NotImplementedException();
+            var existing = target.Divisions.SingleOrDefault(d => d.Unit.Id == division.Unit.Id && d.BattleCount == division.BattleCount);
+
+            if (existing == null)
+            {
+                division.ParentCommand = target;
+            }
+            else
+            {
+                existing.Count += division.Count;
+                context.Divisions.Remove(division);
+            }
+        }
+
+        /// <summary>
+        /// Merges the command into the provided command.
+        /// </summary>
+        /// <param name="command">The <see cref="Command"/> to merge.</param>
+        /// <param name="target">The <see cref="Command"/> to merge into.</param>
+        /// <param name="context">The database to use to remove the division if necessary.</param>
+        public static void MergeInto(this Command command, Command target, UnderSeaDatabaseContext context)
+        {
+            foreach (var div in command.Divisions)
+            {
+                div.MergeInto(target, context);
+            }
+
+            context.Commands.Remove(command);
         }
     }
 }
