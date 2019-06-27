@@ -75,7 +75,7 @@ namespace StrategyGame.Bll.Services.Country
 
         public async Task<CountryInfo> GetCountryInfoAsync(string username, int countryId)
         {
-            var country = await Database.Countries
+            var country = await Context.Countries
                .Include(c => c.Commands)
                     .ThenInclude(comm => comm.Divisions)
                         .ThenInclude(d => d.Unit)
@@ -238,7 +238,7 @@ namespace StrategyGame.Bll.Services.Country
 
         public async Task<IEnumerable<BriefCountryInfo>> GetCountriesAsync(string username)
         {
-            return await Database.Countries
+            return await Context.Countries
                 .Where(c => c.ParentUser.UserName == username)
                 .Select(c => new BriefCountryInfo { CountryId = c.Id, CountryName = c.Name })
                 .ToListAsync();

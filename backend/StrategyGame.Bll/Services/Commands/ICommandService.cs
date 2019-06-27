@@ -16,21 +16,27 @@ namespace StrategyGame.Bll.Services.Commands
         /// Gets the commands that will be executed in the end of the round for the player.
         /// </summary>
         /// <param name="username">The name of the player</param>
+        /// <param name="countryId">The id of the country</param>
         /// <returns>An IEnumerable containing the commands</returns>
-        Task<IEnumerable<CommandInfo>> GetCommandsAsync(string username);
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when the country id is invalid</exception>
+        /// <exception cref="UnauthorizedAccessException">Thrown when the country id is not the user's country</exception>
+        Task<IEnumerable<CommandInfo>> GetCommandsAsync(string username, int countryId);
 
         /// <summary>
         /// Creates a new attack command for the user with the given details.
         /// </summary>
         /// <param name="username">The name of the user</param>
+        /// <param name="countryId">The id of the country</param>
         /// <param name="details">The details of the command</param>
         /// <param name="turnEndWaitToken">The token that can be used to cancel waiting for an in-progress end-of-turn calculation.</param>
+        /// <exception cref="KeyNotFoundException">Thrown when the country id is invalid</exception>
+        /// <exception cref="UnauthorizedAccessException">Thrown when the country id is not the user's country</exception>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the target country is not found or a unit type is not found</exception>
         /// <exception cref="ArgumentException">Thrown when there are not enough units to start this command</exception>
         /// <exception cref="InvalidOperationException">Thrown when no leaders are assigned to the command</exception>
         /// <exception cref="TaskCanceledException">Thrown if the operation was cancelled.</exception>
         /// <returns>The CommandInfo representing the command</returns>
-        Task<CommandInfo> AttackTargetAsync(string username, CommandDetails details, CancellationToken turnEndWaitToken = default);
+        Task<CommandInfo> AttackTargetAsync(string username, int countryId, CommandDetails details, CancellationToken turnEndWaitToken = default);
 
         /// <summary>
         /// Deletes the command with the given id.

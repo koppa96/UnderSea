@@ -27,16 +27,28 @@ namespace StrategyGame.Bll.Services.Commands
             _turnEndLock = turnEndLock;
         }
 
-        public async Task<CommandInfo> AttackTargetAsync(string username, CommandDetails details,
+        public async Task<CommandInfo> AttackTargetAsync(string username, int countryId, CommandDetails details,
             CancellationToken turnEndWaitToken)
         {
             using (var lck = await _turnEndLock.ReaderLockAsync(turnEndWaitToken))
             {
-                var country = await _context.Countries.Include(c => c.Commands)
-                .ThenInclude(c => c.Divisions)
-                    .ThenInclude(d => d.Unit)
-                        .ThenInclude(u => u.Content)
-                .SingleAsync(c => c.ParentUser.UserName == username);
+                var country = await _context.Countries
+                    .Include(c => c.Commands)
+                        .ThenInclude(c => c.Divisions)
+                            .ThenInclude(d => d.Unit)
+                            .ThenInclude(u => u.Content)
+                    .Include(c => c.ParentUser)
+                    .SingleAsync(c => c.Id == countryId);
+
+                if (country == null)
+                {
+                    throw new KeyNotFoundException("Invalid country id.");
+                }
+
+                if (country.ParentUser.UserName != username)
+                {
+                    throw new UnauthorizedAccessException("Can not attack from countries you don't own.");
+                }
 
                 var targetCountry = await _context.Countries.FindAsync(details.TargetCountryId);
                 if (targetCountry == null)
@@ -119,18 +131,29 @@ namespace StrategyGame.Bll.Services.Commands
             }
         }
 
-        public async Task<IEnumerable<CommandInfo>> GetCommandsAsync(string username)
+        public async Task<IEnumerable<CommandInfo>> GetCommandsAsync(string username, int countryId)
         {
-            var commands = await _context.Commands
-                .Include(c => c.Divisions)
-                    .ThenInclude(d => d.Unit)
-                        .ThenInclude(u => u.Content)
-                .Include(c => c.TargetCountry)
-                .Include(c => c.ParentCountry)
-                .Where(c => c.ParentCountry.ParentUser.UserName == username && !c.ParentCountry.Equals(c.TargetCountry))
-                .ToListAsync();
+            var country = await _context.Countries
+               .Include(c => c.Commands)
+                    .ThenInclude(comm => comm.TargetCountry)
+                .Include(c => c.Commands)
+                    .ThenInclude(c => c.Divisions)
+                        .ThenInclude(d => d.Unit)
+                            .ThenInclude(u => u.Content)
+               .Include(c => c.ParentUser)
+               .SingleOrDefaultAsync(c => c.Id == countryId);
 
-            var commandInfos = commands.Select(c => ToCommandInfo(c, _mapper));
+            if (country == null)
+            {
+                throw new ArgumentOutOfRangeException("Invalid country id.");
+            }
+
+            if (country.ParentUser.UserName != username)
+            {
+                throw new UnauthorizedAccessException("Can not view the commands of others.");
+            }
+
+            var commandInfos = country.Commands.Select(c => ToCommandInfo(c, _mapper));
             return commandInfos;
         }
 

@@ -24,24 +24,24 @@ namespace StrategyGame.Api.Controllers
             _commandService = commandService;
         }
 
-        [HttpGet]
+        [HttpGet("{id}")]
         [ProducesResponseType(401)]
         [ProducesResponseType(200)]
-        public async Task<ActionResult<IEnumerable<CommandInfo>>> GetCommandsAsync()
+        public async Task<ActionResult<IEnumerable<CommandInfo>>> GetCommandsAsync(int id)
         {
-            return Ok(await _commandService.GetCommandsAsync(User.Identity.Name));
+            return Ok(await _commandService.GetCommandsAsync(User.Identity.Name, id));
         }
 
-        [HttpPost]
+        [HttpPost("{id}")]
         [ProducesResponseType(401)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(200)]
-        public async Task<ActionResult<CommandInfo>> AttackTargetAsync([FromBody] CommandDetails command)
+        public async Task<ActionResult<CommandInfo>> AttackTargetAsync(int id, [FromBody] CommandDetails command)
         {
             using (var src = new CancellationTokenSource(Constants.DefaultTurnEndTimeout))
             {
-                return Ok(await _commandService.AttackTargetAsync(User.Identity.Name, command, src.Token));
+                return Ok(await _commandService.AttackTargetAsync(User.Identity.Name, id, command, src.Token));
             }
         }
 

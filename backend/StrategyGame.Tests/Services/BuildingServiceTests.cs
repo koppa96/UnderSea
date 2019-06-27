@@ -21,7 +21,33 @@ namespace StrategyGame.Tests.Services
         {
             context = await UtilityFactory.CreateContextAsync();
 
-            buildingService = new BuildingService(context, new AsyncReaderWriterLock(), UtilityFactory.CreateMapper());
+            buildingService = new BuildingService(context, UtilityFactory.CreateMapper());
+        }
+
+        [TestMethod]
+        [DataRow("TheBuilder")]
+        public async Task TestGetUserBuildings(string username)
+        {
+            var buildings = await buildingService.GetBuildingsAsync(username,
+                (await context.Countries.FirstAsync(c => c.ParentUser.UserName == username)).Id);
+
+            var dbBuildings = await context.CountryBuildings.Include(cb => cb.Building)
+                .Where(cb => cb.ParentCountry.ParentUser.UserName == username)
+                .ToListAsync();
+
+            foreach (var buildingInfo in buildings)
+            {
+                var dbBuilding = dbBuildings.SingleOrDefault(cb => cb.Building.Id == buildingInfo.Id);
+
+                if (dbBuilding == null)
+                {
+                    Assert.AreEqual(0, buildingInfo.Count);
+                }
+                else
+                {
+                    Assert.AreEqual(dbBuilding.Count, buildingInfo.Count);
+                }
+            }
         }
 
         [TestMethod]
@@ -30,7 +56,9 @@ namespace StrategyGame.Tests.Services
         {
             var buildingId = (await context.BuildingTypes.FirstAsync()).Id;
 
-            await buildingService.StartBuildingAsync(username, buildingId);
+            await buildingService.StartBuildingAsync(username,
+                (await context.Countries.FirstAsync(c => c.ParentUser.UserName == username)).Id,
+                buildingId);
 
             var inProgressBuildings = await context.InProgressBuildings
                 .Include(b => b.Building)
@@ -48,7 +76,9 @@ namespace StrategyGame.Tests.Services
         {
             var buildingId = (await context.BuildingTypes.FirstAsync()).Id;
 
-            await buildingService.StartBuildingAsync(username, buildingId);
+            await buildingService.StartBuildingAsync(username,
+                (await context.Countries.FirstAsync(c => c.ParentUser.UserName == username)).Id,
+                buildingId);
         }
 
         [TestMethod]
@@ -58,8 +88,12 @@ namespace StrategyGame.Tests.Services
         {
             var buildingId = (await context.BuildingTypes.FirstAsync()).Id;
 
-            await buildingService.StartBuildingAsync(username, buildingId);
-            await buildingService.StartBuildingAsync(username, buildingId);
+            await buildingService.StartBuildingAsync(username,
+                (await context.Countries.FirstAsync(c => c.ParentUser.UserName == username)).Id,
+                buildingId);
+            await buildingService.StartBuildingAsync(username,
+                (await context.Countries.FirstAsync(c => c.ParentUser.UserName == username)).Id,
+                buildingId);
         }
 
         [TestMethod]
@@ -84,7 +118,9 @@ namespace StrategyGame.Tests.Services
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public async Task TestStartBuildingNotExisting(string username)
         {
-            await buildingService.StartBuildingAsync(username, -1);
+            await buildingService.StartBuildingAsync(username,
+                (await context.Countries.FirstAsync(c => c.ParentUser.UserName == username)).Id,
+                -1);
         }
 
         [TestCleanup]
