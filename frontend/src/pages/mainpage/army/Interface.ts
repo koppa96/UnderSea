@@ -1,8 +1,8 @@
 import { ArmyState } from "./store/store";
-import { IRequestParamState } from "./store/actions/ArmyActions";
+import { IRequestParamState } from "./store/actions/ArmyActions.post";
 
 interface NativeProps {
-  isNative: boolean
+  isNative: boolean;
 }
 
 export interface MappedProps {
@@ -11,7 +11,7 @@ export interface MappedProps {
 
 export interface DispachedProps {
   addUnits: (params: IRequestParamState) => void;
+  getArmy: () => void;
 }
 
 export type ArmyProps = NativeProps & MappedProps & DispachedProps;
-

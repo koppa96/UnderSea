@@ -1,9 +1,9 @@
 import React from "react";
-import { ArmyItemProps } from "./Interface";
+import { ArmyItemResponse } from "./Interface";
 
-interface ArmyProps{
-  unit:ArmyItemProps
-  currentTroops:Function
+interface ArmyProps {
+  unit: ArmyItemResponse;
+  currentTroops: Function;
 }
 
 export class ArmyItem extends React.Component<ArmyProps> {
@@ -15,12 +15,12 @@ export class ArmyItem extends React.Component<ArmyProps> {
     this.setState({ currentTroop: this.state.currentTroop + 1 }, () =>
       this.props.currentTroops(this.props.unit.id, this.state.currentTroop)
     );
-  removeTroop = () =>{
-    if(this.state.currentTroop>0)
+  removeTroop = () => {
+    if (this.state.currentTroop > 0)
       this.setState({ currentTroop: this.state.currentTroop - 1 }, () =>
         this.props.currentTroops(this.props.unit.id, this.state.currentTroop)
       );
-  }
+  };
   render() {
     const {
       imageUrl,
@@ -45,7 +45,7 @@ export class ArmyItem extends React.Component<ArmyProps> {
         </div>
         <div>
           <span>Támadás/Védekezés</span>
-          <span>{attackPower+"/"+defensePower}</span>
+          <span>{attackPower + "/" + defensePower}</span>
         </div>
         <div>
           <span>Zsold(/kör/példány)</span>
