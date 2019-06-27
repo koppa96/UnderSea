@@ -31,22 +31,22 @@ namespace StrategyGame.Bll.Services.Commands
                     .ThenInclude(d => d.Unit)
                         .ThenInclude(u => u.Content)
                 .Include(c => c.ParentUser)
-                .SingleAsync(c => c.Id == countryId);
+                .SingleOrDefaultAsync(c => c.Id == countryId);
 
             if (country == null)
             {
-                throw new KeyNotFoundException("Invalid country id.");
+                throw new ArgumentOutOfRangeException(nameof(countryId), "No parent country found by the provided ID.");
             }
 
             if (country.ParentUser.UserName != username)
             {
-                throw new UnauthorizedAccessException("Can not attack from countries you don't own.");
+                throw new UnauthorizedAccessException("Can't access country not owned by the user.");
             }
 
             var targetCountry = await _context.Countries.FindAsync(details.TargetCountryId);
             if (targetCountry == null)
             {
-                throw new ArgumentOutOfRangeException(nameof(details.TargetCountryId), "Invalid country id.");
+                throw new ArgumentOutOfRangeException(nameof(details.TargetCountryId), "No target country found by the provided ID.");
             }
 
             var defendingCommand = country.GetAllDefending();
@@ -61,12 +61,12 @@ namespace StrategyGame.Bll.Services.Commands
                 var defendingDivision = defendingCommand.Divisions.SingleOrDefault(d => d.Unit.Id == detail.UnitId);
                 if (defendingDivision == null)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(detail.UnitId), "Invalid unit id.");
+                    throw new ArgumentOutOfRangeException(nameof(detail.UnitId), "No unit found by the provided ID.");
                 }
 
                 if (defendingDivision.Count < detail.Amount)
                 {
-                    throw new ArgumentException("Not enough units.");
+                    throw new ArgumentException("There were not enough units to create the command.");
                 }
 
                 defendingDivision.Count -= detail.Amount;
@@ -92,26 +92,30 @@ namespace StrategyGame.Bll.Services.Commands
 
         public async Task DeleteCommandAsync(string username, int commandId)
         {
-            var country = await _context.Countries.Include(c => c.Commands)
-                .ThenInclude(c => c.Divisions)
+            var command = await _context.Commands
+                .Include(c => c.Divisions)
                     .ThenInclude(d => d.Unit)
-                .Include(c => c.Commands)
-                    .ThenInclude(c => c.TargetCountry)
-                .Include(c => c.ParentUser)
-                .SingleAsync(c => c.ParentUser.UserName == username);
+                .Include(c => c.TargetCountry)
+                .Include(c => c.ParentCountry)
+                    .ThenInclude(c => c.ParentUser)
+                .SingleOrDefaultAsync(c => c.Id == commandId);
 
-            var command = country.Commands.SingleOrDefault(c => c.Id == commandId);
-            if (command == null || command.ParentCountry.Id == command.TargetCountry.Id)
+            if (command == null)
             {
-                if (await _context.Commands.AnyAsync(c => c.Id == commandId))
-                {
-                    throw new UnauthorizedAccessException("Can not modify commands of others.");
-                }
-
-                throw new ArgumentOutOfRangeException("Invalid command id.");
+                throw new ArgumentOutOfRangeException(nameof(commandId), "No command found by the provided ID.");
             }
 
-            var defendingCommand = country.GetAllDefending();
+            if (command.ParentCountry.ParentUser.UserName != username)
+            {
+                throw new UnauthorizedAccessException("Can't modify commands of other users.");
+            }
+
+            if (command.ParentCountry.Id == command.TargetCountry.Id)
+            {
+                throw new ArgumentException("Can't modify the defending command directly.");
+            }
+
+            var defendingCommand = command.ParentCountry.GetAllDefending();
             foreach (var division in command.Divisions)
             {
                 var defendingDivision = defendingCommand.Divisions.SingleOrDefault(d => d.Unit.Id == division.Unit.Id);
@@ -149,12 +153,12 @@ namespace StrategyGame.Bll.Services.Commands
 
             if (country == null)
             {
-                throw new ArgumentOutOfRangeException("Invalid country id.");
+                throw new ArgumentOutOfRangeException(nameof(countryId), "No country found by the provided ID.");
             }
 
             if (country.ParentUser.UserName != username)
             {
-                throw new UnauthorizedAccessException("Can not view the commands of others.");
+                throw new UnauthorizedAccessException("Can't access country not owned by the user.");
             }
 
             var commandInfos = country.Commands.Select(c => ToCommandInfo(c, _mapper));
@@ -163,37 +167,41 @@ namespace StrategyGame.Bll.Services.Commands
 
         public async Task<CommandInfo> UpdateCommandAsync(string username, int commandId, CommandDetails details)
         {
-            var country = await _context.Countries.Include(c => c.Commands)
-                    .ThenInclude(c => c.TargetCountry)
-                .Include(c => c.Commands)
-                    .ThenInclude(c => c.Divisions)
-                        .ThenInclude(d => d.Unit)
-                            .ThenInclude(u => u.Content)
-                .SingleAsync(c => c.ParentUser.UserName == username);
+            var command = await _context.Commands
+                .Include(c => c.Divisions)
+                    .ThenInclude(d => d.Unit)
+                .Include(c => c.TargetCountry)
+                .Include(c => c.ParentCountry)
+                    .ThenInclude(c => c.ParentUser)
+                .SingleOrDefaultAsync(c => c.Id == commandId);
 
-            var attackingCommand = country.Commands.SingleOrDefault(c => c.Id == commandId);
-            if (attackingCommand == null)
+            if (command == null)
             {
-                if (await _context.Commands.AnyAsync(c => c.Id == commandId))
-                {
-                    throw new UnauthorizedAccessException("Can not modify commands of others.");
-                }
+                throw new ArgumentOutOfRangeException(nameof(commandId), "No command found by the provided ID.");
+            }
 
-                throw new ArgumentOutOfRangeException(nameof(commandId), "Invalid command id.");
+            if (command.ParentCountry.ParentUser.UserName != username)
+            {
+                throw new UnauthorizedAccessException("Can't modify commands of other users.");
+            }
+
+            if (command.ParentCountry.Id == command.TargetCountry.Id)
+            {
+                throw new ArgumentException("Can't modify the defending command directly.");
             }
 
             var targetCountry = await _context.Countries.FindAsync(details.TargetCountryId);
             if (targetCountry == null)
             {
-                throw new ArgumentOutOfRangeException(nameof(details.TargetCountryId), "Invalid country id.");
+                throw new ArgumentOutOfRangeException(nameof(details.TargetCountryId), "No target country found by the provided ID.");
             }
 
-            var defendingCommand = country.GetAllDefending();
-            attackingCommand.TargetCountry = targetCountry;
+            var defendingCommand = command.ParentCountry.GetAllDefending();
+            command.TargetCountry = targetCountry;
 
             foreach (var detail in details.Units)
             {
-                var division = attackingCommand.Divisions.SingleOrDefault(d => d.Unit.Id == detail.UnitId);
+                var division = command.Divisions.SingleOrDefault(d => d.Unit.Id == detail.UnitId);
                 var defendingDivision = defendingCommand.Divisions.SingleOrDefault(d => d.Unit.Id == detail.UnitId);
                 if (division == null)
                 {
@@ -202,15 +210,15 @@ namespace StrategyGame.Bll.Services.Commands
                     {
                         if (await _context.UnitTypes.AnyAsync(u => u.Id == detail.UnitId))
                         {
-                            throw new ArgumentException("Not enough units.");
+                            throw new ArgumentException("There were not enough units to modify the command.");
                         }
 
-                        throw new ArgumentOutOfRangeException("Invalid unit id.");
+                        throw new ArgumentOutOfRangeException(nameof(detail.UnitId), "No unit found by the provided ID.");
                     }
 
                     division = new Division
                     {
-                        ParentCommand = attackingCommand,
+                        ParentCommand = command,
                         Unit = unit,
                         Count = 0
                     };
@@ -220,20 +228,20 @@ namespace StrategyGame.Bll.Services.Commands
 
                 if (detail.Amount - division.Count > defendingDivision.Count)
                 {
-                    throw new ArgumentException("Not enough units.");
+                    throw new ArgumentException("There were not enough units to modify the command.");
                 }
 
                 defendingDivision.Count -= detail.Amount - division.Count;
                 division.Count = detail.Amount;
             }
 
-            if (!attackingCommand.Divisions.Any(d => d.Unit is LeaderType && d.Count > 0))
+            if (!command.Divisions.Any(d => d.Unit is LeaderType && d.Count > 0))
             {
                 throw new InvalidOperationException("Every attack must contain a leader.");
             }
 
             await _context.SaveChangesAsync();
-            return ToCommandInfo(attackingCommand, _mapper);
+            return ToCommandInfo(command, _mapper);
         }
 
         public CommandInfo ToCommandInfo(Command command, IMapper mapper)

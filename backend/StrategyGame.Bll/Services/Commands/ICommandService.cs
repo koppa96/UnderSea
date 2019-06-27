@@ -27,7 +27,6 @@ namespace StrategyGame.Bll.Services.Commands
         /// <param name="username">The name of the user</param>
         /// <param name="countryId">The id of the country</param>
         /// <param name="details">The details of the command</param>
-        /// <exception cref="KeyNotFoundException">Thrown when the country id is invalid</exception>
         /// <exception cref="UnauthorizedAccessException">Thrown when the country id is not the user's country</exception>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the target country is not found or a unit type is not found</exception>
         /// <exception cref="ArgumentException">Thrown when there are not enough units to start this command</exception>
