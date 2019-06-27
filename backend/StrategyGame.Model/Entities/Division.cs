@@ -19,5 +19,10 @@
         /// Gets the amount of units in the division.
         /// </summary>
         public int Count { get; set; }
+
+        /// <summary>
+        /// Gets the amount of battles the division took part in since the last battle.
+        /// </summary>
+        public int BattleCount { get; set; }
     }
 }
