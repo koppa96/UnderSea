@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StrategyGame.Bll.Exceptions;
+using StrategyGame.Bll.Services.Logger;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace StrategyGame.Api
             _next = next;
         }
 
-        public async Task InvokeAsync(HttpContext context)
+        public async Task InvokeAsync(HttpContext context, IExceptionLogger logger)
         {
             try
             {
@@ -25,6 +26,7 @@ namespace StrategyGame.Api
             }
             catch (Exception e)
             {
+                await logger.LogExceptionAsync(e);
                 await HandleExceptionAsync(context, e);
             }
         }
