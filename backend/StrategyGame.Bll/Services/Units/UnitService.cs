@@ -135,7 +135,7 @@ namespace StrategyGame.Bll.Services.Units
 
                 if (unit == null)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(unitId), "No country found by the provided ID.");
+                    throw new ArgumentOutOfRangeException(nameof(unitId), "No unit found by the provided ID.");
                 }
 
                 var country = await Context.Countries
