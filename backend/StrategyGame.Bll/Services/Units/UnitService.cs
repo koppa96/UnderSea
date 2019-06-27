@@ -67,30 +67,41 @@ namespace StrategyGame.Bll.Services.Units
 
                 if (country == null)
                 {
-                    throw new KeyNotFoundException("Invalid country id.");
+                    throw new ArgumentOutOfRangeException(nameof(countryId), "No country found by the provided ID.");
                 }
 
                 if (country.ParentUser.UserName != username)
                 {
-                    throw new UnauthorizedAccessException("Can not view country info of others.");
+                    throw new UnauthorizedAccessException("Can't access country not owned by the user.");
                 }
 
-                var unitInfos = new List<BriefUnitInfo>();
+                var unitInfos = new List<UnitInfo>();
                 foreach (var purchase in purchases)
                 {
                     var unit = unitTypes.Single(u => u.Id == purchase.UnitId);
 
-                    // Check cost
-                    long costPearl = unit.CostPearl * purchase.Count;
-                    long costCoral = unit.CostCoral * purchase.Count;
+                    if (unit == null)
+                    {
+                        throw new ArgumentOutOfRangeException(nameof(purchase.UnitId), "No unit found by the provided ID.");
+                    }
 
-                    var builder = country.ParseAllEffectForCountry(Context, globals, Parsers, false, false);
+                    if (!unit.IsPurchasable)
+                    {
+                        throw new InvalidOperationException("Can not purchase ranked up unit.");
+                    }
+
+                    if (purchase.Count < 0)
+                    {
+                        throw new ArgumentException("Purchase amount must be positive.");
+                    }
+
+                    var builder = country.ParseAllEffectForCountry(Context, globals, Parsers, false);
                     var totalUnits = country.Commands.Sum(c => c.Divisions.Sum(d => d.Count));
 
                     // Check pop-space
                     if (builder.BarrackSpace < totalUnits + purchase.Count)
                     {
-                        throw new LimitReachedException("The max unit count has been reached.");
+                        throw new LimitReachedException("Unit count limit reached.");
                     }
 
                     var defenders = country.GetAllDefending();
@@ -106,12 +117,10 @@ namespace StrategyGame.Bll.Services.Units
                         targetDiv.Count += purchase.Count;
                     }
 
-                    country.Pearls -= costPearl;
-                    country.Corals -= costCoral;
+                    country.Purchase(unit, Context, purchase.Count);
 
-                    var info = Mapper.Map<UnitType, BriefUnitInfo>(unit);
-                    info.TotalCount = targetDiv.Count;
-                    info.DefendingCount = targetDiv.Count;
+                    var info = Mapper.Map<UnitType, UnitInfo>(unit);
+                    info.Count = targetDiv.Count;
                     unitInfos.Add(info);
                 }
 
@@ -125,7 +134,6 @@ namespace StrategyGame.Bll.Services.Units
         {
             using (var lck = await TurnEndLock.ReaderLockAsync(turnEndWaitToken))
             {
-
                 if (count < 1)
                 {
                     throw new ArgumentException("Purchase amount must be positive.");

@@ -33,12 +33,12 @@ namespace StrategyGame.Bll.Services.Commands
             using (var lck = await _turnEndLock.ReaderLockAsync(turnEndWaitToken))
             {
                 var country = await _context.Countries
-                    .Include(c => c.Commands)
-                    .ThenInclude(c => c.Divisions)
-                        .ThenInclude(d => d.Unit)
-                            .ThenInclude(u => u.Content)
-                    .Include(c => c.ParentUser)
-                    .SingleOrDefaultAsync(c => c.Id == countryId);
+                .Include(c => c.Commands)
+                .ThenInclude(c => c.Divisions)
+                    .ThenInclude(d => d.Unit)
+                        .ThenInclude(u => u.Content)
+                .Include(c => c.ParentUser)
+                .SingleOrDefaultAsync(c => c.Id == countryId);
 
                 if (country == null)
                 {
@@ -56,16 +56,6 @@ namespace StrategyGame.Bll.Services.Commands
                     throw new ArgumentOutOfRangeException(nameof(details.TargetCountryId), "No target country found by the provided ID.");
                 }
 
-                if (country.ParentUser.UserName != username)
-                {
-                    throw new UnauthorizedAccessException("Can not attack from countries you don't own.");
-                }
-
-                if (country.Commands.Any(c => c.TargetCountry.Equals(targetCountry)))
-                {
-                    throw new InvalidOperationException("Target country is already attacked.");
-                }
-
                 var defendingCommand = country.GetAllDefending();
                 var attackingCommand = new Command
                 {
@@ -75,26 +65,14 @@ namespace StrategyGame.Bll.Services.Commands
 
                 foreach (var detail in details.Units)
                 {
-                    var defendingDivision = defendingCommand.Divisions.SingleOrDefault(d => d.Unit.Id == detail.UnitId);
-                    if (defendingDivision == null)
-                    {
-                        throw new ArgumentOutOfRangeException(nameof(detail.UnitId), "Invalid unit id.");
-                    }
+                    var defendingDivisions = defendingCommand.Divisions.Where(d => d.Unit.Id == detail.UnitId).ToList();
 
-                    if (defendingDivision.Count < detail.Amount)
-                    {
-                        throw new ArgumentException("Not enough units.");
-                    }
-
-                    defendingDivision.Count -= detail.Amount;
-                    var attackingDivision = new Division
-                    {
-                        Unit = defendingDivision.Unit,
-                        ParentCommand = attackingCommand,
-                        Count = detail.Amount
-                    };
-
-                    _context.Divisions.Add(attackingDivision);
+                    TransferUnits(defendingDivisions,
+                        defendingCommand,
+                        new List<Division>(),
+                        attackingCommand,
+                        detail.Amount
+                    );
                 }
 
                 if (!attackingCommand.Divisions.Any(d => d.Unit is LeaderType && d.Count > 0))
@@ -206,6 +184,7 @@ namespace StrategyGame.Bll.Services.Commands
                     throw new UnauthorizedAccessException("Can't modify commands of other users.");
                 }
 
+<<<<<<< master
                 if (command.ParentCountry.Id == command.TargetCountry.Id)
                 {
                     throw new ArgumentException("Can't modify the defending command directly.");
@@ -240,6 +219,11 @@ namespace StrategyGame.Bll.Services.Commands
 
                 await _context.SaveChangesAsync();
                 return ToCommandInfo(command, _mapper);
+=======
+            foreach (var detail in details.Units)
+            {
+                
+>>>>>>> Modifyinf the commandservice attack method and the unit service
             }
         }
 
