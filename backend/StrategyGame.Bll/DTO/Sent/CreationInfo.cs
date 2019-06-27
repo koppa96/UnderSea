@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace StrategyGame.Bll.Dto.Sent
+﻿namespace StrategyGame.Bll.Dto.Sent
 {
     public class CreationInfo
     {
@@ -11,6 +6,7 @@ namespace StrategyGame.Bll.Dto.Sent
         public string Name { get; set; }
         public string Description { get; set; }
         public string ImageUrl { get; set; }
+        public string IconImageUrl { get; set; }
         public int Cost { get; set; }
     }
 }

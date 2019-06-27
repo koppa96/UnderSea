@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace StrategyGame.Bll.Dto.Sent.Country
+﻿namespace StrategyGame.Bll.Dto.Sent.Country
 {
     public class BriefCreationInfo
     {
@@ -11,5 +6,6 @@ namespace StrategyGame.Bll.Dto.Sent.Country
         public int Count { get; set; }
         public int InProgressCount { get; set; }
         public string ImageUrl { get; set; }
+        public string IconImageUrl { get; set; }
     }
 }

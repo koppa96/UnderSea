@@ -1428,6 +1428,7 @@ export class CreationInfo implements ICreationInfo {
     name?: string | undefined;
     description?: string | undefined;
     imageUrl?: string | undefined;
+    iconImageUrl?: string | undefined;
     cost!: number;
 
     constructor(data?: ICreationInfo) {
@@ -1445,6 +1446,7 @@ export class CreationInfo implements ICreationInfo {
             this.name = data["name"];
             this.description = data["description"];
             this.imageUrl = data["imageUrl"];
+            this.iconImageUrl = data["iconImageUrl"];
             this.cost = data["cost"];
         }
     }
@@ -1462,6 +1464,7 @@ export class CreationInfo implements ICreationInfo {
         data["name"] = this.name;
         data["description"] = this.description;
         data["imageUrl"] = this.imageUrl;
+        data["iconImageUrl"] = this.iconImageUrl;
         data["cost"] = this.cost;
         return data; 
     }
@@ -1472,6 +1475,7 @@ export interface ICreationInfo {
     name?: string | undefined;
     description?: string | undefined;
     imageUrl?: string | undefined;
+    iconImageUrl?: string | undefined;
     cost: number;
 }
 
@@ -1824,6 +1828,7 @@ export class BriefCreationInfo implements IBriefCreationInfo {
     count!: number;
     inProgressCount!: number;
     imageUrl?: string | undefined;
+    iconImageUrl?: string | undefined;
 
     constructor(data?: IBriefCreationInfo) {
         if (data) {
@@ -1840,6 +1845,7 @@ export class BriefCreationInfo implements IBriefCreationInfo {
             this.count = data["count"];
             this.inProgressCount = data["inProgressCount"];
             this.imageUrl = data["imageUrl"];
+            this.iconImageUrl = data["iconImageUrl"];
         }
     }
 
@@ -1856,6 +1862,7 @@ export class BriefCreationInfo implements IBriefCreationInfo {
         data["count"] = this.count;
         data["inProgressCount"] = this.inProgressCount;
         data["imageUrl"] = this.imageUrl;
+        data["iconImageUrl"] = this.iconImageUrl;
         return data; 
     }
 }
@@ -1865,6 +1872,7 @@ export interface IBriefCreationInfo {
     count: number;
     inProgressCount: number;
     imageUrl?: string | undefined;
+    iconImageUrl?: string | undefined;
 }
 
 export class CombatInfo implements ICombatInfo {

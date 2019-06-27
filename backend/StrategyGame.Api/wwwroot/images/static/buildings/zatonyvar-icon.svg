@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="58.667" height="58.667" viewBox="0 0 58.667 58.667">
+  <g id="icon_zatonyvar" transform="translate(-1003 -38)">
+    <g id="Rectangle_4" data-name="Rectangle 4" transform="translate(1003 38)" fill="#9ffff0" stroke="#428dff" stroke-width="2">
+      <rect width="58.667" height="58.667" rx="14" stroke="none"/>
+      <rect x="1" y="1" width="56.667" height="56.667" rx="13" fill="none"/>
+    </g>
+    <g id="Group_10" data-name="Group 10" transform="translate(126.053 99.806)">
+      <g id="Ellipse_1" data-name="Ellipse 1" transform="translate(889.754 -50.5)" fill="#dfe3ee" stroke="#428dff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+        <ellipse cx="16.296" cy="16.296" rx="16.296" ry="16.296" stroke="none"/>
+        <ellipse cx="16.296" cy="16.296" rx="15.296" ry="15.296" fill="none"/>
+      </g>
+      <g id="Path_98" data-name="Path 98" transform="translate(887 -28.16)" fill="#dfe3ee" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M 36.84499740600586 11.54709529876709 L 1.10230553150177 11.54709529876709 L 2.131284475326538 1.00000524520874 L 35.81602096557617 1.00000524520874 L 36.84499740600586 11.54709529876709 Z" stroke="none"/>
+        <path d="M 3.038478851318359 1.999995231628418 L 2.204620361328125 10.54708480834961 L 35.74268341064453 10.54708480834961 L 34.9088249206543 1.999995231628418 L 3.038478851318359 1.999995231628418 M 1.224102020263672 -4.76837158203125e-06 L 36.72320175170898 -4.76837158203125e-06 L 37.94730377197266 12.54708480834961 L 0 12.54708480834961 L 1.224102020263672 -4.76837158203125e-06 Z" stroke="none" fill="#428dff"/>
+      </g>
+    </g>
+  </g>
+</svg>

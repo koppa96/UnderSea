@@ -198,7 +198,8 @@ namespace StrategyGame.Bll.Extensions
                 Parent = currentController,
                 Name = "Áramlásirányító",
                 Description = "+50 lakos, 200 korall / kör",
-                ImageUrl = "images/static/buildings/aramlasiranyito-lg.png"
+                ImageUrl = "images/static/buildings/aramlasiranyito-lg.png",
+                IconImageUrl = "images/static/buildings/aramlasiranyito-icon.png"
             };
 
             var reefCastCont = new BuildingContent
@@ -206,7 +207,8 @@ namespace StrategyGame.Bll.Extensions
                 Parent = reefCastle,
                 Name = "Zátonyvár",
                 Description = "+200 szállás",
-                ImageUrl = "images/static/buildings/zatonyvar-lg.png"
+                ImageUrl = "images/static/buildings/zatonyvar-lg.png",
+                IconImageUrl = "images/static/buildings/zatonyvar-icon.png"
             };
 
             context.BuildingContents.AddRange(currentCont, reefCastCont);
@@ -216,21 +218,24 @@ namespace StrategyGame.Bll.Extensions
                 Parent = seal,
                 Name = "Rohamfóka",
                 Description = "Jól támad de rosszul véd",
-                ImageUrl = "images/static/units/rohamfoka.svg"
+                ImageUrl = "images/static/units/rohamfoka.svg",
+                IconImageUrl = "images/static/units/rohamfoka.svg"
             };
             var ponyCont = new UnitContent
             {
                 Parent = pony,
                 Name = "Csatacsikó",
                 Description = "Jól véd de rosszul támad",
-                ImageUrl = "images/static/units/csatacsiko.svg"
+                ImageUrl = "images/static/units/csatacsiko.svg",
+                IconImageUrl = "images/static/units/csatacsiko.svg"
             };
             var lazorCont = new UnitContent
             {
                 Parent = lazor,
                 Name = "Lézercápa",
                 Description = "lazers man",
-                ImageUrl = "images/static/units/lezercapa.svg"
+                ImageUrl = "images/static/units/lezercapa.svg",
+                IconImageUrl = "images/static/units/lezercapa.svg"
             };
             var leaderCont = new UnitContent
             {
@@ -246,39 +251,48 @@ namespace StrategyGame.Bll.Extensions
                 Parent = mudT,
                 Name = "Iszap traktor",
                 Description = "Iszapozza a korallt (amitől amúgy IRL meghalna, korall nem növény nem kell neki föld), +10% korall termelés",
-                ImageUrl = "images/static/researches/iszaptraktor-lg.png"
+                ImageUrl = "images/static/researches/iszaptraktor-lg.png",
+                IconImageUrl = "images/static/researches/iszaptraktor-sm.png"
             };
             var mudCCont = new ResearchContent
             {
                 Parent = mudC,
                 Name = "Iszap kombájn",
                 Description = "Nagyon iszapozza a korallt, +15% korall termelés",
-                ImageUrl = "images/static/researches/iszapkombajn-lg.png"
+                ImageUrl = "images/static/researches/iszapkombajn-lg.png",
+                IconImageUrl = "images/static/researches/iszapkombajn-sm.png"
             };
             var defCont = new ResearchContent
             {
                 Parent = wall,
                 Name = "Korallfal",
-                Description = "Fal, korallból. +20% védekezés"
+                Description = "Fal, korallból. +20% védekezés",
+                ImageUrl = "images/static/buildings/korallfal.svg",
+                IconImageUrl = "images/static/buildings/korallfal.svg"
             };
             var attCont = new ResearchContent
             {
                 Parent = canon,
                 Name = "Szonárágyú",
                 Description = "Mint a denevér, echo-lokáció. +20% támadás",
-                ImageUrl = "images/static/researches/szonaragyu-lg.png"
+                ImageUrl = "images/static/researches/szonaragyu-lg.png",
+                IconImageUrl = "images/static/researches/szonaragyu-sm.png"
             };
             var cCont = new ResearchContent
             {
                 Parent = martialArts,
                 Name = "Vízalatti harcművészetek",
-                Description = "\"A különbség a lehetetlen és a lehetséges között az egyén akarata.\", +10% védekezés és támadás"
+                Description = "\"A különbség a lehetetlen és a lehetséges között az egyén akarata.\", +10% védekezés és támadás",
+                ImageUrl = "images/static/buildings/vizalatti-harcmuveszetek.svg",
+                IconImageUrl = "images/static/buildings/vizalatti-harcmuveszetek.svg"
             };
             var taxCont = new ResearchContent
             {
                 Parent = alchemy,
                 Name = "Alkímia",
-                Description = "A népesség pénzt csinál, +30% adó bevétel"
+                Description = "A népesség pénzt csinál, +30% adó bevétel",
+                ImageUrl = "images/static/buildings/alkimia.svg",
+                IconImageUrl = "images/static/buildings/alkimia.svg"
             };
 
             context.ResearchContents.AddRange(mudTCont, mudCCont, defCont, attCont, cCont, taxCont);

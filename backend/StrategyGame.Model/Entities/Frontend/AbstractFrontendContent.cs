@@ -36,5 +36,10 @@
         /// Gets or sets the image URL for the content.
         /// </summary>
         public string ImageUrl { get; set; }
+
+        /// <summary>
+        /// Gets or sets the image url for the icon of the building.
+        /// </summary>
+        public string IconImageUrl { get; set; }
     }
 }
