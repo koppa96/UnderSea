@@ -12,7 +12,6 @@ namespace StrategyGame.Bll.Dto.Sent
         public string ImageUrl { get; set; }
         public int AttackPower { get; set; }
         public int DefensePower { get; set; }
-        public int Count { get; set; }
         public int MaintenancePearl { get; set; }
         public int MaintenanceCoral { get; set; }
         public int CostPearl { get; set; }

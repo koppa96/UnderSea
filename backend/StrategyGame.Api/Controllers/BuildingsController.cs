@@ -28,7 +28,7 @@ namespace StrategyGame.Api.Controllers
         [ProducesResponseType(200)]
         public async Task<ActionResult<IEnumerable<CreationInfo>>> GetBuildingsAsync()
         {
-            return Ok(await _buildingService.GetBuildingsAsync(User.Identity.Name));
+            return Ok(await _buildingService.GetBuildingsAsync());
         }
 
         [HttpPost("{id}")]

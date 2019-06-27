@@ -1,4 +1,5 @@
 ﻿using StrategyGame.Bll.Dto.Sent;
+using StrategyGame.Bll.Dto.Sent.Country;
 using StrategyGame.Bll.DTO.Received;
 using StrategyGame.Bll.Exceptions;
 using System;
@@ -15,9 +16,8 @@ namespace StrategyGame.Bll.Services.Units
         /// <summary>
         /// Gets UnitInfos for the given player.
         /// </summary>
-        /// <param name="username">The name of the player</param>
         /// <returns>An IEnumerable containing the UnitInfos</returns>
-        Task<IEnumerable<UnitInfo>> GetUnitInfoAsync(string username);
+        Task<IEnumerable<UnitInfo>> GetUnitInfoAsync();
 
         /// <summary>
         /// Creates the desired amount of units of the given type to the user.
@@ -29,7 +29,7 @@ namespace StrategyGame.Bll.Services.Units
         /// <exception cref="LimitReachedException">Thrown when the unit would be exceeded by the creation of units</exception>
         /// <exception cref="InvalidOperationException">Thrown when there is not enough money to hire the units</exception>
         /// <returns>A UnitInfo containing the new amount of units</returns>
-        Task<IEnumerable<UnitInfo>> CreateUnitAsync(string username, IEnumerable<PurchaseDetails> purchases);
+        Task<IEnumerable<BriefUnitInfo>> CreateUnitAsync(string username, IEnumerable<PurchaseDetails> purchases);
 
         /// <summary>
         /// Deletes the desired amount of units of the given type.

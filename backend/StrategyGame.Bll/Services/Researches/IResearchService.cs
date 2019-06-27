@@ -14,9 +14,8 @@ namespace StrategyGame.Bll.Services.Researches
         /// <summary>
         /// Gets the researches of the given player.
         /// </summary>
-        /// <param name="username">The name of the player</param>
         /// <returns>An IEnumerable containing the researches of the player</returns>
-         Task<IEnumerable<CreationInfo>> GetResearchesAsync(string username);
+         Task<IEnumerable<CreationInfo>> GetResearchesAsync();
 
         /// <summary>
         /// Starts the desired research for the given player.

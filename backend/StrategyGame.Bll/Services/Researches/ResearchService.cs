@@ -22,32 +22,12 @@ namespace StrategyGame.Bll.Services.Researches
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<CreationInfo>> GetResearchesAsync(string username)
+        public async Task<IEnumerable<CreationInfo>> GetResearchesAsync()
         {
-            var country = await _context.Countries
-                .Include(c => c.Researches)
-                    .ThenInclude(cr => cr.Research)
-                        .ThenInclude(r => r.Content)
-                .SingleAsync(c => c.ParentUser.UserName == username);
-
-            var creationInfos = country.Researches.Select(cr => {
-                var creationInfo = _mapper.Map<ResearchType, CreationInfo>(cr.Research);
-                creationInfo.Count = cr.Count;
-                return creationInfo;
-            }).ToList();
-
-            var researchTypes = await _context.ResearchTypes.Include(r => r.Content).ToListAsync();
-            foreach (var researchInfo in researchTypes)
-            {
-                if (creationInfos.Any(ci => ci.Id == researchInfo.Id))
-                {
-                    continue;
-                }
-
-                creationInfos.Add(_mapper.Map<ResearchType, CreationInfo>(researchInfo));
-            }
-
-            return creationInfos;
+            return (await _context.ResearchTypes
+                .Include(r => r.Content)
+                .ToListAsync())
+                .Select(r => _mapper.Map<ResearchType, CreationInfo>(r));
         }
 
         public async Task StartResearchAsync(string username, int researchId)
@@ -56,7 +36,7 @@ namespace StrategyGame.Bll.Services.Researches
                 .Include(c => c.Researches)
                     .ThenInclude(cr => cr.Research)
                 .SingleAsync(c => c.ParentUser.UserName == username);
-            
+
             if (country.InProgressResearches.Count > 0)
             {
                 throw new InProgressException("The country already has a research in progress.");

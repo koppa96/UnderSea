@@ -97,7 +97,7 @@ namespace StrategyGame.Bll.Extensions
 
             return builder;
         }
-
+        
         /// <summary>
         /// Gets all <see cref="UnitInfo"/>s from all commands and divisions of a country, including units the country does not yet have.
         /// The commands, divisions, unit types and unit contents must be included in the country.
@@ -107,7 +107,7 @@ namespace StrategyGame.Bll.Extensions
         /// <param name="mapper">The mapper used to convert <see cref="UnitType"/> to <see cref="UnitInfo"/>.</param>
         /// <returns>The list of units.</returns>
         /// <exception cref="ArgumentNullException">Thrown if an argument was null.</exception>
-        public static async Task<IEnumerable<UnitInfo>> GetAllUnitInfoAsync(this Country country, UnderSeaDatabaseContext context,
+        public static async Task<IEnumerable<BriefUnitInfo>> GetAllBriefUnitInfoAsync(this Country country, UnderSeaDatabaseContext context,
             IMapper mapper)
         {
             if (country == null)
@@ -136,7 +136,7 @@ namespace StrategyGame.Bll.Extensions
 
             return flattened.Select(d =>
             {
-                var ui = mapper.Map<UnitType, UnitInfo>(d.Key);
+                var ui = mapper.Map<UnitType, BriefUnitInfo>(d.Key);
                 ui.Count = d.Value;
                 return ui;
             }).ToList();

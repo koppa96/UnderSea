@@ -28,7 +28,7 @@ namespace StrategyGame.Api.Controllers
         [ProducesResponseType(200)]
         public async Task<ActionResult<IEnumerable<CreationInfo>>> GetResearchesAsync()
         {
-            return Ok(await _researchService.GetResearchesAsync(User.Identity.Name));
+            return Ok(await _researchService.GetResearchesAsync());
         }
 
         [HttpPost("{id}")]

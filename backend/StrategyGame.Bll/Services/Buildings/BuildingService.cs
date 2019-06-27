@@ -1,14 +1,13 @@
-using System;
-using System.Runtime.InteropServices;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using StrategyGame.Bll.Dto.Sent;
-using StrategyGame.Dal;
-using System.Linq;
-using AutoMapper;
-using StrategyGame.Model.Entities;
 using StrategyGame.Bll.Exceptions;
+using StrategyGame.Dal;
+using StrategyGame.Model.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace StrategyGame.Bll.Services.Buildings
 {
@@ -23,32 +22,12 @@ namespace StrategyGame.Bll.Services.Buildings
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<CreationInfo>> GetBuildingsAsync(string username)
+        public async Task<IEnumerable<CreationInfo>> GetBuildingsAsync()
         {
-            var country = await _context.Countries
-                .Include(c => c.Buildings)
-                    .ThenInclude(cb => cb.Building)
-                        .ThenInclude(b => b.Content)
-                .SingleAsync(c => c.ParentUser.UserName == username);
-
-            var creationInfos = country.Buildings.Select(cb => {
-                var creationInfo = _mapper.Map<BuildingType, CreationInfo>(cb.Building);
-                creationInfo.Count = cb.Count;
-                return creationInfo;
-            }).ToList();
-
-            var buildingTypes = await _context.BuildingTypes.Include(b => b.Content).ToListAsync();
-            foreach (var buildingInfo in buildingTypes)
-            {
-                if (creationInfos.Any(ci => ci.Id == buildingInfo.Id))
-                {
-                    continue;
-                }
-
-                creationInfos.Add(_mapper.Map<BuildingType, CreationInfo>(buildingInfo));
-            }
-
-            return creationInfos;
+            return (await _context.BuildingTypes
+                .Include(b => b.Content)
+                .ToListAsync())
+                .Select(b => _mapper.Map<BuildingType, CreationInfo>(b));
         }
 
         public async Task StartBuildingAsync(string username, int buildingId)

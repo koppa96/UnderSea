@@ -39,21 +39,12 @@ namespace StrategyGame.Tests.Services
         }
 
         [TestMethod]
-        [DataRow("TheCommander")]
-        public async Task TestGetUnitInfo(string username)
-        {
-            var units = await unitService.GetUnitInfoAsync(username);
-            Assert.IsTrue(units.All(u => u.Count > 0));
-        }
-
-        [TestMethod]
         [DataRow("TheBuilder")]
         public async Task TestBuyUnit(string username)
         {
             var id = (await context.UnitTypes.FirstAsync()).Id;
 
-            await unitService.CreateUnitAsync(username, new[] { new PurchaseDetails { UnitId = id, Count = 10 } });
-            var units = await unitService.GetUnitInfoAsync(username);
+            var units = await unitService.CreateUnitAsync(username, new[] { new PurchaseDetails { UnitId = id, Count = 10 } });
             Assert.AreEqual(units.Single(u => u.Id == id).Count, 10);
         }
 
@@ -65,8 +56,6 @@ namespace StrategyGame.Tests.Services
 
             await unitService.CreateUnitAsync(username, new[] { new PurchaseDetails { UnitId = id, Count = 10 } });
             await unitService.DeleteUnitsAsync(username, id, 10);
-            var units = await unitService.GetUnitInfoAsync(username);
-            Assert.AreEqual(units.Single(u => u.Id == id).Count, 0);
         }
 
         [TestMethod]

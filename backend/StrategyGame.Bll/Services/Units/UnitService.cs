@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using StrategyGame.Bll.Dto.Sent;
+using StrategyGame.Bll.Dto.Sent.Country;
 using StrategyGame.Bll.DTO.Received;
 using StrategyGame.Bll.EffectParsing;
 using StrategyGame.Bll.Exceptions;
@@ -30,19 +31,15 @@ namespace StrategyGame.Bll.Services.Units
             Parsers = container ?? throw new ArgumentNullException(nameof(container));
         }
 
-        public async Task<IEnumerable<UnitInfo>> GetUnitInfoAsync(string username)
+        public async Task<IEnumerable<UnitInfo>> GetUnitInfoAsync()
         {
-            var country = await Context.Countries
-              .Include(c => c.Commands)
-              .ThenInclude(comm => comm.Divisions)
-              .ThenInclude(d => d.Unit)
-              .ThenInclude(u => u.Content)
-              .SingleAsync(c => c.ParentUser.UserName == username);
-
-            return await country.GetAllUnitInfoAsync(Context, Mapper);
+            return (await Context.UnitTypes
+                .Include(u => u.Content)
+                .ToListAsync())
+                .Select(u => Mapper.Map<UnitType, UnitInfo>(u));
         }
 
-        public async Task<IEnumerable<UnitInfo>> CreateUnitAsync(string username, IEnumerable<PurchaseDetails> purchases)
+        public async Task<IEnumerable<BriefUnitInfo>> CreateUnitAsync(string username, IEnumerable<PurchaseDetails> purchases)
         {
             var globals = await Context.GlobalValues.SingleAsync();
 
@@ -64,7 +61,7 @@ namespace StrategyGame.Bll.Services.Units
                             .ThenInclude(rf => rf.Effect)
                .SingleAsync(c => c.ParentUser.UserName == username);
 
-            var unitInfos = new List<UnitInfo>();
+            var unitInfos = new List<BriefUnitInfo>();
             foreach (var purchase in purchases)
             {
                 var unit = unitTypes.Single(u => u.Id == purchase.UnitId);
@@ -113,7 +110,7 @@ namespace StrategyGame.Bll.Services.Units
                 country.Pearls -= costPearl;
                 country.Corals -= costCoral;
 
-                var info = Mapper.Map<UnitType, UnitInfo>(unit);
+                var info = Mapper.Map<UnitType, BriefUnitInfo>(unit);
                 info.Count = targetDiv.Count;
                 unitInfos.Add(info);
             }

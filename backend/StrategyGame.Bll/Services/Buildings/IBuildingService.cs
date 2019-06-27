@@ -14,9 +14,8 @@ namespace StrategyGame.Bll.Services.Buildings
         /// <summary>
         /// Gets the buildings for the player.
         /// </summary>
-        /// <param name="username">The name of the player</param>
         /// <returns>The information about the buildings</returns>
-         Task<IEnumerable<CreationInfo>> GetBuildingsAsync(string username);
+         Task<IEnumerable<CreationInfo>> GetBuildingsAsync();
 
         /// <summary>
         /// Starts the building of a building for the player.

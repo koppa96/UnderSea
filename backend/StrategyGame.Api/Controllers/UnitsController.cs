@@ -29,7 +29,7 @@ namespace StrategyGame.Api.Controllers
         [ProducesResponseType(200)]
         public async Task<ActionResult<IEnumerable<UnitInfo>>> GetAllUnitsAsync()
         {
-            return Ok(await _unitService.GetUnitInfoAsync(User.Identity.Name));
+            return Ok(await _unitService.GetUnitInfoAsync());
         }
 
         [HttpPost]

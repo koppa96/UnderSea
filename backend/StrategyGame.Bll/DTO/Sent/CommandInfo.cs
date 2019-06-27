@@ -1,7 +1,5 @@
-﻿using System;
+﻿using StrategyGame.Bll.Dto.Sent.Country;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace StrategyGame.Bll.Dto.Sent
 {
@@ -10,6 +8,6 @@ namespace StrategyGame.Bll.Dto.Sent
         public int Id { get; set; }
         public int TargetCountryId { get; set; }
         public string TargetCountryName { get; set; }
-        public IEnumerable<UnitInfo> Units { get; set; }
+        public IEnumerable<BriefUnitInfo> Units { get; set; }
     }
 }

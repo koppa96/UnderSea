@@ -2,9 +2,6 @@
 using StrategyGame.Bll.Dto.Sent;
 using StrategyGame.Bll.Dto.Sent.Country;
 using StrategyGame.Model.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace StrategyGame.Bll.Mapping
 {
@@ -14,6 +11,11 @@ namespace StrategyGame.Bll.Mapping
         {
             CreateMap<Country, CountryInfo>();
             CreateMap<Country, RankInfo>();
+
+            CreateMap<UnitType, BriefUnitInfo>()
+                .ForMember(dest => dest.Name, conf => conf.MapFrom(src => src.Content.Name))
+                .ForMember(dest => dest.ImageUrl, conf => conf.MapFrom(src => src.Content.ImageUrl))
+                .ForMember(dest => dest.Id, conf => conf.MapFrom(src => src.Id));
 
             CreateMap<CountryBuilding, BriefCreationInfo>()
                 .ForMember(dest => dest.ImageUrl, conf => conf.MapFrom(src => src.Building.Content.ImageUrl))

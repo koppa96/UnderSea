@@ -2,6 +2,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using StrategyGame.Bll.Dto.Received;
 using StrategyGame.Bll.Dto.Sent;
+using StrategyGame.Bll.Dto.Sent.Country;
 using StrategyGame.Bll.Extensions;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
@@ -217,7 +218,7 @@ namespace StrategyGame.Bll.Services.Commands
             var commandInfo = mapper.Map<Command, CommandInfo>(command);
             commandInfo.Units = command.Divisions.Select(d =>
             {
-                var unitInfo = mapper.Map<UnitType, UnitInfo>(d.Unit);
+                var unitInfo = mapper.Map<UnitType, BriefUnitInfo>(d.Unit);
                 unitInfo.Count = d.Count;
                 return unitInfo;
             });

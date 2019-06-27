@@ -23,32 +23,7 @@ namespace StrategyGame.Tests.Services
             context = await UtilityFactory.CreateContextAsync();
             researchService = new ResearchService(context, UtilityFactory.CreateMapper());
         }
-
-        [TestMethod]
-        [DataRow("TheResearcher")]
-        public async Task TestGetResearches(string username)
-        {
-            var researches = await researchService.GetResearchesAsync(username);
-
-            var dbResearches = await context.CountryResearches.Include(cr => cr.Research)
-                .Where(cr => cr.ParentCountry.ParentUser.UserName == username)
-                .ToListAsync();
-
-            foreach (var researchInfo in researches)
-            {
-                var dbResearch = dbResearches.SingleOrDefault(cr => cr.Research.Id == researchInfo.Id);
-
-                if (dbResearch != null)
-                {
-                    Assert.AreEqual(dbResearch.Count, researchInfo.Count);
-                }
-                else
-                {
-                    Assert.AreEqual(0, researchInfo.Count);
-                }
-            }
-        }
-
+        
         [TestMethod]
         [DataRow("TheRich")]
         public async Task TestStartResearch(string username)

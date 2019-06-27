@@ -24,31 +24,6 @@ namespace StrategyGame.Tests.Services
         }
 
         [TestMethod]
-        [DataRow("TheBuilder")]
-        public async Task TestGetUserBuildings(string username)
-        {
-            var buildings = await buildingService.GetBuildingsAsync(username);
-
-            var dbBuildings = await context.CountryBuildings.Include(cb => cb.Building)
-                .Where(cb => cb.ParentCountry.ParentUser.UserName == username)
-                .ToListAsync();
-
-            foreach (var buildingInfo in buildings)
-            {
-                var dbBuilding = dbBuildings.SingleOrDefault(cb => cb.Building.Id == buildingInfo.Id);
-                
-                if (dbBuilding == null)
-                {
-                    Assert.AreEqual(0, buildingInfo.Count);
-                }
-                else
-                {
-                    Assert.AreEqual(dbBuilding.Count, buildingInfo.Count);
-                }
-            }
-        }
-
-        [TestMethod]
         [DataRow("TheRich")]
         public async Task TestStartBuilding(string username)
         {
