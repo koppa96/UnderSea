@@ -221,16 +221,19 @@ namespace StrategyGame.Dal
                 .WithMany(e => e.ParentCountries);
 
             // BuildingType - BuildingContent
-            builder.Entity<BuildingType>().HasOne(b => b.Content).WithOne(c => c.Parent)
-                .HasForeignKey<BuildingContent>(c => c.ParentId);
-
-            // BuildingType - BuildingContent
-            builder.Entity<ResearchType>().HasOne(r => r.Content).WithOne(c => c.Parent)
-                .HasForeignKey<ResearchContent>(c => c.ParentId);
-
-            // BuildingType - BuildingContent
-            builder.Entity<UnitType>().HasOne(u => u.Content).WithOne(c => c.Parent)
-                .HasForeignKey<UnitContent>(c => c.ParentId);
+            builder.Entity<BuildingType>()
+                .HasOne(b => b.Content)
+                .WithMany(c => c.Parents);
+            
+            // ResearchType - ResearchContent
+            builder.Entity<ResearchType>()
+                .HasOne(r => r.Content)
+                .WithMany(c => c.Parents);
+            
+            // UnitType - UnitContent
+            builder.Entity<UnitType>()
+                .HasOne(u => u.Content)
+                .WithMany(c => c.Parents);
 
             // Commands
             builder.Entity<Command>()

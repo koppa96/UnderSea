@@ -1,5 +1,6 @@
 ﻿using StrategyGame.Model.Entities.Frontend;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StrategyGame.Model.Entities
 {
@@ -47,5 +48,14 @@ namespace StrategyGame.Model.Entities
         /// Gets or sets the collection of divisions that contain the unit type.
         /// </summary>
         public virtual ICollection<Division> ContainingDivisions { get; set; }
+
+        public int BattlesToLevelUp { get; set; }
+
+        public bool IsPurchasable { get; set; }
+
+        public UnitType RankedUpType { get; set; }
+
+        [NotMapped]
+        public bool CanRankUp => RankedUpType != null;
     }
 }

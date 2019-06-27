@@ -62,40 +62,193 @@ namespace StrategyGame.Bll.Extensions
         /// <returns>The task representing the operation.</returns>
         public static async Task FillWithDefaultAsync(this UnderSeaDatabaseContext context)
         {
+            // Add contents
+            var currentCont = new BuildingContent
+            {
+                Name = "Áramlásirányító",
+                Description = "+50 lakos, 200 korall / kör",
+                ImageUrl = "images/static/buildings/aramlasiranyito-lg.png",
+                IconImageUrl = "images/static/buildings/aramlasiranyito-icon.svg"
+            };
+
+            var reefCastCont = new BuildingContent
+            {
+                Name = "Zátonyvár",
+                Description = "+200 szállás",
+                ImageUrl = "images/static/buildings/zatonyvar-lg.png",
+                IconImageUrl = "images/static/buildings/zatonyvar-icon.svg" +
+                ""
+            };
+
+            context.BuildingContents.AddRange(currentCont, reefCastCont);
+
+            var sealCont = new UnitContent
+            {
+                Name = "Rohamfóka",
+                Description = "Jól támad de rosszul véd",
+                ImageUrl = "images/static/units/rohamfoka.svg",
+                IconImageUrl = "images/static/units/rohamfoka.svg"
+            };
+            var ponyCont = new UnitContent
+            {
+                Name = "Csatacsikó",
+                Description = "Jól véd de rosszul támad",
+                ImageUrl = "images/static/units/csatacsiko.svg",
+                IconImageUrl = "images/static/units/csatacsiko.svg"
+            };
+            var lazorCont = new UnitContent
+            {
+                Name = "Lézercápa",
+                Description = "lazers man",
+                ImageUrl = "images/static/units/lezercapa.svg",
+                IconImageUrl = "images/static/units/lezercapa.svg"
+            };
+            var leaderCont = new UnitContent
+            {
+                Name = "Parancsnok",
+                Description = "Támadást csak parancsnok tud vezetni",
+            };
+
+            context.UnitContents.AddRange(sealCont, ponyCont, lazorCont, leaderCont);
+
+            var mudTCont = new ResearchContent
+            {
+                Name = "Iszap traktor",
+                Description = "Iszapozza a korallt (amitől amúgy IRL meghalna, korall nem növény nem kell neki föld), +10% korall termelés",
+                ImageUrl = "images/static/researches/iszaptraktor-lg.png",
+                IconImageUrl = "images/static/researches/iszaptraktor-sm.png"
+            };
+            var mudCCont = new ResearchContent
+            {
+                Name = "Iszap kombájn",
+                Description = "Nagyon iszapozza a korallt, +15% korall termelés",
+                ImageUrl = "images/static/researches/iszapkombajn-lg.png",
+                IconImageUrl = "images/static/researches/iszapkombajn-sm.png"
+            };
+            var defCont = new ResearchContent
+            {
+                Name = "Korallfal",
+                Description = "Fal, korallból. +20% védekezés",
+                ImageUrl = "images/static/researches/korallfal.svg",
+                IconImageUrl = "images/static/researches/korallfal.svg"
+            };
+            var attCont = new ResearchContent
+            {
+                Name = "Szonárágyú",
+                Description = "Mint a denevér, echo-lokáció. +20% támadás",
+                ImageUrl = "images/static/researches/szonaragyu-lg.png",
+                IconImageUrl = "images/static/researches/szonaragyu-sm.png"
+            };
+            var cCont = new ResearchContent
+            {
+                Name = "Vízalatti harcművészetek",
+                Description = "\"A különbség a lehetetlen és a lehetséges között az egyén akarata.\", +10% védekezés és támadás",
+                ImageUrl = "images/static/researches/vizalatti-harcmuveszetek.svg",
+                IconImageUrl = "images/static/researches/vizalatti-harcmuveszetek.svg"
+            };
+            var taxCont = new ResearchContent
+            {
+                Name = "Alkímia",
+                Description = "A népesség pénzt csinál, +30% adó bevétel",
+                ImageUrl = "images/static/researches/alkimia.svg",
+                IconImageUrl = "images/static/researches/alkimia.svg"
+            };
+
+            context.ResearchContents.AddRange(mudTCont, mudCCont, defCont, attCont, cCont, taxCont);
+
+            var plagueCont = new EventContent
+            {
+                Name = "Pestis",
+                Description = "Az országodban kitört a pestis, elveszítesz 50 embert és egy áramlásirányítót.",
+                FlavourText = "Hozzátok a halottakat!"
+            };
+            var fireCont = new EventContent
+            {
+                Name = "Víz alatti tűz",
+                Description = "Az országodban tűz ütött ki és leégett egy zátonyvár.",
+                FlavourText = "Tűz víz alatt? Micsoda?!"
+            };
+            var mineCont = new EventContent
+            {
+                Name = "Aranybánya",
+                Description = "Az embereid felfedeztek egy új aranybányát, kapsz 1000 bónusz aranyat.",
+                FlavourText = "Nagyon fényes"
+            };
+            var goodhvCont = new EventContent
+            {
+                Name = "Jó termés",
+                Description = "Minden áramlásirányító +50 korallt ad ebben a körben.",
+                FlavourText = "A termés egy stabil ország alapja"
+            };
+            var badhvCont = new EventContent
+            {
+                Name = "Rossz termés",
+                Description = "Minden áramlásirányító -50 korallt ad ebben a körben.",
+                FlavourText = "A király lakomázik, a paraszt éhezik"
+            };
+            var contPopCont = new EventContent
+            {
+                Name = "Elégedett emberek",
+                Description = "Az országodban elégedettek az emberek, ezért extra 50 ember költözött be és építettek maguknak egy áramlásirányítót.",
+                FlavourText = "Nő a nép, nő a felelősség"
+            };
+            var discontPopCont = new EventContent
+            {
+                Name = "Elégedetlen emberek",
+                Description = "Az országodban elégedetlenek az emberek, ezért 50 ember elköltözött és az áramlásirányítójukat lerombolták.",
+                FlavourText = "A paraszt elmegy, pusztítást hagy maga után"
+            };
+            var contSolCont = new EventContent
+            {
+                Name = "Elégedett katonák",
+                Description = "Katonáid elégedettek ebben a körben, minden katona támadása nő eggyel.",
+                FlavourText = "Elégedett katona motivált katona"
+            };
+            var disconSolCont = new EventContent
+            {
+                Name = "Elégedetlen katonák",
+                Description = "Katonáid elégedetlenek ebben a körben, minden katona támadása csökken eggyel.",
+                FlavourText = "Elsőnek a morál, utána a hűség"
+            };
+
+            context.EventContents.AddRange(plagueCont, mineCont, fireCont, goodhvCont, badhvCont,
+                contPopCont, contSolCont, disconSolCont, discontPopCont);
+            await context.SaveChangesAsync();
+
             // Effects, Buildings, researches
             // áramlásirányító
             var popIn = new Effect { Name = KnownValues.PopulationIncrease, Value = 50 };
             var cp = new Effect { Name = KnownValues.CoralProductionIncrease, Value = 200 };
-            var currentController = new BuildingType { CostPearl = 1000, CostCoral = 0, BuildTime = 5, MaxCount = -1 };
+            var currentController = new BuildingType { CostPearl = 1000, CostCoral = 0, BuildTime = 5, MaxCount = -1, Content = currentCont  };
 
             // zátonyvár
             var bsIn = new Effect { Name = KnownValues.BarrackSpaceIncrease, Value = 200 };
-            var reefCastle = new BuildingType { CostPearl = 1000, CostCoral = 0, BuildTime = 5, MaxCount = -1 };
+            var reefCastle = new BuildingType { CostPearl = 1000, CostCoral = 0, BuildTime = 5, MaxCount = -1, Content = reefCastCont };
 
             // Iszaptraktor
             var harvMod1 = new Effect { Name = KnownValues.HarvestModifier, Value = 0.1 };
-            var mudT = new ResearchType { CostPearl = 1000, CostCoral = 0, ResearchTime = 15, MaxCompletedAmount = 1 };
+            var mudT = new ResearchType { CostPearl = 1000, CostCoral = 0, ResearchTime = 15, MaxCompletedAmount = 1, Content = mudTCont };
 
             // Iszapkombájn
             var harvMod2 = new Effect { Name = KnownValues.HarvestModifier, Value = 0.15 };
-            var mudC = new ResearchType { CostPearl = 1000, CostCoral = 0, ResearchTime = 15, MaxCompletedAmount = 1 };
+            var mudC = new ResearchType { CostPearl = 1000, CostCoral = 0, ResearchTime = 15, MaxCompletedAmount = 1, Content = mudCCont };
 
             // korallfal
             var defMod1 = new Effect { Name = KnownValues.UnitDefenseModifier, Value = 0.2 };
-            var wall = new ResearchType { CostPearl = 1000, CostCoral = 0, ResearchTime = 15, MaxCompletedAmount = 1 };
+            var wall = new ResearchType { CostPearl = 1000, CostCoral = 0, ResearchTime = 15, MaxCompletedAmount = 1, Content = defCont };
 
             // Szonárágyú
             var attMod1 = new Effect { Name = KnownValues.UnitAttackModifier, Value = 0.2 };
-            var canon = new ResearchType { CostPearl = 1000, CostCoral = 0, ResearchTime = 15, MaxCompletedAmount = 1 };
+            var canon = new ResearchType { CostPearl = 1000, CostCoral = 0, ResearchTime = 15, MaxCompletedAmount = 1, Content = attCont };
 
             // Harcművészet
             var combModA = new Effect { Name = KnownValues.UnitAttackModifier, Value = 0.1 };
             var combModD = new Effect { Name = KnownValues.UnitDefenseModifier, Value = 0.1 };
-            var martialArts = new ResearchType { CostPearl = 1000, CostCoral = 0, ResearchTime = 15, MaxCompletedAmount = 1 };
+            var martialArts = new ResearchType { CostPearl = 1000, CostCoral = 0, ResearchTime = 15, MaxCompletedAmount = 1, Content = cCont };
 
             // Alchemy
             var taxMod1 = new Effect { Name = KnownValues.TaxationModifier, Value = 0.3 };
-            var alchemy = new ResearchType { CostPearl = 1000, CostCoral = 0, ResearchTime = 15, MaxCompletedAmount = 1 };
+            var alchemy = new ResearchType { CostPearl = 1000, CostCoral = 0, ResearchTime = 15, MaxCompletedAmount = 1, Content = taxCont };
 
 
             // Add effects, buildings, researches
@@ -122,56 +275,67 @@ namespace StrategyGame.Bll.Extensions
                 new ResearchEffect { Research = alchemy, Effect = taxMod1 });
             await context.SaveChangesAsync();
 
-
             // Add units
             // rohamfóka
+            var seal3 = new UnitType
+            { AttackPower = 10, DefensePower = 5, CostPearl = 0, CostCoral = 0, MaintenancePearl = 1, MaintenanceCoral = 1, IsPurchasable = false, Content = sealCont };
+            var seal2 = new UnitType
+            { AttackPower = 8, DefensePower = 3, CostPearl = 0, CostCoral = 0, MaintenancePearl = 1, MaintenanceCoral = 1, BattlesToLevelUp = 5, RankedUpType = seal3, IsPurchasable = false, Content = sealCont };
             var seal = new UnitType
-            { AttackPower = 6, DefensePower = 2, CostPearl = 50, CostCoral = 0, MaintenancePearl = 1, MaintenanceCoral = 1 };
+            { AttackPower = 6, DefensePower = 2, CostPearl = 50, CostCoral = 0, MaintenancePearl = 1, MaintenanceCoral = 1, BattlesToLevelUp = 3, RankedUpType = seal2, IsPurchasable = true, Content = sealCont };
             // csatacsikó
+            var pony3 = new UnitType
+            { AttackPower = 5, DefensePower = 10, CostPearl = 0, CostCoral = 0, MaintenancePearl = 1, MaintenanceCoral = 1, IsPurchasable = false, Content = ponyCont };
+            var pony2 = new UnitType
+            { AttackPower = 3, DefensePower = 8, CostPearl = 0, CostCoral = 0, MaintenancePearl = 1, MaintenanceCoral = 1, BattlesToLevelUp = 5, RankedUpType = pony3, IsPurchasable = false, Content = ponyCont };
             var pony = new UnitType
-            { AttackPower = 2, DefensePower = 6, CostPearl = 50, CostCoral = 0, MaintenancePearl = 1, MaintenanceCoral = 1 };
+            { AttackPower = 2, DefensePower = 6, CostPearl = 50, CostCoral = 0, MaintenancePearl = 1, MaintenanceCoral = 1, BattlesToLevelUp = 3, RankedUpType = pony2, IsPurchasable = true, Content = ponyCont };
             // lézercápa
+            var lazor3 = new UnitType
+            { AttackPower = 10, DefensePower = 10, CostPearl = 0, CostCoral = 0, MaintenancePearl = 3, MaintenanceCoral = 2, IsPurchasable = false, Content = lazorCont };
+            var lazor2 = new UnitType
+            { AttackPower = 7, DefensePower = 7, CostPearl = 0, CostCoral = 0, MaintenancePearl = 3, MaintenanceCoral = 2, BattlesToLevelUp = 5, RankedUpType = lazor3, IsPurchasable = false, Content = lazorCont };
             var lazor = new UnitType
-            { AttackPower = 5, DefensePower = 5, CostPearl = 100, CostCoral = 0, MaintenancePearl = 3, MaintenanceCoral = 2 };
+            { AttackPower = 5, DefensePower = 5, CostPearl = 100, CostCoral = 0, MaintenancePearl = 3, MaintenanceCoral = 2, BattlesToLevelUp = 3, RankedUpType = lazor2, IsPurchasable = true, Content = lazorCont };
             // hadvezér
             var leader = new LeaderType
-            { AttackPower = 0, DefensePower = 0, CostPearl = 400, CostCoral = 0, MaintenancePearl = 4, MaintenanceCoral = 2 };
+            { AttackPower = 0, DefensePower = 0, CostPearl = 400, CostCoral = 0, MaintenancePearl = 4, MaintenanceCoral = 2, BattlesToLevelUp = 3, IsPurchasable = true, Content = leaderCont };
 
-            context.UnitTypes.AddRange(seal, pony, lazor, leader);
+            context.UnitTypes.AddRange(seal3, seal2, seal, pony3, pony2, pony, lazor3, lazor2, lazor, leader);
             await context.SaveChangesAsync();
 
 
             // Add events
-            var plague = new RandomEvent();
+            var plague = new RandomEvent { Content = plagueCont };
             var removeCurrent = new Effect
             { TargetId = currentController.Id, Name = KnownValues.AddBuildingEffect, Value = -1 };
 
-            var fire = new RandomEvent();
+            var fire = new RandomEvent { Content = fireCont };
             var removeCastle = new Effect
             { TargetId = reefCastle.Id, Name = KnownValues.AddBuildingEffect, Value = -1 };
 
-            var mine = new RandomEvent();
+            var mine = new RandomEvent { Content = mineCont };
             var addPearl = new Effect
             { Value = 1000, Name = KnownValues.PearlProductionIncrease };
 
-            var goodHarvest = new RandomEvent();
+            var goodHarvest = new RandomEvent { Content = goodhvCont };
             var extraCoral = new Effect
             { Name = KnownValues.BuildingProductionIncrease, Value = 50 };
 
-            var badHarvest = new RandomEvent();
+            var badHarvest = new RandomEvent { Content = badhvCont };
             var lessCoral = new Effect
             { Name = KnownValues.BuildingProductionIncrease, Value = -50 };
 
-            var contentPopulation = new RandomEvent();
+            var contentPopulation = new RandomEvent { Content = contPopCont };
             var addCurrent = new Effect
             { Name = KnownValues.AddBuildingEffect, TargetId = currentController.Id, Value = 1 };
             var discontentPopulation = new RandomEvent();
 
-            var contentSoldiers = new RandomEvent();
+            var contentSoldiers = new RandomEvent { Content = contSolCont };
             var addAttack = new Effect
             { Name = KnownValues.IncreaseUnitAttack, Value = 1 };
 
-            var discontentSoldiers = new RandomEvent();
+            var discontentSoldiers = new RandomEvent { Content = disconSolCont };
             var removeAttack = new Effect
             { Name = KnownValues.IncreaseUnitAttack, Value = -1 };
 
@@ -190,182 +354,6 @@ namespace StrategyGame.Bll.Extensions
                 new EventEffect { Effect = removeAttack, Event = discontentSoldiers }
             );
             await context.SaveChangesAsync();
-
-
-            // Add contents
-            var currentCont = new BuildingContent
-            {
-                Parent = currentController,
-                Name = "Áramlásirányító",
-                Description = "+50 lakos, 200 korall / kör",
-                ImageUrl = "images/static/buildings/aramlasiranyito-lg.png",
-                IconImageUrl = "images/static/buildings/aramlasiranyito-icon.svg"
-            };
-
-            var reefCastCont = new BuildingContent
-            {
-                Parent = reefCastle,
-                Name = "Zátonyvár",
-                Description = "+200 szállás",
-                ImageUrl = "images/static/buildings/zatonyvar-lg.png",
-                IconImageUrl = "images/static/buildings/zatonyvar-icon.svg" +
-                ""
-            };
-
-            context.BuildingContents.AddRange(currentCont, reefCastCont);
-
-            var sealCont = new UnitContent
-            {
-                Parent = seal,
-                Name = "Rohamfóka",
-                Description = "Jól támad de rosszul véd",
-                ImageUrl = "images/static/units/rohamfoka.svg",
-                IconImageUrl = "images/static/units/rohamfoka.svg"
-            };
-            var ponyCont = new UnitContent
-            {
-                Parent = pony,
-                Name = "Csatacsikó",
-                Description = "Jól véd de rosszul támad",
-                ImageUrl = "images/static/units/csatacsiko.svg",
-                IconImageUrl = "images/static/units/csatacsiko.svg"
-            };
-            var lazorCont = new UnitContent
-            {
-                Parent = lazor,
-                Name = "Lézercápa",
-                Description = "lazers man",
-                ImageUrl = "images/static/units/lezercapa.svg",
-                IconImageUrl = "images/static/units/lezercapa.svg"
-            };
-            var leaderCont = new UnitContent
-            {
-                Parent = leader,
-                Name = "Parancsnok",
-                Description = "Támadást csak parancsnok tud vezetni",
-            };
-
-            context.UnitContents.AddRange(sealCont, ponyCont, lazorCont, leaderCont);
-
-            var mudTCont = new ResearchContent
-            {
-                Parent = mudT,
-                Name = "Iszap traktor",
-                Description = "Iszapozza a korallt (amitől amúgy IRL meghalna, korall nem növény nem kell neki föld), +10% korall termelés",
-                ImageUrl = "images/static/researches/iszaptraktor-lg.png",
-                IconImageUrl = "images/static/researches/iszaptraktor-sm.png"
-            };
-            var mudCCont = new ResearchContent
-            {
-                Parent = mudC,
-                Name = "Iszap kombájn",
-                Description = "Nagyon iszapozza a korallt, +15% korall termelés",
-                ImageUrl = "images/static/researches/iszapkombajn-lg.png",
-                IconImageUrl = "images/static/researches/iszapkombajn-sm.png"
-            };
-            var defCont = new ResearchContent
-            {
-                Parent = wall,
-                Name = "Korallfal",
-                Description = "Fal, korallból. +20% védekezés",
-                ImageUrl = "images/static/researches/korallfal.svg",
-                IconImageUrl = "images/static/researches/korallfal.svg"
-            };
-            var attCont = new ResearchContent
-            {
-                Parent = canon,
-                Name = "Szonárágyú",
-                Description = "Mint a denevér, echo-lokáció. +20% támadás",
-                ImageUrl = "images/static/researches/szonaragyu-lg.png",
-                IconImageUrl = "images/static/researches/szonaragyu-sm.png"
-            };
-            var cCont = new ResearchContent
-            {
-                Parent = martialArts,
-                Name = "Vízalatti harcművészetek",
-                Description = "\"A különbség a lehetetlen és a lehetséges között az egyén akarata.\", +10% védekezés és támadás",
-                ImageUrl = "images/static/researches/vizalatti-harcmuveszetek.svg",
-                IconImageUrl = "images/static/researches/vizalatti-harcmuveszetek.svg"
-            };
-            var taxCont = new ResearchContent
-            {
-                Parent = alchemy,
-                Name = "Alkímia",
-                Description = "A népesség pénzt csinál, +30% adó bevétel",
-                ImageUrl = "images/static/researches/alkimia.svg",
-                IconImageUrl = "images/static/researches/alkimia.svg"
-            };
-
-            context.ResearchContents.AddRange(mudTCont, mudCCont, defCont, attCont, cCont, taxCont);
-
-            var plagueCont = new EventContent
-            {
-                Parent = plague,
-                Name = "Pestis",
-                Description = "Az országodban kitört a pestis, elveszítesz 50 embert és egy áramlásirányítót.",
-                FlavourText = "Hozzátok a halottakat!"
-            };
-            var fireCont = new EventContent
-            {
-                Parent = fire,
-                Name = "Víz alatti tűz",
-                Description = "Az országodban tűz ütött ki és leégett egy zátonyvár.",
-                FlavourText = "Tűz víz alatt? Micsoda?!"
-            };
-            var mineCont = new EventContent
-            {
-                Parent = mine,
-                Name = "Aranybánya",
-                Description = "Az embereid felfedeztek egy új aranybányát, kapsz 1000 bónusz aranyat.",
-                FlavourText = "Nagyon fényes"
-            };
-            var goodhvCont = new EventContent
-            {
-                Parent = goodHarvest,
-                Name = "Jó termés",
-                Description = "Minden áramlásirányító +50 korallt ad ebben a körben.",
-                FlavourText = "A termés egy stabil ország alapja"
-            };
-            var badhvCont = new EventContent
-            {
-                Parent = badHarvest,
-                Name = "Rossz termés",
-                Description = "Minden áramlásirányító -50 korallt ad ebben a körben.",
-                FlavourText = "A király lakomázik, a paraszt éhezik"
-            };
-            var contPopCont = new EventContent
-            {
-                Parent = contentPopulation,
-                Name = "Elégedett emberek",
-                Description = "Az országodban elégedettek az emberek, ezért extra 50 ember költözött be és építettek maguknak egy áramlásirányítót.",
-                FlavourText = "Nő a nép, nő a felelősség"
-            };
-            var discontPopCont = new EventContent
-            {
-                Parent = discontentPopulation,
-                Name = "Elégedetlen emberek",
-                Description = "Az országodban elégedetlenek az emberek, ezért 50 ember elköltözött és az áramlásirányítójukat lerombolták.",
-                FlavourText = "A paraszt elmegy, pusztítást hagy maga után"
-            };
-            var contSolCont = new EventContent
-            {
-                Parent = contentSoldiers,
-                Name = "Elégedett katonák",
-                Description = "Katonáid elégedettek ebben a körben, minden katona támadása nő eggyel.",
-                FlavourText = "Elégedett katona motivált katona"
-            };
-            var disconSolCont = new EventContent
-            {
-                Parent = discontentSoldiers,
-                Name = "Elégedetlen katonák",
-                Description = "Katonáid elégedetlenek ebben a körben, minden katona támadása csökken eggyel.",
-                FlavourText = "Elsőnek a morál, utána a hűség"
-            };
-
-            context.EventContents.AddRange(plagueCont, mineCont, fireCont, goodhvCont, badhvCont,
-                contPopCont, contSolCont, disconSolCont, discontPopCont);
-            await context.SaveChangesAsync();
-
 
             // globals
             context.GlobalValues.Add(new GlobalValue
