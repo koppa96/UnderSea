@@ -1,3 +1,5 @@
+import { IRankInfo } from "../../../../../api/Client";
+
 //ACTIONTYPES
 export interface IGetRankActionsTypes {
   REQUEST: "RANK_REQUEST_GET_RANK";
@@ -12,7 +14,7 @@ export const GetRankActions: IGetRankActionsTypes = {
 };
 
 export interface ISuccesParamState {
-  //Ranks: ICreationInfo[];
+  ranks: IRankInfo[];
 }
 
 //ACTIONHOZ
@@ -29,7 +31,7 @@ export interface IErrorActionGetRank {
 }
 
 //REDUCERHEZ
-export type IActions =
+export type IRankActions =
   | IRequestActionGetRank
   | ISuccesActionGetRank
   | IErrorActionGetRank;

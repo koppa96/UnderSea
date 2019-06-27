@@ -10,6 +10,8 @@ import { ArmyState } from "./mainpage/army/store/store";
 import { ArmyReducer } from "./mainpage/army/store/reducer";
 import { MainpageResponseState } from "./mainpage/store/store";
 import { MainpageReducer } from "./mainpage/store/reducer";
+import { RankState } from "./mainpage/rank/store/store";
+import { RankReducer } from "./mainpage/rank/store/reducer";
 
 export interface PagesState {
   gyakorlas: ManState;
@@ -17,6 +19,7 @@ export interface PagesState {
   Army: ArmyState;
   mainpage: MainpageResponseState;
   buildings: BuildingState;
+  rank: RankState;
 }
 
 export const PagesReducer = combineReducers<PagesState>({
@@ -24,5 +27,6 @@ export const PagesReducer = combineReducers<PagesState>({
   loginDetails: LoginReducer,
   Army: ArmyReducer,
   mainpage: MainpageReducer,
-  buildings: BuildingReducer
+  buildings: BuildingReducer,
+  rank: RankReducer
 });

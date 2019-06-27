@@ -2,9 +2,10 @@ import React from "react";
 import { ComponentHeader } from "../../../components/componentHeader";
 import { RankProps } from "./Interface";
 
-export class Rank extends React.Component /*<RankProps>*/ {
+export class Rank extends React.Component<RankProps> {
   componentDidMount() {
     document.title = title;
+    this.props.getAllBuilding();
   }
   handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -13,7 +14,7 @@ export class Rank extends React.Component /*<RankProps>*/ {
   };
 
   render() {
-    //  const{ id,place,name, point}=this.props.rank;
+    const { totalRank } = this.props;
     return (
       <div className="main-component rank-width">
         <ComponentHeader title={title} />
@@ -23,11 +24,11 @@ export class Rank extends React.Component /*<RankProps>*/ {
           placeholder="Felhasználónév"
         />
         <ul className="rank-page">
-          {mockData.map(item => (
-            <li key={item.id}>
-              <span>{item.place}.</span>
+          {totalRank.map(item => (
+            <li key={item.name}>
+              <span>{item.rank}.</span>
               <span>{item.name}</span>
-              <span className="rank-point">{item.point}</span>
+              <span className="rank-point">{item.score}</span>
             </li>
           ))}
         </ul>
