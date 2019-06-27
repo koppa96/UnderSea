@@ -42,46 +42,20 @@ const beginAddUnits = (unitsToAdd: ArmyUnit[]): Promise<IActions> | any => {
   // return axiosClient.create(unitsToAdd)
 };
 
+const getUnits = () => {
+  return axios
+    .get("/api/Units")
+    .then(response => {
+      return response.data;
+    })
+    .catch(error => {
+      throw new Error(error);
+    });
+};
+
 function* handleArmyGetUnits(action: IActionGetArmyUnitRequest) {
   try {
-    // const response = yield call(API, nincs param);
-    const response: IGetArmyRespone = [
-      {
-        id: 1,
-        imageUrl: "asdasd",
-        name: "Lézercápa",
-        count: 10,
-        attackPower: 5,
-        defensePower: 5,
-        maintenancePearl: 1,
-        maintenanceCoral: 10,
-        costPearl: 3
-      },
-      {
-        id: 2,
-        imageUrl: "asdasd",
-        name: "Foka",
-        count: 15,
-        attackPower: 1,
-        defensePower: 6,
-        maintenancePearl: 1,
-        maintenanceCoral: 10,
-        costPearl: 3
-      },
-      {
-        id: 3,
-        imageUrl: "asdasd",
-        name: "Csatacsikó",
-        count: 20,
-        attackPower: 5,
-        defensePower: 5,
-        maintenancePearl: 1,
-        maintenanceCoral: 10,
-        costPearl: 3
-      }
-    ];
-    // TODO: Delete
-    yield delay(2000);
+    const response = yield call(getUnits);
     yield put(ArmyUnitGetSuccessActionCreator(response));
   } catch (err) {
     const ErrorMEssage: string = "Sajnos valami hiba történt betöltés közben";

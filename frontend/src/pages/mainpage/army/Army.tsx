@@ -11,22 +11,6 @@ interface InitialState {
   units: Unit[];
   unitsAdded: boolean;
 }
-/*const initialState = {
-  troopsToAdd: [
-    {
-      unitId: 1,
-      count: 0
-    },
-    {
-      unitId: 2,
-      count: 0
-    },
-    {
-      unitId: 3,
-      count: 0
-    }
-  ]
-};*/
 
 export class Army extends React.Component<ArmyProps, InitialState> {
   componentDidMount() {
@@ -35,34 +19,28 @@ export class Army extends React.Component<ArmyProps, InitialState> {
       this.props.getArmy();
     }
   }
-  state = {
-    units: [
-      {
-        unitId: 1,
-        count: 0
-      },
-      {
-        unitId: 2,
-        count: 0
-      },
-      {
-        unitId: 3,
-        count: 0
-      }
-    ],
+  state: InitialState = {
+    units: [],
     unitsAdded: false
   };
 
   currentSoldiers = (id: number, troop: number) => {
-    const newtTemp = this.state.units.map(unit => {
+    const temp = this.state.units;
+    const index = this.state.units.findIndex(unit => unit.unitId == id);
+    if (index !== undefined && index != -1) {
+      temp[index].count = troop;
+    } else {
+      temp.push({ unitId: id, count: troop });
+    }
+    /*const newtTemp = this.state.units.map(unit => {
       if (unit.unitId == id) {
         return { ...unit, count: troop };
       }
       return unit;
-    });
-    console.log(newtTemp.some(item => item.count != 0));
-    this.setState({ units: newtTemp });
-    if (newtTemp.some(item => item.count != 0)) {
+    });*/
+    console.log(temp.some(item => item.count != 0));
+    this.setState({ units: temp });
+    if (temp.some(item => item.count != 0)) {
       this.setState({ unitsAdded: true });
     } else {
       this.setState({ unitsAdded: false });
