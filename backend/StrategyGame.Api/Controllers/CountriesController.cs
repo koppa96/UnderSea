@@ -27,13 +27,21 @@ namespace StrategyGame.Api.Controllers
             return Ok(await _countryService.GetCountriesAsync(User.Identity.Name));
         }
 
+        [HttpPut("{id}/{name}")]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(200)]
+        public async Task<ActionResult<BriefCountryInfo>> BuyCountryAsync(int id, string name)
+        {
+            return Ok(await _countryService.BuyAsync(User.Identity.Name, id, name));
+        }
+
         [HttpGet("{id}")]
         [ProducesResponseType(401)]
         [ProducesResponseType(400)]
         [ProducesResponseType(200)]
         public async Task<ActionResult<CountryInfo>> GetCurrentStateAsync(int id)
         {
-            return Ok(await _countryService.GetCountryInfoAsync(User.Identity.Name, id));            
+            return Ok(await _countryService.GetCountryInfoAsync(User.Identity.Name, id));
         }
     }
 }

@@ -371,7 +371,9 @@ namespace StrategyGame.Bll.Extensions
                 ScoreUnitMultiplier = 5,
                 FirstStartingBuilding = reefCastle,
                 SecondStartingBuilding = currentController,
-                RandomAttackModifier = 0.1
+                RandomAttackModifier = 0.1,
+                NewCountryCoralCost = 100000,
+                NewCountryPearlCost = 100000
             });
             await context.SaveChangesAsync();
         }
