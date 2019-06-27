@@ -1,18 +1,89 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="58.667" height="58.667" viewBox="0 0 58.667 58.667">
-  <g id="icon_zatonyvar" transform="translate(-1003 -38)">
-    <g id="Rectangle_4" data-name="Rectangle 4" transform="translate(1003 38)" fill="#9ffff0" stroke="#428dff" stroke-width="2">
-      <rect width="58.667" height="58.667" rx="14" stroke="none"/>
-      <rect x="1" y="1" width="56.667" height="56.667" rx="13" fill="none"/>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="58.667"
+   height="58.667"
+   viewBox="0 0 58.667 58.667"
+   version="1.1"
+   id="svg3789"
+   sodipodi:docname="zatonyvar-icon.svg"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
+  <metadata
+     id="metadata3795">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs3793" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1600"
+     inkscape:window-height="837"
+     id="namedview3791"
+     showgrid="false"
+     inkscape:zoom="4.0227044"
+     inkscape:cx="29.3335"
+     inkscape:cy="29.3335"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg3789" />
+  <g
+     transform="translate(-876.947,61.806)"
+     data-name="Group 10"
+     id="Group_10">
+    <g
+       style="fill:#dfe3ee;stroke:#428dff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"
+       transform="translate(889.754,-50.5)"
+       data-name="Ellipse 1"
+       id="Ellipse_1">
+      <circle
+         style="stroke:none"
+         r="16.296"
+         id="ellipse3777"
+         cy="16.296"
+         cx="16.296" />
+      <circle
+         style="fill:none"
+         r="15.296"
+         id="ellipse3779"
+         cy="16.296"
+         cx="16.296" />
     </g>
-    <g id="Group_10" data-name="Group 10" transform="translate(126.053 99.806)">
-      <g id="Ellipse_1" data-name="Ellipse 1" transform="translate(889.754 -50.5)" fill="#dfe3ee" stroke="#428dff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-        <ellipse cx="16.296" cy="16.296" rx="16.296" ry="16.296" stroke="none"/>
-        <ellipse cx="16.296" cy="16.296" rx="15.296" ry="15.296" fill="none"/>
-      </g>
-      <g id="Path_98" data-name="Path 98" transform="translate(887 -28.16)" fill="#dfe3ee" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M 36.84499740600586 11.54709529876709 L 1.10230553150177 11.54709529876709 L 2.131284475326538 1.00000524520874 L 35.81602096557617 1.00000524520874 L 36.84499740600586 11.54709529876709 Z" stroke="none"/>
-        <path d="M 3.038478851318359 1.999995231628418 L 2.204620361328125 10.54708480834961 L 35.74268341064453 10.54708480834961 L 34.9088249206543 1.999995231628418 L 3.038478851318359 1.999995231628418 M 1.224102020263672 -4.76837158203125e-06 L 36.72320175170898 -4.76837158203125e-06 L 37.94730377197266 12.54708480834961 L 0 12.54708480834961 L 1.224102020263672 -4.76837158203125e-06 Z" stroke="none" fill="#428dff"/>
-      </g>
+    <g
+       style="fill:#dfe3ee;stroke-linecap:round;stroke-linejoin:round"
+       transform="translate(887,-28.16)"
+       data-name="Path 98"
+       id="Path_98">
+      <path
+         style="stroke:none"
+         inkscape:connector-curvature="0"
+         id="path3782"
+         d="M 36.844997,11.547095 H 1.1023055 L 2.1312845,1.0000052 H 35.816021 Z" />
+      <path
+         style="fill:#428dff;stroke:none"
+         inkscape:connector-curvature="0"
+         id="path3784"
+         d="M 3.0384789,1.9999952 2.2046204,10.547085 H 35.742683 L 34.908825,1.9999952 H 3.0384789 M 1.224102,-4.7683716e-6 h 35.4991 L 37.947304,12.547085 H 0 Z" />
     </g>
   </g>
 </svg>
