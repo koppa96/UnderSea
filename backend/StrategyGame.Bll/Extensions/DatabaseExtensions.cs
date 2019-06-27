@@ -140,5 +140,10 @@ namespace StrategyGame.Bll.Extensions
                 return ui;
             }).ToList();
         }
+
+        public static void MergeInto(this Division division, Command command)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
