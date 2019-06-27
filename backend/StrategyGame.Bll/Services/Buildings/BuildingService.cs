@@ -72,6 +72,9 @@ namespace StrategyGame.Bll.Services.Buildings
                 throw new InvalidOperationException("Not enough money");
             }
 
+            country.Pearls -= buildingType.CostPearl;
+            country.Corals -= buildingType.CostCoral;
+
             var inProgressBuilding = new InProgressBuilding
             {
                 ParentCountry = country,

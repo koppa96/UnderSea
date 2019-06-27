@@ -79,6 +79,9 @@ namespace StrategyGame.Bll.Services.Researches
                 throw new InvalidOperationException("Not enough money.");
             }
 
+            country.Pearls -= researchType.CostPearl;
+            country.Corals -= researchType.CostCoral;
+
             var inProgressResearch = new InProgressResearch
             {
                 ParentCountry = country,
