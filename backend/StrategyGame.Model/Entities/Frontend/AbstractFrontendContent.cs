@@ -1,4 +1,6 @@
-﻿namespace StrategyGame.Model.Entities.Frontend
+﻿using System.Collections.Generic;
+
+namespace StrategyGame.Model.Entities.Frontend
 {
     /// <summary>
     /// Provides an abstract base for frontend content classes.
@@ -13,14 +15,9 @@
         where TEntity : AbstractFrontendContent<TParent, TEntity>
     {
         /// <summary>
-        /// Gets or sets the parent ID of the parent.
-        /// </summary>
-        public int ParentId { get; set; }
-
-        /// <summary>
         /// Gets the object the content belongs to.
         /// </summary>
-        public TParent Parent { get; set; }
+        public ICollection<TParent> Parents { get; set; }
 
         /// <summary>
         /// Gets or sets the name for the content.
