@@ -145,7 +145,8 @@ namespace StrategyGame.Api.Controllers
             return StatusCode(201, new UserInfo
             {
                 Username = user.UserName,
-                Email = user.Email
+                Email = user.Email,
+                ProfileImageUrl = user.ImageUrl
             });
         }
 
