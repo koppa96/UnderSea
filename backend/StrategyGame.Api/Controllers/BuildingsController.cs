@@ -38,7 +38,7 @@ namespace StrategyGame.Api.Controllers
         [ProducesResponseType(200)]
         public async Task<ActionResult> StartBuildingAsync(int countryId, int buildingId)
         {
-            await _buildingService.StartBuildingAsync(User.Identity.Name, id);
+            await _buildingService.StartBuildingAsync(User.Identity.Name, countryId, buildingId);
             return Ok();
         }
     }

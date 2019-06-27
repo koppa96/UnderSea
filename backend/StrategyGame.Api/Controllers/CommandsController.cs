@@ -36,7 +36,7 @@ namespace StrategyGame.Api.Controllers
         [ProducesResponseType(200)]
         public async Task<ActionResult<CommandInfo>> AttackTargetAsync(int id, [FromBody] CommandDetails command)
         {
-            return Ok(await _commandService.AttackTargetAsync(User.Identity.Name, command));
+            return Ok(await _commandService.AttackTargetAsync(User.Identity.Name, id, command));
         }
 
         [HttpDelete("{id}")]

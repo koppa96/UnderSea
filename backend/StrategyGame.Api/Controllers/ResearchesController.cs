@@ -38,7 +38,7 @@ namespace StrategyGame.Api.Controllers
         [ProducesResponseType(200)]
         public async Task<ActionResult> StartResearchAsync(int countryId, int researchId)
         {
-            await _researchService.StartResearchAsync(User.Identity.Name, id);
+            await _researchService.StartResearchAsync(User.Identity.Name, countryId, researchId);
             return Ok();
         }
     }

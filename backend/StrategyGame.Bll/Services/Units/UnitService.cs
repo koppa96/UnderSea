@@ -49,7 +49,7 @@ namespace StrategyGame.Bll.Services.Units
                 throw new UnauthorizedAccessException("Can't access country not owned by the user.");
             }
 
-            return await country.GetAllUnitInfoAsync(Database, Mapper);
+            return await country.GetAllUnitInfoAsync(Context, Mapper);
         }
 
         public async Task<IEnumerable<UnitInfo>> CreateUnitAsync(string username, int countryId, IEnumerable<PurchaseDetails> purchases)

@@ -2,9 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using StrategyGame.Bll.Dto.Sent;
 using StrategyGame.Bll.DTO.Received;
-using StrategyGame.Bll.Exceptions;
 using StrategyGame.Bll.Services.Units;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -28,28 +26,7 @@ namespace StrategyGame.Api.Controllers
         [ProducesResponseType(200)]
         public async Task<ActionResult<IEnumerable<UnitInfo>>> GetAllUnitsAsync(int countryid)
         {
-            try
-            {
-                return Ok(await _unitService.GetUnitInfoAsync(User.Identity.Name, countryid));
-            }
-            catch (ArgumentOutOfRangeException e)
-            {
-                return BadRequest(new ProblemDetails
-                {
-                    Status = 400,
-                    Title = ErrorMessages.BadRequest,
-                    Detail = e.Message
-                });
-            }
-            catch (UnauthorizedAccessException e)
-            {
-                return Unauthorized(new ProblemDetails
-                {
-                    Status = 401,
-                    Title = ErrorMessages.Unauthorized,
-                    Detail = e.Message
-                });
-            }
+            return Ok(await _unitService.GetUnitInfoAsync(User.Identity.Name, countryid));
         }
 
         [HttpPost("{countryid}")]
@@ -59,7 +36,7 @@ namespace StrategyGame.Api.Controllers
         [ProducesResponseType(201)]
         public async Task<ActionResult<IEnumerable<UnitInfo>>> CreateAsync(int countryid, [FromBody] IEnumerable<PurchaseDetails> purchases)
         {
-            return Ok(await _unitService.CreateUnitAsync(User.Identity.Name, purchases));
+            return Ok(await _unitService.CreateUnitAsync(User.Identity.Name, countryid, purchases));
         }
 
         [HttpDelete("{countryid}/{id}/{count}")]
@@ -69,7 +46,7 @@ namespace StrategyGame.Api.Controllers
         [ProducesResponseType(204)]
         public async Task<ActionResult> DeleteAsync(int countryid, int id, int count)
         {
-            await _unitService.DeleteUnitsAsync(User.Identity.Name, id, count);
+            await _unitService.DeleteUnitsAsync(User.Identity.Name, countryid, id, count);
             return NoContent();
         }
     }
