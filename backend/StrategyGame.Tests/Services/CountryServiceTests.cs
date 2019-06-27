@@ -43,6 +43,30 @@ namespace StrategyGame.Tests.Services
         }
 
         [TestMethod]
+        [DataRow("TheCommander")]
+        public async Task TestGetCountryUnits(string username)
+        {
+            var info = await countryService.GetCountryInfoAsync(username);
+            Assert.IsTrue(info.ArmyInfo.Any(a => a.Count > 0));
+        }
+
+        [TestMethod]
+        [DataRow("TheResearcher")]
+        public async Task TestGetCountryResearches(string username)
+        {
+            var info = await countryService.GetCountryInfoAsync(username);
+            Assert.IsTrue(info.Researches.Any(r => r.Count > 0));
+        }
+
+        [TestMethod]
+        [DataRow("TheBuilder")]
+        public async Task TestGetCountryBuildings(string username)
+        {
+            var info = await countryService.GetCountryInfoAsync(username);
+            Assert.IsTrue(info.Buildings.Any(b => b.Count > 0));
+        }
+
+        [TestMethod]
         [DataRow("TheBuilder")]
         public async Task TestGetCountryEffects(string username)
         {

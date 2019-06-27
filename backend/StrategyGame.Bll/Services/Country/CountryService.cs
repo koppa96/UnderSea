@@ -113,7 +113,7 @@ namespace StrategyGame.Bll.Services.Country
 
             foreach (var research in country.Researches)
             {
-                totalBuildings[research.Research.Id] = Mapper.Map<CountryResearch, BriefCreationInfo>(research);
+                totalResearches[research.Research.Id] = Mapper.Map<CountryResearch, BriefCreationInfo>(research);
             }
 
             // Add in progress buildings and researches
