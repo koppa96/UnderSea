@@ -45,7 +45,8 @@ export const MainpageReducer = (
         : [];
       for (let index = 0; index < newBuilding.length; index++) {
         if (newBuilding[index].id === state.lastBuilding) {
-          newBuilding[index].count = newBuilding[index].count + 1;
+          newBuilding[index].inProgressCount =
+            newBuilding[index].inProgressCount + 1;
         }
       }
 
