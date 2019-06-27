@@ -1,9 +1,7 @@
 import React from "react";
 import { Menu } from "../../components/menu";
-import { ProfileContainer } from "../../components/profileContainer";
 import { Route, Switch } from "react-router-dom";
 import { Development } from "./development/Development";
-import { War } from "./war";
 import { TestConnected } from "../gyakorlás/connect";
 import { BuildingsConnected } from "./buildings/connect";
 import { NavBarConnected } from "../../components/navBar/connect";
@@ -11,6 +9,8 @@ import { Attack } from "./attack";
 import { ArmyConnected } from "./army/connect";
 import { MainPageProps } from "./Interface";
 import { RankConnected } from "./rank/connect";
+import { ProfileContainerConnected } from "../../components/profileContainer/connect";
+import { WarConnected } from "./war/connect";
 //import { ArmyConnected } from "./army/connect";
 
 export class MainPage extends React.Component<MainPageProps> {
@@ -32,7 +32,7 @@ export class MainPage extends React.Component<MainPageProps> {
           <div className="side-menu">
             <Menu />
             <div>
-              <ProfileContainer />
+              <ProfileContainerConnected />
               <h3 className="undersea-font-mainpage">UNDERSEA</h3>
             </div>
           </div>
@@ -45,7 +45,7 @@ export class MainPage extends React.Component<MainPageProps> {
                 <Development />
               </Route>
               <Route path="/account/war">
-                <War />
+                <WarConnected />
               </Route>
               <Route path="/account/attack">
                 <Attack />

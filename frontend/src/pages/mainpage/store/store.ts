@@ -17,10 +17,3 @@ export const initialMainpageResponseState: MainpageResponseState = {
 };
 
 //REDUCER
-export interface MainpageState {
-  buildingIds: BuildingState;
-}
-
-export const MainpageReducer = combineReducers<MainpageState>({
-  buildingIds: BuildingReducer
-});

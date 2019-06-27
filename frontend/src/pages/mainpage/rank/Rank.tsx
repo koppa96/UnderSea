@@ -23,15 +23,19 @@ export class Rank extends React.Component<RankProps> {
           className="rank-input"
           placeholder="Felhasználónév"
         />
-        <ul className="rank-page">
-          {totalRank.map(item => (
-            <li key={item.name}>
-              <span>{item.rank}.</span>
-              <span>{item.name}</span>
-              <span className="rank-point">{item.score}</span>
-            </li>
-          ))}
-        </ul>
+        {totalRank.loading ? (
+          <span>Betöltés...</span>
+        ) : (
+          <ul className="rank-page">
+            {totalRank.rank.map(item => (
+              <li key={item.name}>
+                <span>{item.rank}.</span>
+                <span>{item.name}</span>
+                <span className="rank-point">{item.score}</span>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     );
   }

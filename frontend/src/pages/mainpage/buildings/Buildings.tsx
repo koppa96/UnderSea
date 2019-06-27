@@ -21,7 +21,7 @@ export class Buildings extends React.Component<BuildingProps> {
     const { boughtBuildingState } = this.props;
     const sendBuilding =
       boughtBuildingState &&
-      boughtBuildingState.find(x => x.id === +currentValue);
+      boughtBuildingState.buildings.find(x => x.id === +currentValue);
     const temp = {
       id: sendBuilding ? sendBuilding.id : -1,
       count: sendBuilding ? sendBuilding.count : -1
@@ -34,12 +34,8 @@ export class Buildings extends React.Component<BuildingProps> {
   };
 
   render() {
-    const {
-      addBuilding,
-      boughtBuildingState,
-
-      totalpearl
-    } = this.props;
+    const { addBuilding, boughtBuildingState, totalpearl } = this.props;
+    const error = boughtBuildingState ? boughtBuildingState.error : "";
     return (
       <div className="main-component">
         <ComponentHeader
@@ -48,33 +44,47 @@ export class Buildings extends React.Component<BuildingProps> {
           description={description}
         />
         <div className="building-page hide-scroll">
-          {boughtBuildingState &&
-            boughtBuildingState.map(item => (
-              <label key={item.id}>
-                {totalpearl >= item.cost && (
-                  <input
-                    onClick={this.addBuildingByID}
-                    value={item.id}
-                    name="select"
-                    className="sr-only"
-                    type="radio"
+          {boughtBuildingState ? (
+            boughtBuildingState.loading ? (
+              <span>Betöltés...</span>
+            ) : (
+              boughtBuildingState &&
+              boughtBuildingState.buildings.map(item => (
+                <label key={item.id}>
+                  {totalpearl >= item.cost && (
+                    <input
+                      onClick={this.addBuildingByID}
+                      value={item.id}
+                      name="select"
+                      className="sr-only"
+                      type="radio"
+                    />
+                  )}
+                  <BuildingItem
+                    id={item.id}
+                    amount={item.count}
+                    title={item.name ? item.name : ""}
+                    price={item.cost + " Gyöngy/darab"}
+                    description={
+                      item.description
+                        ? item.description
+                        : "Nem tartozik leírás"
+                    }
+                    imageUrl={item.imageUrl ? item.imageUrl : ""}
                   />
-                )}
-                <BuildingItem
-                  id={item.id}
-                  amount={item.count}
-                  title={item.name ? item.name : ""}
-                  price={item.cost + " Gyöngy/darab"}
-                  description={
-                    item.description ? item.description : "Nem tartozik leírás"
-                  }
-                  imageUrl={item.imageUrl ? item.imageUrl : ""}
-                />
-              </label>
-            ))}
+                </label>
+              ))
+            )
+          ) : (
+            <span>{error}</span>
+          )}
         </div>
         <button onClick={() => addBuilding(this.state.buildIDs.id)}>
-          Megveszem
+          {boughtBuildingState
+            ? boughtBuildingState.isPostRequesting
+              ? "Töltés"
+              : "Megveszem"
+            : "Hiba"}
         </button>
       </div>
     );

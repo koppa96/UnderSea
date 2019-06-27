@@ -8,7 +8,7 @@ import {
 interface NativeProps {}
 
 export interface MappedProps {
-  boughtBuildingState?: ICreationInfo[];
+  boughtBuildingState?: BuildingState;
   buildingCount?: countProp[];
   totalpearl: number;
   totalcoral: number;

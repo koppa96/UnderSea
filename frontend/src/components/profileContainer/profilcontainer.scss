@@ -33,6 +33,9 @@ $local-profilrect-size: 96px;
     height: $local-profilrect-size;
   }
 }
+.logout {
+  cursor: pointer;
+}
 .profile-bg > * {
   color: rgba(#ffffff, $alpha: 0.75);
   font-family: Baloo;

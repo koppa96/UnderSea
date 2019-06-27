@@ -29,7 +29,11 @@ const mapStateToProps = (state: IApllicationState): MappedProps => {
   }
 
   return {
-    boughtBuildingState: temp,
+    boughtBuildingState: {
+      ...state.app.pages.buildings,
+      buildings: temp
+    },
+
     totalpearl: model ? model.pearls : 0,
     totalcoral: model ? model.corals : 0
   };

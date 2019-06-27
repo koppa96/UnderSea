@@ -30,5 +30,6 @@ export const appRootReducer: Reducer<AppState> = (
   if (action.type === "RESET_EVERYTHING") {
     state = undefined;
   }
+  localStorage.clear();
   return appReducer(state, action);
 };

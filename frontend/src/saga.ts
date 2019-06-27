@@ -6,6 +6,8 @@ import { watchMainPageFetchRequest } from "./pages/mainpage/store/saga";
 import { watchAddBuildingRequest } from "./pages/mainpage/buildings/store/actions/saga.post";
 import { watchBuildingFetchRequest } from "./pages/mainpage/buildings/store/actions/saga.get";
 import { watchRankFetchRequest } from "./pages/mainpage/rank/store/actions/saga.get";
+import { watchProfileFetchRequest } from "./components/profileContainer/store/saga";
+import { watchWarFetchRequest } from "./pages/mainpage/war/store/saga";
 
 export function* rootSaga() {
   yield all([
@@ -14,6 +16,8 @@ export function* rootSaga() {
     call(watchArmyUnits),
     call(watchBuildingFetchRequest),
     call(watchAddBuildingRequest),
-    call(watchRankFetchRequest)
+    call(watchRankFetchRequest),
+    call(watchProfileFetchRequest),
+    call(watchWarFetchRequest)
   ]);
 }

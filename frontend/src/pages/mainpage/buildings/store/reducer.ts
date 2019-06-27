@@ -1,9 +1,13 @@
 import { buildingInitialState, BuildingState } from "./store";
 import { GetBuildingActions, IActions } from "./actions/BuildingAction.get";
+import {
+  IAddBuildingActions,
+  AddBuildingActions
+} from "./actions/BuildingAction.post";
 
 export const BuildingReducer = (
   state = buildingInitialState,
-  action: IActions
+  action: IActions | IAddBuildingActions
 ): BuildingState => {
   switch (action.type) {
     case GetBuildingActions.REQUEST:
@@ -25,6 +29,21 @@ export const BuildingReducer = (
         error: action.params ? action.params : "Ismeretlen hiba"
       };
 
+    case AddBuildingActions.REQUEST:
+      return {
+        ...state,
+        isPostRequesting: true
+      };
+    case AddBuildingActions.SUCCES:
+      return {
+        ...state,
+        isPostRequesting: false
+      };
+    case AddBuildingActions.ERROR:
+      return {
+        ...state,
+        isPostRequesting: false
+      };
     default:
       const check: never = action;
       return state;

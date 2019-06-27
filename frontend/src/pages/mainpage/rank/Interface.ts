@@ -1,9 +1,9 @@
-import { IRankInfo } from "../../../api/Client";
+import { RankState } from "./store/store";
 
 interface NativeProps {}
 
 export interface MappedProps {
-  totalRank: IRankInfo[];
+  totalRank: RankState;
 }
 export interface DispachedProps {
   getAllBuilding: () => void;
