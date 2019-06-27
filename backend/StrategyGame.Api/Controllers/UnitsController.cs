@@ -39,46 +39,7 @@ namespace StrategyGame.Api.Controllers
         [ProducesResponseType(201)]
         public async Task<ActionResult<IEnumerable<UnitInfo>>> CreateAsync([FromBody] IEnumerable<PurchaseDetails> purchases)
         {
-            try
-            {
-                return Ok(await _unitService.CreateUnitAsync(User.Identity.Name, purchases));
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-                return NotFound(new ProblemDetails
-                {
-                    Status = 404,
-                    Title = ErrorMessages.NotFound,
-                    Detail = ErrorMessages.NoSuchUnit
-                });
-            }
-            catch (ArgumentException)
-            {
-                return BadRequest(new ProblemDetails
-                {
-                    Status = 400,
-                    Title = ErrorMessages.BadRequest,
-                    Detail = ErrorMessages.InvalidAmount
-                });
-            }
-            catch (LimitReachedException)
-            {
-                return BadRequest(new ProblemDetails
-                {
-                    Status = 400,
-                    Title = ErrorMessages.BadRequest,
-                    Detail = ErrorMessages.LimitReached
-                });
-            }
-            catch (InvalidOperationException)
-            {
-                return BadRequest(new ProblemDetails
-                {
-                    Status = 400,
-                    Title = ErrorMessages.BadRequest,
-                    Detail = ErrorMessages.NotEnoughMoney
-                });
-            }
+            return Ok(await _unitService.CreateUnitAsync(User.Identity.Name, purchases));
         }
 
         [HttpDelete("{id}/{count}")]
@@ -88,29 +49,8 @@ namespace StrategyGame.Api.Controllers
         [ProducesResponseType(204)]
         public async Task<ActionResult> DeleteAsync(int id, int count)
         {
-            try
-            {
-                await _unitService.DeleteUnitsAsync(User.Identity.Name, id, count);
-                return NoContent();
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-                return NotFound(new ProblemDetails
-                {
-                    Status = 404,
-                    Title = ErrorMessages.NotFound,
-                    Detail = ErrorMessages.NoSuchUnit
-                });
-            }
-            catch (ArgumentException)
-            {
-                return BadRequest(new ProblemDetails
-                {
-                    Status = 400,
-                    Title = ErrorMessages.BadRequest,
-                    Detail = ErrorMessages.InvalidAmount
-                });
-            }
+            await _unitService.DeleteUnitsAsync(User.Identity.Name, id, count);
+            return NoContent();
         }
     }
 }

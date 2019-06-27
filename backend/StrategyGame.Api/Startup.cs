@@ -155,6 +155,8 @@ namespace StrategyGame.Api
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
+
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseIdentityServer();
