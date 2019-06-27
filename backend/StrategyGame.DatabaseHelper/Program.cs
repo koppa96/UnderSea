@@ -24,6 +24,7 @@ namespace StrategyGame.DatabaseHelper
                 context.PurgeDatabaseAsync().Wait();
                 context.FillWithDefaultAsync().Wait();
                 //context.AddTestUsersAsync().Wait();
+                //context.GenerateRandomTestUsersAsync(1000).Wait();
             }
 
             Console.Write("Finished, press any key to exit...");

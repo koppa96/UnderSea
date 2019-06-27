@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using StrategyGame.Bll.DTO.Received;
 using StrategyGame.Bll.EffectParsing;
 using StrategyGame.Bll.Exceptions;
 using StrategyGame.Bll.Services.Units;
@@ -51,7 +52,7 @@ namespace StrategyGame.Tests.Services
         {
             var id = (await context.UnitTypes.FirstAsync()).Id;
 
-            await unitService.CreateUnitAsync(username, id, 10);
+            await unitService.CreateUnitAsync(username, new[] { new PurchaseDetails { UnitId = id, Count = 10 } });
             var units = await unitService.GetUnitInfoAsync(username);
             Assert.AreEqual(units.Single(u => u.Id == id).Count, 10);
         }
@@ -62,7 +63,7 @@ namespace StrategyGame.Tests.Services
         {
             var id = (await context.UnitTypes.FirstAsync()).Id;
 
-            await unitService.CreateUnitAsync(username, id, 10);
+            await unitService.CreateUnitAsync(username, new[] { new PurchaseDetails { UnitId = id, Count = 10 } });
             await unitService.DeleteUnitsAsync(username, id, 10);
             var units = await unitService.GetUnitInfoAsync(username);
             Assert.AreEqual(units.Single(u => u.Id == id).Count, 0);
@@ -75,7 +76,7 @@ namespace StrategyGame.Tests.Services
         {
             var id = (await context.UnitTypes.FirstAsync()).Id;
 
-            await unitService.CreateUnitAsync(username, id, 10);
+            await unitService.CreateUnitAsync(username, new[] { new PurchaseDetails { UnitId = id, Count = 10 } });
         }
 
         [TestMethod]
@@ -85,7 +86,7 @@ namespace StrategyGame.Tests.Services
         {
             var id = (await context.UnitTypes.FirstAsync()).Id;
 
-            await unitService.CreateUnitAsync(username, id, 200);
+            await unitService.CreateUnitAsync(username, new[] { new PurchaseDetails { UnitId = id, Count = 200 } });
         }
 
         [TestCleanup]

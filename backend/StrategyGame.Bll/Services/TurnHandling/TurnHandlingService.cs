@@ -64,6 +64,10 @@ namespace StrategyGame.Bll.Services.TurnHandling
 
             await preCombat.ForEachAsync(c => Handler.HandlePreCombat(context, c, globals, events));
 
+            timer.Stop();
+            var preCombatTime = timer.ElapsedMilliseconds;
+            timer.Restart();
+
             var combat = context.Countries
                 .Include(c => c.Commands)
                     .ThenInclude(c => c.Divisions)
@@ -97,6 +101,10 @@ namespace StrategyGame.Bll.Services.TurnHandling
 
             await combat.ForEachAsync(c => Handler.HandleCombat(context, c, globals));
 
+            timer.Stop();
+            var combatTime = timer.ElapsedMilliseconds;
+            timer.Restart();
+
             var postCombat = context.Countries
                 .Include(c => c.Commands)
                     .ThenInclude(c => c.Divisions)
@@ -119,8 +127,16 @@ namespace StrategyGame.Bll.Services.TurnHandling
 
             globals.Round++;
 
+            timer.Stop();
+            var postCombatTime = timer.ElapsedMilliseconds;
+            timer.Restart();
+
             // See comment block at the start of the method as to why a save is needed here
             await context.SaveChangesAsync();
+
+            timer.Stop();
+            var saveTime = timer.ElapsedMilliseconds;
+            timer.Restart();
 
             context.InProgressBuildings.RemoveRange(context.InProgressBuildings.Where(b => b.TimeLeft <= 0));
             context.InProgressResearches.RemoveRange(context.InProgressResearches.Where(r => r.TimeLeft <= 0));
@@ -128,7 +144,12 @@ namespace StrategyGame.Bll.Services.TurnHandling
             await context.SaveChangesAsync();
 
             timer.Stop();
-            Debug.WriteLine("Turn completed, elapsed time: {0} ms", timer.ElapsedMilliseconds);
+            Debug.WriteLine("Turn completed, total elapsed time: {0} ms", preCombatTime + postCombatTime + combatTime + saveTime + timer.ElapsedMilliseconds);
+            Debug.WriteLine("   Pre-combat time: {0} ms", preCombatTime);
+            Debug.WriteLine("   Combat time: {0} ms", combatTime);
+            Debug.WriteLine("   Post-combat time: {0} ms", postCombatTime);
+            Debug.WriteLine("   Save time: {0} ms", saveTime);
+            Debug.WriteLine("   In-progress delete time: {0} ms", timer.ElapsedMilliseconds);
         }
     }
 }
