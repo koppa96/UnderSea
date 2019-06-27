@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StrategyGame.Bll.Dto.Received;
 using StrategyGame.Bll.Dto.Sent;
 using StrategyGame.Bll.Services.Commands;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace StrategyGame.Api.Controllers
 {
@@ -23,20 +21,20 @@ namespace StrategyGame.Api.Controllers
             _commandService = commandService;
         }
 
-        [HttpGet]
+        [HttpGet("{id}")]
         [ProducesResponseType(401)]
         [ProducesResponseType(200)]
-        public async Task<ActionResult<IEnumerable<CommandInfo>>> GetCommandsAsync()
+        public async Task<ActionResult<IEnumerable<CommandInfo>>> GetCommandsAsync(int id)
         {
-            return Ok(await _commandService.GetCommandsAsync(User.Identity.Name));
+            return Ok(await _commandService.GetCommandsAsync(User.Identity.Name, id));
         }
 
-        [HttpPost]
+        [HttpPost("{id}")]
         [ProducesResponseType(401)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(200)]
-        public async Task<ActionResult<CommandInfo>> AttackTargetAsync([FromBody] CommandDetails command)
+        public async Task<ActionResult<CommandInfo>> AttackTargetAsync(int id, [FromBody] CommandDetails command)
         {
             return Ok(await _commandService.AttackTargetAsync(User.Identity.Name, command));
         }

@@ -4,9 +4,7 @@ using StrategyGame.Bll.Exceptions;
 using StrategyGame.Bll.Services.Researches;
 using StrategyGame.Dal;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace StrategyGame.Tests.Services
@@ -28,7 +26,8 @@ namespace StrategyGame.Tests.Services
         [DataRow("TheResearcher")]
         public async Task TestGetResearches(string username)
         {
-            var researches = await researchService.GetResearchesAsync(username);
+            var researches = await researchService.GetResearchesAsync(username,
+                (await context.Countries.FirstAsync(c => c.ParentUser.UserName == username)).Id);
 
             var dbResearches = await context.CountryResearches.Include(cr => cr.Research)
                 .Where(cr => cr.ParentCountry.ParentUser.UserName == username)
@@ -55,7 +54,9 @@ namespace StrategyGame.Tests.Services
         {
             var researchId = (await context.ResearchTypes.FirstAsync()).Id;
 
-            await researchService.StartResearchAsync(username, researchId);
+            await researchService.StartResearchAsync(username,
+                (await context.Countries.FirstAsync(c => c.ParentUser.UserName == username)).Id,
+                researchId);
 
             var inProgressResearches = await context.InProgressResearches
                 .Include(r => r.Research)
@@ -73,7 +74,9 @@ namespace StrategyGame.Tests.Services
         {
             var researchId = (await context.ResearchTypes.FirstAsync()).Id;
 
-            await researchService.StartResearchAsync(username, researchId);
+            await researchService.StartResearchAsync(username,
+                (await context.Countries.FirstAsync(c => c.ParentUser.UserName == username)).Id,
+                researchId);
         }
 
         [TestMethod]
@@ -83,8 +86,12 @@ namespace StrategyGame.Tests.Services
         {
             var researchId = (await context.ResearchTypes.FirstAsync()).Id;
 
-            await researchService.StartResearchAsync(username, researchId);
-            await researchService.StartResearchAsync(username, researchId);
+            await researchService.StartResearchAsync(username,
+                (await context.Countries.FirstAsync(c => c.ParentUser.UserName == username)).Id,
+                researchId);
+            await researchService.StartResearchAsync(username,
+                (await context.Countries.FirstAsync(c => c.ParentUser.UserName == username)).Id,
+                researchId);
         }
 
         [TestMethod]
@@ -97,7 +104,9 @@ namespace StrategyGame.Tests.Services
                 .Where(r => r.ParentCountry.ParentUser.UserName == username)
                 .FirstAsync()).Research.Id;
 
-            await researchService.StartResearchAsync(username, researchId);
+            await researchService.StartResearchAsync(username,
+                (await context.Countries.FirstAsync(c => c.ParentUser.UserName == username)).Id,
+                researchId);
         }
 
         [TestMethod]
@@ -105,7 +114,9 @@ namespace StrategyGame.Tests.Services
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public async Task TestStartResearchNotExisting(string username)
         {
-            await researchService.StartResearchAsync(username, -1);
+            await researchService.StartResearchAsync(username,
+                (await context.Countries.FirstAsync(c => c.ParentUser.UserName == username)).Id,
+                -1);
         }
 
         [TestCleanup]

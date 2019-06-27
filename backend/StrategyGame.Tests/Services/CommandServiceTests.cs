@@ -7,7 +7,6 @@ using StrategyGame.Model.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace StrategyGame.Tests.Services
@@ -62,7 +61,9 @@ namespace StrategyGame.Tests.Services
         {
             var commandDetails = await SetUpValidAttackAsync(attacker, target);
 
-            var info = await commandService.AttackTargetAsync(attacker, commandDetails);
+            var info = await commandService.AttackTargetAsync(attacker,
+                (await context.Countries.FirstAsync(c => c.ParentUser.UserName == attacker)).Id,
+                commandDetails);
             Assert.AreEqual(commandDetails.TargetCountryId, info.TargetCountryId);
             Assert.AreEqual(2, info.Units.Count());
             Assert.AreEqual(commandDetails.Units.First().UnitId, info.Units.First().Id);
@@ -94,7 +95,9 @@ namespace StrategyGame.Tests.Services
                 }
             };
 
-            await commandService.AttackTargetAsync(attacker, commandDetails);
+            await commandService.AttackTargetAsync(attacker,
+                (await context.Countries.FirstAsync(c => c.ParentUser.UserName == attacker)).Id,
+                commandDetails);
         }
 
         [TestMethod]
@@ -128,7 +131,9 @@ namespace StrategyGame.Tests.Services
                 }
             };
 
-            await commandService.AttackTargetAsync(attacker, commandDetails);
+            await commandService.AttackTargetAsync(attacker,
+                (await context.Countries.FirstAsync(c => c.ParentUser.UserName == attacker)).Id,
+                commandDetails);
         }
 
         [TestMethod]
@@ -150,7 +155,9 @@ namespace StrategyGame.Tests.Services
                 }
             };
 
-            await commandService.AttackTargetAsync(attacker, commandDetails);
+            await commandService.AttackTargetAsync(attacker,
+                (await context.Countries.FirstAsync(c => c.ParentUser.UserName == attacker)).Id,
+                commandDetails);
         }
 
         [TestMethod]
@@ -171,7 +178,9 @@ namespace StrategyGame.Tests.Services
                 }
             };
 
-            await commandService.AttackTargetAsync(attacker, commandDetails);
+            await commandService.AttackTargetAsync(attacker,
+                (await context.Countries.FirstAsync(c => c.ParentUser.UserName == attacker)).Id,
+                commandDetails);
         }
 
         [TestMethod]
@@ -179,7 +188,9 @@ namespace StrategyGame.Tests.Services
         public async Task TestDeleteAttack(string attacker, string defender)
         {
             var commandDetails = await SetUpValidAttackAsync(attacker, defender);
-            var info = await commandService.AttackTargetAsync(attacker, commandDetails);
+            var info = await commandService.AttackTargetAsync(attacker,
+                (await context.Countries.FirstAsync(c => c.ParentUser.UserName == attacker)).Id,
+                commandDetails);
 
             await commandService.DeleteCommandAsync(attacker, info.Id);
 
@@ -192,7 +203,9 @@ namespace StrategyGame.Tests.Services
         public async Task TestDeleteOthersAttack(string attacker, string defender)
         {
             var commandDetails = await SetUpValidAttackAsync(attacker, defender);
-            var info = await commandService.AttackTargetAsync(attacker, commandDetails);
+            var info = await commandService.AttackTargetAsync(attacker,
+                (await context.Countries.FirstAsync(c => c.ParentUser.UserName == attacker)).Id,
+                commandDetails);
 
             await commandService.DeleteCommandAsync(defender, info.Id);
         }
@@ -209,7 +222,9 @@ namespace StrategyGame.Tests.Services
         public async Task TestModifyCommand(string attacker, string defender)
         {
             var commandDetails = await SetUpValidAttackAsync(attacker, defender);
-            var info = await commandService.AttackTargetAsync(attacker, commandDetails);
+            var info = await commandService.AttackTargetAsync(attacker,
+                (await context.Countries.FirstAsync(c => c.ParentUser.UserName == attacker)).Id,
+                commandDetails);
 
             var newDetails = new CommandDetails
             {
@@ -242,7 +257,9 @@ namespace StrategyGame.Tests.Services
         public async Task TestModifyOtherCommand(string attacker, string defender)
         {
             var commandDetails = await SetUpValidAttackAsync(attacker, defender);
-            var info = await commandService.AttackTargetAsync(attacker, commandDetails);
+            var info = await commandService.AttackTargetAsync(attacker,
+                (await context.Countries.FirstAsync(c => c.ParentUser.UserName == attacker)).Id,
+                commandDetails);
 
             await commandService.UpdateCommandAsync(defender, info.Id, commandDetails);
         }
@@ -253,7 +270,9 @@ namespace StrategyGame.Tests.Services
         public async Task TestModifyCommandNotExistingTarget(string attacker, string defender)
         {
             var commandDetails = await SetUpValidAttackAsync(attacker, defender);
-            var info = await commandService.AttackTargetAsync(attacker, commandDetails);
+            var info = await commandService.AttackTargetAsync(attacker,
+                (await context.Countries.FirstAsync(c => c.ParentUser.UserName == attacker)).Id,
+                commandDetails);
 
             commandDetails.TargetCountryId = -1;
             await commandService.UpdateCommandAsync(attacker, info.Id, commandDetails);
@@ -265,7 +284,9 @@ namespace StrategyGame.Tests.Services
         public async Task TestModifyCommandNotExistingUnit(string attacker, string defender)
         {
             var commandDetails = await SetUpValidAttackAsync(attacker, defender);
-            var info = await commandService.AttackTargetAsync(attacker, commandDetails);
+            var info = await commandService.AttackTargetAsync(attacker,
+                (await context.Countries.FirstAsync(c => c.ParentUser.UserName == attacker)).Id,
+                commandDetails);
 
             var firstUnit = commandDetails.Units.First();
             firstUnit.UnitId = -1;
@@ -279,7 +300,9 @@ namespace StrategyGame.Tests.Services
         public async Task TestModifyCommandNotEnoughUnits(string attacker, string defender)
         {
             var commandDetails = await SetUpValidAttackAsync(attacker, defender);
-            var info = await commandService.AttackTargetAsync(attacker, commandDetails);
+            var info = await commandService.AttackTargetAsync(attacker,
+                (await context.Countries.FirstAsync(c => c.ParentUser.UserName == attacker)).Id,
+                commandDetails);
 
             var firstUnit = commandDetails.Units.First();
             firstUnit.Amount += 1;
