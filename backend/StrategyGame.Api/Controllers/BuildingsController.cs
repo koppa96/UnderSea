@@ -31,16 +31,16 @@ namespace StrategyGame.Api.Controllers
             return Ok(await _buildingService.GetBuildingsAsync());
         }
 
-        [HttpPost("{id}")]
+        [HttpPost("{countryId}/{buildingId}")]
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(404)]
         [ProducesResponseType(200)]
-        public async Task<ActionResult> StartBuildingAsync(int id)
+        public async Task<ActionResult> StartBuildingAsync(int countryId, int buildingId)
         {
             using (var src = new CancellationTokenSource(Constants.DefaultTurnEndTimeout))
             {
-                await _buildingService.StartBuildingAsync(User.Identity.Name, id, src.Token);
+                await _buildingService.StartBuildingAsync(User.Identity.Name, countryId, buildingId, src.Token);
                 return Ok();
             }
         }

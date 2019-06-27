@@ -31,16 +31,16 @@ namespace StrategyGame.Api.Controllers
             return Ok(await _researchService.GetResearchesAsync());
         }
 
-        [HttpPost("{id}")]
+        [HttpPost("{countryId}/{researchId}")]
         [ProducesResponseType(401)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(200)]
-        public async Task<ActionResult> StartResearchAsync(int id)
+        public async Task<ActionResult> StartResearchAsync(int countryId, int researchId)
         {
             using (var src = new CancellationTokenSource(Constants.DefaultTurnEndTimeout))
             {
-                await _researchService.StartResearchAsync(User.Identity.Name, id, src.Token);
+                await _researchService.StartResearchAsync(User.Identity.Name, countryId, researchId, src.Token);
                 return Ok();
             }
         }

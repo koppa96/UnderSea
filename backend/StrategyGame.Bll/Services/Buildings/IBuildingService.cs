@@ -22,13 +22,15 @@ namespace StrategyGame.Bll.Services.Buildings
         /// Starts the building of a building for the player.
         /// </summary>
         /// <param name="username">The name of the player</param>
+        /// <param name="countryId">The id of the country</param>
         /// <param name="buildingId">The identifier of the building type</param>
         /// <param name="turnEndWaitToken">The token that can be used to cancel waiting for an in-progress end-of-turn calculation.</param>
         /// <exception cref="InvalidOperationException">Thrown when the player does not have enough money</exception>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the id of the building is invalid</exception>
         /// <exception cref="InProgressException">Thrown when when a building is already in progress</exception>
         /// <exception cref="TaskCanceledException">Thrown if the operation was cancelled.</exception>
+        /// <exception cref="UnauthorizedAccessException">Thrown when the country id is not the user's country</exception>
         /// <returns>A task that can be awaited</returns>
-        Task StartBuildingAsync(string username, int buildingId, CancellationToken turnEndWaitToken = default);
+        Task StartBuildingAsync(string username, int countryId, int buildingId, CancellationToken turnEndWaitToken = default);
     }
 }

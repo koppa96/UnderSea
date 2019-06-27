@@ -34,24 +34,29 @@ namespace StrategyGame.Bll.Services.Researches
                 .Select(r => _mapper.Map<ResearchType, CreationInfo>(r));
         }
 
-        public async Task StartResearchAsync(string username, int researchId, CancellationToken turnEndWaitToken)
+        public async Task StartResearchAsync(string username, int countryId, int researchId, CancellationToken turnEndWaitToken)
         {
             using (var lck = await _turnEndLock.ReaderLockAsync(turnEndWaitToken))
             {
                 var country = await _context.Countries.Include(c => c.InProgressResearches)
-                    .Include(c => c.Researches)
-                        .ThenInclude(cr => cr.Research)
-                    .SingleAsync(c => c.ParentUser.UserName == username);
+                .Include(c => c.Researches)
+                    .ThenInclude(cr => cr.Research)
+                .Include(c => c.ParentUser)
+                .SingleOrDefaultAsync(c => c.Id == countryId);
+
+                if (country == null)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(countryId), "Invalid country id.");
+                }
+
+                if (country.ParentUser.UserName != username)
+                {
+                    throw new UnauthorizedAccessException("Not your country id.");
+                }
 
                 if (country.InProgressResearches.Count > 0)
                 {
                     throw new InProgressException("The country already has a research in progress.");
-                }
-
-                var research = country.Researches.SingleOrDefault(cr => cr.Research.Id == researchId);
-                if (research != null && research.Count >= research.Research.MaxCompletedAmount)
-                {
-                    throw new LimitReachedException("The max research count has been reached.");
                 }
 
                 var researchType = await _context.ResearchTypes.FindAsync(researchId);
@@ -60,9 +65,9 @@ namespace StrategyGame.Bll.Services.Researches
                     throw new ArgumentOutOfRangeException(nameof(researchId), "No such research id.");
                 }
 
-                if (country.Pearls < researchType.CostPearl || country.Corals < researchType.CostCoral)
+                if (researchType.CostPearl > country.Pearls || researchType.CostCoral > country.Corals)
                 {
-                    throw new InvalidOperationException("Not enough money.");
+                    throw new InvalidOperationException("Not enough money");
                 }
 
                 country.Pearls -= researchType.CostPearl;

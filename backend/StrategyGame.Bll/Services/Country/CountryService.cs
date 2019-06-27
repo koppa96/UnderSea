@@ -247,8 +247,7 @@ namespace StrategyGame.Bll.Services.Country
         public async Task<IEnumerable<CountryInfo>> GetAllCountryInfoAsync(string username)
         {
             var countries = await GetCountriesAsync(username);
-            return countries.Select(c => GetCountryInfoAsync(username, c.CountryId))
-                .Select(t => t.Result);
+            return await Task.WhenAll(countries.Select(c => GetCountryInfoAsync(username, c.CountryId)));
         }
     }
 }
