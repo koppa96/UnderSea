@@ -1,10 +1,17 @@
 import React from "react";
 import { ComponentHeader } from "../../../components/componentHeader";
 import { ArmyItem } from "./ArmyItem";
-import { ArmyInitialState, ArmyUnit } from "./store/store";
 import { ArmyProps } from "./Interface";
 
-const initialState = {
+interface Unit {
+  unitId: number;
+  count: number;
+}
+interface InitialState {
+  units: Unit[];
+  unitsAdded: boolean;
+}
+/*const initialState = {
   troopsToAdd: [
     {
       unitId: 1,
@@ -19,9 +26,9 @@ const initialState = {
       count: 0
     }
   ]
-};
+};*/
 
-export class Army extends React.Component<ArmyProps> {
+export class Army extends React.Component<ArmyProps, InitialState> {
   componentDidMount() {
     document.title = title;
     if (!this.props.ownedUnitState.isLoaded) {
@@ -29,20 +36,32 @@ export class Army extends React.Component<ArmyProps> {
     }
   }
   state = {
-    ...initialState,
+    units: [
+      {
+        unitId: 1,
+        count: 0
+      },
+      {
+        unitId: 2,
+        count: 0
+      },
+      {
+        unitId: 3,
+        count: 0
+      }
+    ],
     unitsAdded: false
-    //troops: ArmyInitialState
   };
 
   currentSoldiers = (id: number, troop: number) => {
-    const newtTemp = this.state.troopsToAdd.map(unit => {
+    const newtTemp = this.state.units.map(unit => {
       if (unit.unitId == id) {
         return { ...unit, count: troop };
       }
       return unit;
     });
     console.log(newtTemp.some(item => item.count != 0));
-    this.setState({ troopsToAdd: newtTemp });
+    this.setState({ units: newtTemp });
     if (newtTemp.some(item => item.count != 0)) {
       this.setState({ unitsAdded: true });
     } else {
@@ -52,7 +71,7 @@ export class Army extends React.Component<ArmyProps> {
 
   render() {
     const { addUnits, ownedUnitState } = this.props;
-    console.log(this.state.troopsToAdd, "itt");
+    console.log(this.state.units, "itt");
     return (
       <div className="main-component army-component">
         <ComponentHeader title={title} mainDescription={mainDescription} />
@@ -73,7 +92,7 @@ export class Army extends React.Component<ArmyProps> {
 
         <button
           disabled={!this.state.unitsAdded || ownedUnitState.isPostRequesting}
-          onClick={() => addUnits({ unitsToAdd: this.state.troopsToAdd })}
+          onClick={() => addUnits({ unitsToAdd: this.state.units })}
         >
           {ownedUnitState.isPostRequesting ? "töltés.." : "Megveszem"}
         </button>
