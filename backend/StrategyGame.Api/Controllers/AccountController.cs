@@ -87,7 +87,7 @@ namespace StrategyGame.Api.Controllers
                     return Unauthorized(new ProblemDetails
                     {
                         Status = 401,
-                        Title = ErrorMessages.Unauthorized,
+                        Title = "Unauthorized",
                         Detail = "Invalid current password."
                     });
                 }
@@ -95,7 +95,7 @@ namespace StrategyGame.Api.Controllers
                 return BadRequest(new ProblemDetails
                 {
                     Status = 400,
-                    Title = ErrorMessages.BadRequest,
+                    Title = "Bad Request",
                     Detail = "Invalid new password. The password must contain at least 6 characters, and at least one uppercase, one lowercase and on number."
                 });
             }
