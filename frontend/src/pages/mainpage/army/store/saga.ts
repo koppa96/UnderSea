@@ -1,7 +1,7 @@
 import {
   IActionAddArmyUnitRequest,
   ArmyActions,
-  IActions,
+  IArmyActions,
   fetchSuccess,
   fetchError
 } from "./actions/ArmyActions.post";
@@ -16,7 +16,7 @@ import axios from "axios";
 export const asd = 0;
 
 // TODO: create error handling (dont use any)
-const beginAddUnits = (unitsToAdd: ArmyUnit[]): Promise<IActions> | any => {
+const beginAddUnits = (unitsToAdd: ArmyUnit[]): Promise<IArmyActions> | any => {
   const config = {
     headers: {
       Authorization: localStorage.getItem("access_token"),

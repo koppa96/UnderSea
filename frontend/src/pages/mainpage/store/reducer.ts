@@ -4,11 +4,15 @@ import {
   IAddBuildingActions,
   AddBuildingActions
 } from "../buildings/store/actions/BuildingAction.post";
+import {
+  IArmyActions,
+  ArmyActions
+} from "../army/store/actions/ArmyActions.post";
 
 //Rename to reducer
 export const MainpageReducer = (
   state = initialMainpageResponseState,
-  action: IActions | IAddBuildingActions
+  action: IActions | IAddBuildingActions | IArmyActions
 ): MainpageResponseState => {
   switch (action.type) {
     case MainpageActions.REQUEST:
@@ -66,6 +70,43 @@ export const MainpageReducer = (
         error: action.params
           ? action.params
           : "Ismeretlen hiba" + state.lastBuilding + " hozzáadásnál"
+      };
+    case ArmyActions.REQUEST:
+      return {
+        ...state,
+        loading: true
+      };
+    case ArmyActions.SUCCESS:
+      if (state.model) {
+        if (state.model.armyInfo) {
+          const temp = state.model.armyInfo;
+          temp.forEach(armyunit => {
+            action.data.unitsToAdd.forEach(unit => {
+              if (unit.unitId == armyunit.id) {
+                armyunit.count += unit.count;
+              }
+            });
+          });
+        }
+      }
+
+      return {
+        ...state,
+        loading: false,
+        model: state.model
+          ? {
+              ...state.model
+              //armyInfo:
+            }
+          : undefined
+      };
+    case ArmyActions.ERROR:
+      return {
+        ...state,
+        loading: false,
+        error: action.params
+          ? action.params
+          : "Ismeretlen hiba az egységek hozzáadásnál"
       };
 
     default:

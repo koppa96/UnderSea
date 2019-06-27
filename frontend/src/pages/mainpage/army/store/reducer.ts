@@ -1,5 +1,5 @@
 import { ArmyState, ArmyInitialState } from "./store";
-import { IActions, ArmyActions } from "./actions/ArmyActions.post";
+import { IArmyActions, ArmyActions } from "./actions/ArmyActions.post";
 import {
   IGetActions,
   ArmyActions as getArmyActions
@@ -7,7 +7,7 @@ import {
 
 export const ArmyReducer = (
   state = ArmyInitialState,
-  action: IActions | IGetActions
+  action: IArmyActions | IGetActions
 ): ArmyState => {
   switch (action.type) {
     case ArmyActions.REQUEST:

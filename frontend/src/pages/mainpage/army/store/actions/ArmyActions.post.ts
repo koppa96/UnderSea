@@ -30,7 +30,7 @@ export interface IActionAddArmyUnitError {
   params: string | null;
 }
 
-export type IActions =
+export type IArmyActions =
   | IActionAddArmyUnitRequest
   | IActionAddArmyUnitSucces
   | IActionAddArmyUnitError;

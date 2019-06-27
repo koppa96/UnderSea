@@ -9,7 +9,7 @@ import { LoginResponseState } from "./account/login/store/store";
 import { ArmyState } from "./mainpage/army/store/store";
 import { ArmyReducer } from "./mainpage/army/store/reducer";
 import { MainpageResponseState } from "./mainpage/store/store";
-import { MainpageReducer } from "./mainpage/store/reduce";
+import { MainpageReducer } from "./mainpage/store/reducer";
 
 export interface PagesState {
   gyakorlas: ManState;
