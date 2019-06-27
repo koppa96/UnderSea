@@ -223,21 +223,20 @@ namespace StrategyGame.Bll.Extensions
                 Parent = pony,
                 Name = "Csatacsikó",
                 Description = "Jól véd de rosszul támad",
-                ImageUrl = "images/static/units/csatacsiko.png"
+                ImageUrl = "images/static/units/csatacsiko.svg"
             };
             var lazorCont = new UnitContent
             {
                 Parent = lazor,
                 Name = "Lézercápa",
                 Description = "lazers man",
-                ImageUrl = "images/static/units/lezercapa.png"
+                ImageUrl = "images/static/units/lezercapa.svg"
             };
             var leaderCont = new UnitContent
             {
                 Parent = leader,
                 Name = "Parancsnok",
                 Description = "Támadást csak parancsnok tud vezetni",
-                ImageUrl = "https://vignette.wikia.nocookie.net/venturian-battle-headquarters/images/6/69/Flyinglasershark.jpg/revision/latest?cb=20160714220743"
             };
 
             context.UnitContents.AddRange(sealCont, ponyCont, lazorCont, leaderCont);
@@ -260,8 +259,7 @@ namespace StrategyGame.Bll.Extensions
             {
                 Parent = wall,
                 Name = "Korallfal",
-                Description = "Fal, korallból. +20% védekezés",
-                ImageUrl = "https://ak2.picdn.net/shutterstock/videos/1396612/thumb/1.jpg"
+                Description = "Fal, korallból. +20% védekezés"
             };
             var attCont = new ResearchContent
             {
@@ -274,15 +272,13 @@ namespace StrategyGame.Bll.Extensions
             {
                 Parent = martialArts,
                 Name = "Vízalatti harcművészetek",
-                Description = "\"A különbség a lehetetlen és a lehetséges között az egyén akarata.\", +10% védekezés és támadás",
-                ImageUrl = "https://www.pallensmartialarts.com/uploads/1/0/9/3/109303993/girl-kicking-boy-to-air_1_orig.jpg"
+                Description = "\"A különbség a lehetetlen és a lehetséges között az egyén akarata.\", +10% védekezés és támadás"
             };
             var taxCont = new ResearchContent
             {
                 Parent = alchemy,
                 Name = "Alkímia",
-                Description = "A népesség pénzt csinál, +30% adó bevétel",
-                ImageUrl = "https://f4.bcbits.com/img/a3431451072_10.jpg"
+                Description = "A népesség pénzt csinál, +30% adó bevétel"
             };
 
             context.ResearchContents.AddRange(mudTCont, mudCCont, defCont, attCont, cCont, taxCont);
@@ -480,7 +476,7 @@ namespace StrategyGame.Bll.Extensions
                 ParentCommand = d6,
                 Unit = u3
             }, new Division
-            { 
+            {
                 Count = 1,
                 ParentCommand = d3,
                 Unit = leader
@@ -510,7 +506,7 @@ namespace StrategyGame.Bll.Extensions
                 Defender = bc,
                 Attackers = new[] { attackers },
                 Defenders = new[] { defenders },
-                Losses = new[] { losses }, 
+                Losses = new[] { losses },
                 AttackModifier = 1.1,
                 DefenseModifier = 1,
                 BaseAttackPower = 20,
@@ -519,7 +515,7 @@ namespace StrategyGame.Bll.Extensions
                 TotalDefensePower = 60,
                 PearlLoot = 50,
                 CoralLoot = 1731,
-                Round = 0                
+                Round = 0
             });
 
             await context.SaveChangesAsync();
@@ -549,7 +545,7 @@ namespace StrategyGame.Bll.Extensions
                 InProgressBuildings = context.BuildingTypes.Where(b => rng.NextDouble() < 0.5)
                     .Select(b => new InProgressBuilding { TimeLeft = 1, Building = b }).ToList(),
                 Buildings = context.BuildingTypes.Where(b => rng.NextDouble() < 0.5)
-                    .Select(b => new CountryBuilding { Count = rng.Next(1, 5), Building = b }).ToList()                
+                    .Select(b => new CountryBuilding { Count = rng.Next(1, 5), Building = b }).ToList()
             }).ToList();
 
             foreach (var country in countries)
