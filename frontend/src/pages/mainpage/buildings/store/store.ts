@@ -1,5 +1,4 @@
-import { BuildingProps } from "../buildingItem/Interface";
-import { IBriefCreationInfo, ICreationInfo } from "../../../../api/Client";
+import { ICreationInfo } from "../../../../api/Client";
 
 export interface BuildingState {
   buildings: ICreationInfo[];

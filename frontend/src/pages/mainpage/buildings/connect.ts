@@ -1,4 +1,4 @@
-import { MappedProps, DispachedProps, countProp } from "./Interface";
+import { MappedProps, DispachedProps } from "./Interface";
 import { IApllicationState } from "../../../store";
 import { Dispatch, bindActionCreators } from "redux";
 import { connect } from "react-redux";

@@ -1,4 +1,3 @@
-import { ArmyUnit } from "../store";
 import { ArmyItemResponse } from "../../ArmyItem/Interface";
 
 export type IGetArmyRespone = ArmyItemResponse[];

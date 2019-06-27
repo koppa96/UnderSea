@@ -1,7 +1,6 @@
 import * as React from "react";
 import { NavBarIcon } from "./../navBarIcons/index";
 import { NavBarProps } from "./Interface";
-const PearlImage = "src/assets/images/pearl.svg";
 
 export class NavBar extends React.Component<NavBarProps> {
   render() {
@@ -20,9 +19,7 @@ export class NavBar extends React.Component<NavBarProps> {
       this.props.navbar.navBarIcons && this.props.navbar.navBarIcons.pearls;
     const navbarCollar =
       this.props.navbar.navBarIcons && this.props.navbar.navBarIcons.corals;
-    const navbarCollerPerRound =
-      this.props.navbar.navBarIcons &&
-      this.props.navbar.navBarIcons.coralsPerRound;
+
     const navbarPearlPerRound =
       this.props.navbar.navBarIcons &&
       this.props.navbar.navBarIcons.pearlsPerRound;

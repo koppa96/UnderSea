@@ -1,12 +1,4 @@
-import {
-  createStore,
-  applyMiddleware,
-  combineReducers,
-  Reducer,
-  AnyAction
-} from "redux";
-import saga from "redux-saga";
-import { composeWithDevTools } from "redux-devtools-extension";
+import { combineReducers, Reducer, AnyAction } from "redux";
 import { RouterState } from "connected-react-router";
 import { PagesState, PagesReducer } from "./pages/store";
 

@@ -1,8 +1,6 @@
-import * as React from "react";
 import axios from "axios";
 
 import qs from "qs";
-import { LoginResponse } from "../Interface";
 import { call, put, takeEvery } from "redux-saga/effects";
 import {
   LoginActions,

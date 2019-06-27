@@ -8,10 +8,10 @@ export const DevelopmentItem = (props: DevelopmentProps) => {
   return (
     <div className="development-item">
       <div className="development-img">
-        {time !== undefined && +time[0] != 0 && <p> még {time} kör</p>}
+        {time !== undefined && +time[0] !== 0 && <p> még {time} kör</p>}
         {isDeveloped && (
           <div>
-            <img src="src\assets\images\check_mark.png" />
+            <img src="src\assets\images\check_mark.png" alt="checked" />
           </div>
         )}
         <img alt="building" src={BuildingImg} />

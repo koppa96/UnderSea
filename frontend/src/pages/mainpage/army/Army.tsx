@@ -26,15 +26,15 @@ export class Army extends React.Component<ArmyProps, InitialState> {
 
   currentSoldiers = (id: number, troop: number) => {
     const temp = this.state.units;
-    const index = this.state.units.findIndex(unit => unit.unitId == id);
-    if (index !== undefined && index != -1) {
+    const index = this.state.units.findIndex(unit => unit.unitId === id);
+    if (index !== undefined && index !== -1) {
       temp[index].count = troop;
     } else {
       temp.push({ unitId: id, count: troop });
     }
 
     this.setState({ units: temp });
-    if (temp.some(item => item.count != 0)) {
+    if (temp.some(item => item.count !== 0)) {
       this.setState({ unitsAdded: true });
     } else {
       this.setState({ unitsAdded: false });

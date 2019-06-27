@@ -1,4 +1,4 @@
-import { CountryInfo, ICountryInfo } from "../../../api/Client";
+import { ICountryInfo } from "../../../api/Client";
 import { combineReducers } from "redux";
 import { BuildingState } from "../buildings/store/store";
 import { BuildingReducer } from "../buildings/store/reducer";

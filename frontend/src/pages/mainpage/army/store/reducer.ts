@@ -19,7 +19,7 @@ export const ArmyReducer = (
       const temp = state.units;
       temp.forEach(unit => {
         action.data.unitsToAdd.forEach(element => {
-          if (unit.id == element.unitId) unit.count += element.count;
+          if (unit.id === element.unitId) unit.count += element.count;
         });
       });
       return {

@@ -1,4 +1,4 @@
-import { all, fork, call } from "redux-saga/effects";
+import { all, call } from "redux-saga/effects";
 import { watchLoginFetchRequest } from "./pages/account/login/store/saga";
 import { watchArmyUnits } from "./pages/mainpage/army/store/saga";
 

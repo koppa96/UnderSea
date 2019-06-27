@@ -82,7 +82,7 @@ export const MainpageReducer = (
           temp = { ...state.model.armyInfo };
           temp.forEach(armyunit => {
             action.data.unitsToAdd.forEach(unit => {
-              if (unit.unitId == armyunit.id) {
+              if (unit.unitId === armyunit.id) {
                 armyunit.count += unit.count;
               }
             });

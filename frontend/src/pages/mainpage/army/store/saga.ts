@@ -10,7 +10,7 @@ import {
   IActionGetArmyUnitRequest,
   ArmyUnitGetSuccessActionCreator
 } from "./actions/ArmyActions.get";
-import { call, put, takeEvery, all, delay } from "redux-saga/effects";
+import { call, put, takeEvery, all } from "redux-saga/effects";
 import { ArmyUnit } from "./store";
 import axios from "axios";
 export const asd = 0;

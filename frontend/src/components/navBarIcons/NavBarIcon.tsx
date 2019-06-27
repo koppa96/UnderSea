@@ -6,10 +6,6 @@ import CoralImage from "./../../assets/images/coral.svg";
 import { BasePortUrl } from "../..";
 
 export const NavBarIcon = (props: NavBarIconProp) => {
-  const info = props.info && (
-    <span className="navbaricon-info">{props.info}</span>
-  );
-
   const image = props.imageUrl ? (
     <img src={BasePortUrl + "/" + props.imageUrl} alt="Icon" />
   ) : props.money && props.money === true ? (

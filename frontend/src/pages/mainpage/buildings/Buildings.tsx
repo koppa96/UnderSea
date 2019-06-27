@@ -2,7 +2,6 @@ import React from "react";
 import { ComponentHeader } from "../../../components/componentHeader";
 import { BuildingItem } from "./buildingItem";
 import { BuildingProps } from "./Interface";
-import { number } from "prop-types";
 
 export class Buildings extends React.Component<BuildingProps> {
   componentDidMount() {
@@ -38,8 +37,7 @@ export class Buildings extends React.Component<BuildingProps> {
     const {
       addBuilding,
       boughtBuildingState,
-      buildingCount,
-      totalcoral,
+
       totalpearl
     } = this.props;
     return (

@@ -1,6 +1,5 @@
 import * as React from "react";
 import { BuildingProps } from "./Interface";
-import BuildingImg from "./../../../../assets/images/building-bg.png";
 import { BasePortUrl } from "../../../..";
 
 export const BuildingItem = (props: BuildingProps) => {
@@ -8,7 +7,7 @@ export const BuildingItem = (props: BuildingProps) => {
 
   return (
     <div className="building-item">
-      <img alt="building" src={BasePortUrl + props.imageUrl} />
+      <img alt="building" src={BasePortUrl + imageUrl} />
       <div>
         <p>{title}</p>
         <p>{description}</p>
