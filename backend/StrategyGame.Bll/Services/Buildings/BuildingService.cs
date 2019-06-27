@@ -23,13 +23,24 @@ namespace StrategyGame.Bll.Services.Buildings
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<CreationInfo>> GetBuildingsAsync(string username)
+        public async Task<IEnumerable<CreationInfo>> GetBuildingsAsync(string username, int countryId)
         {
             var country = await _context.Countries
                 .Include(c => c.Buildings)
                     .ThenInclude(cb => cb.Building)
                         .ThenInclude(b => b.Content)
-                .SingleAsync(c => c.ParentUser.UserName == username);
+                .Include(c => c.ParentUser)
+                .SingleOrDefaultAsync(c => c.Id == countryId);
+
+            if (country == null)
+            {
+                throw new ArgumentOutOfRangeException(nameof(countryId), "Invalid country id.");
+            }
+
+            if (country.ParentUser.UserName != username)
+            {
+                throw new UnauthorizedAccessException("Not your country id.");
+            }
 
             var creationInfos = country.Buildings.Select(cb => {
                 var creationInfo = _mapper.Map<BuildingType, CreationInfo>(cb.Building);
@@ -51,10 +62,21 @@ namespace StrategyGame.Bll.Services.Buildings
             return creationInfos;
         }
 
-        public async Task StartBuildingAsync(string username, int buildingId)
+        public async Task StartBuildingAsync(string username, int countryId, int buildingId)
         {
             var country = await _context.Countries.Include(c => c.InProgressBuildings)
-                .SingleAsync(c => c.ParentUser.UserName == username);
+                .Include(c => c.ParentUser)
+                .SingleOrDefaultAsync(c => c.Id == countryId);
+
+            if (country == null)
+            {
+                throw new ArgumentOutOfRangeException(nameof(countryId), "Invalid country id.");
+            }
+
+            if (country.ParentUser.UserName != username)
+            {
+                throw new UnauthorizedAccessException("Not your country id.");
+            }
 
             if (country.InProgressBuildings.Count > 0)
             {
@@ -69,7 +91,7 @@ namespace StrategyGame.Bll.Services.Buildings
 
             if (buildingType.CostPearl > country.Pearls || buildingType.CostCoral > country.Corals)
             {
-                throw new InvalidOperationException("Not enough money");
+                throw new InvalidOperationException("Not enough money.");
             }
 
             country.Pearls -= buildingType.CostPearl;

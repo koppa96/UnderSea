@@ -23,20 +23,20 @@ namespace StrategyGame.Api.Controllers
             _researchService = researchService;
         }
 
-        [HttpGet]
+        [HttpGet("{countryId}")]
         [ProducesResponseType(401)]
         [ProducesResponseType(200)]
-        public async Task<ActionResult<IEnumerable<CreationInfo>>> GetResearchesAsync()
+        public async Task<ActionResult<IEnumerable<CreationInfo>>> GetResearchesAsync(int countryId)
         {
-            return Ok(await _researchService.GetResearchesAsync(User.Identity.Name));
+            return Ok(await _researchService.GetResearchesAsync(User.Identity.Name, countryId));
         }
 
-        [HttpPost("{id}")]
+        [HttpPost("{countryId}/{researchId}")]
         [ProducesResponseType(401)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(200)]
-        public async Task<ActionResult> StartResearchAsync(int id)
+        public async Task<ActionResult> StartResearchAsync(int countryId, int researchId)
         {
             await _researchService.StartResearchAsync(User.Identity.Name, id);
             return Ok();

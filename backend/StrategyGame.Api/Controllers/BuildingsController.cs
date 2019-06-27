@@ -23,20 +23,20 @@ namespace StrategyGame.Api.Controllers
             _buildingService = buildingService;
         }
 
-        [HttpGet]
+        [HttpGet("{countryId}")]
         [ProducesResponseType(401)]
         [ProducesResponseType(200)]
-        public async Task<ActionResult<IEnumerable<CreationInfo>>> GetBuildingsAsync()
+        public async Task<ActionResult<IEnumerable<CreationInfo>>> GetBuildingsAsync(int countryId)
         {
-            return Ok(await _buildingService.GetBuildingsAsync(User.Identity.Name));
+            return Ok(await _buildingService.GetBuildingsAsync(User.Identity.Name, countryId));
         }
 
-        [HttpPost("{id}")]
+        [HttpPost("{countryId}/{buildingId}")]
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(404)]
         [ProducesResponseType(200)]
-        public async Task<ActionResult> StartBuildingAsync(int id)
+        public async Task<ActionResult> StartBuildingAsync(int countryId, int buildingId)
         {
             await _buildingService.StartBuildingAsync(User.Identity.Name, id);
             return Ok();

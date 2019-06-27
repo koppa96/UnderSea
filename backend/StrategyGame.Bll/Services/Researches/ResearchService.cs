@@ -22,13 +22,24 @@ namespace StrategyGame.Bll.Services.Researches
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<CreationInfo>> GetResearchesAsync(string username)
+        public async Task<IEnumerable<CreationInfo>> GetResearchesAsync(string username, int countryId)
         {
             var country = await _context.Countries
                 .Include(c => c.Researches)
                     .ThenInclude(cr => cr.Research)
                         .ThenInclude(r => r.Content)
-                .SingleAsync(c => c.ParentUser.UserName == username);
+                .Include(c => c.ParentUser)
+                .SingleOrDefaultAsync(c => c.Id == countryId);
+
+            if (country == null)
+            {
+                throw new ArgumentOutOfRangeException(nameof(countryId), "Invalid country id.");
+            }
+
+            if (country.ParentUser.UserName != username)
+            {
+                throw new UnauthorizedAccessException("Not your country id.");
+            }
 
             var creationInfos = country.Researches.Select(cr => {
                 var creationInfo = _mapper.Map<ResearchType, CreationInfo>(cr.Research);
@@ -50,12 +61,23 @@ namespace StrategyGame.Bll.Services.Researches
             return creationInfos;
         }
 
-        public async Task StartResearchAsync(string username, int researchId)
+        public async Task StartResearchAsync(string username, int countryId, int researchId)
         {
             var country = await _context.Countries.Include(c => c.InProgressResearches)
                 .Include(c => c.Researches)
                     .ThenInclude(cr => cr.Research)
-                .SingleAsync(c => c.ParentUser.UserName == username);
+                .Include(c => c.ParentUser)
+                .SingleOrDefaultAsync(c => c.Id == countryId);
+
+            if (country == null)
+            {
+                throw new ArgumentOutOfRangeException(nameof(countryId), "Invalid country id.");
+            }
+
+            if (country.ParentUser.UserName != username)
+            {
+                throw new UnauthorizedAccessException("Not your country id.");
+            }
             
             if (country.InProgressResearches.Count > 0)
             {
