@@ -172,6 +172,8 @@ namespace StrategyGame.Api
 
             app.UseStaticFiles();
 
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
+
             RecurringJob.AddOrUpdate<TurnEndingJob>(x => x.EndTurnAsync(), Cron.Hourly);
         }
     }
