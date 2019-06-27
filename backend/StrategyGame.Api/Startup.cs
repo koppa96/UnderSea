@@ -155,6 +155,8 @@ namespace StrategyGame.Api
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
+
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseIdentityServer();
@@ -171,8 +173,6 @@ namespace StrategyGame.Api
             app.UseSignalR(route => route.MapHub<UnderSeaHub>("/hub"));
 
             app.UseStaticFiles();
-
-            app.UseMiddleware<ExceptionHandlingMiddleware>();
 
             RecurringJob.AddOrUpdate<TurnEndingJob>(x => x.EndTurnAsync(), Cron.Hourly);
         }
