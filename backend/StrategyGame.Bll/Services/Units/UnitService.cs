@@ -64,7 +64,7 @@ namespace StrategyGame.Bll.Services.Units
             var unitInfos = new List<BriefUnitInfo>();
             foreach (var purchase in purchases)
             {
-                var unit = unitTypes.Single(u => u.Id == purchase.UnitId);
+                var unit = unitTypes.SingleOrDefault(u => u.Id == purchase.UnitId);
 
                 if (unit == null)
                 {
