@@ -43,6 +43,14 @@ namespace StrategyGame.Tests.Services
         }
 
         [TestMethod]
+        [DataRow("TheBuilder")]
+        public async Task TestGetCountryEffects(string username)
+        {
+            var info = await countryService.GetCountryInfoAsync(username);
+            Assert.IsTrue(info.CoralsPerRound > 0);
+        }
+
+        [TestMethod]
         public async Task TestGetAllCountries()
         {
             foreach (var u in context.Users)
