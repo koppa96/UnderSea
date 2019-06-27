@@ -125,16 +125,17 @@ namespace StrategyGame.Bll.Services.Units
         {
             using (var lck = await TurnEndLock.ReaderLockAsync(turnEndWaitToken))
             {
+
                 if (count < 1)
                 {
-                    throw new ArgumentException();
+                    throw new ArgumentException("Purchase amount must be positive.");
                 }
 
                 var unit = await Context.UnitTypes.FindAsync(unitId);
 
                 if (unit == null)
                 {
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(unitId), "No country found by the provided ID.");
                 }
 
                 var country = await Context.Countries
@@ -145,12 +146,12 @@ namespace StrategyGame.Bll.Services.Units
 
                 if (country == null)
                 {
-                    throw new KeyNotFoundException("Invalid country id.");
+                    throw new ArgumentOutOfRangeException(nameof(countryId), "No country found by the provided ID.");
                 }
 
                 if (country.ParentUser.UserName != username)
                 {
-                    throw new UnauthorizedAccessException("Can not view country info of others.");
+                    throw new UnauthorizedAccessException("Can't access country not owned by the user.");
                 }
 
                 var defenders = country.GetAllDefending();
@@ -158,7 +159,7 @@ namespace StrategyGame.Bll.Services.Units
 
                 if (targetDiv == null || targetDiv.Count < count)
                 {
-                    throw new ArgumentException("Too many units deleted");
+                    throw new ArgumentException("Count was bigger than the unit's total count.");
                 }
                 else
                 {
