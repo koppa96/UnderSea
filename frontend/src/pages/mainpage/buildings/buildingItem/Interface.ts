@@ -6,3 +6,8 @@ export interface BuildingProps {
   amount: number;
   price: string;
 }
+
+export interface sendBuilding {
+  id: number;
+  count: number;
+}

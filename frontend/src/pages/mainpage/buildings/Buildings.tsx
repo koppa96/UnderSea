@@ -2,6 +2,7 @@ import React from "react";
 import { ComponentHeader } from "../../../components/componentHeader";
 import { BuildingItem } from "./buildingItem";
 import { BuildingProps } from "./Interface";
+import { number } from "prop-types";
 
 export class Buildings extends React.Component<BuildingProps> {
   componentDidMount() {
@@ -10,28 +11,37 @@ export class Buildings extends React.Component<BuildingProps> {
     this.props.getAllBuilding();
   }
   state = {
-    buildIDs: []
-  };
-
-  addBuildingByID = (e: React.MouseEvent<HTMLInputElement>) => {
-    const iDs = this.state.buildIDs;
-    const currentValue = e.currentTarget.value;
-
-    if (iDs.find(x => x == currentValue)) {
-      const newIds = iDs.filter(x => x !== currentValue);
-
-      this.setState({
-        buildIDs: newIds
-      });
-    } else {
-      this.setState({
-        buildIDs: [...this.state.buildIDs, currentValue]
-      });
+    buildIDs: {
+      id: -1,
+      count: -1
     }
   };
 
+  addBuildingByID = (e: React.MouseEvent<HTMLInputElement>) => {
+    const currentValue = e.currentTarget.value;
+    const { boughtBuildingState } = this.props;
+    const sendBuilding =
+      boughtBuildingState &&
+      boughtBuildingState.find(x => x.id === +currentValue);
+    const temp = {
+      id: sendBuilding ? sendBuilding.id : -1,
+      count: sendBuilding ? sendBuilding.count : -1
+    };
+    console.log(sendBuilding);
+
+    this.setState({
+      buildIDs: temp
+    });
+  };
+
   render() {
-    const { addBuilding, boughtBuildingState } = this.props;
+    const {
+      addBuilding,
+      boughtBuildingState,
+      buildingCount,
+      totalcoral,
+      totalpearl
+    } = this.props;
     return (
       <div className="main-component">
         <ComponentHeader
@@ -43,19 +53,29 @@ export class Buildings extends React.Component<BuildingProps> {
           {boughtBuildingState &&
             boughtBuildingState.map(item => (
               <label key={item.id}>
-                <input
-                  onClick={this.addBuildingByID}
-                  value={item.id}
-                  className="sr-only"
-                  type="checkbox"
+                {totalpearl >= item.cost && (
+                  <input
+                    onClick={this.addBuildingByID}
+                    value={item.id}
+                    name="select"
+                    className="sr-only"
+                    type="radio"
+                  />
+                )}
+                <BuildingItem
+                  id={item.id}
+                  amount={item.count}
+                  title={item.name ? item.name : ""}
+                  price={item.cost + " Gyöngy/darab"}
+                  description={
+                    item.description ? item.description : "Nem tartozik leírás"
+                  }
+                  imageUrl={item.imageUrl ? item.imageUrl : ""}
                 />
-                ideideidieidieideidieid
               </label>
             ))}
         </div>
-        <button
-          onClick={() => addBuilding({ buildingIDs: this.state.buildIDs })}
-        >
+        <button onClick={() => addBuilding(this.state.buildIDs.id)}>
           Megveszem
         </button>
       </div>
@@ -63,13 +83,7 @@ export class Buildings extends React.Component<BuildingProps> {
   }
 }
 /*
-                <BuildingItem
-                  id={item.id}
-                  amount={item.amount}
-                  title={item.title}
-                  price={item.price}
-                  description={item.description}
-                  imageUrl={item.imageUrl}
+                
                 />*/
 
 const title: string = "Épületek";
