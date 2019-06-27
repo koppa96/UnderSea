@@ -100,27 +100,7 @@ namespace StrategyGame.Bll.Services.Commands
                 throw new ArgumentOutOfRangeException("Invalid command id.");
             }
 
-            var defendingCommand = country.GetAllDefending();
-            foreach (var division in command.Divisions)
-            {
-                var defendingDivision = defendingCommand.Divisions.SingleOrDefault(d => d.Unit.Id == division.Unit.Id);
-                if (defendingDivision == null)
-                {
-                    defendingDivision = new Division
-                    {
-                        ParentCommand = defendingCommand,
-                        Unit = division.Unit,
-                        Count = 0
-                    };
-
-                    _context.Divisions.Add(defendingDivision);
-                }
-
-                defendingDivision.Count += division.Count;
-                _context.Divisions.Remove(division);
-            }
-
-            _context.Commands.Remove(command);
+            command.MergeInto(country.GetAllDefending(), _context);
             await _context.SaveChangesAsync();
         }
 
