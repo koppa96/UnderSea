@@ -219,5 +219,10 @@ namespace StrategyGame.Bll.Extensions
 
             context.Commands.Remove(command);
         }
+
+        public static void MergeInto(this Division division, Command command)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
