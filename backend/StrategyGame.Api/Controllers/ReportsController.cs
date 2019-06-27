@@ -35,29 +35,8 @@ namespace StrategyGame.Api.Controllers
         [ProducesResponseType(200)]
         public async Task<ActionResult> SetSeenAsync(int id)
         {
-            try
-            {
-                await _reportService.SetSeenAsync(User.Identity.Name, id);
-                return Ok();
-            }
-            catch (UnauthorizedAccessException e)
-            {
-                return Unauthorized(new ProblemDetails
-                {
-                    Status = 401,
-                    Title = ErrorMessages.Unauthorized,
-                    Detail = e.Message
-                });
-            }
-            catch (ArgumentOutOfRangeException e)
-            {
-                return NotFound(new ProblemDetails
-                {
-                    Status = 404,
-                    Title = ErrorMessages.NotFound,
-                    Detail = e.Message
-                });
-            }
+            await _reportService.SetSeenAsync(User.Identity.Name, id);
+            return Ok();
         }
 
         [HttpDelete("{id}")]
@@ -66,29 +45,8 @@ namespace StrategyGame.Api.Controllers
         [ProducesResponseType(204)]
         public async Task<ActionResult> DeleteReportAsync(int id)
         {
-            try
-            {
-                await _reportService.DeleteAsync(User.Identity.Name, id);
-                return NoContent();
-            }
-            catch (UnauthorizedAccessException e)
-            {
-                return Unauthorized(new ProblemDetails
-                {
-                    Status = 401,
-                    Title = ErrorMessages.Unauthorized,
-                    Detail = e.Message
-                });
-            }
-            catch (ArgumentOutOfRangeException e)
-            {
-                return NotFound(new ProblemDetails
-                {
-                    Status = 404,
-                    Title = ErrorMessages.NotFound,
-                    Detail = e.Message
-                });
-            }
+            await _reportService.DeleteAsync(User.Identity.Name, id);
+            return NoContent();
         }
     }
 }

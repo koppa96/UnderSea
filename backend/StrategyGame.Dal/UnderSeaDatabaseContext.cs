@@ -119,6 +119,8 @@ namespace StrategyGame.Dal
         /// </summary>
         public DbSet<EventContent> EventContents { get; }
 
+        public DbSet<ExceptionLog> ExceptionLogs { get; set; }
+
         #endregion
 
         /// <summary>
@@ -126,7 +128,7 @@ namespace StrategyGame.Dal
         /// </summary>
         /// <param name="options">The <see cref="DbContextOptions{UnderSeaDatabaseContext}"/> for the database.</param>
         /// <exception cref="ArgumentNullException">Thrown if an argument was null.</exception>
-        public UnderSeaDatabaseContext(DbContextOptions<UnderSeaDatabaseContext> options)
+        public UnderSeaDatabaseContext(DbContextOptions options)
             : base(options)
         {
             Countries = Set<Country>();
@@ -151,6 +153,7 @@ namespace StrategyGame.Dal
             UnitContents = Set<UnitContent>();
             EventContents = Set<EventContent>();
             GlobalValues = Set<GlobalValue>();
+            ExceptionLogs = Set<ExceptionLog>();
         }
 
         /// <summary>

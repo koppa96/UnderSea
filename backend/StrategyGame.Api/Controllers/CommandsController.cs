@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using StrategyGame.Api.ControllerExtensions;
 using StrategyGame.Bll.Dto.Received;
 using StrategyGame.Bll.Dto.Sent;
 using StrategyGame.Bll.Services.Commands;
@@ -39,32 +38,7 @@ namespace StrategyGame.Api.Controllers
         [ProducesResponseType(200)]
         public async Task<ActionResult<CommandInfo>> AttackTargetAsync([FromBody] CommandDetails command)
         {
-            try
-            {
-                return Ok(await _commandService.AttackTargetAsync(User.Identity.Name, command));
-            }
-            catch (ArgumentOutOfRangeException e)
-            {
-                return this.HandleNotFound(command, e);
-            }
-            catch (ArgumentException)
-            {
-                return BadRequest(new ProblemDetails
-                {
-                    Status = 400,
-                    Title = ErrorMessages.BadRequest,
-                    Detail = ErrorMessages.NotEnoughUnits
-                });
-            }
-            catch (InvalidOperationException e)
-            {
-                return BadRequest(new ProblemDetails
-                {
-                    Status = 400,
-                    Title = ErrorMessages.BadRequest,
-                    Detail = e.Message
-                });
-            }
+            return Ok(await _commandService.AttackTargetAsync(User.Identity.Name, command));
         }
 
         [HttpDelete("{id}")]
@@ -73,29 +47,8 @@ namespace StrategyGame.Api.Controllers
         [ProducesResponseType(204)]
         public async Task<ActionResult> DeleteAsync(int id)
         {
-            try
-            {
-                await _commandService.DeleteCommandAsync(User.Identity.Name, id);
-                return NoContent();
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-                return NotFound(new ProblemDetails
-                {
-                    Status = 404,
-                    Title = ErrorMessages.NotFound,
-                    Detail = ErrorMessages.NoSuchCommand
-                });
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized(new ProblemDetails
-                {
-                    Status = 401,
-                    Title = ErrorMessages.Unauthorized,
-                    Detail = ErrorMessages.CannotChangeCommand
-                });
-            }
+            await _commandService.DeleteCommandAsync(User.Identity.Name, id);
+            return NoContent();
         }
 
         [HttpPatch("{id}")]
@@ -105,41 +58,7 @@ namespace StrategyGame.Api.Controllers
         [ProducesResponseType(200)]
         public async Task<ActionResult<CommandInfo>> UpdateCommandAsync(int id, [FromBody] CommandDetails command)
         {
-            try
-            {
-                return Ok(await _commandService.UpdateCommandAsync(User.Identity.Name, id, command));
-            }
-            catch (ArgumentOutOfRangeException e)
-            {
-                return this.HandleNotFound(command, e);
-            }
-            catch (ArgumentException)
-            {
-                return BadRequest(new ProblemDetails
-                {
-                    Status = 400,
-                    Title = ErrorMessages.BadRequest,
-                    Detail = ErrorMessages.NotEnoughUnits
-                });
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized(new ProblemDetails
-                {
-                    Status = 401,
-                    Title = ErrorMessages.Unauthorized,
-                    Detail = ErrorMessages.CannotChangeCommand
-                });
-            }
-            catch (InvalidOperationException e)
-            {
-                return BadRequest(new ProblemDetails
-                {
-                    Status = 400,
-                    Title = ErrorMessages.BadRequest,
-                    Detail = e.Message
-                });
-            }
+            return Ok(await _commandService.UpdateCommandAsync(User.Identity.Name, id, command));
         }
     }
 }
