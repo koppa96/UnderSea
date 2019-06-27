@@ -26,8 +26,7 @@ namespace StrategyGame.Bll.Services.Units
         /// </summary>
         /// <param name="username">The name of the user</param>
         /// <param name="purchases">The details of the purchases</param>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown when the unit id is invalid</exception>
-        /// <exception cref="KeyNotFoundException">Thrown when the country is invalid</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when the unit id or country id is invalid</exception>
         /// <exception cref="UnauthorizedAccessException">Thrown when the country id is not the user's country</exception>
         /// <exception cref="ArgumentException">Thrown when the count is not a valid amount</exception>
         /// <exception cref="LimitReachedException">Thrown when the unit would be exceeded by the creation of units</exception>
@@ -41,8 +40,7 @@ namespace StrategyGame.Bll.Services.Units
         /// <param name="username">The name of the user</param>
         /// <param name="unitId">The identifier of the unit</param>
         /// <param name="count">The amount of units to be deleted</param>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown when the unit id is invalid</exception>
-        /// <exception cref="KeyNotFoundException">Thrown when the country is invalid</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when the unit id or country id is invalid</exception>
         /// <exception cref="UnauthorizedAccessException">Thrown when the country id is not the user's country</exception>
         /// <exception cref="ArgumentException">Thrown when the count is not a valid amount</exception>
         /// <returns>A task that can be awaited</returns>

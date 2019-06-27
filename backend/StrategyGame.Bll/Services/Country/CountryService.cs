@@ -95,12 +95,12 @@ namespace StrategyGame.Bll.Services.Country
 
             if (country == null)
             {
-                throw new ArgumentOutOfRangeException("Invalid country id.");
+                throw new ArgumentOutOfRangeException(nameof(countryId), "No country found by the provided ID.");
             }
 
             if (country.ParentUser.UserName != username)
             {
-                throw new UnauthorizedAccessException("Can not view country info of others.");
+                throw new UnauthorizedAccessException("Can't access country not owned by the user.");
             }
 
             var info = Mapper.Map<Model.Entities.Country, CountryInfo>(country);

@@ -41,12 +41,12 @@ namespace StrategyGame.Bll.Services.Units
 
             if (country == null)
             {
-                throw new ArgumentOutOfRangeException("Invalid country id.");
+                throw new ArgumentOutOfRangeException(nameof(countryId), "No country found by the provided ID.");
             }
 
             if (country.ParentUser.UserName != username)
             {
-                throw new UnauthorizedAccessException("Can not view country info of others.");
+                throw new UnauthorizedAccessException("Can't access country not owned by the user.");
             }
 
             return await country.GetAllUnitInfoAsync(Database, Mapper);
@@ -75,12 +75,12 @@ namespace StrategyGame.Bll.Services.Units
 
             if (country == null)
             {
-                throw new KeyNotFoundException("Invalid country id.");
+                throw new ArgumentOutOfRangeException(nameof(countryId), "No country found by the provided ID.");
             }
 
             if (country.ParentUser.UserName != username)
             {
-                throw new UnauthorizedAccessException("Can not view country info of others.");
+                throw new UnauthorizedAccessException("Can't access country not owned by the user.");
             }
 
             var unitInfos = new List<UnitInfo>();
@@ -90,21 +90,21 @@ namespace StrategyGame.Bll.Services.Units
 
                 if (unit == null)
                 {
-                    throw new ArgumentOutOfRangeException("Invalid unit id.");
+                    throw new ArgumentOutOfRangeException(nameof(purchase.UnitId), "No country found by the provided ID.");
                 }
 
                 if (purchase.Count < 0)
                 {
-                    throw new ArgumentException("Invalid amount.");
+                    throw new ArgumentException("Purchase amount must be positive.");
                 }
-                
+
                 // Check cost
                 long costPearl = unit.CostPearl * purchase.Count;
                 long costCoral = unit.CostCoral * purchase.Count;
 
                 if (costPearl > country.Pearls || costCoral > country.Corals)
                 {
-                    throw new InvalidOperationException("Units too expensive");
+                    throw new InvalidOperationException("Purchase is too expensive for the country.");
                 }
 
                 var builder = country.ParseAllEffectForCountry(Context, globals, Parsers, false);
@@ -113,7 +113,7 @@ namespace StrategyGame.Bll.Services.Units
                 // Check pop-space
                 if (builder.BarrackSpace < totalUnits + purchase.Count)
                 {
-                    throw new LimitReachedException();
+                    throw new LimitReachedException("Unit count limit reached.");
                 }
 
                 var defenders = country.GetAllDefending();
@@ -145,14 +145,14 @@ namespace StrategyGame.Bll.Services.Units
         {
             if (count < 1)
             {
-                throw new ArgumentException();
+                throw new ArgumentException("Purchase amount must be positive.");
             }
 
             var unit = await Context.UnitTypes.FindAsync(unitId);
 
             if (unit == null)
             {
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException(nameof(unitId), "No country found by the provided ID.");
             }
 
             var country = await Context.Countries
@@ -163,12 +163,12 @@ namespace StrategyGame.Bll.Services.Units
 
             if (country == null)
             {
-                throw new KeyNotFoundException("Invalid country id.");
+                throw new ArgumentOutOfRangeException(nameof(countryId), "No country found by the provided ID.");
             }
 
             if (country.ParentUser.UserName != username)
             {
-                throw new UnauthorizedAccessException("Can not view country info of others.");
+                throw new UnauthorizedAccessException("Can't access country not owned by the user.");
             }
 
             var defenders = country.GetAllDefending();
@@ -176,7 +176,7 @@ namespace StrategyGame.Bll.Services.Units
 
             if (targetDiv == null || targetDiv.Count < count)
             {
-                throw new ArgumentException("Too many units deleted");
+                throw new ArgumentException("Count was bigger than the unit's total count.");
             }
             else
             {

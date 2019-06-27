@@ -3,7 +3,6 @@ using StrategyGame.Bll.Dto.Sent.Country;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System;
 
 namespace StrategyGame.Bll.Services.Country
 {
@@ -32,8 +31,8 @@ namespace StrategyGame.Bll.Services.Country
         /// </summary>
         /// <param name="username">The name of the user</param>
         /// <param name="countryId">The id of the country</param>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown when the country id is invalid</exception>
-        /// <exception cref="UnauthorizedAccessException">Thrown when the country id is not the user's country</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when the country id is invalid.</exception>
+        /// <exception cref="UnauthorizedAccessException">Thrown when the country id is not the user's country.</exception>
         /// <returns>The information about the country</returns>
         Task<CountryInfo> GetCountryInfoAsync(string username, int countryId);
 
