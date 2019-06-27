@@ -292,8 +292,11 @@ export class BuildingsClient {
         this.baseUrl = baseUrl ? baseUrl : "";
     }
 
-    getBuildings(): Promise<CreationInfo[]> {
-        let url_ = this.baseUrl + "/api/Buildings";
+    getBuildings(countryId: number): Promise<CreationInfo[]> {
+        let url_ = this.baseUrl + "/api/Buildings/{countryId}";
+        if (countryId === undefined || countryId === null)
+            throw new Error("The parameter 'countryId' must be defined.");
+        url_ = url_.replace("{countryId}", encodeURIComponent("" + countryId)); 
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <AxiosRequestConfig>{
@@ -338,11 +341,14 @@ export class BuildingsClient {
         return Promise.resolve<CreationInfo[]>(<any>null);
     }
 
-    startBuilding(id: number): Promise<void> {
-        let url_ = this.baseUrl + "/api/Buildings/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
+    startBuilding(countryId: number, buildingId: number): Promise<void> {
+        let url_ = this.baseUrl + "/api/Buildings/{countryId}/{buildingId}";
+        if (countryId === undefined || countryId === null)
+            throw new Error("The parameter 'countryId' must be defined.");
+        url_ = url_.replace("{countryId}", encodeURIComponent("" + countryId)); 
+        if (buildingId === undefined || buildingId === null)
+            throw new Error("The parameter 'buildingId' must be defined.");
+        url_ = url_.replace("{buildingId}", encodeURIComponent("" + buildingId)); 
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <AxiosRequestConfig>{
@@ -402,8 +408,11 @@ export class CommandsClient {
         this.baseUrl = baseUrl ? baseUrl : "";
     }
 
-    getCommands(): Promise<CommandInfo[]> {
-        let url_ = this.baseUrl + "/api/Commands";
+    getCommands(id: number): Promise<CommandInfo[]> {
+        let url_ = this.baseUrl + "/api/Commands/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <AxiosRequestConfig>{
@@ -448,8 +457,11 @@ export class CommandsClient {
         return Promise.resolve<CommandInfo[]>(<any>null);
     }
 
-    attackTarget(command: CommandDetails): Promise<CommandInfo> {
-        let url_ = this.baseUrl + "/api/Commands";
+    attackTarget(id: number, command: CommandDetails): Promise<CommandInfo> {
+        let url_ = this.baseUrl + "/api/Commands/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(command);
@@ -615,7 +627,7 @@ export class CommandsClient {
     }
 }
 
-export class CountryClient {
+export class CountriesClient {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -625,8 +637,105 @@ export class CountryClient {
         this.baseUrl = baseUrl ? baseUrl : "";
     }
 
-    getCurrentState(): Promise<CountryInfo> {
-        let url_ = this.baseUrl + "/api/Country";
+    getCountries(): Promise<BriefCountryInfo[]> {
+        let url_ = this.baseUrl + "/api/Countries";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <AxiosRequestConfig>{
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.instance.request(options_).then((_response: AxiosResponse) => {
+            return this.processGetCountries(_response);
+        });
+    }
+
+    protected processGetCountries(response: AxiosResponse): Promise<BriefCountryInfo[]> {
+        const status = response.status;
+        let _headers: any = {}; 
+        if (response.headers && response.headers.forEach) { 
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        };
+        if (status === 401) {
+            const _responseText = response.data;
+            let result401: any = null;
+            let resultData401  = _responseText;
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("A server error occurred.", status, _responseText, _headers, result401);
+        } else if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(BriefCountryInfo.fromJS(item));
+            }
+            return result200;
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<BriefCountryInfo[]>(<any>null);
+    }
+
+    buyCountry(id: number, name: string | null): Promise<BriefCountryInfo> {
+        let url_ = this.baseUrl + "/api/Countries/{id}/{name}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
+        if (name === undefined || name === null)
+            throw new Error("The parameter 'name' must be defined.");
+        url_ = url_.replace("{name}", encodeURIComponent("" + name)); 
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <AxiosRequestConfig>{
+            method: "PUT",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.instance.request(options_).then((_response: AxiosResponse) => {
+            return this.processBuyCountry(_response);
+        });
+    }
+
+    protected processBuyCountry(response: AxiosResponse): Promise<BriefCountryInfo> {
+        const status = response.status;
+        let _headers: any = {}; 
+        if (response.headers && response.headers.forEach) { 
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        };
+        if (status === 401) {
+            const _responseText = response.data;
+            let result401: any = null;
+            let resultData401  = _responseText;
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("A server error occurred.", status, _responseText, _headers, result401);
+        } else if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = BriefCountryInfo.fromJS(resultData200);
+            return result200;
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<BriefCountryInfo>(<any>null);
+    }
+
+    getCurrentState(id: number): Promise<CountryInfo> {
+        let url_ = this.baseUrl + "/api/Countries/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <AxiosRequestConfig>{
@@ -654,6 +763,12 @@ export class CountryClient {
             let resultData401  = _responseText;
             result401 = ProblemDetails.fromJS(resultData401);
             return throwException("A server error occurred.", status, _responseText, _headers, result401);
+        } else if (status === 400) {
+            const _responseText = response.data;
+            let result400: any = null;
+            let resultData400  = _responseText;
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("A server error occurred.", status, _responseText, _headers, result400);
         } else if (status === 200) {
             const _responseText = response.data;
             let result200: any = null;
@@ -665,6 +780,54 @@ export class CountryClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
         return Promise.resolve<CountryInfo>(<any>null);
+    }
+
+    sendResources(details: TransferDetails): Promise<void> {
+        let url_ = this.baseUrl + "/api/Countries/send-resources";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(details);
+
+        let options_ = <AxiosRequestConfig>{
+            data: content_,
+            method: "POST",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json", 
+            }
+        };
+
+        return this.instance.request(options_).then((_response: AxiosResponse) => {
+            return this.processSendResources(_response);
+        });
+    }
+
+    protected processSendResources(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; 
+        if (response.headers && response.headers.forEach) { 
+            response.headers.forEach((v: any, k: any) => _headers[k] = v);
+        };
+        if (status === 401) {
+            const _responseText = response.data;
+            let result401: any = null;
+            let resultData401  = _responseText;
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("A server error occurred.", status, _responseText, _headers, result401);
+        } else if (status === 400) {
+            const _responseText = response.data;
+            let result400: any = null;
+            let resultData400  = _responseText;
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("A server error occurred.", status, _responseText, _headers, result400);
+        } else if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(<any>null);
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(<any>null);
     }
 }
 
@@ -876,8 +1039,11 @@ export class ResearchesClient {
         this.baseUrl = baseUrl ? baseUrl : "";
     }
 
-    getResearches(): Promise<CreationInfo[]> {
-        let url_ = this.baseUrl + "/api/Researches";
+    getResearches(countryId: number): Promise<CreationInfo[]> {
+        let url_ = this.baseUrl + "/api/Researches/{countryId}";
+        if (countryId === undefined || countryId === null)
+            throw new Error("The parameter 'countryId' must be defined.");
+        url_ = url_.replace("{countryId}", encodeURIComponent("" + countryId)); 
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <AxiosRequestConfig>{
@@ -922,11 +1088,14 @@ export class ResearchesClient {
         return Promise.resolve<CreationInfo[]>(<any>null);
     }
 
-    startResearch(id: number): Promise<void> {
-        let url_ = this.baseUrl + "/api/Researches/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
+    startResearch(countryId: number, researchId: number): Promise<void> {
+        let url_ = this.baseUrl + "/api/Researches/{countryId}/{researchId}";
+        if (countryId === undefined || countryId === null)
+            throw new Error("The parameter 'countryId' must be defined.");
+        url_ = url_.replace("{countryId}", encodeURIComponent("" + countryId)); 
+        if (researchId === undefined || researchId === null)
+            throw new Error("The parameter 'researchId' must be defined.");
+        url_ = url_.replace("{researchId}", encodeURIComponent("" + researchId)); 
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <AxiosRequestConfig>{
@@ -986,8 +1155,11 @@ export class UnitsClient {
         this.baseUrl = baseUrl ? baseUrl : "";
     }
 
-    getAllUnits(): Promise<UnitInfo[]> {
-        let url_ = this.baseUrl + "/api/Units";
+    getAllUnits(countryid: number): Promise<UnitInfo[]> {
+        let url_ = this.baseUrl + "/api/Units/{countryid}";
+        if (countryid === undefined || countryid === null)
+            throw new Error("The parameter 'countryid' must be defined.");
+        url_ = url_.replace("{countryid}", encodeURIComponent("" + countryid)); 
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <AxiosRequestConfig>{
@@ -1015,6 +1187,12 @@ export class UnitsClient {
             let resultData401  = _responseText;
             result401 = ProblemDetails.fromJS(resultData401);
             return throwException("A server error occurred.", status, _responseText, _headers, result401);
+        } else if (status === 400) {
+            const _responseText = response.data;
+            let result400: any = null;
+            let resultData400  = _responseText;
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("A server error occurred.", status, _responseText, _headers, result400);
         } else if (status === 200) {
             const _responseText = response.data;
             let result200: any = null;
@@ -1032,8 +1210,11 @@ export class UnitsClient {
         return Promise.resolve<UnitInfo[]>(<any>null);
     }
 
-    create(purchases: PurchaseDetails[]): Promise<UnitInfo[]> {
-        let url_ = this.baseUrl + "/api/Units";
+    create(countryid: number, purchases: PurchaseDetails[]): Promise<UnitInfo[]> {
+        let url_ = this.baseUrl + "/api/Units/{countryid}";
+        if (countryid === undefined || countryid === null)
+            throw new Error("The parameter 'countryid' must be defined.");
+        url_ = url_.replace("{countryid}", encodeURIComponent("" + countryid)); 
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(purchases);
@@ -1094,8 +1275,11 @@ export class UnitsClient {
         return Promise.resolve<UnitInfo[]>(<any>null);
     }
 
-    delete(id: number, count: number): Promise<void> {
-        let url_ = this.baseUrl + "/api/Units/{id}/{count}";
+    delete(countryid: number, id: number, count: number): Promise<void> {
+        let url_ = this.baseUrl + "/api/Units/{countryid}/{id}/{count}";
+        if (countryid === undefined || countryid === null)
+            throw new Error("The parameter 'countryid' must be defined.");
+        url_ = url_.replace("{countryid}", encodeURIComponent("" + countryid)); 
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id)); 
@@ -1691,6 +1875,46 @@ export interface IUnitDetails {
     amount: number;
 }
 
+export class BriefCountryInfo implements IBriefCountryInfo {
+    countryId!: number;
+    countryName?: string | undefined;
+
+    constructor(data?: IBriefCountryInfo) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.countryId = data["countryId"];
+            this.countryName = data["countryName"];
+        }
+    }
+
+    static fromJS(data: any): BriefCountryInfo {
+        data = typeof data === 'object' ? data : {};
+        let result = new BriefCountryInfo();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["countryId"] = this.countryId;
+        data["countryName"] = this.countryName;
+        return data; 
+    }
+}
+
+export interface IBriefCountryInfo {
+    countryId: number;
+    countryName?: string | undefined;
+}
+
 export class CountryInfo implements ICountryInfo {
     round!: number;
     rank!: number;
@@ -1933,6 +2157,54 @@ export interface IBriefCreationInfo {
     count: number;
     inProgressCount: number;
     imageUrl?: string | undefined;
+}
+
+export class TransferDetails implements ITransferDetails {
+    fromId!: number;
+    toId!: number;
+    pearls!: number;
+    corals!: number;
+
+    constructor(data?: ITransferDetails) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.fromId = data["fromId"];
+            this.toId = data["toId"];
+            this.pearls = data["pearls"];
+            this.corals = data["corals"];
+        }
+    }
+
+    static fromJS(data: any): TransferDetails {
+        data = typeof data === 'object' ? data : {};
+        let result = new TransferDetails();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["fromId"] = this.fromId;
+        data["toId"] = this.toId;
+        data["pearls"] = this.pearls;
+        data["corals"] = this.corals;
+        return data; 
+    }
+}
+
+export interface ITransferDetails {
+    fromId: number;
+    toId: number;
+    pearls: number;
+    corals: number;
 }
 
 export class CombatInfo implements ICombatInfo {

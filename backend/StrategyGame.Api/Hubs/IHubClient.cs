@@ -1,4 +1,5 @@
-﻿using StrategyGame.Bll.Dto.Sent.Country;
+﻿using StrategyGame.Bll.Dto.Received;
+using StrategyGame.Bll.Dto.Sent.Country;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +13,6 @@ namespace StrategyGame.Api.Hubs
     public interface IHubClient
     {
         Task NotifyTurnEnded();
+        Task TransferReceived(TransferDetails details);
     }
 }
