@@ -240,5 +240,58 @@ namespace StrategyGame.Bll.Services.Country
             var countries = await GetCountriesAsync(username);
             return await Task.WhenAll(countries.Select(c => GetCountryInfoAsync(username, c.CountryId)));
         }
+
+        public async Task<BriefCountryInfo> BuyAsync(string username, int countryId, string countryName)
+        {
+            var country = await Context.Countries
+                  .Include(c => c.ParentUser)
+                  .SingleOrDefaultAsync(c => c.Id == countryId);
+
+            if (country == null)
+            {
+                throw new ArgumentOutOfRangeException(nameof(countryId), "No country found by the provided ID.");
+            }
+
+            if (country.ParentUser.UserName != username)
+            {
+                throw new UnauthorizedAccessException("Can't access country not owned by the user.");
+            }
+
+            var globals = await Context.GlobalValues
+                .Include(g => g.FirstStartingBuilding)
+                .Include(g => g.SecondStartingBuilding)
+                .SingleAsync();
+
+            if (globals.NewCountryCoralCost > country.Corals || globals.NewCountryPearlCost > country.Pearls)
+            {
+                throw new InvalidOperationException("Not enough resources to buy a new country.");
+            }
+
+            country.Corals -= globals.NewCountryCoralCost;
+            country.Pearls -= globals.NewCountryPearlCost;
+
+            var newCountry = new Model.Entities.Country()
+            {
+                Name = countryName,
+                ParentUser = country.ParentUser,
+                Corals = globals.StartingCorals,
+                Pearls = globals.StartingPearls,
+                Score = -1,
+                Rank = -1,
+                CreatedRound = globals.Round
+            };
+
+            var defenders = new Command { ParentCountry = newCountry, TargetCountry = newCountry };
+
+            Context.Countries.Add(newCountry);
+            Context.Commands.Add(defenders);
+            Context.CountryBuildings.AddRange(
+                new CountryBuilding { ParentCountry = newCountry, Count = 1, Building = globals.FirstStartingBuilding },
+                new CountryBuilding { ParentCountry = newCountry, Count = 1, Building = globals.SecondStartingBuilding });
+
+            await Context.SaveChangesAsync();
+
+            return Mapper.Map<Model.Entities.Country, BriefCountryInfo>(newCountry);
+        }
     }
 }

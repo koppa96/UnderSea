@@ -90,5 +90,15 @@
         /// Gets or sets the second starting building for a new country.
         /// </summary>
         public BuildingType SecondStartingBuilding { get; set; }
+
+        /// <summary>
+        /// Gets or sets the pearl cost of a new country.
+        /// </summary>
+        public long NewCountryPearlCost { get; set; }
+
+        /// <summary>
+        /// Gets or sets the coral cost of a new country.
+        /// </summary>
+        public long NewCountryCoralCost { get; set; }
     }
 }
