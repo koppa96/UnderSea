@@ -20,7 +20,15 @@ export class NavBar extends React.Component<NavBarProps> {
       this.props.navbar.navBarIcons && this.props.navbar.navBarIcons.pearls;
     const navbarCollar =
       this.props.navbar.navBarIcons && this.props.navbar.navBarIcons.corals;
-    // console.log("navbar render", navbar);
+    const navbarCollerPerRound =
+      this.props.navbar.navBarIcons &&
+      this.props.navbar.navBarIcons.coralsPerRound;
+    const navbarPearlPerRound =
+      this.props.navbar.navBarIcons &&
+      this.props.navbar.navBarIcons.pearlsPerRound;
+    const navbarCoralPerRound =
+      this.props.navbar.navBarIcons &&
+      this.props.navbar.navBarIcons.coralsPerRound;
     return (
       <div className="navbar-bg">
         <div className="navbar-color ">
@@ -43,11 +51,13 @@ export class NavBar extends React.Component<NavBarProps> {
               count={navbarCollar ? navbarCollar : 0}
               money={true}
               id={0}
+              info={navbarCoralPerRound + "/kör"}
             />
             <NavBarIcon
               count={navbarPearl ? navbarPearl : 0}
               money={false}
               id={1}
+              info={navbarPearlPerRound + "/kör"}
             />
             {navbarBuildings &&
               navbarBuildings.map(item => (
@@ -56,7 +66,9 @@ export class NavBar extends React.Component<NavBarProps> {
                     id={item.id}
                     imageUrl={item.imageUrl ? item.imageUrl : ""}
                     count={item.count ? item.count : 0}
-                    info={item.inProgressCount ? item.count : 0}
+                    info={
+                      item.inProgressCount ? item.count + " épül" : "0 épül"
+                    }
                   />
                 </li>
               ))}
