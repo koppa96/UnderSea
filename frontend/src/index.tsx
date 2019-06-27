@@ -47,7 +47,8 @@ axios.interceptors.response.use(
       });
       const url = "connect/token";
 
-      const { data } = await axios.post(url, requestBody, config);
+      const instance = axios.create();
+      const { data } = await instance.post(url, requestBody, config);
       window.localStorage.setItem("token", data.token);
       window.localStorage.setItem("refreshToken", data.refreshToken);
       axios.defaults.headers.common["Authorization"] = "Bearer " + data.token;
