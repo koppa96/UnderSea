@@ -1,13 +1,13 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 
-import { BuildingsClient, ICreationInfo } from "../../../../api/Client";
 import {
+  fetchSucces,
   IRequestActionGetBuilding,
   ISuccesParamState,
-  fetchSucces,
   fetchError,
   GetBuildingActions
-} from "./actions/get";
+} from "./BuildingAction.get";
+import { BuildingsClient, ICreationInfo } from "../../../../../api/Client";
 
 export const beginFetchBuilding = () => {
   const getCountry = new BuildingsClient();

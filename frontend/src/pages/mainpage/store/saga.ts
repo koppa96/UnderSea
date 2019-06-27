@@ -1,18 +1,12 @@
-import * as React from "react";
-import axios from "axios";
-
 import { call, put, takeEvery, all, fork } from "redux-saga/effects";
 import {
-  IActions,
   IActionMainpageRequest,
   ISuccesParamState,
   fetchSucces,
   fetchError,
   MainpageActions
-} from "./actions/get/actions";
+} from "./actions/MainpageAction.get";
 import { CountryClient, CountryInfo, ICountryInfo } from "../../../api/Client";
-import { async } from "q";
-import { watchBuildingFetchRequest } from "../buildings/store/saga";
 
 export const beginToFetchMainpage = (): Promise<CountryInfo> => {
   const getCountry = new CountryClient();

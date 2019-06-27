@@ -1,5 +1,5 @@
 import { LoginResponseState, initialLoginResponseState } from "./store";
-import { IActions, LoginActions } from "./actions/post";
+import { IActions, LoginActions } from "./actions/LoginAction.post";
 
 //Rename to reducer
 export const LoginReducer = (

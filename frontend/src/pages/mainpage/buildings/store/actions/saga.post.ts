@@ -6,7 +6,7 @@ import {
   fetchError,
   fetchSucces,
   IActionRequestAddBuilding
-} from "./addBuilding";
+} from "./BuildingAction.post";
 import { BuildingsClient } from "../../../../../api/Client";
 
 export const beginToAddBuilding = (id: number): Promise<void> => {

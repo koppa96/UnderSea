@@ -3,9 +3,9 @@ import { IApllicationState } from "../../../store";
 import { Dispatch, bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { Buildings } from "./Buildings";
-import { GetBuildingActionCreator } from "./store/actions/get";
+import { GetBuildingActionCreator } from "./store/actions/BuildingAction.get";
 import { ICreationInfo } from "../../../api/Client";
-import { BuildingAddActionCreator } from "../store/actions/post/addBuilding";
+import { BuildingAddActionCreator } from "./store/actions/BuildingAction.post";
 
 const mapStateToProps = (state: IApllicationState): MappedProps => {
   const { buildings } = state.app.pages.buildings;

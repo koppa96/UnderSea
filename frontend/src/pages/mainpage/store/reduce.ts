@@ -1,10 +1,9 @@
-import { IActions, MainpageActions } from "./actions/get/actions";
+import { IActions, MainpageActions } from "./actions/MainpageAction.get";
 import { MainpageResponseState, initialMainpageResponseState } from "./store";
 import {
   IAddBuildingActions,
   AddBuildingActions
-} from "./actions/post/addBuilding";
-import { ICountryInfo } from "../../../api/Client";
+} from "../buildings/store/actions/BuildingAction.post";
 
 //Rename to reducer
 export const MainpageReducer = (

@@ -4,14 +4,14 @@ import {
   IActions,
   fetchSuccess,
   fetchError
-} from "./store/actions/ArmyActions.post";
+} from "./actions/ArmyActions.post";
 import {
   ArmyActions as GetArmyActions,
   IActionGetArmyUnitRequest,
   ArmyUnitGetSuccessActionCreator
-} from "./store/actions/ArmyActions.get";
+} from "./actions/ArmyActions.get";
 import { call, put, takeEvery, all, delay } from "redux-saga/effects";
-import { ArmyUnit } from "./store/store";
+import { ArmyUnit } from "./store";
 import axios from "axios";
 export const asd = 0;
 

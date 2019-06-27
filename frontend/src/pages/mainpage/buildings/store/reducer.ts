@@ -1,6 +1,6 @@
 import { buildingInitialState, BuildingState } from "./store";
 import { BuildingProps } from "../Interface";
-import { GetBuildingActions, IActions } from "./actions/get";
+import { GetBuildingActions, IActions } from "./actions/BuildingAction.get";
 
 //Rename to reducer
 export const BuildingReducer = (
