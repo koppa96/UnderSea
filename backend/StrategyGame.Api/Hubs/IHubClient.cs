@@ -9,5 +9,6 @@ namespace StrategyGame.Api.Hubs
     public interface IHubClient
     {
         Task NotifyTurnEnded();
+        Task TransferReceived(TransferDetails details);
     }
 }

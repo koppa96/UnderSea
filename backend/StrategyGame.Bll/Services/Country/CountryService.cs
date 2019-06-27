@@ -293,5 +293,43 @@ namespace StrategyGame.Bll.Services.Country
 
             return Mapper.Map<Model.Entities.Country, BriefCountryInfo>(newCountry);
         }
+
+        public async Task<string> TransferAsync(string username, TransferDetails details)
+        {
+            var sender = await Context.Countries.Include(c => c.ParentUser)
+                .SingleOrDefaultAsync(c => c.Id == details.FromId);
+
+            if (sender == null)
+            {
+                throw new ArgumentOutOfRangeException(nameof(details.FromId), "Invalid sender country id.");
+            }
+
+            if (sender.ParentUser.UserName != username)
+            {
+                throw new UnauthorizedAccessException("The sender must be your country.");
+            }
+
+            if (sender.Pearls < details.Pearls || sender.Corals < details.Corals)
+            {
+                throw new InvalidOperationException("Not enough money.");
+            }
+
+            var receiver = await Context.Countries.Include(c => c.ParentUser)
+                .SingleOrDefaultAsync(c => c.Id == details.ToId);
+
+            if (receiver == null)
+            {
+                throw new ArgumentOutOfRangeException(nameof(details.ToId), "Invalid receiver country.");
+            }
+
+            sender.Pearls -= details.Pearls;
+            sender.Corals -= details.Corals;
+
+            receiver.Pearls += details.Pearls;
+            receiver.Corals += details.Corals;
+
+            await Context.SaveChangesAsync();
+            return receiver.ParentUser.UserName;
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using StrategyGame.Bll.Dto.Sent;
+﻿using StrategyGame.Bll.Dto.Received;
+using StrategyGame.Bll.Dto.Sent;
 using StrategyGame.Bll.Dto.Sent.Country;
 using System;
 using System.Collections.Generic;
@@ -60,5 +61,16 @@ namespace StrategyGame.Bll.Services.Country
         /// </summary>
         /// <returns>The list of rank infos</returns>
         Task<IEnumerable<RankInfo>> GetRankedListAsync();
+
+        /// <summary>
+        /// Transfers resources from one country to another one.
+        /// </summary>
+        /// <param name="username">The name of the user</param>
+        /// <param name="details">The details of the transaction</param>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when either country ids are invalid</exception>
+        /// <exception cref="InvalidOperationException">Thrown when there are not enough resources</exception>
+        /// <exception cref="UnauthorizedAccessException">Thrown when the sender is not the user's country</exception>
+        /// <returns>The name of the target user to be notified</returns>
+        Task<string> TransferAsync(string username, TransferDetails details);
     }
 }
