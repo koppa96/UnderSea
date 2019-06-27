@@ -64,15 +64,6 @@ namespace StrategyGame.Bll.Services.Country
             }
         }
 
-        public async Task<IEnumerable<RankInfo>> GetRankedListAsync()
-        {
-            return await Database.Countries
-                .Where(c => c.Rank > 0)
-                .OrderBy(c => c.Rank)
-                .Select(c => Mapper.Map<Model.Entities.Country, RankInfo>(c))
-                .ToListAsync();
-        }
-
         public async Task<CountryInfo> GetCountryInfoAsync(string username, int countryId)
         {
             var country = await Context.Countries
@@ -124,7 +115,7 @@ namespace StrategyGame.Bll.Services.Country
 
         public async Task<IEnumerable<CountryInfo>> GetCountryInfoAsync(string username)
         {
-            var countries = await Database.Countries
+            var countries = await Context.Countries
                   .Include(c => c.Commands)
                        .ThenInclude(comm => comm.Divisions)
                            .ThenInclude(d => d.Unit)
@@ -148,7 +139,7 @@ namespace StrategyGame.Bll.Services.Country
                   .Where(c => c.ParentUser.UserName == username).ToListAsync();
 
             var infos = new List<CountryInfo>(countries.Count);
-            var globals = await Database.GlobalValues.SingleAsync();
+            var globals = await Context.GlobalValues.SingleAsync();
 
             foreach (var c in countries)
             {

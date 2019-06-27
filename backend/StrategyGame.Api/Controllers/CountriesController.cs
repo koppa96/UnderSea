@@ -35,28 +35,7 @@ namespace StrategyGame.Api.Controllers
         [ProducesResponseType(200)]
         public async Task<ActionResult<CountryInfo>> GetCurrentStateAsync(int id)
         {
-            try
-            {
-                return Ok(await _countryService.GetCountryInfoAsync(User.Identity.Name, id));
-            }
-            catch (ArgumentOutOfRangeException e)
-            {
-                return BadRequest(new ProblemDetails
-                {
-                    Status = 400,
-                    Title = ErrorMessages.BadRequest,
-                    Detail = e.Message
-                });
-            }
-            catch (UnauthorizedAccessException e)
-            {
-                return Unauthorized(new ProblemDetails
-                {
-                    Status = 401,
-                    Title = ErrorMessages.Unauthorized,
-                    Detail = e.Message
-                });
-            }
+            return Ok(await _countryService.GetCountryInfoAsync(User.Identity.Name, id));            
         }
     }
 }
