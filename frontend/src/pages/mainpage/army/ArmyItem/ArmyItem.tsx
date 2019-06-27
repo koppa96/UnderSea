@@ -1,9 +1,11 @@
 import React from "react";
 import { ArmyItemResponse } from "./Interface";
+import { BasePortUrl } from "../../../..";
 
 interface ArmyProps {
   unit: ArmyItemResponse;
   currentTroops: Function;
+  count: number;
 }
 
 export class ArmyItem extends React.Component<ArmyProps> {
@@ -25,7 +27,6 @@ export class ArmyItem extends React.Component<ArmyProps> {
     const {
       imageUrl,
       name,
-      count,
       maintenanceCoral,
       maintenancePearl,
       costPearl,
@@ -36,12 +37,12 @@ export class ArmyItem extends React.Component<ArmyProps> {
     return (
       <div className="solider-item">
         <div className="rectangle army-rectangle">
-          <img alt="solider" src={imageUrl} />
+          <img alt="solider" src={BasePortUrl + imageUrl} />
         </div>
         <h3>{name}</h3>
         <div>
           <span>Birtokodban:</span>
-          <span>{count}</span>
+          <span>{this.props.count}</span>
         </div>
         <div>
           <span>Támadás/Védekezés</span>

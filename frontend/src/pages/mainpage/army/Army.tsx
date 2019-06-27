@@ -32,13 +32,7 @@ export class Army extends React.Component<ArmyProps, InitialState> {
     } else {
       temp.push({ unitId: id, count: troop });
     }
-    /*const newtTemp = this.state.units.map(unit => {
-      if (unit.unitId == id) {
-        return { ...unit, count: troop };
-      }
-      return unit;
-    });*/
-    console.log(temp.some(item => item.count != 0));
+
     this.setState({ units: temp });
     if (temp.some(item => item.count != 0)) {
       this.setState({ unitsAdded: true });
@@ -49,7 +43,6 @@ export class Army extends React.Component<ArmyProps, InitialState> {
 
   render() {
     const { addUnits, ownedUnitState } = this.props;
-    console.log(this.state.units, "itt");
     return (
       <div className="main-component army-component">
         <ComponentHeader title={title} mainDescription={mainDescription} />
@@ -62,6 +55,7 @@ export class Army extends React.Component<ArmyProps, InitialState> {
                 <ArmyItem
                   key={item.id}
                   unit={item}
+                  count={item.count}
                   currentTroops={this.currentSoldiers}
                 />
               ))}

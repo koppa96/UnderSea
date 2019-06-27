@@ -8,7 +8,6 @@ import { getArmy } from "./store/actions/ArmyActions.get";
 
 const mapStateToProps = (state: IApllicationState): MappedProps => ({
   ownedUnitState: state.app.pages.Army
-  //getOwnedUnits:
 });
 
 const mapDispatchToProps = (dispatch: Dispatch): DispachedProps =>

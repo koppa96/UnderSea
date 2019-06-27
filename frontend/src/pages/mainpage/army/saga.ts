@@ -8,13 +8,11 @@ import {
 import {
   ArmyActions as GetArmyActions,
   IActionGetArmyUnitRequest,
-  ArmyUnitGetSuccessActionCreator,
-  IGetArmyRespone
+  ArmyUnitGetSuccessActionCreator
 } from "./store/actions/ArmyActions.get";
 import { call, put, takeEvery, all, delay } from "redux-saga/effects";
 import { ArmyUnit } from "./store/store";
 import axios from "axios";
-import { UnitsClient, PurchaseDetails } from "./../../../api/Client";
 export const asd = 0;
 
 // TODO: create error handling (dont use any)

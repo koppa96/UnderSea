@@ -8,7 +8,6 @@ import { Provider } from "react-redux";
 import { configureStore } from "./config/ConfigureStore";
 import { createBrowserHistory } from "history";
 import { ConnectedRouter } from "connected-react-router";
-import { codegen } from "swagger-axios-codegen";
 import qs from "qs";
 
 export const BasePortUrl = "https://localhost:44355/";
