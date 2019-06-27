@@ -1697,6 +1697,8 @@ export class CountryInfo implements ICountryInfo {
     armyInfo?: BriefUnitInfo[] | undefined;
     pearls!: number;
     corals!: number;
+    pearlsPerRound!: number;
+    coralsPerRound!: number;
     event?: EventInfo | undefined;
     unseenReports!: number;
     buildings?: BriefCreationInfo[] | undefined;
@@ -1722,6 +1724,8 @@ export class CountryInfo implements ICountryInfo {
             }
             this.pearls = data["pearls"];
             this.corals = data["corals"];
+            this.pearlsPerRound = data["pearlsPerRound"];
+            this.coralsPerRound = data["coralsPerRound"];
             this.event = data["event"] ? EventInfo.fromJS(data["event"]) : <any>undefined;
             this.unseenReports = data["unseenReports"];
             if (Array.isArray(data["buildings"])) {
@@ -1755,6 +1759,8 @@ export class CountryInfo implements ICountryInfo {
         }
         data["pearls"] = this.pearls;
         data["corals"] = this.corals;
+        data["pearlsPerRound"] = this.pearlsPerRound;
+        data["coralsPerRound"] = this.coralsPerRound;
         data["event"] = this.event ? this.event.toJSON() : <any>undefined;
         data["unseenReports"] = this.unseenReports;
         if (Array.isArray(this.buildings)) {
@@ -1777,6 +1783,8 @@ export interface ICountryInfo {
     armyInfo?: BriefUnitInfo[] | undefined;
     pearls: number;
     corals: number;
+    pearlsPerRound: number;
+    coralsPerRound: number;
     event?: EventInfo | undefined;
     unseenReports: number;
     buildings?: BriefCreationInfo[] | undefined;

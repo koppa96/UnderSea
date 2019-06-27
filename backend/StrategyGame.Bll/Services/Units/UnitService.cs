@@ -18,39 +18,39 @@ namespace StrategyGame.Bll.Services.Units
     {
         protected IMapper Mapper { get; }
 
-        protected UnderSeaDatabaseContext Database { get; }
+        protected UnderSeaDatabaseContext Context { get; }
 
         protected ModifierParserContainer Parsers { get; }
 
-        public UnitService(UnderSeaDatabaseContext database,
+        public UnitService(UnderSeaDatabaseContext context,
             ModifierParserContainer container, IMapper mapper)
         {
             Mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-            Database = database ?? throw new ArgumentNullException(nameof(database));
+            Context = context ?? throw new ArgumentNullException(nameof(context));
             Parsers = container ?? throw new ArgumentNullException(nameof(container));
         }
 
         public async Task<IEnumerable<UnitInfo>> GetUnitInfoAsync(string username)
         {
-            var country = await Database.Countries
+            var country = await Context.Countries
               .Include(c => c.Commands)
               .ThenInclude(comm => comm.Divisions)
               .ThenInclude(d => d.Unit)
               .ThenInclude(u => u.Content)
               .SingleAsync(c => c.ParentUser.UserName == username);
 
-            return await country.GetAllUnitInfoAsync(Database, Mapper);
+            return await country.GetAllUnitInfoAsync(Context, Mapper);
         }
 
         public async Task<IEnumerable<UnitInfo>> CreateUnitAsync(string username, IEnumerable<PurchaseDetails> purchases)
         {
-            var globals = await Database.GlobalValues.SingleAsync();
+            var globals = await Context.GlobalValues.SingleAsync();
 
-            var unitTypes = await Database.UnitTypes
+            var unitTypes = await Context.UnitTypes
                 .Include(u => u.Content)
                 .ToListAsync();
 
-            var country = await Database.Countries
+            var country = await Context.Countries
                .Include(c => c.Commands)
                     .ThenInclude(comm => comm.Divisions)
                         .ThenInclude(d => d.Unit)
@@ -86,7 +86,7 @@ namespace StrategyGame.Bll.Services.Units
                     throw new InvalidOperationException("Units too expensive");
                 }
 
-                var builder = country.ParseAllEffectForCountry(Database, globals, Parsers, false);
+                var builder = country.ParseAllEffectForCountry(Context, globals, Parsers, false);
                 var totalUnits = country.Commands.Sum(c => c.Divisions.Sum(d => d.Count));
 
                 // Check pop-space
@@ -101,7 +101,7 @@ namespace StrategyGame.Bll.Services.Units
                 if (targetDiv == null)
                 {
                     targetDiv = new Division { Count = purchase.Count, ParentCommand = defenders, Unit = unit };
-                    Database.Divisions.Add(targetDiv);
+                    Context.Divisions.Add(targetDiv);
                 }
                 else
                 {
@@ -116,7 +116,7 @@ namespace StrategyGame.Bll.Services.Units
                 unitInfos.Add(info);
             }
 
-            await Database.SaveChangesAsync();
+            await Context.SaveChangesAsync();
             return unitInfos;
         }
 
@@ -127,14 +127,14 @@ namespace StrategyGame.Bll.Services.Units
                 throw new ArgumentException();
             }
 
-            var unit = await Database.UnitTypes.FindAsync(unitId);
+            var unit = await Context.UnitTypes.FindAsync(unitId);
 
             if (unit == null)
             {
                 throw new ArgumentOutOfRangeException();
             }
 
-            var country = await Database.Countries
+            var country = await Context.Countries
                .Include(c => c.Commands)
                .ThenInclude(comm => comm.Divisions)
                .ThenInclude(d => d.Unit)
@@ -152,7 +152,7 @@ namespace StrategyGame.Bll.Services.Units
                 targetDiv.Count -= count;
             }
 
-            await Database.SaveChangesAsync();
+            await Context.SaveChangesAsync();
         }
     }
 }

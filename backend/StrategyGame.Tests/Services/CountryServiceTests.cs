@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using StrategyGame.Bll.EffectParsing;
 using StrategyGame.Bll.Services.Country;
 using StrategyGame.Dal;
 using System.Linq;
@@ -16,7 +17,21 @@ namespace StrategyGame.Tests.Services
         public async Task Initialize()
         {
             context = await UtilityFactory.CreateContextAsync();
-            countryService = new CountryService(context, UtilityFactory.CreateMapper());
+            countryService = new CountryService(UtilityFactory.CreateMapper(), context,
+                new ModifierParserContainer(new AbstractEffectModifierParser[]
+                {
+                    new BarrackSpaceEffectParser(),
+                    new CoralProductionEffectParser(),
+                    new PearlProductionEffectParser(),
+                    new HarvestModifierEffectParser(),
+                    new PopulationEffectParser(),
+                    new TaxModifierEffectParser(),
+                    new UnitDefenseEffectParser(),
+                    new UnitAttackEffectParser(),
+                    new AddBuildingEffectParser(),
+                    new IncreaseUnitAttackEffectParser(),
+                    new BuildingCoralProductionEffectParser()
+                }));
         }
 
         [TestMethod]
@@ -40,7 +55,7 @@ namespace StrategyGame.Tests.Services
         public async Task TestRankList()
         {
             int index = 0;
-            
+
             foreach (var cnt in context.Countries)
             {
                 cnt.Rank = ++index;

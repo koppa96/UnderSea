@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace StrategyGame.Bll.Dto.Sent.Country
 {
@@ -15,6 +12,8 @@ namespace StrategyGame.Bll.Dto.Sent.Country
         public IEnumerable<BriefUnitInfo> ArmyInfo { get; set; }
         public long Pearls { get; set; }
         public long Corals { get; set; }
+        public long PearlsPerRound { get; set; }
+        public long CoralsPerRound { get; set; }
         public EventInfo Event { get; set; }
         public int UnseenReports { get; set; }
         public IEnumerable<BriefCreationInfo> Buildings { get; set; }

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using StrategyGame.Bll.Dto.Sent;
 using StrategyGame.Bll.Dto.Sent.Country;
+using StrategyGame.Bll.EffectParsing;
 using StrategyGame.Bll.Extensions;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
@@ -16,18 +17,21 @@ namespace StrategyGame.Bll.Services.Country
     {
         protected IMapper Mapper { get; }
 
-        protected UnderSeaDatabaseContext Database { get; }
+        protected UnderSeaDatabaseContext Context { get; }
 
-        public CountryService(UnderSeaDatabaseContext database, IMapper mapper)
+        protected ModifierParserContainer Parsers { get; }
+
+        public CountryService(IMapper mapper, UnderSeaDatabaseContext context, ModifierParserContainer parsers)
         {
             Mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-            Database = database ?? throw new ArgumentNullException(nameof(database));
+            Context = context ?? throw new ArgumentNullException(nameof(context));
+            Parsers = parsers ?? throw new ArgumentNullException(nameof(parsers));
         }
 
         public async Task CreateAsync(string username, string countryName)
         {
-            var user = await Database.Users.SingleAsync(u => u.UserName == username);
-            var globals = await Database.GlobalValues
+            var user = await Context.Users.SingleAsync(u => u.UserName == username);
+            var globals = await Context.GlobalValues
                 .Include(g => g.FirstStartingBuilding)
                 .Include(g => g.SecondStartingBuilding)
                 .SingleAsync();
@@ -45,18 +49,18 @@ namespace StrategyGame.Bll.Services.Country
 
             var defenders = new Command { ParentCountry = country, TargetCountry = country };
 
-            Database.Countries.Add(country);
-            Database.Commands.Add(defenders);
-            Database.CountryBuildings.AddRange(
+            Context.Countries.Add(country);
+            Context.Commands.Add(defenders);
+            Context.CountryBuildings.AddRange(
                 new CountryBuilding { ParentCountry = country, Count = 1, Building = globals.FirstStartingBuilding },
                 new CountryBuilding { ParentCountry = country, Count = 1, Building = globals.SecondStartingBuilding });
 
-            await Database.SaveChangesAsync();
+            await Context.SaveChangesAsync();
         }
 
         public async Task<CountryInfo> GetCountryInfoAsync(string username)
         {
-            var country = await Database.Countries
+            var country = await Context.Countries
                .Include(c => c.Commands)
                     .ThenInclude(comm => comm.Divisions)
                         .ThenInclude(d => d.Unit)
@@ -80,13 +84,17 @@ namespace StrategyGame.Bll.Services.Country
                .SingleAsync(c => c.ParentUser.UserName == username);
 
             var info = Mapper.Map<Model.Entities.Country, CountryInfo>(country);
-            var globals = await Database.GlobalValues.SingleAsync();
+            var globals = await Context.GlobalValues.SingleAsync();
+            var mods = country.ParseAllEffectForCountry(Context, globals, Parsers, false);
+
             info.Round = globals.Round;
+            info.CoralsPerRound = (long)Math.Round(mods.CoralProduction * mods.HarvestModifier);
+            info.PearlsPerRound = (long)Math.Round(mods.PearlProduction * mods.TaxModifier);
 
             // Start with all buildings and researches
-            var totalBuildings = await Database.BuildingTypes.Include(r => r.Content)
+            var totalBuildings = await Context.BuildingTypes.Include(r => r.Content)
                 .ToDictionaryAsync(x => x.Id, x => Mapper.Map<BuildingType, BriefCreationInfo>(x));
-            var totalResearches = await Database.ResearchTypes.Include(r => r.Content)
+            var totalResearches = await Context.ResearchTypes.Include(r => r.Content)
                 .ToDictionaryAsync(x => x.Id, x => Mapper.Map<ResearchType, BriefCreationInfo>(x));
 
             // Map all existing buildings and researches
@@ -128,7 +136,7 @@ namespace StrategyGame.Bll.Services.Country
             info.Buildings = totalBuildings.Select(x => x.Value).ToList();
             info.Researches = totalResearches.Select(x => x.Value).ToList();
 
-            info.ArmyInfo = (await country.GetAllUnitInfoAsync(Database, Mapper))
+            info.ArmyInfo = (await country.GetAllUnitInfoAsync(Context, Mapper))
                 .Select(ui => new BriefUnitInfo
                 {
                     Id = ui.Id,
@@ -149,7 +157,7 @@ namespace StrategyGame.Bll.Services.Country
 
         public async Task<IEnumerable<RankInfo>> GetRankedListAsync()
         {
-            return await Database.Countries
+            return await Context.Countries
                 .Where(c => c.Rank > 0)
                 .OrderBy(c => c.Rank)
                 .Select(c => Mapper.Map<Model.Entities.Country, RankInfo>(c))
