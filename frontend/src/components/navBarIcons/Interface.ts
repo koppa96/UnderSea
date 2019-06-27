@@ -1,6 +1,7 @@
 export interface NavBarIconProp {
   id: number;
-  imageUrl: string;
-  amount: number;
+  imageUrl?: string;
+  count: number;
   info?: string;
+  money?: boolean;
 }

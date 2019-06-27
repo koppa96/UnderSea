@@ -8,7 +8,7 @@ import {
   IActionLoginRequest,
   ISuccesParamState,
   LoginActions
-} from "./actions/post";
+} from "./actions/LoginCheckAction.post";
 
 export const beginToLogin = (
   name: string,

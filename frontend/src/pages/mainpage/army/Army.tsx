@@ -1,59 +1,74 @@
 import React from "react";
 import { ComponentHeader } from "../../../components/componentHeader";
 import { ArmyItem } from "./ArmyItem";
-import {  ArmyInitialState, ArmyUnit } from "./store/store";
 import { ArmyProps } from "./Interface";
 
+interface Unit {
+  unitId: number;
+  count: number;
+}
+interface InitialState {
+  units: Unit[];
+  unitsAdded: boolean;
+}
 
-export class Army extends React.Component<ArmyProps> {
+export class Army extends React.Component<ArmyProps, InitialState> {
   componentDidMount() {
     document.title = title;
+    if (!this.props.ownedUnitState.isLoaded) {
+      this.props.getArmy();
+    }
   }
-  state = {
-    troopsToAdd: [
-      {
-          id:1,
-          amount: 0
-      },
-      {
-          id:2,
-          amount: 0
-      },
-      {
-          id:3,
-          amount: 0
-      }
-    ]
-    //troops: ArmyInitialState
-  }
+  state: InitialState = {
+    units: [],
+    unitsAdded: false
+  };
 
   currentSoldiers = (id: number, troop: number) => {
-    var temp = this.state.troopsToAdd;
-    temp.map(
-      unit => {
-        if(unit.id == id)
-          unit.amount = troop
-      }
-    )
-    this.setState({troopsToAdd: temp}, () => {
-      console.log(this.state.troopsToAdd);
-    });
+    const temp = this.state.units;
+    const index = this.state.units.findIndex(unit => unit.unitId == id);
+    if (index !== undefined && index != -1) {
+      temp[index].count = troop;
+    } else {
+      temp.push({ unitId: id, count: troop });
+    }
+
+    this.setState({ units: temp });
+    if (temp.some(item => item.count != 0)) {
+      this.setState({ unitsAdded: true });
+    } else {
+      this.setState({ unitsAdded: false });
+    }
   };
 
   render() {
-    const {addUnits, ownedUnitState} = this.props
-    console.log(this.state.troopsToAdd, 'itt');
+    const { addUnits, ownedUnitState } = this.props;
     return (
       <div className="main-component army-component">
         <ComponentHeader title={title} mainDescription={mainDescription} />
-        <div className="army-page hide-scroll">
-          {ownedUnitState.units.length > 0 &&
-            ownedUnitState.units.map(item => (
-              <ArmyItem unit={item} currentTroops={this.currentSoldiers} />
-            ))}
-        </div>
+        {ownedUnitState.isRequesting && "loading..."}
+
+        {ownedUnitState.isLoaded && (
+          <div className="army-page hide-scroll">
+            {ownedUnitState.units.length > 0 &&
+              ownedUnitState.units.map(item => (
+                <ArmyItem
+                  key={item.id}
+                  unit={item}
+                  count={item.count}
+                  currentTroops={this.currentSoldiers}
+                />
+              ))}
+          </div>
+        )}
+
         <button
-        onClick = {() => addUnits({unitsToAdd:this.state.troopsToAdd})}>Megveszem</button>
+          disabled={!this.state.unitsAdded || ownedUnitState.isPostRequesting}
+          onClick={() => addUnits({ unitsToAdd: this.state.units })}
+        >
+          {ownedUnitState.isPostRequesting ? "töltés.." : "Megveszem"}
+        </button>
+        {ownedUnitState.error && <p>{ownedUnitState.error}</p>}
       </div>
     );
   }

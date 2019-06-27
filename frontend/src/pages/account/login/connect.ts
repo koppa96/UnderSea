@@ -2,7 +2,7 @@ import { MappedProps, DispatchedProps } from "./Interface";
 import { Dispatch, bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import Login from "./Login";
-import { BeginLoginActionCreator } from "./store/actions/post";
+import { BeginLoginActionCreator } from "./store/actions/LoginAction.post";
 import { IApllicationState } from "../../../store";
 
 const mapStateToProps = (state: IApllicationState): MappedProps => ({

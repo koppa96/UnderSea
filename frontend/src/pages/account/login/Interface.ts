@@ -1,4 +1,4 @@
-import { IRequestParamState } from "./store/actions/post";
+import { IRequestParamState } from "./store/actions/LoginAction.post";
 
 export interface NativeProps {}
 

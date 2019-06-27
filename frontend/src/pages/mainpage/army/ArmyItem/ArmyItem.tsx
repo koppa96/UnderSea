@@ -1,9 +1,11 @@
 import React from "react";
-import { ArmyItemProps } from "./Interface";
+import { ArmyItemResponse } from "./Interface";
+import { BasePortUrl } from "../../../..";
 
-interface ArmyProps{
-  unit:ArmyItemProps
-  currentTroops:Function
+interface ArmyProps {
+  unit: ArmyItemResponse;
+  currentTroops: Function;
+  count: number;
 }
 
 export class ArmyItem extends React.Component<ArmyProps> {
@@ -15,48 +17,48 @@ export class ArmyItem extends React.Component<ArmyProps> {
     this.setState({ currentTroop: this.state.currentTroop + 1 }, () =>
       this.props.currentTroops(this.props.unit.id, this.state.currentTroop)
     );
-  removeTroop = () =>{
-    if(this.state.currentTroop>0)
+  removeTroop = () => {
+    if (this.state.currentTroop > 0)
       this.setState({ currentTroop: this.state.currentTroop - 1 }, () =>
         this.props.currentTroops(this.props.unit.id, this.state.currentTroop)
       );
-  }
+  };
   render() {
     const {
       imageUrl,
-      title,
-      amount,
-      price,
-      price2,
-      price3,
-      stat
+      name,
+      maintenanceCoral,
+      maintenancePearl,
+      costPearl,
+      attackPower,
+      defensePower
     } = this.props.unit;
     const { currentTroop } = this.state;
     return (
       <div className="solider-item">
         <div className="rectangle army-rectangle">
-          <img alt="solider" src={imageUrl} />
+          <img alt="solider" src={BasePortUrl + imageUrl} />
         </div>
-        <h3>{title}</h3>
+        <h3>{name}</h3>
         <div>
           <span>Birtokodban:</span>
-          <span>{amount}</span>
+          <span>{this.props.count}</span>
         </div>
         <div>
           <span>Támadás/Védekezés</span>
-          <span>{stat}</span>
+          <span>{attackPower + "/" + defensePower}</span>
         </div>
         <div>
           <span>Zsold(/kör/példány)</span>
-          <span>{price}</span>
+          <span>{maintenancePearl}</span>
         </div>
         <div>
           <span>Ellátmány(/kör/példány)</span>
-          <span>{price2}</span>
+          <span>{maintenanceCoral}</span>
         </div>
         <div>
           <span>Ár</span>
-          <span>{price3}</span>
+          <span>{costPearl}</span>
         </div>
         <div className="army-circle">
           <div onClick={this.removeTroop} className="circle">

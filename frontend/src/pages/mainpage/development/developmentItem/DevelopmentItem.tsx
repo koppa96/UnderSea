@@ -3,15 +3,15 @@ import BuildingImg from "./../../../../assets/images/development-bg.png";
 import { DevelopmentProps } from "./Interface";
 
 export const DevelopmentItem = (props: DevelopmentProps) => {
-  const { title, description, isDeveloped, time, imageUrl } = props.development;
+  const { title, description, isDeveloped, time } = props.development;
 
   return (
     <div className="development-item">
       <div className="development-img">
-        {(time !== undefined) && (+time[0] != 0) && <p> még {time} kör</p>}
+        {time !== undefined && +time[0] != 0 && <p> még {time} kör</p>}
         {isDeveloped && (
           <div>
-            <img src="src\assets\images\check_mark.png"/>
+            <img src="src\assets\images\check_mark.png" />
           </div>
         )}
         <img alt="building" src={BuildingImg} />

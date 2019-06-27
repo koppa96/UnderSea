@@ -1,14 +1,26 @@
 import { BuildingState } from "./store/store";
-import { IRequestParamState } from "./store/actions/buildingActions";
+import {
+  IBriefCreationInfo,
+  BriefCreationInfo,
+  ICreationInfo
+} from "../../../api/Client";
 
 interface NativeProps {}
 
 export interface MappedProps {
-  boughtBuildingState: BuildingState;
+  boughtBuildingState?: ICreationInfo[];
+  buildingCount?: countProp[];
+  totalpearl: number;
+  totalcoral: number;
+}
+export interface countProp {
+  id: number;
+  count: number;
 }
 
 export interface DispachedProps {
-  addBuilding: (params: IRequestParamState) => void;
+  addBuilding: (params: number) => void;
+  getAllBuilding: () => void;
 }
 
 export type BuildingProps = NativeProps & MappedProps & DispachedProps;

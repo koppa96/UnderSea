@@ -3,7 +3,7 @@ import { bindActionCreators, Dispatch } from "redux";
 import { MainPage } from "./Mainpage";
 import { connect } from "react-redux";
 import { MappedProps, DispatchedProps } from "./Interface";
-import { MainpageRequestActionCreator } from "./store/actions";
+import { MainpageRequestActionCreator } from "./store/actions/MainpageAction.get";
 
 const mapStateToProps = (state: IApllicationState): MappedProps => ({
   error: state.app.pages.mainpage.error,
