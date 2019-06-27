@@ -232,7 +232,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
                 + divisionScore * globals.ScoreUnitMultiplier
                 + country.Researches.Count * globals.ScoreResearchMultiplier);
 
-            // Merge all attacking commands into the defense command, delete attacking commands, and add the loot
+            // Merge all attacking commands into the defense command, delete attacking commands, add the loot, and upgrade units.
             var defenders = country.GetAllDefending();
 
             foreach (var attack in country.Attacks.Where(x => x.DidAttackerWin && x.Round == globals.Round))
@@ -244,6 +244,15 @@ namespace StrategyGame.Bll.Services.TurnHandling
             foreach (var attack in country.Commands.Where(c => c.Id != defenders.Id).ToList())
             {
                 attack.MergeInto(defenders, context);
+            }
+
+            foreach (var div in defenders.Divisions)
+            {
+                if (div.Unit.CanRankUp && div.BattleCount >= div.Unit.BattlesToLevelUp)
+                {
+                    div.Unit = div.Unit.RankedUpType;
+                    div.BattleCount = 0;
+                }
             }
         }
 
