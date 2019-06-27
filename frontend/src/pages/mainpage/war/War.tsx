@@ -5,6 +5,7 @@ import { WarProps } from "./Interface";
 export class War extends React.Component<WarProps> {
   componentDidMount() {
     document.title = "Harc";
+    this.props.getAllWar();
   }
 
   render() {

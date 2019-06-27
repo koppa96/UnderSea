@@ -4,6 +4,11 @@ import { ProfileProps } from "./Interface";
 import { BasePortUrl } from "../..";
 
 export class ProfileContainer extends React.Component<ProfileProps> {
+  componentDidMount() {
+    document.title = "Profil";
+    this.props.getUserInfo();
+  }
+
   render = () => {
     const { profile } = this.props.profile;
     console.log("profile container rendered");
