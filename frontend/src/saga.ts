@@ -8,6 +8,7 @@ import { watchBuildingFetchRequest } from "./pages/mainpage/buildings/store/acti
 import { watchRankFetchRequest } from "./pages/mainpage/rank/store/actions/saga.get";
 import { watchProfileFetchRequest } from "./components/profileContainer/store/saga";
 import { watchWarFetchRequest } from "./pages/mainpage/war/store/saga";
+import { watchDevelopmentFetchRequest } from "./pages/mainpage/development/store/actions/saga.get";
 
 export function* rootSaga() {
   yield all([
@@ -18,6 +19,7 @@ export function* rootSaga() {
     call(watchAddBuildingRequest),
     call(watchRankFetchRequest),
     call(watchProfileFetchRequest),
-    call(watchWarFetchRequest)
+    call(watchWarFetchRequest),
+    call(watchDevelopmentFetchRequest)
   ]);
 }

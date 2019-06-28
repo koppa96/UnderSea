@@ -46,13 +46,13 @@ export class NavBar extends React.Component<NavBarProps> {
               ))}
             <NavBarIcon
               count={navbarCollar ? navbarCollar : 0}
-              money={true}
+              money={false}
               id={0}
               info={navbarCoralPerRound + "/kör"}
             />
             <NavBarIcon
               count={navbarPearl ? navbarPearl : 0}
-              money={false}
+              money={true}
               id={1}
               info={navbarPearlPerRound + "/kör"}
             />
@@ -61,7 +61,7 @@ export class NavBar extends React.Component<NavBarProps> {
                 <li key={item.id}>
                   <NavBarIcon
                     id={item.id}
-                    imageUrl={item.imageUrl ? item.imageUrl : ""}
+                    imageUrl={item.iconImageUrl ? item.iconImageUrl : ""}
                     count={item.count ? item.count : 0}
                     info={
                       item.inProgressCount ? item.count + " épül" : "0 épül"

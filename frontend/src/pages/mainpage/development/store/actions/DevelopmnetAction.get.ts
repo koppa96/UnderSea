@@ -1,4 +1,4 @@
-import { IBriefCreationInfo } from "../../../../../api/Client";
+import { ICreationInfo } from "../../../../../api/Client";
 
 //ACTIONTYPES
 export interface IGetDevelopmentActionsTypes {
@@ -14,7 +14,7 @@ export const GetDevelopmentActions: IGetDevelopmentActionsTypes = {
 };
 
 export interface ISuccesParamState {
-  Developments: IBriefCreationInfo[];
+  description: ICreationInfo[];
 }
 
 //ACTIONHOZ
@@ -31,7 +31,7 @@ export interface IErrorActionGetDevelopment {
 }
 
 //REDUCERHEZ
-export type IActions =
+export type IGetDevelopmentActions =
   | IRequestActionGetDevelopment
   | ISuccesActionGetDevelopment
   | IErrorActionGetDevelopment;

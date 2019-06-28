@@ -1,10 +1,12 @@
+import { ICreationInfo } from "../../../../api/Client";
+
 export interface DevelopmentProps {
-  development: {
-    id: string;
-    imageUrl: string;
-    title: string;
-    description: string;
-    time?: string;
-    isDeveloped?: boolean;
-  };
+  id?: string;
+  imageUrl?: string;
+  title?: string;
+  description?: string;
+  time?: string;
+  inProgress?: number;
+  count: number;
+  info: ICreationInfo | null;
 }

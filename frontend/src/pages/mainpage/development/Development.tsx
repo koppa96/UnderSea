@@ -6,13 +6,14 @@ import { DevelopmentProps } from "./Interface";
 export class Development extends React.Component<DevelopmentProps> {
   componentDidMount() {
     document.title = "Development";
+    this.props.getAllDevelopment();
   }
   onChecked(e: React.ChangeEvent<HTMLInputElement>) {
     console.log("sd");
   }
 
   render() {
-    const { development, error, loading } = this.props.totalDevelopment;
+    const { totalDevelopment, totalResourcesDesc } = this.props;
     return (
       <div className="main-component">
         <ComponentHeader
@@ -21,8 +22,11 @@ export class Development extends React.Component<DevelopmentProps> {
           description={description}
         />
         <div className="development-page hide-scroll">
-          {development.length > 0 &&
-            development.map(item => (
+          {totalResourcesDesc.map(item => {
+            const mappedDeveleopmnet = totalDevelopment.development.find(
+              x => x.id === item.id
+            );
+            return (
               <label key={item.id}>
                 <input
                   value={item.id}
@@ -30,16 +34,21 @@ export class Development extends React.Component<DevelopmentProps> {
                   type="radio"
                   onChange={e => this.onChecked(e)}
                 />
-                ideideiideideiieiided
+                <DevelopmentItem
+                  count={item.count}
+                  inProgress={item.inProgressCount}
+                  info={mappedDeveleopmnet ? mappedDeveleopmnet : null}
+                />
               </label>
-            ))}
+            );
+          })}
         </div>
         <button>Megveszem</button>
       </div>
     );
   }
 }
-/* <DevelopmentItem development={item} />*/
+
 const mockData = [
   {
     id: "1",

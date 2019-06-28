@@ -3,30 +3,28 @@ import { IApllicationState } from "../../../store";
 import { Dispatch, bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { Development } from "./Development";
+import { GetDevelopmentActionCreator } from "./store/actions/DevelopmnetAction.get";
 
 const mapStateToProps = (state: IApllicationState): MappedProps => {
   const { model } = state.app.pages.mainpage;
-  const researches = model && model.researches ? model.researches : [];
+  const researchs = model && model.researches ? model.researches : [];
 
   return {
-    totalDevelopment: {
-      development: researches,
-      loading: state.app.pages.mainpage.loading,
-      isPostRequesting: false
-    }
+    totalResourcesDesc: researchs,
+    totalDevelopment: state.app.pages.development
   };
 };
-/*
+
 const mapDispatchToProps = (dispatch: Dispatch): DispachedProps =>
   bindActionCreators(
     {
-       addDevelopment: ,
+      getAllDevelopment: GetDevelopmentActionCreator
     },
 
     dispatch
   );
-*/
+
 export const DevelopmentConnected = connect(
   mapStateToProps,
-  {}
+  mapDispatchToProps
 )(Development);

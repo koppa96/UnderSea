@@ -1,16 +1,28 @@
-import { call, put, takeEvery } from "redux-saga/effects";
-/*
-export const beginFetchBuilding = () => {
-  const getCountry = new BuildingsClient();
-  const tempData = getCountry.getBuildings();
+import { call, put, takeEvery, all } from "redux-saga/effects";
+import {
+  AccountsClient,
+  ResearchesClient,
+  ICreationInfo
+} from "../../../../../api/Client";
+import {
+  IRequestActionGetDevelopment,
+  fetchSucces,
+  fetchError,
+  ISuccesParamState,
+  GetDevelopmentActions
+} from "./DevelopmnetAction.get";
+
+export const beginFetchDevelopment = () => {
+  const getResearch = new ResearchesClient();
+  const tempData = getResearch.getResearches();
   return tempData;
 };
 
-function* handleLogin(action: IRequestActionGetBuilding) {
-  console.log("SAGA-BUILDING");
+function* handleLogin(action: IRequestActionGetDevelopment) {
+  console.log("SAGA-Development");
   try {
-    const data: ICreationInfo[] = yield call(beginFetchBuilding);
-    const response: ISuccesParamState = { buildings: data };
+    const data: ICreationInfo[] = yield call(beginFetchDevelopment);
+    const response: ISuccesParamState = { description: data };
     yield put(fetchSucces(response));
   } catch (err) {
     if (err) {
@@ -21,7 +33,6 @@ function* handleLogin(action: IRequestActionGetBuilding) {
   }
 }
 
-export function* watchBuildingFetchRequest() {
-  yield takeEvery(GetBuildingActions.REQUEST, handleLogin);
+export function* watchDevelopmentFetchRequest() {
+  yield takeEvery(GetDevelopmentActions.REQUEST, handleLogin);
 }
-*/

@@ -1,13 +1,14 @@
-import { IBriefCreationInfo } from "../../../../api/Client";
+import { IBriefCreationInfo, ICreationInfo } from "../../../../api/Client";
+import { DevelpomentDescription } from "../Interface";
 
 export interface DevelopmentState {
   isPostRequesting: boolean;
-  development: IBriefCreationInfo[];
+  development: ICreationInfo[];
   loading: boolean;
   error?: string;
 }
 
-export const buildingInitialState: DevelopmentState = {
+export const developmentInitialState: DevelopmentState = {
   isPostRequesting: false,
   development: [],
   loading: false
