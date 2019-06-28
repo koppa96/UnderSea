@@ -58,33 +58,14 @@ namespace StrategyGame.Bll.Services.Commands
 
             foreach (var detail in details.Units)
             {
-                var defendingDivisions = defendingCommand.Divisions.Where(d => d.Id == detail.UnitId).ToList();
-                if (defendingDivisions.Sum(d => d.Count) < detail.Amount)
-                {
-                    throw new ArgumentException("Not enough units.");
-                }
+                var defendingDivisions = defendingCommand.Divisions.Where(d => d.Unit.Id == detail.UnitId).ToList();
 
-                var newDivisions = new List<Division>();
-                while (newDivisions.Sum(d => d.Count) + defendingDivisions[newDivisions.Count].Count < detail.Amount)
-                {
-                    var division = defendingDivisions[newDivisions.Count];
-                    division.ParentCommand = attackingCommand;
-                    newDivisions.Add(division);                    
-                }
-
-                if (newDivisions.Sum(d => d.Count) < detail.Amount)
-                {
-                    var division = defendingDivisions[newDivisions.Count];
-                    var newDivision = new Division
-                    {
-                        ParentCommand = attackingCommand,
-                        Unit = division.Unit,
-                        BattleCount = division.BattleCount,
-                        Count = newDivisions.Sum(d => d.Count) - detail.Amount
-                    };
-                    division.Count -= newDivision.Count;
-                    _context.Divisions.Add(newDivision);
-                }
+                TransferUnits(defendingDivisions,
+                    defendingCommand,
+                    new List<Division>(),
+                    attackingCommand,
+                    detail.Amount
+                );
             }
 
             if (!attackingCommand.Divisions.Any(d => d.Unit is LeaderType && d.Count > 0))
@@ -123,23 +104,18 @@ namespace StrategyGame.Bll.Services.Commands
             }
 
             var defendingCommand = command.ParentCountry.GetAllDefending();
-            foreach (var division in command.Divisions)
+            var unitIds = command.Divisions.Select(d => d.Unit.Id).Distinct().ToList();
+            foreach (var unitId in unitIds)
             {
-                var defendingDivision = defendingCommand.Divisions.SingleOrDefault(d => d.Unit.Id == division.Unit.Id);
-                if (defendingDivision == null)
-                {
-                    defendingDivision = new Division
-                    {
-                        ParentCommand = defendingCommand,
-                        Unit = division.Unit,
-                        Count = 0
-                    };
+                var defendingDivisions = defendingCommand.Divisions.Where(d => d.Unit.Id == unitId).ToList();
+                var attackingDivisions = command.Divisions.Where(d => d.Unit.Id == unitId).ToList();
 
-                    _context.Divisions.Add(defendingDivision);
-                }
-
-                defendingDivision.Count += division.Count;
-                _context.Divisions.Remove(division);
+                TransferUnits(attackingDivisions,
+                    command, 
+                    defendingDivisions, 
+                    defendingCommand, 
+                    attackingDivisions.Sum(d => d.Count)
+                );
             }
 
             _context.Commands.Remove(command);
@@ -208,7 +184,15 @@ namespace StrategyGame.Bll.Services.Commands
 
             foreach (var detail in details.Units)
             {
-                
+                var attackingDivisions = command.Divisions.Where(d => d.Id == detail.UnitId).ToList();
+                var defendingDivisions = defendingCommand.Divisions.Where(d => d.Id == detail.UnitId).ToList();
+
+                TransferUnits(defendingDivisions,
+                    defendingCommand,
+                    attackingDivisions,
+                    command,
+                    detail.Amount - attackingDivisions.Sum(d => d.Count)
+                );
             }
 
             if (!command.Divisions.Any(d => d.Unit is LeaderType && d.Count > 0))
@@ -218,6 +202,73 @@ namespace StrategyGame.Bll.Services.Commands
 
             await _context.SaveChangesAsync();
             return ToCommandInfo(command, _mapper);
+        }
+
+        private void TransferUnits(List<Division> from, Command fromCommand, List<Division> to, Command toCommand, int amount)
+        {
+            if (amount < 0)
+            {
+                var tmp = from;
+                from = to;
+                to = tmp;
+                var tmp2 = fromCommand;
+                fromCommand = toCommand;
+                toCommand = tmp2;
+
+                amount = -amount;
+            }
+
+            if (from.Sum(d => d.Count) < amount)
+            {
+                throw new ArgumentException("Not enough units.");
+            }
+
+            int transfered = 0, i = 0;
+            while (transfered + from[i].Count <= amount)
+            {
+                var division = from[i];
+                var toDivision = to.SingleOrDefault(d => d.BattleCount == division.BattleCount);
+
+                if (toDivision == null)
+                {
+                    division.ParentCommand = toCommand;
+                    transfered += division.Count;
+                }
+                else
+                {
+                    toDivision.Count += division.Count;
+                    _context.Divisions.Remove(division);
+                }
+
+                i++;
+            }
+
+            if (transfered < amount)
+            {
+                var splitDivison = from[i];
+                var toDivision = to.SingleOrDefault(d => d.BattleCount == splitDivison.BattleCount);
+
+                if (toDivision == null)
+                {
+                    var newDivision = new Division
+                    {
+                        Unit = splitDivison.Unit,
+                        BattleCount = splitDivison.BattleCount,
+                        Count = amount - transfered,
+                        ParentCommand = toCommand
+                    };
+
+                    splitDivison.Count -= newDivision.Count;
+                    _context.Divisions.Add(newDivision);
+                }
+                else
+                {
+                    var toBeTransfered = amount - transfered;
+                    toDivision.Count += toBeTransfered;
+                    splitDivison.Count -= toBeTransfered;
+                }
+
+            }
         }
 
         public CommandInfo ToCommandInfo(Command command, IMapper mapper)
