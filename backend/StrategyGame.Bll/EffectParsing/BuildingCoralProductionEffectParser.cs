@@ -12,8 +12,21 @@ namespace StrategyGame.Bll.EffectParsing
         /// </summary>
         public BuildingCoralProductionEffectParser()
             : base(KnownValues.BuildingProductionIncrease, (effect, country, context, builder, doApply) =>
-                builder.CoralProduction +=
-                    country.Buildings.Count(b => b.Building.Id == effect.TargetId) * (int)effect.Value)
+            {
+                var split = effect.Parameter.Split(";");
+                int buildingId = int.Parse(split[0]);
+                int resourceId = int.Parse(split[1]);
+                var resourceAmount = country.Buildings.Count(b => b.Building.Id == buildingId) * (int)effect.Value;
+
+                if (builder.ResourceProductions.ContainsKey(resourceId))
+                {
+                    builder.ResourceProductions[resourceId] += resourceAmount;
+                }
+                else
+                {
+                    builder.ResourceProductions.Add(resourceId, resourceAmount);
+                }
+            })
         { }
     }
 }
