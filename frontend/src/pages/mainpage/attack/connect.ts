@@ -3,7 +3,8 @@ import { bindActionCreators, Dispatch } from "redux";
 import { connect } from "react-redux";
 import { Attack } from "./Attack";
 import { GetTargetActionCreator } from "./store/actions/GetAttackAction.get";
-import { MappedProps, DispatchedProps } from "./interface";
+import { PostTargetActionCreator } from "./store/actions/AddAttackAction.post";
+import { DispatchedProps, MappedProps } from "./interface";
 
 const mapStateToProps = (state: IApllicationState): MappedProps => {
   const { model } = state.app.pages.mainpage;
@@ -18,11 +19,13 @@ const mapStateToProps = (state: IApllicationState): MappedProps => {
 const mapDispatchToProps = (dispatch: Dispatch): DispatchedProps =>
   bindActionCreators(
     {
-      getTargets: GetTargetActionCreator
+      getTargets: GetTargetActionCreator,
+      attackTarget: PostTargetActionCreator
     },
 
     dispatch
   );
+
 export const AttackConnected = connect(
   mapStateToProps,
   mapDispatchToProps

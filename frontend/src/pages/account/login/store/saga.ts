@@ -42,6 +42,9 @@ export const beginToLogin = (
       localStorage.setItem("access_token", access_token);
       localStorage.setItem("refresh_token", refresh_token);
 
+      axios.defaults.headers.common["Authorization"] = localStorage.getItem(
+        "access_token"
+      );
       return response;
     })
     .catch(error => {

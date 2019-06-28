@@ -14,9 +14,6 @@ export const BasePortUrl = "https://localhost:44355/";
 
 axios.defaults.baseURL = BasePortUrl;
 
-axios.defaults.headers.common["Authorization"] = localStorage.getItem(
-  "access_token"
-);
 axios.interceptors.response.use(
   function(response) {
     return response;

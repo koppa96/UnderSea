@@ -1,9 +1,13 @@
-import { ITargetInfo, IBriefUnitInfo } from "../../../api/Client";
+import { ITargetInfo, IBriefUnitInfo, ICommandInfo } from "../../../api/Client";
 
 export interface Attack {
   id: number;
   name: string;
   checked: boolean;
+}
+interface OutProp {
+  unitId: number;
+  count: number;
 }
 
 export interface NativeProps {}
@@ -15,6 +19,7 @@ export interface MappedProps {
 
 export interface DispatchedProps {
   getTargets: () => void;
+  attackTarget: (params: ICommandInfo) => void;
 }
 
 export type TargetProps = NativeProps & MappedProps & DispatchedProps;

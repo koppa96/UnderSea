@@ -9,6 +9,16 @@ export class Attack extends React.Component<TargetProps> {
     this.props.getTargets();
   }
 
+  state = {
+    targetCountryId: -1,
+    units: [
+      {
+        unitId: 1,
+        amount: 1
+      }
+    ]
+  };
+
   render() {
     const { targets, unit } = this.props;
     return (
@@ -20,7 +30,10 @@ export class Attack extends React.Component<TargetProps> {
             <input className="rank-input" placeholder="Felhasználónév" />
             <ul className="rank-page">
               {targets.map(item => (
-                <li key={item.countryId}>
+                <li
+                  key={item.countryId}
+                  onClick={() => this.setState({ targetid: item.countryId })}
+                >
                   <span>{item.countryName}</span>
                   ide
                 </li>
