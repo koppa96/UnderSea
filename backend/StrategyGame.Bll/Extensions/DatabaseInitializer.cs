@@ -222,16 +222,20 @@ namespace StrategyGame.Bll.Extensions
             await context.SaveChangesAsync();
 
             // Resources
-            var coral = new ResourceType { Content = coralCont, StartingAmount = 500 };
-            var pearl = new ResourceType { Content = coralCont, StartingAmount = 1000 };
-            var stone = new ResourceType { Content = coralCont, StartingAmount = 1000 };
+            var coral = new ResourceType { Content = coralCont, StartingAmount = 500, NewCountryCost = 100000 };
+            var pearl = new ResourceType { Content = coralCont, StartingAmount = 1000, NewCountryCost = 100000 };
+            var stone = new ResourceType { Content = coralCont, StartingAmount = 1000, NewCountryCost = 100000 };
             context.ResourceTypes.AddRange(coral, pearl, stone);
             await context.SaveChangesAsync();
 
             // Effects, Buildings, researches
             // áramlásirányító
-            var popIn = new Effect { Name = KnownValues.PopulationIncrease, Value = 50,
-                Parameter = pearl.Id.ToString() + ":" + 25 };
+            var popIn = new Effect
+            {
+                Name = KnownValues.PopulationIncrease,
+                Value = 50,
+                Parameter = pearl.Id.ToString() + ":" + 25
+            };
             var cp = new Effect { Name = KnownValues.ResourceProductionIncrease, Value = 200, Parameter = coral.Id.ToString() };
             var currentController = new BuildingType
             {
@@ -512,9 +516,7 @@ namespace StrategyGame.Bll.Extensions
                 ScoreUnitMultiplier = 5,
                 FirstStartingBuilding = reefCastle,
                 SecondStartingBuilding = currentController,
-                RandomAttackModifier = 0.1,
-                NewCountryCoralCost = 100000,
-                NewCountryPearlCost = 100000
+                RandomAttackModifier = 0.1
             });
             await context.SaveChangesAsync();
         }
@@ -676,7 +678,7 @@ namespace StrategyGame.Bll.Extensions
                 BaseDefensePower = 10,
                 TotalAttackPower = 1337,
                 TotalDefensePower = 60,
-                Loot = new[] 
+                Loot = new[]
                 {
                     new ReportResource { ResourceType = context.ResourceTypes.First(), Amount = 1000 },
                     new ReportResource { ResourceType = context.ResourceTypes.Skip(1).First(), Amount = 2000 }

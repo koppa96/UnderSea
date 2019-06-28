@@ -9,7 +9,9 @@ namespace StrategyGame.Model.Entities.Resources
     {
         public ResourceContent Content { get; set; }
 
-        public int StartingAmount { get; set; }
+        public long StartingAmount { get; set; }
+
+        public long NewCountryCost { get; set; }
 
         public ICollection<BuildingResource> BuildingResources { get; set; }
 
