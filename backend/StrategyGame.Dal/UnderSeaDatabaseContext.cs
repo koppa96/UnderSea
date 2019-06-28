@@ -237,7 +237,6 @@ namespace StrategyGame.Dal
 
             // Effect
             builder.Entity<Effect>().Property(e => e.Name).IsRequired().HasMaxLength(200);
-            builder.Entity<Effect>().Property(e => e.TargetId).IsRequired(false);
 
             //Building - BuildingEffect - Effect
             builder.Entity<BuildingEffect>()
