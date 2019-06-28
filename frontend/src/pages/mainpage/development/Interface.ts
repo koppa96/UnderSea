@@ -9,7 +9,7 @@ export interface MappedProps {
   totalResourcesDesc: IBriefCreationInfo[];
 }
 export interface DispachedProps {
-  //addDevelopment: (params: number) => void;
+  addDevelopment: (params: number) => void;
   getAllDevelopment: () => void;
 }
 

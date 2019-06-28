@@ -12,6 +12,10 @@ export class Development extends React.Component<DevelopmentProps> {
     console.log("sd");
   }
 
+  state = {
+    id: -1
+  };
+
   render() {
     const { totalDevelopment, totalResourcesDesc } = this.props;
     return (
@@ -32,7 +36,8 @@ export class Development extends React.Component<DevelopmentProps> {
                   value={item.id}
                   className="sr-only"
                   type="radio"
-                  onChange={e => this.onChecked(e)}
+                  name="select"
+                  onChange={e => this.setState({ id: e.target.value })}
                 />
                 <DevelopmentItem
                   count={item.count}
@@ -43,7 +48,9 @@ export class Development extends React.Component<DevelopmentProps> {
             );
           })}
         </div>
-        <button>Megveszem</button>
+        <button onClick={() => this.props.addDevelopment(this.state.id)}>
+          Megveszem
+        </button>
       </div>
     );
   }

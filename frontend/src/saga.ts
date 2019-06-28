@@ -9,6 +9,7 @@ import { watchRankFetchRequest } from "./pages/mainpage/rank/store/actions/saga.
 import { watchProfileFetchRequest } from "./components/profileContainer/store/saga";
 import { watchWarFetchRequest } from "./pages/mainpage/war/store/saga";
 import { watchDevelopmentFetchRequest } from "./pages/mainpage/development/store/actions/saga.get";
+import { watchAddResearchRequest } from "./pages/mainpage/development/store/actions/saga.post";
 
 export function* rootSaga() {
   yield all([
@@ -20,6 +21,7 @@ export function* rootSaga() {
     call(watchRankFetchRequest),
     call(watchProfileFetchRequest),
     call(watchWarFetchRequest),
-    call(watchDevelopmentFetchRequest)
+    call(watchDevelopmentFetchRequest),
+    call(watchAddResearchRequest)
   ]);
 }

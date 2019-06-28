@@ -4,6 +4,7 @@ import { Dispatch, bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { Development } from "./Development";
 import { GetDevelopmentActionCreator } from "./store/actions/DevelopmnetAction.get";
+import { AddDevelopmentAddActionCreator } from "./store/actions/DevelopmentAction.post";
 
 const mapStateToProps = (state: IApllicationState): MappedProps => {
   const { model } = state.app.pages.mainpage;
@@ -18,7 +19,8 @@ const mapStateToProps = (state: IApllicationState): MappedProps => {
 const mapDispatchToProps = (dispatch: Dispatch): DispachedProps =>
   bindActionCreators(
     {
-      getAllDevelopment: GetDevelopmentActionCreator
+      getAllDevelopment: GetDevelopmentActionCreator,
+      addDevelopment: AddDevelopmentAddActionCreator
     },
 
     dispatch
