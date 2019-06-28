@@ -1,12 +1,11 @@
-export const alma = "";
-/*
 import {
   ITargetActions,
   GetTargetActions
 } from "./actions/GetAttackAction.get";
+import { targetInitialState, TargetState } from "./store";
 
 export const TargetReducer = (
-  state = TargetInitialState,
+  state = targetInitialState,
   action: ITargetActions
 ): TargetState => {
   switch (action.type) {
@@ -20,7 +19,7 @@ export const TargetReducer = (
       return {
         ...state,
         loading: false,
-        target: action.params.targets
+        targets: action.params.targets
       };
     case GetTargetActions.ERROR:
       return {
@@ -34,4 +33,3 @@ export const TargetReducer = (
       return state;
   }
 };
-*/

@@ -1430,7 +1430,6 @@ export class CreationInfo implements ICreationInfo {
     imageUrl?: string | undefined;
     iconImageUrl?: string | undefined;
     cost!: number;
-    count!:number;
 
     constructor(data?: ICreationInfo) {
         if (data) {
@@ -1449,7 +1448,6 @@ export class CreationInfo implements ICreationInfo {
             this.imageUrl = data["imageUrl"];
             this.iconImageUrl = data["iconImageUrl"];
             this.cost = data["cost"];
-            this.count = data["count"];
         }
     }
 
@@ -1468,7 +1466,6 @@ export class CreationInfo implements ICreationInfo {
         data["imageUrl"] = this.imageUrl;
         data["iconImageUrl"] = this.iconImageUrl;
         data["cost"] = this.cost;
-        data["count"] = this.count;
         return data; 
     }
 }
@@ -1480,7 +1477,6 @@ export interface ICreationInfo {
     imageUrl?: string | undefined;
     iconImageUrl?: string | undefined;
     cost: number;
-    count:number;
 }
 
 export class CommandInfo implements ICommandInfo {

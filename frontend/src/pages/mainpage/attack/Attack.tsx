@@ -1,9 +1,16 @@
 import * as React from "react";
 import { ComponentHeader } from "../../../components/componentHeader";
 import { AttackItem } from "./attackItem";
+import { TargetProps } from "./interface";
 
-export class Attack extends React.Component {
+export class Attack extends React.Component<TargetProps> {
+  componentDidMount() {
+    document.title = "Támadás";
+    this.props.getTargets();
+  }
+
   render() {
+    const { targets, unit } = this.props;
     return (
       <div className="main-component">
         <ComponentHeader title={title} />
@@ -12,10 +19,10 @@ export class Attack extends React.Component {
             <span>1. Jelöld ki, kit szeretnél megtámadni:</span>
             <input className="rank-input" placeholder="Felhasználónév" />
             <ul className="rank-page">
-              {mockData.map(item => (
-                <li key={item.id}>
-                  <span>{item.name}</span>
-                  {item.checked && <div className="circle">.</div>}
+              {targets.map(item => (
+                <li key={item.countryId}>
+                  <span>{item.countryName}</span>
+                  ide
                 </li>
               ))}
             </ul>
@@ -23,7 +30,15 @@ export class Attack extends React.Component {
 
           <div>
             <span>2. Állítsd be, kiket küldesz harcba:</span>
-            <AttackItem />
+            {unit.map(item => (
+              <AttackItem
+                id={item.id}
+                imageUrl={item.imageUrl}
+                name={item.name}
+                defendingCount={item.defendingCount}
+                totalCount={item.totalCount}
+              />
+            ))}
           </div>
         </div>
         <button>Megtámadom!</button>
@@ -32,81 +47,4 @@ export class Attack extends React.Component {
   }
 }
 const title: string = "Támadás";
-
-const mockData = [
-  {
-    id: 1,
-    name: "Zátorvány",
-    checked: false
-  },
-  {
-    id: 2,
-    name: "Zátorvány",
-    checked: true
-  },
-  {
-    id: 3,
-    name: "Zátorvány",
-    checked: false
-  },
-  {
-    id: 4,
-    name: "Zátorvány",
-    checked: false
-  },
-  {
-    id: 5,
-    name: "Zátorvány",
-    checked: false
-  },
-  {
-    id: 6,
-    name: "Zátorvány",
-    checked: false
-  },
-  {
-    id: 7,
-    name: "Zátorvány",
-    checked: false
-  },
-  {
-    id: 8,
-    name: "Zátorvány",
-    checked: false
-  },
-  {
-    id: 9,
-    name: "Zátorvány",
-    checked: false
-  },
-  {
-    id: 10,
-    name: "Zátorvány",
-    checked: false
-  },
-  {
-    id: 11,
-    name: "Zátorvány",
-    checked: false
-  },
-  {
-    id: 12,
-    name: "Zátorvány",
-    checked: false
-  },
-  {
-    id: 13,
-    name: "Zátorvány",
-    checked: false
-  },
-  {
-    id: 14,
-    name: "Zátorvány",
-    checked: false
-  },
-  {
-    id: 15,
-    name: "Zátorvány",
-    checked: false
-  }
-];
+/* {item.checked && <div className="circle">.</div>}*/
