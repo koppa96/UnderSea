@@ -69,7 +69,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
             }
 
             // Apply permanent effects here
-            var builder = country.ParseAllEffectForCountry(context, globals, Parsers, true);
+            var builder = country.ParseAllEffectForCountry(context, globals, Parsers, true, true);
 
             if (builder.WasEventIgnored)
             {
@@ -124,12 +124,12 @@ namespace StrategyGame.Bll.Services.TurnHandling
                 .ToList();
 
             var defenders = country.GetAllDefending();
-            var builder = country.ParseAllEffectForCountry(context, globals, Parsers, false);
+            var builder = country.ParseAllEffectForCountry(context, globals, Parsers, true, false);
 
             foreach (var attack in incomingAttacks)
             {
                 (double attackPower, double attackMods, double attackBase) = GetCurrentUnitPower(attack, globals, true,
-                    attack.ParentCountry.ParseAllEffectForCountry(context, globals, Parsers, false));
+                    attack.ParentCountry.ParseAllEffectForCountry(context, globals, Parsers, true, false));
                 (double defensePower, double defenseMods, double defenseBase) = GetCurrentUnitPower(defenders, globals,
                     false, builder);
 
@@ -195,7 +195,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
                 throw new ArgumentNullException(nameof(globals));
             }
 
-            var builder = country.ParseAllEffectForCountry(context, globals, Parsers, false);
+            var builder = country.ParseAllEffectForCountry(context, globals, Parsers, true, false);
 
             long divisionScore = 0;
             foreach (var comm in country.Commands)
@@ -365,16 +365,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
         /// <param name="country">The country to delete from.</param>
         protected void DesertUnits(Model.Entities.Country country)
         {
-            long pearlUpkeep = 0;
-            long coralUpkeep = 0;
-            foreach (var comm in country.Commands)
-            {
-                foreach (var div in comm.Divisions)
-                {
-                    pearlUpkeep += div.Count * div.Unit.MaintenancePearl;
-                    coralUpkeep += div.Count * div.Unit.MaintenanceCoral;
-                }
-            }
+            var (pearlUpkeep, coralUpkeep) = country.GetTotalMaintenance();
 
             if (coralUpkeep > country.Corals || pearlUpkeep > country.Pearls)
             {

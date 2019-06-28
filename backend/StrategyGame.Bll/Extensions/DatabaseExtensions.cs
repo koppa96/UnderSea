@@ -32,16 +32,38 @@ namespace StrategyGame.Bll.Extensions
         }
 
         /// <summary>
+        /// Calculates the total maintenance of the units in the country.
+        /// </summary>
+        /// <param name="country">The <see cref="Country"/> to calculate total maintenance for.</param>
+        /// <returns>The maintenance of all units in the country.</returns>
+        public static (long PearlUpkeep, long CoralUpkeep) GetTotalMaintenance(this Country country)
+        {
+            long pearlUpkeep = 0;
+            long coralUpkeep = 0;
+            foreach (var comm in country.Commands)
+            {
+                foreach (var div in comm.Divisions)
+                {
+                    pearlUpkeep += div.Count * div.Unit.MaintenancePearl;
+                    coralUpkeep += div.Count * div.Unit.MaintenanceCoral;
+                }
+            }
+
+            return (pearlUpkeep, coralUpkeep);
+        }
+
+        /// <summary>
         /// Parses all effects of a country into a <see cref="CountryModifierBuilder"/>.
         /// </summary>
         /// <param name="country">The country to parse effects for. Its buildings, researches, events and their effects must be included.</param>
         /// <param name="context">The database to use.</param>
         /// <param name="globals">The <see cref="GlobalValue"/> to use.</param>
         /// <param name="Parsers">The collection of parsers to use.</param>
+        /// <param name="doApplyEvent">If random events should be applied to the modifier.</param>
         /// <param name="doApplyPermanent">If effects that have permanenet effects should be applied.</param>
         /// <returns>The builder containing the modifiers for the country</returns>
         public static CountryModifierBuilder ParseAllEffectForCountry(this Country country, UnderSeaDatabaseContext context,
-            GlobalValue globals, ModifierParserContainer Parsers, bool doApplyPermanent = false)
+            GlobalValue globals, ModifierParserContainer Parsers, bool doApplyEvent, bool doApplyPermanent)
         {
             if (country == null)
             {
@@ -56,7 +78,7 @@ namespace StrategyGame.Bll.Extensions
             };
 
             // First handle events
-            if (country.CurrentEvent != null)
+            if (doApplyEvent && country.CurrentEvent != null)
             {
                 foreach (var e in country.CurrentEvent.Effects)
                 {

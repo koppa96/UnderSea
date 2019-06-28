@@ -93,12 +93,13 @@ namespace StrategyGame.Bll.Services.Country
 
             var info = Mapper.Map<Model.Entities.Country, CountryInfo>(country);
             var globals = await Context.GlobalValues.SingleAsync();
-            var mods = country.ParseAllEffectForCountry(Context, globals, Parsers, false);
+            var mods = country.ParseAllEffectForCountry(Context, globals, Parsers, false, false);
+            var (pearlUpkeep, coralUpkeep) = country.GetTotalMaintenance();
 
             info.Round = globals.Round;
-            info.CoralsPerRound = (long)Math.Round(mods.CoralProduction * mods.HarvestModifier);
+            info.CoralsPerRound = (long)Math.Round(mods.CoralProduction * mods.HarvestModifier - coralUpkeep);
             info.PearlsPerRound = (long)Math.Round(mods.Population * globals.BaseTaxation * mods.TaxModifier
-                + mods.PearlProduction);
+                + mods.PearlProduction - pearlUpkeep);
 
             // Start with all buildings and researches
             var totalBuildings = await Context.BuildingTypes.Include(r => r.Content)
