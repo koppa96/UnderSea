@@ -25,8 +25,7 @@ namespace StrategyGame.Bll.EffectParsing
             return new ModifierParserContainer(new AbstractEffectModifierParser[]
                 {
                     new BarrackSpaceEffectParser(),
-                    new CoralProductionEffectParser(),
-                    new PearlProductionEffectParser(),
+                    new ResourceProductionEffectParser(),
                     new HarvestModifierEffectParser(),
                     new PopulationEffectParser(),
                     new TaxModifierEffectParser(),
