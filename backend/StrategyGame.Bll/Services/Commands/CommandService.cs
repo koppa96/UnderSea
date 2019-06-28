@@ -184,7 +184,6 @@ namespace StrategyGame.Bll.Services.Commands
                     throw new UnauthorizedAccessException("Can't modify commands of other users.");
                 }
 
-<<<<<<< master
                 if (command.ParentCountry.Id == command.TargetCountry.Id)
                 {
                     throw new ArgumentException("Can't modify the defending command directly.");
@@ -219,11 +218,73 @@ namespace StrategyGame.Bll.Services.Commands
 
                 await _context.SaveChangesAsync();
                 return ToCommandInfo(command, _mapper);
-=======
-            foreach (var detail in details.Units)
+            }
+        }
+
+        private void TransferUnits(List<Division> from, Command fromCommand, List<Division> to, Command toCommand, int amount)
+        {
+            if (amount < 0)
             {
-                
->>>>>>> Modifyinf the commandservice attack method and the unit service
+                var tmp = from;
+                from = to;
+                to = tmp;
+                var tmp2 = fromCommand;
+                fromCommand = toCommand;
+                toCommand = tmp2;
+
+                amount = -amount;
+            }
+
+            if (from.Sum(d => d.Count) < amount)
+            {
+                throw new ArgumentException("Not enough units.");
+            }
+
+            int transfered = 0, i = 0;
+            while (transfered + from[i].Count <= amount)
+            {
+                var division = from[i];
+                var toDivision = to.SingleOrDefault(d => d.BattleCount == division.BattleCount);
+
+                if (toDivision == null)
+                {
+                    division.ParentCommand = toCommand;
+                    transfered += division.Count;
+                }
+                else
+                {
+                    toDivision.Count += division.Count;
+                    _context.Divisions.Remove(division);
+                }
+
+                i++;
+            }
+
+            if (transfered < amount)
+            {
+                var splitDivison = from[i];
+                var toDivision = to.SingleOrDefault(d => d.BattleCount == splitDivison.BattleCount);
+
+                if (toDivision == null)
+                {
+                    var newDivision = new Division
+                    {
+                        Unit = splitDivison.Unit,
+                        BattleCount = splitDivison.BattleCount,
+                        Count = amount - transfered,
+                        ParentCommand = toCommand
+                    };
+
+                    splitDivison.Count -= newDivision.Count;
+                    _context.Divisions.Add(newDivision);
+                }
+                else
+                {
+                    var toBeTransfered = amount - transfered;
+                    toDivision.Count += toBeTransfered;
+                    splitDivison.Count -= toBeTransfered;
+                }
+
             }
         }
 
