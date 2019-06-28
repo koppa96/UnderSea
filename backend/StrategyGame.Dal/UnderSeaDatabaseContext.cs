@@ -120,6 +120,11 @@ namespace StrategyGame.Dal
         /// </summary>
         public DbSet<EventContent> EventContents { get; }
 
+        /// <summary>
+        /// Gets the collection of <see cref="UnitContent"/> in the database.
+        /// </summary>
+        public DbSet<ResourceContent> ResourceContents { get; }
+
         public DbSet<ExceptionLog> ExceptionLogs { get; set; }
 
         public DbSet<ResourceType> ResourceTypes { get; set; }
@@ -163,6 +168,7 @@ namespace StrategyGame.Dal
             ResearchContents = Set<ResearchContent>();
             UnitContents = Set<UnitContent>();
             EventContents = Set<EventContent>();
+            ResourceContents = Set<ResourceContent>();
             GlobalValues = Set<GlobalValue>();
             ExceptionLogs = Set<ExceptionLog>();
         }
