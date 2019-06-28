@@ -22,6 +22,7 @@ export const MainpageReducer = (
       };
 
     case MainpageActions.SUCCES:
+      console.log("Mainpage reducer army", action.params.country);
       return {
         ...state,
         loading: false,
@@ -85,7 +86,7 @@ export const MainpageReducer = (
           temp.forEach(armyunit => {
             action.data.unitsToAdd.forEach(unit => {
               if (unit.unitId === armyunit.id) {
-                armyunit.count += unit.count;
+                armyunit.totalCount += unit.count;
                 costPearl += unit.price * unit.count;
               }
             });

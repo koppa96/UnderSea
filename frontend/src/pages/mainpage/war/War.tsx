@@ -27,7 +27,9 @@ export class War extends React.Component<WarProps> {
                     {item.units
                       ? item.units.map(single => (
                           <div key={single.id}>
-                            <span className="war-margin">{single.count}</span>
+                            <span className="war-margin">
+                              {single.totalCount}
+                            </span>
                             <span>{single.name ? single.name : "egység"}</span>
                           </div>
                         ))

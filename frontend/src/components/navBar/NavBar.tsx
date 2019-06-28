@@ -40,7 +40,7 @@ export class NavBar extends React.Component<NavBarProps> {
                   <NavBarIcon
                     id={item.id}
                     imageUrl={item.imageUrl ? item.imageUrl : ""}
-                    count={item.count ? item.count : 0}
+                    count={item.totalCount ? item.totalCount : 0}
                   />
                 </li>
               ))}

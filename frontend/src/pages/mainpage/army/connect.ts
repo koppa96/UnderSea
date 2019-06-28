@@ -12,7 +12,7 @@ const mapStateToProps = (state: IApllicationState): MappedProps => {
     ownedUnitState: state.app.pages.Army,
     count: model
       ? model.armyInfo
-        ? model.armyInfo.map(info => ({ id: info.id, count: info.count }))
+        ? model.armyInfo.map(info => ({ id: info.id, count: info.totalCount }))
         : []
       : []
   };

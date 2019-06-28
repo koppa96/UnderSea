@@ -8,7 +8,6 @@
 // ReSharper disable InconsistentNaming
 
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { number } from 'prop-types';
 
 export class AccountsClient {
     private instance: AxiosInstance;
@@ -1033,7 +1032,7 @@ export class UnitsClient {
         return Promise.resolve<UnitInfo[]>(<any>null);
     }
 
-    create(purchases: PurchaseDetails[]): Promise<UnitInfo[]> {
+    create(purchases: PurchaseDetails[]): Promise<BriefUnitInfo[]> {
         let url_ = this.baseUrl + "/api/Units";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1054,7 +1053,7 @@ export class UnitsClient {
         });
     }
 
-    protected processCreate(response: AxiosResponse): Promise<UnitInfo[]> {
+    protected processCreate(response: AxiosResponse): Promise<BriefUnitInfo[]> {
         const status = response.status;
         let _headers: any = {}; 
         if (response.headers && response.headers.forEach) { 
@@ -1085,14 +1084,14 @@ export class UnitsClient {
             if (Array.isArray(resultData201)) {
                 result201 = [] as any;
                 for (let item of resultData201)
-                    result201!.push(UnitInfo.fromJS(item));
+                    result201!.push(BriefUnitInfo.fromJS(item));
             }
             return result201;
         } else if (status !== 200 && status !== 204) {
             const _responseText = response.data;
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-        return Promise.resolve<UnitInfo[]>(<any>null);
+        return Promise.resolve<BriefUnitInfo[]>(<any>null);
     }
 
     delete(id: number, count: number): Promise<void> {
@@ -1543,8 +1542,10 @@ export interface ICommandInfo {
 export class BriefUnitInfo implements IBriefUnitInfo {
     id!: number;
     name?: string | undefined;
-    count!: number;
+    totalCount!: number;
+    defendingCount!: number;
     imageUrl?: string | undefined;
+    
 
     constructor(data?: IBriefUnitInfo) {
         if (data) {
@@ -1559,7 +1560,8 @@ export class BriefUnitInfo implements IBriefUnitInfo {
         if (data) {
             this.id = data["id"];
             this.name = data["name"];
-            this.count = data["count"];
+            this.totalCount = data["totalCount"];
+            this.defendingCount = data["defendingCount"];
             this.imageUrl = data["imageUrl"];
         }
     }
@@ -1575,7 +1577,8 @@ export class BriefUnitInfo implements IBriefUnitInfo {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["name"] = this.name;
-        data["count"] = this.count;
+        data["totalCount"] = this.totalCount;
+        data["defendingCount"] = this.defendingCount;
         data["imageUrl"] = this.imageUrl;
         return data; 
     }
@@ -1584,7 +1587,8 @@ export class BriefUnitInfo implements IBriefUnitInfo {
 export interface IBriefUnitInfo {
     id: number;
     name?: string | undefined;
-    count: number;
+    totalCount: number;
+    defendingCount: number;
     imageUrl?: string | undefined;
 }
 
