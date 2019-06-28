@@ -156,6 +156,8 @@ namespace StrategyGame.Bll.Services.Commands
                 .Include(c => c.TargetCountry)
                 .Include(c => c.ParentCountry)
                     .ThenInclude(c => c.ParentUser)
+                .Include(c => c.ParentCountry)
+                    .ThenInclude(c => c.Commands)
                 .SingleOrDefaultAsync(c => c.Id == commandId);
 
             if (command == null)

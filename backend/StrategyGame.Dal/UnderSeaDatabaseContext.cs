@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using StrategyGame.Model.Entities;
 using StrategyGame.Model.Entities.Frontend;
+using StrategyGame.Model.Entities.Resources;
 using System;
 
 namespace StrategyGame.Dal
@@ -121,6 +122,14 @@ namespace StrategyGame.Dal
 
         public DbSet<ExceptionLog> ExceptionLogs { get; set; }
 
+        public DbSet<ResourceType> ResourceTypes { get; set; }
+
+        public DbSet<CountryResource> CountryResources { get; set; }
+
+        public DbSet<BuildingResource> BuildingResources { get; set; }
+
+        public DbSet<ResearchResource> ResearchResources { get; set; }
+
         #endregion
 
         /// <summary>
@@ -162,6 +171,35 @@ namespace StrategyGame.Dal
         /// <param name="Builder">The <see cref="ModelBuilder"/> to use.</param>
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            // Resources
+            builder.Entity<ResourceType>()
+                .HasOne(r => r.Content)
+                .WithMany(c => c.Parents);
+
+            builder.Entity<CountryResource>()
+                .HasOne(cr => cr.Entity)
+                .WithMany(c => c.Resources);
+
+            builder.Entity<CountryResource>()
+                .HasOne(cr => cr.ResourceType)
+                .WithMany(r => r.CountryResources);
+
+            builder.Entity<BuildingResource>()
+                .HasOne(br => br.Entity)
+                .WithMany(b => b.Cost);
+
+            builder.Entity<BuildingResource>()
+                .HasOne(br => br.ResourceType)
+                .WithMany(r => r.BuildingResources);
+
+            builder.Entity<ResearchResource>()
+                .HasOne(rr => rr.Entity)
+                .WithMany(r => r.Cost);
+
+            builder.Entity<ResearchResource>()
+                .HasOne(rr => rr.ResourceType)
+                .WithMany(r => r.ResearchResources);
+
             // Combat report
             builder.Entity<CombatReport>()
                 .HasOne(c => c.Attacker)

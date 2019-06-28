@@ -1,4 +1,5 @@
 ﻿using StrategyGame.Model.Entities.Frontend;
+using StrategyGame.Model.Entities.Resources;
 using System.Collections.Generic;
 
 namespace StrategyGame.Model.Entities
@@ -8,15 +9,7 @@ namespace StrategyGame.Model.Entities
     /// </summary>
     public class ResearchType : AbstractEntity<ResearchType>
     {
-        /// <summary>
-        /// Gets or sets the amount of pearls the research costs.
-        /// </summary>
-        public int CostPearl { get; set; }
-
-        /// <summary>
-        /// Gets or sets the amount of corals the research costs.
-        /// </summary>
-        public int CostCoral { get; set; }
+        public ICollection<ResearchResource> Cost { get; set; }
 
         /// <summary>
         /// Gets or sets the built time of the research (in turns).

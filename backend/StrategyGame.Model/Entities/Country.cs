@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using StrategyGame.Model.Entities.Resources;
+using System.Collections.Generic;
 
 namespace StrategyGame.Model.Entities
 {
@@ -12,15 +13,7 @@ namespace StrategyGame.Model.Entities
         /// </summary>
         public string Name { get; set; }
 
-        /// <summary>
-        /// Gets or sets the current amount of pearls the country has.
-        /// </summary>
-        public long Pearls { get; set; }
-
-        /// <summary>
-        /// Gets or sets the current amount of corals the country has.
-        /// </summary>
-        public long Corals { get; set; }
+        public ICollection<CountryResource> Resources { get; set; }
 
         /// <summary>
         /// Gets or sets the current score of the country.
