@@ -1,9 +1,10 @@
 import React from "react";
 import { ArmyItemResponse } from "./Interface";
 import { BasePortUrl } from "../../../..";
+import { ArmyInfoWoCount } from "../store/actions/ArmyActions.get";
 
 interface ArmyProps {
-  unit: ArmyItemResponse;
+  unit: ArmyInfoWoCount;
   currentTroops: Function;
   count: number;
 }

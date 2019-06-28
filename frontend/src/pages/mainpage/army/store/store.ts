@@ -1,4 +1,5 @@
 import { ArmyItemResponse } from "../ArmyItem/Interface";
+import { ArmyInfoWoCount } from "./actions/ArmyActions.get";
 
 export interface ArmyUnit {
   unitId: number;
@@ -10,7 +11,7 @@ export interface ArmyState {
   isRequesting: boolean;
   isLoaded: boolean;
   error: string | null;
-  units: ArmyItemResponse[];
+  units: ArmyInfoWoCount[];
 }
 export const ArmyInitialState: ArmyState = {
   isPostRequesting: false,

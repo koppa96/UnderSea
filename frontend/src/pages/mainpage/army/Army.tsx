@@ -42,7 +42,7 @@ export class Army extends React.Component<ArmyProps, InitialState> {
   };
 
   render() {
-    const { addUnits, ownedUnitState } = this.props;
+    const { addUnits, ownedUnitState, count } = this.props;
     return (
       <div className="main-component army-component">
         <ComponentHeader title={title} mainDescription={mainDescription} />
@@ -51,14 +51,17 @@ export class Army extends React.Component<ArmyProps, InitialState> {
         {ownedUnitState.isLoaded && (
           <div className="army-page hide-scroll">
             {ownedUnitState.units.length > 0 &&
-              ownedUnitState.units.map(item => (
-                <ArmyItem
-                  key={item.id}
-                  unit={item}
-                  count={item.count}
-                  currentTroops={this.currentSoldiers}
-                />
-              ))}
+              ownedUnitState.units.map(item => {
+                const curentCount = count.find(c => c.id === item.id);
+                return (
+                  <ArmyItem
+                    key={item.id}
+                    unit={item}
+                    count={curentCount ? curentCount.count : 0}
+                    currentTroops={this.currentSoldiers}
+                  />
+                );
+              })}
           </div>
         )}
 

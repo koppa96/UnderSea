@@ -57,7 +57,6 @@ function* handleLogin(action: IActionLoginRequest) {
       action.params.name,
       action.params.password
     );
-    console.log(caller);
     yield put(fetchSucces(caller));
   } catch (err) {
     if (err) {

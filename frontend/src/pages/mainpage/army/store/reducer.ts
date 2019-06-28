@@ -16,16 +16,10 @@ export const ArmyReducer = (
         isPostRequesting: true
       };
     case ArmyActions.SUCCESS:
-      const temp = state.units;
-      temp.forEach(unit => {
-        action.data.unitsToAdd.forEach(element => {
-          if (unit.id === element.unitId) unit.count += element.count;
-        });
-      });
       return {
         ...state,
         isPostRequesting: false,
-        units: temp
+        units: state.units
       };
     case ArmyActions.ERROR:
       return {

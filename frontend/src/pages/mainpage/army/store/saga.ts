@@ -28,7 +28,6 @@ const beginAddUnits = (unitsToAdd: ArmyUnit[]): Promise<IArmyActions> | any => {
   return axios
     .post(url, unitsToAdd)
     .then(response => {
-      console.log(response);
       return response;
     })
     .catch(error => {
@@ -44,6 +43,7 @@ const getUnits = () => {
   return axios
     .get("/api/Units")
     .then(response => {
+      console.log(response.data);
       return response.data;
     })
     .catch(error => {
@@ -68,6 +68,7 @@ function* handleArmyAddUnits(action: IActionAddArmyUnitRequest) {
     const response = yield call(beginAddUnits, action.params.unitsToAdd);
     yield put(fetchSuccess(params));
   } catch (err) {
+    console.log(err);
     const ErrorMEssage: string = "Sajnos valami hiba történt vásárlás közben";
 
     yield put(fetchError(ErrorMEssage));

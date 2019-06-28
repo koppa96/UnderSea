@@ -8,6 +8,7 @@ import {
   IArmyActions,
   ArmyActions
 } from "../army/store/actions/ArmyActions.post";
+import { BriefUnitInfo } from "../../../api/Client";
 
 export const MainpageReducer = (
   state = initialMainpageResponseState,
@@ -76,10 +77,10 @@ export const MainpageReducer = (
         loading: true
       };
     case ArmyActions.SUCCESS:
-      let temp;
+      let temp: BriefUnitInfo[] = [];
       if (state.model) {
         if (state.model.armyInfo) {
-          temp = { ...state.model.armyInfo };
+          temp = state.model.armyInfo;
           temp.forEach(armyunit => {
             action.data.unitsToAdd.forEach(unit => {
               if (unit.unitId === armyunit.id) {

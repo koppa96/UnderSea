@@ -6,9 +6,17 @@ import { connect } from "react-redux";
 import { ArmyUnitAddActionCreator } from "./store/actions/ArmyActions.post";
 import { getArmy } from "./store/actions/ArmyActions.get";
 
-const mapStateToProps = (state: IApllicationState): MappedProps => ({
-  ownedUnitState: state.app.pages.Army
-});
+const mapStateToProps = (state: IApllicationState): MappedProps => {
+  const { model } = state.app.pages.mainpage;
+  return {
+    ownedUnitState: state.app.pages.Army,
+    count: model
+      ? model.armyInfo
+        ? model.armyInfo.map(info => ({ id: info.id, count: info.count }))
+        : []
+      : []
+  };
+};
 
 const mapDispatchToProps = (dispatch: Dispatch): DispachedProps =>
   bindActionCreators(

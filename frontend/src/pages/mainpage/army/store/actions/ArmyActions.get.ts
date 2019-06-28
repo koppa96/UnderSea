@@ -1,6 +1,17 @@
 import { ArmyItemResponse } from "../../ArmyItem/Interface";
 
-export type IGetArmyRespone = ArmyItemResponse[];
+export interface ArmyInfoWoCount {
+  id: number;
+  name: string;
+  imageUrl: string;
+  attackPower: number;
+  defensePower: number;
+  maintenancePearl: number;
+  maintenanceCoral: number;
+  costPearl: number;
+}
+
+export type IGetArmyRespone = ArmyInfoWoCount[];
 
 export interface IArmyActionsTypes {
   REQUEST: "ARMY_REQUEST_GET_UNITS";
