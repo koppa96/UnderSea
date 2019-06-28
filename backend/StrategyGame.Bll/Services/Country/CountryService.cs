@@ -151,7 +151,7 @@ namespace StrategyGame.Bll.Services.Country
             // Add units not in the existing infos.
             info.ArmyInfo = existingInfos.Concat(await Context.UnitTypes
                 .Include(u => u.Content)
-                .Where(x => existingInfos.Any(i => i.Id == x.Id))
+                .Where(x => existingInfos.All(i => i.Id != x.Id))
                 .Select(i => Mapper.Map<UnitType, BriefUnitInfo>(i)).ToListAsync())
                 .ToList();
 
