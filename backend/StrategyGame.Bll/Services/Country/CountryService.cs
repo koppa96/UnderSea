@@ -146,11 +146,17 @@ namespace StrategyGame.Bll.Services.Country
             info.Buildings = totalBuildings.Select(x => x.Value).ToList();
             info.Researches = totalResearches.Select(x => x.Value).ToList();
 
-            info.ArmyInfo = country.Commands.GetAllBriefUnitInfo(Mapper);
+            var existingInfos = country.Commands.GetAllBriefUnitInfo(Mapper);
+
+            // Add units not in the existing infos.
+            info.ArmyInfo = existingInfos.Concat(await Context.UnitTypes
+                .Include(u => u.Content)
+                .Where(x => existingInfos.Any(i => i.Id == x.Id))
+                .Select(i => Mapper.Map<UnitType, BriefUnitInfo>(i)).ToListAsync())
+                .ToList();
 
             info.UnseenReports = country.Attacks.Count(r => !r.IsSeenByAttacker) + country.Defenses.Count(r => !r.IsSeenByDefender);
 
-            // Add event info
             if (country.CurrentEvent != null)
             {
                 info.Event = Mapper.Map<RandomEvent, EventInfo>(country.CurrentEvent);
