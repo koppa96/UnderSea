@@ -7,7 +7,7 @@ namespace StrategyGame.Model.Entities
     /// <summary>
     /// Represents a research type in the UnderSea database.
     /// </summary>
-    public class ResearchType : AbstractEntity<ResearchType>
+    public class ResearchType : AbstractEntity<ResearchType>, IPurchasable<ResearchType, ResearchResource>
     {
         public ICollection<ResearchResource> Cost { get; set; }
 

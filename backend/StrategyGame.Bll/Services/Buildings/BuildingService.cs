@@ -10,6 +10,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
+using StrategyGame.Model.Entities;
+using StrategyGame.Bll.Exceptions;
+using StrategyGame.Bll.Extensions;
 
 namespace StrategyGame.Bll.Services.Buildings
 {
@@ -80,6 +84,8 @@ namespace StrategyGame.Bll.Services.Buildings
             {
                 var country = await _context.Countries.Include(c => c.InProgressBuildings)
                 .Include(c => c.ParentUser)
+                .Include(c => c.Resources)
+                    .ThenInclude(r => r.ResourceType)
                 .SingleOrDefaultAsync(c => c.Id == countryId);
 
                 if (country == null)
@@ -97,29 +103,27 @@ namespace StrategyGame.Bll.Services.Buildings
                     throw new InProgressException("There is already a building of this type in progress.");
                 }
 
-                var buildingType = await _context.BuildingTypes.FindAsync(buildingId);
-                if (buildingType == null)
-                {
-                    throw new ArgumentOutOfRangeException(nameof(buildingId), "No such building id.");
-                }
+            var buildingType = await _context.BuildingTypes
+                .Include(b => b.Cost)
+                    .ThenInclude(c => c.ResourceType)
+                        .ThenInclude(r => r.Content)
+                .SingleOrDefaultAsync(b => b.Id == buildingId);
 
-                if (buildingType.CostPearl > country.Pearls || buildingType.CostCoral > country.Corals)
-                {
-                    throw new InvalidOperationException("Not enough money");
-                }
-
-                country.Pearls -= buildingType.CostPearl;
-                country.Corals -= buildingType.CostCoral;
-
-                var inProgressBuilding = new InProgressBuilding
-                {
-                    ParentCountry = country,
-                    Building = buildingType,
-                    TimeLeft = KnownValues.DefaultBuildingTime
-                };
-                _context.InProgressBuildings.Add(inProgressBuilding);
-                await _context.SaveChangesAsync();
+            if (buildingType == null)
+            {
+                throw new ArgumentOutOfRangeException(nameof(buildingId), "No such building id.");
             }
+
+            country.Purchase(buildingType, _context);
+
+            var inProgressBuilding = new InProgressBuilding
+            {
+                ParentCountry = country,
+                Building = buildingType,
+                TimeLeft = KnownValues.DefaultBuildingTime
+            };
+            _context.InProgressBuildings.Add(inProgressBuilding);
+            await _context.SaveChangesAsync();
         }
     }
 }
