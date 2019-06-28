@@ -8,7 +8,7 @@ namespace StrategyGame.Model.Entities
     /// <summary>
     /// Represents a unit type within the UnderSea database.
     /// </summary>
-    public class UnitType : AbstractEntity<UnitType>
+    public class UnitType : AbstractEntity<UnitType>, IPurchasable<UnitType, UnitResource>
     {
         /// <summary>
         /// Gets or sets the attack power of the unit.
@@ -20,9 +20,9 @@ namespace StrategyGame.Model.Entities
         /// </summary>
         public int DefensePower { get; set; }
 
-        public IEnumerable<UnitResource> Cost { get; set; }
+        public ICollection<UnitResource> Cost { get; set; }
 
-        public IEnumerable<UnitResource> Maintenance { get; set; }
+        public ICollection<UnitResource> Maintenance { get; set; }
 
         /// <summary>
         /// Gets or sets the content of the unit.

@@ -4,6 +4,7 @@ using StrategyGame.Bll.Dto.Sent;
 using StrategyGame.Bll.EffectParsing;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
+using StrategyGame.Model.Entities.Resources;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -176,6 +177,23 @@ namespace StrategyGame.Bll.Extensions
             }
 
             context.Commands.Remove(command);
+        }
+
+        public static void Purchase<TEnity, TConnector>(this Country country, IPurchasable<TEnity, TConnector> purchasable, UnderSeaDatabaseContext context, int count = 1)
+            where TEnity : AbstractEntity<TEnity>
+            where TConnector : AbstractResourceConnector<TEnity>
+        {
+            foreach (var resource in purchasable.Cost)
+            {
+                var countryResource = country.Resources.SingleOrDefault(r => r.ResourceType.Id == resource.ResourceType.Id);
+
+                if (countryResource == null || countryResource.Amount < resource.Amount * count)
+                {
+                    throw new ArgumentException("Not enough money.");
+                }
+
+                countryResource.Amount -= resource.Amount * count;
+            }
         }
     }
 }

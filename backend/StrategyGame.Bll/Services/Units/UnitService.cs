@@ -103,14 +103,7 @@ namespace StrategyGame.Bll.Services.Units
                     throw new ArgumentException("Purchase amount must be positive.");
                 }
 
-                // Check cost
-                long costPearl = unit.CostPearl * purchase.Count;
-                long costCoral = unit.CostCoral * purchase.Count;
-
-                if (costPearl > country.Pearls || costCoral > country.Corals)
-                {
-                    throw new InvalidOperationException("Purchase is too expensive for the country.");
-                }
+                country.Purchase(unit, Context, purchase.Count);
 
                 var builder = country.ParseAllEffectForCountry(Context, globals, Parsers, false);
                 var totalUnits = country.Commands.Sum(c => c.Divisions.Sum(d => d.Count));

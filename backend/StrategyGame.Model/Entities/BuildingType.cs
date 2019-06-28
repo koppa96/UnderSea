@@ -7,7 +7,7 @@ namespace StrategyGame.Model.Entities
     /// <summary>
     /// Represents a building type within the UnderSea database.
     /// </summary>
-    public class BuildingType : AbstractEntity<BuildingType>
+    public class BuildingType : AbstractEntity<BuildingType>, IPurchasable<BuildingType, BuildingResource>
     {
         public ICollection<BuildingResource> Cost { get; set; }
 

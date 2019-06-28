@@ -9,6 +9,7 @@ using System.Linq;
 using AutoMapper;
 using StrategyGame.Model.Entities;
 using StrategyGame.Bll.Exceptions;
+using StrategyGame.Bll.Extensions;
 
 namespace StrategyGame.Bll.Services.Buildings
 {
@@ -66,6 +67,8 @@ namespace StrategyGame.Bll.Services.Buildings
         {
             var country = await _context.Countries.Include(c => c.InProgressBuildings)
                 .Include(c => c.ParentUser)
+                .Include(c => c.Resources)
+                    .ThenInclude(r => r.ResourceType)
                 .SingleOrDefaultAsync(c => c.Id == countryId);
 
             if (country == null)
@@ -83,19 +86,18 @@ namespace StrategyGame.Bll.Services.Buildings
                 throw new InProgressException("The country already has a building in progress.");
             }
 
-            var buildingType = await _context.BuildingTypes.FindAsync(buildingId);
+            var buildingType = await _context.BuildingTypes
+                .Include(b => b.Cost)
+                    .ThenInclude(c => c.ResourceType)
+                        .ThenInclude(r => r.Content)
+                .SingleOrDefaultAsync(b => b.Id == buildingId);
+
             if (buildingType == null)
             {
                 throw new ArgumentOutOfRangeException(nameof(buildingId), "No such building id.");
             }
 
-            if (buildingType.CostPearl > country.Pearls || buildingType.CostCoral > country.Corals)
-            {
-                throw new InvalidOperationException("Not enough money.");
-            }
-
-            country.Pearls -= buildingType.CostPearl;
-            country.Corals -= buildingType.CostCoral;
+            country.Purchase(buildingType, _context);
 
             var inProgressBuilding = new InProgressBuilding
             {

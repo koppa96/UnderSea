@@ -2,6 +2,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using StrategyGame.Bll.Dto.Sent;
 using StrategyGame.Bll.Exceptions;
+using StrategyGame.Bll.Extensions;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
 using System;
@@ -90,19 +91,18 @@ namespace StrategyGame.Bll.Services.Researches
                 throw new LimitReachedException("The max research count has been reached.");
             }
 
-            var researchType = await _context.ResearchTypes.FindAsync(researchId);
+            var researchType = await _context.ResearchTypes
+                .Include(b => b.Cost)
+                    .ThenInclude(c => c.ResourceType)
+                        .ThenInclude(r => r.Content)
+                .SingleOrDefaultAsync(b => b.Id == researchId);
+
             if (researchType == null)
             {
                 throw new ArgumentOutOfRangeException(nameof(researchId), "No such research id.");
             }
 
-            if (country.Pearls < researchType.CostPearl || country.Corals < researchType.CostCoral)
-            {
-                throw new InvalidOperationException("Not enough money.");
-            }
-
-            country.Pearls -= researchType.CostPearl;
-            country.Corals -= researchType.CostCoral;
+            country.Purchase(researchType, _context);
 
             var inProgressResearch = new InProgressResearch
             {
