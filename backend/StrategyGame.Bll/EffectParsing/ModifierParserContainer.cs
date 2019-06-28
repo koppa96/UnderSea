@@ -18,6 +18,27 @@ namespace StrategyGame.Bll.EffectParsing
     public class ModifierParserContainer
     {
         /// <summary>
+        /// Creates a <see cref="ModifierParserContainer"/> with all known parsers.
+        /// </summary>
+        /// <returns>The created container.</returns>
+        public static ModifierParserContainer CreateDefault()
+        {
+            return new ModifierParserContainer(new AbstractEffectModifierParser[]
+                {
+                    new BarrackSpaceEffectParser(),
+                    new ResourceProductionEffectParser(),
+                    new HarvestModifierEffectParser(),
+                    new PopulationEffectParser(),
+                    new TaxModifierEffectParser(),
+                    new UnitDefenseEffectParser(),
+                    new UnitAttackEffectParser(),
+                    new AddBuildingEffectParser(),
+                    new IncreaseUnitAttackEffectParser(),
+                    new BuildingCoralProductionEffectParser()
+                });
+        }
+
+        /// <summary>
         /// Writeable backing collection for the <see cref="Parsers"/> collection.
         /// </summary>
         protected List<AbstractEffectModifierParser> WriteableParsers { get; }

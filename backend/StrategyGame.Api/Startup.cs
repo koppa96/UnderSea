@@ -120,21 +120,7 @@ namespace StrategyGame.Api
 
             services.AddAutoMapper(typeof(KnownValues).Assembly);
 
-            services.AddSingleton(new ModifierParserContainer(new AbstractEffectModifierParser[]
-                {
-                    new BarrackSpaceEffectParser(),
-                    new CoralProductionEffectParser(),
-                    new PearlProductionEffectParser(),
-                    new HarvestModifierEffectParser(),
-                    new PopulationEffectParser(),
-                    new TaxModifierEffectParser(),
-                    new UnitDefenseEffectParser(),
-                    new UnitAttackEffectParser(),
-                    new AddBuildingEffectParser(),
-                    new IncreaseUnitAttackEffectParser(),
-                    new BuildingCoralProductionEffectParser()
-                }));
-
+            services.AddSingleton(ModifierParserContainer.CreateDefault());
             services.AddSingleton<IUserTracker, UserTracker>();
 
             services.AddTransient<ITurnHandlingService, TurnHandlingService>();

@@ -18,17 +18,18 @@ namespace StrategyGame.Bll.EffectParsing
                 if (doApply)
                 {
                     int count = (int)effect.Value;
+                    var id = int.Parse(effect.Parameter);
 
                     if (count > 0)
                     {
-                        var existing = country.Buildings.SingleOrDefault(b => b.Building.Id == effect.TargetId);
+                        var existing = country.Buildings.SingleOrDefault(b => b.Building.Id == id);
 
                         if (existing == null)
                         {
                             country.Buildings.Add(new CountryBuilding
                             {
                                 // TODO async effect parsing?
-                                Building = context.BuildingTypes.Find(effect.TargetId),
+                                Building = context.BuildingTypes.Find(id),
                                 Count = (int)effect.Value,
                             });
                         }
@@ -39,9 +40,9 @@ namespace StrategyGame.Bll.EffectParsing
                     }
                     else if (count < 0)
                     {
-                        if (country.Buildings.Any(b => b.Building.Id == effect.TargetId && b.Count > 0))
+                        if (country.Buildings.Any(b => b.Building.Id == id && b.Count > 0))
                         {
-                            country.Buildings.Single(b => b.Building.Id == effect.TargetId).Count--;
+                            country.Buildings.Single(b => b.Building.Id == id).Count--;
                         }
                         else
                         {

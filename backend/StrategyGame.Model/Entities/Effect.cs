@@ -18,9 +18,9 @@ namespace StrategyGame.Model.Entities
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the ID of the target entity of the event.
+        /// Gets or sets the parameter for the event.
         /// </summary>
-        public int? TargetId { get; set; }
+        public string Parameter { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of buildings that are using this effect.
