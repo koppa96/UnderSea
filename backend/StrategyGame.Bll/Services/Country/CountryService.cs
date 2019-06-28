@@ -7,6 +7,7 @@ using StrategyGame.Bll.EffectParsing;
 using StrategyGame.Bll.Extensions;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
+using StrategyGame.Model.Entities.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,16 +42,16 @@ namespace StrategyGame.Bll.Services.Country
                     .Include(g => g.SecondStartingBuilding)
                     .SingleAsync();
 
-                var country = new Model.Entities.Country()
-                {
-                    Name = countryName,
-                    ParentUser = user,
-                    Corals = globals.StartingCorals,
-                    Pearls = globals.StartingPearls,
-                    Score = -1,
-                    Rank = -1,
-                    CreatedRound = globals.Round
-                };
+            var country = new Model.Entities.Country()
+            {
+                Name = countryName,
+                ParentUser = user,
+                Resources = (await Context.ResourceTypes.ToListAsync())
+                    .Select(r => new CountryResource { Amount = r.StartingAmount, ResourceType = r }).ToList(),
+                Score = -1,
+                Rank = -1,
+                CreatedRound = globals.Round
+            };
 
                 var defenders = new Command { ParentCountry = country, TargetCountry = country };
 
@@ -245,6 +246,8 @@ namespace StrategyGame.Bll.Services.Country
         {
             var country = await Context.Countries
                   .Include(c => c.ParentUser)
+                  .Include(r => r.Resources)
+                        .ThenInclude(r => r.ResourceType)
                   .SingleOrDefaultAsync(c => c.Id == countryId);
 
             if (country == null)
@@ -262,7 +265,7 @@ namespace StrategyGame.Bll.Services.Country
                 .Include(g => g.SecondStartingBuilding)
                 .SingleAsync();
 
-            if (globals.NewCountryCoralCost > country.Corals || globals.NewCountryPearlCost > country.Pearls)
+            if (country.Resources.Any(r => r.Amount > r.ResourceType.NewCountryCost))
             {
                 throw new InvalidOperationException("Not enough resources to buy a new country.");
             }
