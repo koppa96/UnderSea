@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using StrategyGame.Bll.Dto.Sent;
-using StrategyGame.Bll.Dto.Sent.Country;
 using StrategyGame.Bll.DTO.Received;
 using StrategyGame.Bll.EffectParsing;
 using StrategyGame.Bll.Exceptions;
@@ -64,7 +63,7 @@ namespace StrategyGame.Bll.Services.Units
             var unitInfos = new List<BriefUnitInfo>();
             foreach (var purchase in purchases)
             {
-                var unit = unitTypes.Single(u => u.Id == purchase.UnitId);
+                var unit = unitTypes.SingleOrDefault(u => u.Id == purchase.UnitId);
 
                 if (unit == null)
                 {
@@ -75,7 +74,7 @@ namespace StrategyGame.Bll.Services.Units
                 {
                     throw new ArgumentException("Invalid amount.");
                 }
-                
+
                 // Check cost
                 long costPearl = unit.CostPearl * purchase.Count;
                 long costCoral = unit.CostCoral * purchase.Count;
@@ -85,13 +84,13 @@ namespace StrategyGame.Bll.Services.Units
                     throw new InvalidOperationException("Units too expensive");
                 }
 
-                var builder = country.ParseAllEffectForCountry(Context, globals, Parsers, false);
+                var builder = country.ParseAllEffectForCountry(Context, globals, Parsers, false, false);
                 var totalUnits = country.Commands.Sum(c => c.Divisions.Sum(d => d.Count));
 
                 // Check pop-space
                 if (builder.BarrackSpace < totalUnits + purchase.Count)
                 {
-                    throw new LimitReachedException();
+                    throw new LimitReachedException("The max unit count has been reached.");
                 }
 
                 var defenders = country.GetAllDefending();
@@ -111,7 +110,8 @@ namespace StrategyGame.Bll.Services.Units
                 country.Corals -= costCoral;
 
                 var info = Mapper.Map<UnitType, BriefUnitInfo>(unit);
-                info.Count = targetDiv.Count;
+                info.TotalCount = targetDiv.Count;
+                info.DefendingCount = targetDiv.Count;
                 unitInfos.Add(info);
             }
 

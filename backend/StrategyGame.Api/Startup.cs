@@ -30,14 +30,13 @@ namespace StrategyGame.Api
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<IdentityOptions>(options =>
@@ -120,21 +119,7 @@ namespace StrategyGame.Api
 
             services.AddAutoMapper(typeof(KnownValues).Assembly);
 
-            services.AddSingleton(new ModifierParserContainer(new AbstractEffectModifierParser[]
-                {
-                    new BarrackSpaceEffectParser(),
-                    new CoralProductionEffectParser(),
-                    new PearlProductionEffectParser(),
-                    new HarvestModifierEffectParser(),
-                    new PopulationEffectParser(),
-                    new TaxModifierEffectParser(),
-                    new UnitDefenseEffectParser(),
-                    new UnitAttackEffectParser(),
-                    new AddBuildingEffectParser(),
-                    new IncreaseUnitAttackEffectParser(),
-                    new BuildingCoralProductionEffectParser()
-                }));
-
+            services.AddSingleton(ModifierParserContainer.CreateDefault());
             services.AddSingleton<IUserTracker, UserTracker>();
 
             services.AddTransient<ITurnHandlingService, TurnHandlingService>();
@@ -149,7 +134,6 @@ namespace StrategyGame.Api
             services.AddTransient<IUserIdProvider, UserIdProvider>();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())

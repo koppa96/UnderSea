@@ -2,7 +2,6 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using StrategyGame.Bll.Dto.Received;
 using StrategyGame.Bll.Dto.Sent;
-using StrategyGame.Bll.Dto.Sent.Country;
 using StrategyGame.Bll.Extensions;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
@@ -111,7 +110,7 @@ namespace StrategyGame.Bll.Services.Commands
                     .ThenInclude(d => d.Unit)
                         .ThenInclude(u => u.Content)
                 .Include(c => c.TargetCountry)
-                .Where(c => c.ParentCountry.ParentUser.UserName == username)
+                .Where(c => c.ParentCountry.ParentUser.UserName == username && !c.ParentCountry.Equals(c.TargetCountry))
                 .ToListAsync();
 
             var commandInfos = commands.Select(c => ToCommandInfo(c, _mapper));
@@ -196,13 +195,7 @@ namespace StrategyGame.Bll.Services.Commands
         public CommandInfo ToCommandInfo(Command command, IMapper mapper)
         {
             var commandInfo = mapper.Map<Command, CommandInfo>(command);
-            commandInfo.Units = command.Divisions.Select(d =>
-            {
-                var unitInfo = mapper.Map<UnitType, BriefUnitInfo>(d.Unit);
-                unitInfo.Count = d.Count;
-                return unitInfo;
-            });
-
+            commandInfo.Units = command.GetAllBriefUnitInfo(mapper);
             return commandInfo;
         }
     }

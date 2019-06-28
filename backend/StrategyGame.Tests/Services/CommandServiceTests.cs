@@ -7,7 +7,6 @@ using StrategyGame.Model.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace StrategyGame.Tests.Services
@@ -66,7 +65,7 @@ namespace StrategyGame.Tests.Services
             Assert.AreEqual(commandDetails.TargetCountryId, info.TargetCountryId);
             Assert.AreEqual(2, info.Units.Count());
             Assert.AreEqual(commandDetails.Units.First().UnitId, info.Units.First().Id);
-            Assert.AreEqual(commandDetails.Units.First().Amount, info.Units.First().Count);
+            Assert.AreEqual(commandDetails.Units.First().Amount, info.Units.First().TotalCount);
         }
 
         [TestMethod]
@@ -219,12 +218,12 @@ namespace StrategyGame.Tests.Services
                     new UnitDetails
                     {
                         UnitId = info.Units.First().Id,
-                        Amount = info.Units.First().Count - 10
+                        Amount = info.Units.First().TotalCount - 10
                     },
                     new UnitDetails
                     {
                         UnitId = info.Units.Last().Id,
-                        Amount = info.Units.Last().Count
+                        Amount = info.Units.Last().TotalCount
                     }
                 }
             };
@@ -233,7 +232,7 @@ namespace StrategyGame.Tests.Services
 
             Assert.AreEqual(2, newInfo.Units.Count());
             Assert.AreEqual(newDetails.Units.First().UnitId, newInfo.Units.First().Id);
-            Assert.AreEqual(newDetails.Units.First().Amount, newInfo.Units.First().Count);
+            Assert.AreEqual(newDetails.Units.First().Amount, newInfo.Units.First().TotalCount);
         }
 
         [TestMethod]

@@ -199,7 +199,7 @@ namespace StrategyGame.Bll.Extensions
                 Name = "Áramlásirányító",
                 Description = "+50 lakos, 200 korall / kör",
                 ImageUrl = "images/static/buildings/aramlasiranyito-lg.png",
-                IconImageUrl = "images/static/buildings/aramlasiranyito-icon.png"
+                IconImageUrl = "images/static/buildings/aramlasiranyito-icon.svg"
             };
 
             var reefCastCont = new BuildingContent
@@ -208,7 +208,8 @@ namespace StrategyGame.Bll.Extensions
                 Name = "Zátonyvár",
                 Description = "+200 szállás",
                 ImageUrl = "images/static/buildings/zatonyvar-lg.png",
-                IconImageUrl = "images/static/buildings/zatonyvar-icon.png"
+                IconImageUrl = "images/static/buildings/zatonyvar-icon.svg" +
+                ""
             };
 
             context.BuildingContents.AddRange(currentCont, reefCastCont);

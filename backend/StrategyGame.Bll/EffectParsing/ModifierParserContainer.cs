@@ -1,5 +1,4 @@
-﻿using StrategyGame.Bll.Services.TurnHandling;
-using StrategyGame.Dal;
+﻿using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
 using System;
 using System.Collections.Generic;
@@ -17,6 +16,28 @@ namespace StrategyGame.Bll.EffectParsing
     /// </remarks>
     public class ModifierParserContainer
     {
+        /// <summary>
+        /// Creates a <see cref="ModifierParserContainer"/> with all known parsers.
+        /// </summary>
+        /// <returns>The created container.</returns>
+        public static ModifierParserContainer CreateDefault()
+        {
+            return new ModifierParserContainer(new AbstractEffectModifierParser[]
+                {
+                    new BarrackSpaceEffectParser(),
+                    new CoralProductionEffectParser(),
+                    new PearlProductionEffectParser(),
+                    new HarvestModifierEffectParser(),
+                    new PopulationEffectParser(),
+                    new TaxModifierEffectParser(),
+                    new UnitDefenseEffectParser(),
+                    new UnitAttackEffectParser(),
+                    new AddBuildingEffectParser(),
+                    new IncreaseUnitAttackEffectParser(),
+                    new BuildingCoralProductionEffectParser()
+                });
+        }
+
         /// <summary>
         /// Writeable backing collection for the <see cref="Parsers"/> collection.
         /// </summary>

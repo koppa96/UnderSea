@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StrategyGame.Bll.Dto.Sent;
 using StrategyGame.Bll.DTO.Received;
-using StrategyGame.Bll.Exceptions;
 using StrategyGame.Bll.Services.Units;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace StrategyGame.Api.Controllers
 {
@@ -37,7 +33,7 @@ namespace StrategyGame.Api.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(201)]
-        public async Task<ActionResult<IEnumerable<UnitInfo>>> CreateAsync([FromBody] IEnumerable<PurchaseDetails> purchases)
+        public async Task<ActionResult<IEnumerable<BriefUnitInfo>>> CreateAsync([FromBody] IEnumerable<PurchaseDetails> purchases)
         {
             return Ok(await _unitService.CreateUnitAsync(User.Identity.Name, purchases));
         }

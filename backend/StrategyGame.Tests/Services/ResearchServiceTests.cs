@@ -4,9 +4,7 @@ using StrategyGame.Bll.Exceptions;
 using StrategyGame.Bll.Services.Researches;
 using StrategyGame.Dal;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace StrategyGame.Tests.Services
@@ -23,7 +21,7 @@ namespace StrategyGame.Tests.Services
             context = await UtilityFactory.CreateContextAsync();
             researchService = new ResearchService(context, UtilityFactory.CreateMapper());
         }
-        
+
         [TestMethod]
         [DataRow("TheRich")]
         public async Task TestStartResearch(string username)

@@ -50,7 +50,7 @@
         /// An effect that increases the taxation (pearl production) by the set percent. Value is double where 0.5 is 50%.
         /// </summary>
         public const string HarvestModifier = "harvest-modifier";
-        
+
         /// <summary>
         /// An effect that adds a number of a building to the country. 
         /// Value is integer, the count of buildings, target is the building type's ID.

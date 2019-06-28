@@ -23,6 +23,6 @@ namespace StrategyGame.Model.Entities
         /// <summary>
         /// Gets the collection of divisions assigned to this command.
         /// </summary>
-        public virtual ICollection<Division> Divisions { get; set; } = new HashSet<Division>();
+        public virtual ICollection<Division> Divisions { get; set; }
     }
 }

@@ -37,6 +37,8 @@ namespace StrategyGame.Bll.Services.TurnHandling
             await context.InProgressBuildings.ForEachAsync(b => b.TimeLeft--);
             await context.InProgressResearches.ForEachAsync(r => r.TimeLeft--);
 
+            // In progress stuff's effects have to be included, as those might turn into actual effects
+            // and if they do, the combat method's include would not find them, causing a null-reference.
             var preCombat = context.Countries
                 .Include(c => c.Commands)
                     .ThenInclude(c => c.Divisions)
@@ -51,8 +53,12 @@ namespace StrategyGame.Bll.Services.TurnHandling
                             .ThenInclude(r => r.Effect)
                 .Include(c => c.InProgressBuildings)
                     .ThenInclude(b => b.Building)
+                        .ThenInclude(b => b.Effects)
+                            .ThenInclude(b => b.Effect)
                 .Include(c => c.InProgressResearches)
                     .ThenInclude(r => r.Research)
+                        .ThenInclude(r => r.Effects)
+                            .ThenInclude(r => r.Effect)
                 .Include(c => c.CurrentEvent)
                     .ThenInclude(e => e.Effects)
                             .ThenInclude(e => e.Effect);
@@ -108,6 +114,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
             var postCombat = context.Countries
                 .Include(c => c.Commands)
                     .ThenInclude(c => c.Divisions)
+                .Include(c => c.Attacks)
                 .Include(c => c.Buildings)
                     .ThenInclude(b => b.Building)
                         .ThenInclude(b => b.Effects)

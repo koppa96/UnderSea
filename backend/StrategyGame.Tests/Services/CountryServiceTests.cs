@@ -18,20 +18,7 @@ namespace StrategyGame.Tests.Services
         {
             context = await UtilityFactory.CreateContextAsync();
             countryService = new CountryService(UtilityFactory.CreateMapper(), context,
-                new ModifierParserContainer(new AbstractEffectModifierParser[]
-                {
-                    new BarrackSpaceEffectParser(),
-                    new CoralProductionEffectParser(),
-                    new PearlProductionEffectParser(),
-                    new HarvestModifierEffectParser(),
-                    new PopulationEffectParser(),
-                    new TaxModifierEffectParser(),
-                    new UnitDefenseEffectParser(),
-                    new UnitAttackEffectParser(),
-                    new AddBuildingEffectParser(),
-                    new IncreaseUnitAttackEffectParser(),
-                    new BuildingCoralProductionEffectParser()
-                }));
+                ModifierParserContainer.CreateDefault());
         }
 
         [TestMethod]
@@ -47,7 +34,7 @@ namespace StrategyGame.Tests.Services
         public async Task TestGetCountryUnits(string username)
         {
             var info = await countryService.GetCountryInfoAsync(username);
-            Assert.IsTrue(info.ArmyInfo.Any(a => a.Count > 0));
+            Assert.IsTrue(info.ArmyInfo.Any(a => a.TotalCount > 0));
         }
 
         [TestMethod]

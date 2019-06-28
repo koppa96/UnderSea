@@ -173,7 +173,7 @@ namespace StrategyGame.Dal
             builder.Entity<CombatReport>()
                 .HasOne(c => c.Defender)
                 .WithMany(c => c.Defenses);
-                       
+
             // Effect
             builder.Entity<Effect>().Property(e => e.Name).IsRequired().HasMaxLength(200);
             builder.Entity<Effect>().Property(e => e.TargetId).IsRequired(false);
@@ -217,15 +217,15 @@ namespace StrategyGame.Dal
             builder.Entity<Country>()
                 .HasOne(c => c.CurrentEvent)
                 .WithMany(e => e.ParentCountries);
-            
+
             // BuildingType - BuildingContent
             builder.Entity<BuildingType>().HasOne(b => b.Content).WithOne(c => c.Parent)
                 .HasForeignKey<BuildingContent>(c => c.ParentId);
-            
+
             // BuildingType - BuildingContent
             builder.Entity<ResearchType>().HasOne(r => r.Content).WithOne(c => c.Parent)
                 .HasForeignKey<ResearchContent>(c => c.ParentId);
-            
+
             // BuildingType - BuildingContent
             builder.Entity<UnitType>().HasOne(u => u.Content).WithOne(c => c.Parent)
                 .HasForeignKey<UnitContent>(c => c.ParentId);
@@ -247,7 +247,7 @@ namespace StrategyGame.Dal
             builder.Entity<Division>()
                 .HasOne(d => d.Unit)
                 .WithMany(u => u.ContainingDivisions);
-            
+
             //Country - CountryBuilding - BuildingType
             builder.Entity<CountryBuilding>()
                 .HasOne(cb => cb.ParentCountry)
@@ -256,7 +256,7 @@ namespace StrategyGame.Dal
             builder.Entity<CountryBuilding>()
                 .HasOne(cb => cb.Building)
                 .WithMany(b => b.CompletedBuildings);
-            
+
             //Country - CountryResearch - ResearchType
             builder.Entity<CountryResearch>()
                 .HasOne(cr => cr.ParentCountry)
@@ -265,7 +265,7 @@ namespace StrategyGame.Dal
             builder.Entity<CountryResearch>()
                 .HasOne(cr => cr.Research)
                 .WithMany(r => r.CompletedResearches);
-            
+
             //Country - InProgressBuilding - BuildingType
             builder.Entity<InProgressBuilding>()
                 .HasOne(ib => ib.ParentCountry)
@@ -274,7 +274,7 @@ namespace StrategyGame.Dal
             builder.Entity<InProgressBuilding>()
                 .HasOne(ib => ib.Building)
                 .WithMany(b => b.InProgressBuildings);
-            
+
             //Country - InProgressResearch - ResearchType
             builder.Entity<InProgressResearch>()
                 .HasOne(ir => ir.ParentCountry)

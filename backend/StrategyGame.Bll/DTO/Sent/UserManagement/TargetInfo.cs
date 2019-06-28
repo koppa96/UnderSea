@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace StrategyGame.Bll.Dto.Sent.UserManagement
+﻿namespace StrategyGame.Bll.Dto.Sent.UserManagement
 {
     public class TargetInfo
     {

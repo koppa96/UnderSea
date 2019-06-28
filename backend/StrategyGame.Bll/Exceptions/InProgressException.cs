@@ -1,18 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Runtime.Serialization;
 
 namespace StrategyGame.Bll.Exceptions
 {
 
+    /// <summary>
+    /// The exception that is thrown when there is already a building or research in progress, preventing the start of another.
+    /// </summary>
     [Serializable]
     public class InProgressException : Exception
     {
         public InProgressException() { }
-        public InProgressException(string message) : base(message) { }
-        public InProgressException(string message, Exception inner) : base(message, inner) { }
+        public InProgressException(string message)
+            : base(message) { }
+        public InProgressException(string message, Exception inner)
+            : base(message, inner) { }
         protected InProgressException(
-          System.Runtime.Serialization.SerializationInfo info,
-          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+          SerializationInfo info, StreamingContext context)
+            : base(info, context) { }
     }
 }

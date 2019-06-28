@@ -9,7 +9,7 @@
         /// Gets or sets the <see cref="ResearchType"/> the effect belongs to.
         /// </summary>
         public ResearchType Research { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the effect of the research.
         /// </summary>

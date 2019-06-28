@@ -19,20 +19,7 @@ namespace StrategyGame.Tests.Services
         public async Task Initialize()
         {
             context = await UtilityFactory.CreateContextAsync();
-            turnService = new TurnHandlingService(new ModifierParserContainer(new AbstractEffectModifierParser[]
-                {
-                    new BarrackSpaceEffectParser(),
-                    new CoralProductionEffectParser(),
-                    new PearlProductionEffectParser(),
-                    new HarvestModifierEffectParser(),
-                    new PopulationEffectParser(),
-                    new TaxModifierEffectParser(),
-                    new UnitDefenseEffectParser(),
-                    new UnitAttackEffectParser(),
-                    new AddBuildingEffectParser(),
-                    new IncreaseUnitAttackEffectParser(),
-                    new BuildingCoralProductionEffectParser()
-                }));
+            turnService = new TurnHandlingService(ModifierParserContainer.CreateDefault());
         }
 
         [TestMethod]
@@ -108,11 +95,15 @@ namespace StrategyGame.Tests.Services
                 .Include(c => c.ParentUser)
                 .Include(c => c.Commands)
                     .ThenInclude(c => c.Divisions)
+                .Include(c => c.Attacks)
+                .Include(c => c.Defenses)
                 .SingleAsync(x => x.ParentUser.UserName == username);
             var poorCountry = await context.Countries
                 .Include(c => c.ParentUser)
                 .Include(c => c.Commands)
                     .ThenInclude(c => c.Divisions)
+                .Include(c => c.Attacks)
+                .Include(c => c.Defenses)
                 .SingleAsync(x => x.ParentUser.UserName == username2);
             poorCountry.Corals = 50000;
             poorCountry.Pearls = 50000;
@@ -157,6 +148,7 @@ namespace StrategyGame.Tests.Services
             var country = await context.Countries
                 .Include(c => c.ParentUser)
                 .Include(c => c.Commands)
+                    .ThenInclude(c => c.Divisions)
                 .SingleAsync(x => x.ParentUser.UserName == username);
 
             country.Corals = 500;
@@ -191,7 +183,7 @@ namespace StrategyGame.Tests.Services
                 c.Divisions.Sum(d => d.Count * d.Unit.MaintenanceCoral));
             var pearlMaintenance = country.Commands.Sum(c =>
                 c.Divisions.Sum(d => d.Count * d.Unit.MaintenancePearl));
-            
+
             country.Corals = 50000;
             country.Pearls = 50000;
 

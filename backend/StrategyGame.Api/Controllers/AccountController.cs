@@ -1,9 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +7,10 @@ using StrategyGame.Bll.Dto.Sent;
 using StrategyGame.Bll.Dto.Sent.UserManagement;
 using StrategyGame.Bll.Services.Country;
 using StrategyGame.Model.Entities;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace StrategyGame.Api.Controllers
 {
@@ -56,7 +55,7 @@ namespace StrategyGame.Api.Controllers
         {
             var filename = User.Identity.Name + "." + Request.Headers["Content-Type"].First().Split("/")[1].Split("+")[0];
             var path = Path.Combine(Directory.GetCurrentDirectory() + @"\wwwroot\images\profile\" + filename);
-            
+
             using (var fileStream = System.IO.File.OpenWrite(path))
             {
                 await Request.Body.CopyToAsync(fileStream);

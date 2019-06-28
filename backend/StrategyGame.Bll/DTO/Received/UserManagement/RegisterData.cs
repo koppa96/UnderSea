@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace StrategyGame.Bll.Dto.Received.UserManagement
+﻿namespace StrategyGame.Bll.Dto.Received.UserManagement
 {
     public class RegisterData
     {

@@ -1,5 +1,4 @@
 ﻿using StrategyGame.Bll.Dto.Sent;
-using StrategyGame.Bll.Dto.Sent.Country;
 using StrategyGame.Bll.DTO.Received;
 using StrategyGame.Bll.Exceptions;
 using System;

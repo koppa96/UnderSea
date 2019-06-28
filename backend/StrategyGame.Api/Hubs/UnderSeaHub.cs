@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using StrategyGame.Bll.Services.UserTracker;
+using System;
+using System.Threading.Tasks;
 
 namespace StrategyGame.Api.Hubs
 {

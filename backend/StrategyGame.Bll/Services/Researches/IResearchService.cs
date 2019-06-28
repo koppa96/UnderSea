@@ -15,7 +15,7 @@ namespace StrategyGame.Bll.Services.Researches
         /// Gets the researches of the given player.
         /// </summary>
         /// <returns>An IEnumerable containing the researches of the player</returns>
-         Task<IEnumerable<CreationInfo>> GetResearchesAsync();
+        Task<IEnumerable<CreationInfo>> GetResearchesAsync();
 
         /// <summary>
         /// Starts the desired research for the given player.
@@ -27,6 +27,6 @@ namespace StrategyGame.Bll.Services.Researches
         /// <exception cref="InProgressException">Thrown when there is another research in progress</exception>
         /// <exception cref="LimitReachedException">Thrown when the research is already finished</exception>
         /// <returns>A task that can be used to await the asynchronous operation</returns>
-         Task StartResearchAsync(string username, int researchId);
+        Task StartResearchAsync(string username, int researchId);
     }
 }

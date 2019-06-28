@@ -16,11 +16,11 @@ namespace StrategyGame.Model.Entities
         /// <summary>
         /// Gets or sets the collection of effects this event has.
         /// </summary>
-        public virtual ICollection<EventEffect> Effects { get; set; } = new HashSet<EventEffect>();
+        public virtual ICollection<EventEffect> Effects { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of countries that have this effect currently.
         /// </summary>
-        public virtual ICollection<Country> ParentCountries { get; set; } = new HashSet<Country>();
+        public virtual ICollection<Country> ParentCountries { get; set; }
     }
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace StrategyGame.Bll.Dto.Received.UserManagement
+﻿namespace StrategyGame.Bll.Dto.Received.UserManagement
 {
     public class PasswordChangeData
     {

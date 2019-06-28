@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace StrategyGame.Bll.Dto.Sent
+﻿namespace StrategyGame.Bll.Dto.Sent
 {
     public class UnitInfo
     {
