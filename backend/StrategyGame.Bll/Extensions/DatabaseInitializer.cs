@@ -268,8 +268,8 @@ namespace StrategyGame.Bll.Extensions
                 Parent = wall,
                 Name = "Korallfal",
                 Description = "Fal, korallból. +20% védekezés",
-                ImageUrl = "images/static/buildings/korallfal.svg",
-                IconImageUrl = "images/static/buildings/korallfal.svg"
+                ImageUrl = "images/static/researches/korallfal.svg",
+                IconImageUrl = "images/static/researches/korallfal.svg"
             };
             var attCont = new ResearchContent
             {
@@ -284,16 +284,16 @@ namespace StrategyGame.Bll.Extensions
                 Parent = martialArts,
                 Name = "Vízalatti harcművészetek",
                 Description = "\"A különbség a lehetetlen és a lehetséges között az egyén akarata.\", +10% védekezés és támadás",
-                ImageUrl = "images/static/buildings/vizalatti-harcmuveszetek.svg",
-                IconImageUrl = "images/static/buildings/vizalatti-harcmuveszetek.svg"
+                ImageUrl = "images/static/researches/vizalatti-harcmuveszetek.svg",
+                IconImageUrl = "images/static/researches/vizalatti-harcmuveszetek.svg"
             };
             var taxCont = new ResearchContent
             {
                 Parent = alchemy,
                 Name = "Alkímia",
                 Description = "A népesség pénzt csinál, +30% adó bevétel",
-                ImageUrl = "images/static/buildings/alkimia.svg",
-                IconImageUrl = "images/static/buildings/alkimia.svg"
+                ImageUrl = "images/static/researches/alkimia.svg",
+                IconImageUrl = "images/static/researches/alkimia.svg"
             };
 
             context.ResearchContents.AddRange(mudTCont, mudCCont, defCont, attCont, cCont, taxCont);
