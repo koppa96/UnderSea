@@ -90,7 +90,7 @@ namespace StrategyGame.Bll.Services.Units
                 // Check pop-space
                 if (builder.BarrackSpace < totalUnits + purchase.Count)
                 {
-                    throw new LimitReachedException();
+                    throw new LimitReachedException("The max unit count has been reached.");
                 }
 
                 var defenders = country.GetAllDefending();
