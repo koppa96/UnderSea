@@ -2,6 +2,7 @@
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
 using StrategyGame.Model.Entities.Frontend;
+using StrategyGame.Model.Entities.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -70,7 +71,6 @@ namespace StrategyGame.Bll.Extensions
                 ImageUrl = "images/static/buildings/aramlasiranyito-lg.png",
                 IconImageUrl = "images/static/buildings/aramlasiranyito-icon.svg"
             };
-
             var reefCastCont = new BuildingContent
             {
                 Name = "Zátonyvár",
@@ -79,8 +79,12 @@ namespace StrategyGame.Bll.Extensions
                 IconImageUrl = "images/static/buildings/zatonyvar-icon.svg" +
                 ""
             };
-
-            context.BuildingContents.AddRange(currentCont, reefCastCont);
+            var stonemineCont = new BuildingContent
+            {
+                Name = "Kőbánya",
+                Description = "+200 kő körönként",
+            };
+            context.BuildingContents.AddRange(currentCont, reefCastCont, stonemineCont);
 
             var sealCont = new UnitContent
             {
@@ -213,48 +217,94 @@ namespace StrategyGame.Bll.Extensions
 
             context.EventContents.AddRange(plagueCont, mineCont, fireCont, goodhvCont, badhvCont,
                 contPopCont, contSolCont, disconSolCont, discontPopCont);
+
+            var coralCont = new ResourceContent
+            {
+                Name = "Korall",
+                Description = "Kis rákok várat építenek",
+            };
+            var pearlCont = new ResourceContent
+            {
+                Name = "Gyöngy",
+                Description = "gyöngy",
+            };
+            var stoneCont = new ResourceContent
+            {
+                Name = "Kő",
+                Description = "Kő, kavics",
+            };
+            context.ResourceContents.AddRange(coralCont, pearlCont, stoneCont);
+            await context.SaveChangesAsync();
+
+            // Resources
+            var coral = new ResourceType { Content = coralCont, StartingAmount = 500 };
+            var pearl = new ResourceType { Content = coralCont, StartingAmount = 1000 };
+            var stone = new ResourceType { Content = coralCont, StartingAmount = 1000 };
+            context.ResourceTypes.AddRange(coral, pearl, stone);
             await context.SaveChangesAsync();
 
             // Effects, Buildings, researches
             // áramlásirányító
             var popIn = new Effect { Name = KnownValues.PopulationIncrease, Value = 50 };
-            var cp = new Effect { Name = KnownValues.CoralProductionIncrease, Value = 200 };
-            var currentController = new BuildingType { CostPearl = 1000, CostCoral = 0, BuildTime = 5, MaxCount = -1, Content = currentCont  };
+            var cp = new Effect { Name = KnownValues.ResourceProductionIncrease, Value = 200, Parameter = coral.Id.ToString() };
+            var currentController = new BuildingType
+            {
+                Cost = new[] { new BuildingResource { Amount = 1000, ResourceType = stone } },
+                BuildTime = 5,
+                MaxCount = -1,
+                Content = currentCont
+            };
 
             // zátonyvár
             var bsIn = new Effect { Name = KnownValues.BarrackSpaceIncrease, Value = 200 };
-            var reefCastle = new BuildingType { CostPearl = 1000, CostCoral = 0, BuildTime = 5, MaxCount = -1, Content = reefCastCont };
+            var reefCastle = new BuildingType
+            {
+                Cost = new[] { new BuildingResource { Amount = 1000, ResourceType = stone } },
+                BuildTime = 5,
+                MaxCount = -1,
+                Content = reefCastCont
+            };
+
+            // kőbánya
+            var stIn = new Effect { Name = KnownValues.ResourceProductionIncrease, Value = 200, Parameter = stone.Id.ToString() };
+            var stoneMine = new BuildingType
+            {
+                Cost = new[] { new BuildingResource { Amount = 1000, ResourceType = stone } },
+                BuildTime = 5,
+                MaxCount = -1,
+                Content = reefCastCont
+            };
 
             // Iszaptraktor
             var harvMod1 = new Effect { Name = KnownValues.HarvestModifier, Value = 0.1 };
-            var mudT = new ResearchType { CostPearl = 1000, CostCoral = 0, ResearchTime = 15, MaxCompletedAmount = 1, Content = mudTCont };
+            var mudT = new ResearchType { Cost = new[] { new ResearchResource { Amount = 1000, ResourceType = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = mudTCont };
 
             // Iszapkombájn
             var harvMod2 = new Effect { Name = KnownValues.HarvestModifier, Value = 0.15 };
-            var mudC = new ResearchType { CostPearl = 1000, CostCoral = 0, ResearchTime = 15, MaxCompletedAmount = 1, Content = mudCCont };
+            var mudC = new ResearchType { Cost = new[] { new ResearchResource { Amount = 1000, ResourceType = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = mudCCont };
 
             // korallfal
             var defMod1 = new Effect { Name = KnownValues.UnitDefenseModifier, Value = 0.2 };
-            var wall = new ResearchType { CostPearl = 1000, CostCoral = 0, ResearchTime = 15, MaxCompletedAmount = 1, Content = defCont };
+            var wall = new ResearchType { Cost = new[] { new ResearchResource { Amount = 1000, ResourceType = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = defCont };
 
             // Szonárágyú
             var attMod1 = new Effect { Name = KnownValues.UnitAttackModifier, Value = 0.2 };
-            var canon = new ResearchType { CostPearl = 1000, CostCoral = 0, ResearchTime = 15, MaxCompletedAmount = 1, Content = attCont };
+            var canon = new ResearchType { Cost = new[] { new ResearchResource { Amount = 1000, ResourceType = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = attCont };
 
             // Harcművészet
             var combModA = new Effect { Name = KnownValues.UnitAttackModifier, Value = 0.1 };
             var combModD = new Effect { Name = KnownValues.UnitDefenseModifier, Value = 0.1 };
-            var martialArts = new ResearchType { CostPearl = 1000, CostCoral = 0, ResearchTime = 15, MaxCompletedAmount = 1, Content = cCont };
+            var martialArts = new ResearchType { Cost = new[] { new ResearchResource { Amount = 1000, ResourceType = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = cCont };
 
             // Alchemy
             var taxMod1 = new Effect { Name = KnownValues.TaxationModifier, Value = 0.3 };
-            var alchemy = new ResearchType { CostPearl = 1000, CostCoral = 0, ResearchTime = 15, MaxCompletedAmount = 1, Content = taxCont };
+            var alchemy = new ResearchType { Cost = new[] { new ResearchResource { Amount = 1000, ResourceType = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = taxCont };
 
 
             // Add effects, buildings, researches
             context.Effects.AddRange(popIn, cp, bsIn, harvMod1, harvMod2,
-                defMod1, attMod1, combModA, combModD, taxMod1);
-            context.BuildingTypes.AddRange(currentController, reefCastle);
+                defMod1, attMod1, combModA, combModD, taxMod1, stIn);
+            context.BuildingTypes.AddRange(currentController, reefCastle, stoneMine);
             context.ResearchTypes.AddRange(mudT, mudC, wall, canon, martialArts, alchemy);
             await context.SaveChangesAsync();
 
@@ -278,28 +328,129 @@ namespace StrategyGame.Bll.Extensions
             // Add units
             // rohamfóka
             var seal3 = new UnitType
-            { AttackPower = 10, DefensePower = 5, CostPearl = 0, CostCoral = 0, MaintenancePearl = 1, MaintenanceCoral = 1, IsPurchasable = false, Content = sealCont };
+            {
+                AttackPower = 10,
+                DefensePower = 5,
+                Maintenance = new[] {
+                    new UnitResource { Amount = 1, ResourceType = pearl },
+                    new UnitResource { Amount = 1, ResourceType = coral }},
+                IsPurchasable = false,
+                Content = sealCont
+            };
             var seal2 = new UnitType
-            { AttackPower = 8, DefensePower = 3, CostPearl = 0, CostCoral = 0, MaintenancePearl = 1, MaintenanceCoral = 1, BattlesToLevelUp = 5, RankedUpType = seal3, IsPurchasable = false, Content = sealCont };
+            {
+                AttackPower = 8,
+                DefensePower = 3,
+                Maintenance = new[] {
+                    new UnitResource { Amount = 1, ResourceType = pearl },
+                    new UnitResource { Amount = 1, ResourceType = coral }},
+                BattlesToLevelUp = 5,
+                RankedUpType = seal3,
+                IsPurchasable = false,
+                Content = sealCont
+            };
             var seal = new UnitType
-            { AttackPower = 6, DefensePower = 2, CostPearl = 50, CostCoral = 0, MaintenancePearl = 1, MaintenanceCoral = 1, BattlesToLevelUp = 3, RankedUpType = seal2, IsPurchasable = true, Content = sealCont };
+            {
+                AttackPower = 6,
+                DefensePower = 2,
+                Cost = new[] {
+                    new UnitResource {Amount = 50, ResourceType = pearl } },
+                Maintenance = new[] {
+                    new UnitResource { Amount = 1, ResourceType = pearl },
+                    new UnitResource { Amount = 1, ResourceType = coral }},
+                BattlesToLevelUp = 3,
+                RankedUpType = seal2,
+                IsPurchasable = true,
+                Content = sealCont
+            };
             // csatacsikó
             var pony3 = new UnitType
-            { AttackPower = 5, DefensePower = 10, CostPearl = 0, CostCoral = 0, MaintenancePearl = 1, MaintenanceCoral = 1, IsPurchasable = false, Content = ponyCont };
+            {
+                AttackPower = 5,
+                DefensePower = 10,
+                Maintenance = new[] {
+                    new UnitResource { Amount = 1, ResourceType = pearl },
+                    new UnitResource { Amount = 1, ResourceType = coral }},
+                IsPurchasable = false,
+                Content = ponyCont
+            };
             var pony2 = new UnitType
-            { AttackPower = 3, DefensePower = 8, CostPearl = 0, CostCoral = 0, MaintenancePearl = 1, MaintenanceCoral = 1, BattlesToLevelUp = 5, RankedUpType = pony3, IsPurchasable = false, Content = ponyCont };
+            {
+                AttackPower = 3,
+                DefensePower = 8,
+                Maintenance = new[] {
+                    new UnitResource { Amount = 1, ResourceType = pearl },
+                    new UnitResource { Amount = 1, ResourceType = coral }},
+                BattlesToLevelUp = 5,
+                RankedUpType = pony3,
+                IsPurchasable = false,
+                Content = ponyCont
+            };
             var pony = new UnitType
-            { AttackPower = 2, DefensePower = 6, CostPearl = 50, CostCoral = 0, MaintenancePearl = 1, MaintenanceCoral = 1, BattlesToLevelUp = 3, RankedUpType = pony2, IsPurchasable = true, Content = ponyCont };
+            {
+                AttackPower = 2,
+                DefensePower = 6,
+                Cost = new[] {
+                    new UnitResource {Amount = 50, ResourceType = pearl } },
+                Maintenance = new[] {
+                    new UnitResource { Amount = 1, ResourceType = pearl },
+                    new UnitResource { Amount = 1, ResourceType = coral }},
+                BattlesToLevelUp = 3,
+                RankedUpType = pony2,
+                IsPurchasable = true,
+                Content = ponyCont
+            };
             // lézercápa
             var lazor3 = new UnitType
-            { AttackPower = 10, DefensePower = 10, CostPearl = 0, CostCoral = 0, MaintenancePearl = 3, MaintenanceCoral = 2, IsPurchasable = false, Content = lazorCont };
+            {
+                AttackPower = 10,
+                DefensePower = 10,
+                Maintenance = new[] {
+                    new UnitResource { Amount = 3, ResourceType = pearl },
+                    new UnitResource { Amount = 2, ResourceType = coral }},
+                IsPurchasable = false,
+                Content = lazorCont
+            };
             var lazor2 = new UnitType
-            { AttackPower = 7, DefensePower = 7, CostPearl = 0, CostCoral = 0, MaintenancePearl = 3, MaintenanceCoral = 2, BattlesToLevelUp = 5, RankedUpType = lazor3, IsPurchasable = false, Content = lazorCont };
+            {
+                AttackPower = 7,
+                DefensePower = 7,
+                Maintenance = new[] {
+                    new UnitResource { Amount = 1, ResourceType = pearl },
+                    new UnitResource { Amount = 1, ResourceType = coral }},
+                BattlesToLevelUp = 5,
+                RankedUpType = lazor3,
+                IsPurchasable = false,
+                Content = lazorCont
+            };
             var lazor = new UnitType
-            { AttackPower = 5, DefensePower = 5, CostPearl = 100, CostCoral = 0, MaintenancePearl = 3, MaintenanceCoral = 2, BattlesToLevelUp = 3, RankedUpType = lazor2, IsPurchasable = true, Content = lazorCont };
+            {
+                AttackPower = 5,
+                DefensePower = 5,
+                Cost = new[] {
+                    new UnitResource {Amount = 100, ResourceType = pearl } },
+                Maintenance = new[] {
+                    new UnitResource { Amount = 3, ResourceType = pearl },
+                    new UnitResource { Amount = 2, ResourceType = coral }},
+                BattlesToLevelUp = 3,
+                RankedUpType = lazor2,
+                IsPurchasable = true,
+                Content = lazorCont
+            };
             // hadvezér
             var leader = new LeaderType
-            { AttackPower = 0, DefensePower = 0, CostPearl = 400, CostCoral = 0, MaintenancePearl = 4, MaintenanceCoral = 2, BattlesToLevelUp = 3, IsPurchasable = true, Content = leaderCont };
+            {
+                AttackPower = 0,
+                DefensePower = 0,
+                Cost = new[] {
+                    new UnitResource {Amount = 400, ResourceType = pearl } },
+                Maintenance = new[] {
+                    new UnitResource { Amount = 4, ResourceType = pearl },
+                    new UnitResource { Amount = 2, ResourceType = coral }},
+                BattlesToLevelUp = 3,
+                IsPurchasable = true,
+                Content = leaderCont
+            };
 
             context.UnitTypes.AddRange(seal3, seal2, seal, pony3, pony2, pony, lazor3, lazor2, lazor, leader);
             await context.SaveChangesAsync();
@@ -308,19 +459,23 @@ namespace StrategyGame.Bll.Extensions
             // Add events
             var plague = new RandomEvent { Content = plagueCont };
             var removeCurrent = new Effect
-            { TargetId = currentController.Id, Name = KnownValues.AddBuildingEffect, Value = -1 };
+            { Parameter = currentController.Id.ToString(), Name = KnownValues.AddBuildingEffect, Value = -1 };
 
             var fire = new RandomEvent { Content = fireCont };
             var removeCastle = new Effect
-            { TargetId = reefCastle.Id, Name = KnownValues.AddBuildingEffect, Value = -1 };
+            { Parameter = reefCastle.Id.ToString(), Name = KnownValues.AddBuildingEffect, Value = -1 };
 
             var mine = new RandomEvent { Content = mineCont };
             var addPearl = new Effect
-            { Value = 1000, Name = KnownValues.PearlProductionIncrease };
+            { Value = 1000, Name = KnownValues.ResourceProductionIncrease, Parameter = pearl.Id.ToString() };
 
             var goodHarvest = new RandomEvent { Content = goodhvCont };
             var extraCoral = new Effect
-            { Name = KnownValues.BuildingProductionIncrease, Value = 50 };
+            {
+                Name = KnownValues.BuildingProductionIncrease,
+                Value = 50,
+                Parameter = currentController.Id.ToString() + ";" + coral.Id.ToString()
+            };
 
             var badHarvest = new RandomEvent { Content = badhvCont };
             var lessCoral = new Effect
@@ -328,7 +483,7 @@ namespace StrategyGame.Bll.Extensions
 
             var contentPopulation = new RandomEvent { Content = contPopCont };
             var addCurrent = new Effect
-            { Name = KnownValues.AddBuildingEffect, TargetId = currentController.Id, Value = 1 };
+            { Name = KnownValues.AddBuildingEffect, Parameter = currentController.Id.ToString(), Value = 1 };
             var discontentPopulation = new RandomEvent();
 
             var contentSoldiers = new RandomEvent { Content = contSolCont };
@@ -361,8 +516,6 @@ namespace StrategyGame.Bll.Extensions
                 BaseTaxation = 25,
                 Round = 1,
                 StartingBarrackSpace = 0,
-                StartingCorals = 2000,
-                StartingPearls = 2000,
                 StartingPopulation = 0,
                 LootPercentage = 0.5,
                 UnitLossOnLostBatle = 0.1,
@@ -401,15 +554,35 @@ namespace StrategyGame.Bll.Extensions
             context.AddRange(thePoor, theRich, theCommander, theBuilder, theResearcher);
 
             var pc = new Country
-            { Name = "poor", Corals = 0, Pearls = 0, ParentUser = thePoor };
+            {
+                Name = "poor",
+                ParentUser = thePoor,
+                Resources = context.ResourceTypes.Select(x => new CountryResource { Amount = 0, ResourceType = x }).ToList()
+            };
             var rc = new Country
-            { Name = "rich", Corals = 1000000, Pearls = 1000000, ParentUser = theRich };
+            {
+                Name = "rich",
+                ParentUser = theRich,
+                Resources = context.ResourceTypes.Select(x => new CountryResource { Amount = 100000, ResourceType = x }).ToList()
+            };
             var cc = new Country
-            { Name = "attacky", Corals = 1000, Pearls = 1000, ParentUser = theCommander };
+            {
+                Name = "attacky",
+                ParentUser = theCommander,
+                Resources = context.ResourceTypes.Select(x => new CountryResource { Amount = x.StartingAmount, ResourceType = x }).ToList()
+            };
             var bc = new Country
-            { Name = "poi", Corals = 1000, Pearls = 1000, ParentUser = theBuilder };
+            {
+                Name = "poi",
+                ParentUser = theBuilder,
+                Resources = context.ResourceTypes.Select(x => new CountryResource { Amount = x.StartingAmount, ResourceType = x }).ToList()
+            };
             var sc = new Country
-            { Name = "science", Corals = 1000, Pearls = 1000, ParentUser = theResearcher };
+            {
+                Name = "science",
+                ParentUser = theResearcher,
+                Resources = context.ResourceTypes.Select(x => new CountryResource { Amount = x.StartingAmount, ResourceType = x }).ToList()
+            };
             context.Countries.AddRange(pc, rc, cc, bc, sc);
 
             var d1 = new Command { ParentCountry = pc, TargetCountry = pc };
@@ -541,8 +714,7 @@ namespace StrategyGame.Bll.Extensions
             var users = Enumerable.Range(1, count).Select(x => new User { UserName = Guid.NewGuid().ToString() }).ToList();
             var countries = users.Select(x => new Country
             {
-                Corals = rng.Next(0, 50000),
-                Pearls = rng.Next(0, 50000),
+                Resources = context.ResourceTypes.Select(r => new CountryResource { Amount = rng.Next(0, 50000), ResourceType = r }).ToList(),
                 ParentUser = x,
                 Name = x.UserName,
                 InProgressResearches = context.ResearchTypes.Where(r => rng.NextDouble() < 0.5)
