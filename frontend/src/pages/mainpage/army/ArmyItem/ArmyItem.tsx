@@ -16,7 +16,11 @@ export class ArmyItem extends React.Component<ArmyProps> {
 
   addTroop = () =>
     this.setState({ currentTroop: this.state.currentTroop + 1 }, () =>
-      this.props.currentTroops(this.props.unit.id, this.state.currentTroop)
+      this.props.currentTroops(
+        this.props.unit.id,
+        this.state.currentTroop,
+        this.props.unit.costPearl
+      )
     );
   removeTroop = () => {
     if (this.state.currentTroop > 0)

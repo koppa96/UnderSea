@@ -78,6 +78,7 @@ export const MainpageReducer = (
       };
     case ArmyActions.SUCCESS:
       let temp: BriefUnitInfo[] = [];
+      let costPearl: number = 0;
       if (state.model) {
         if (state.model.armyInfo) {
           temp = state.model.armyInfo;
@@ -85,19 +86,22 @@ export const MainpageReducer = (
             action.data.unitsToAdd.forEach(unit => {
               if (unit.unitId === armyunit.id) {
                 armyunit.count += unit.count;
+                costPearl += unit.price * unit.count;
               }
             });
           });
         }
+        costPearl = state.model.pearls - costPearl;
       }
-
+      console.log(costPearl);
       return {
         ...state,
         loading: false,
         model: state.model
           ? {
               ...state.model,
-              armyInfo: temp
+              armyInfo: temp,
+              pearls: costPearl
             }
           : undefined
       };

@@ -4,6 +4,7 @@ import { ArmyInfoWoCount } from "./actions/ArmyActions.get";
 export interface ArmyUnit {
   unitId: number;
   count: number;
+  price: number;
 }
 
 export interface ArmyState {
