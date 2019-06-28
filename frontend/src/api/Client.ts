@@ -1428,8 +1428,9 @@ export class CreationInfo implements ICreationInfo {
     name?: string | undefined;
     description?: string | undefined;
     imageUrl?: string | undefined;
-    count!: number;
+    iconImageUrl?: string | undefined;
     cost!: number;
+    count!:number;
 
     constructor(data?: ICreationInfo) {
         if (data) {
@@ -1446,8 +1447,9 @@ export class CreationInfo implements ICreationInfo {
             this.name = data["name"];
             this.description = data["description"];
             this.imageUrl = data["imageUrl"];
-            this.count = data["count"];
+            this.iconImageUrl = data["iconImageUrl"];
             this.cost = data["cost"];
+            this.count = data["count"];
         }
     }
 
@@ -1464,8 +1466,9 @@ export class CreationInfo implements ICreationInfo {
         data["name"] = this.name;
         data["description"] = this.description;
         data["imageUrl"] = this.imageUrl;
-        data["count"] = this.count;
+        data["iconImageUrl"] = this.iconImageUrl;
         data["cost"] = this.cost;
+        data["count"] = this.count;
         return data; 
     }
 }
@@ -1475,15 +1478,16 @@ export interface ICreationInfo {
     name?: string | undefined;
     description?: string | undefined;
     imageUrl?: string | undefined;
-    count: number;
+    iconImageUrl?: string | undefined;
     cost: number;
+    count:number;
 }
 
 export class CommandInfo implements ICommandInfo {
     id!: number;
     targetCountryId!: number;
     targetCountryName?: string | undefined;
-    units?: UnitInfo[] | undefined;
+    units?: BriefUnitInfo[] | undefined;
 
     constructor(data?: ICommandInfo) {
         if (data) {
@@ -1502,7 +1506,7 @@ export class CommandInfo implements ICommandInfo {
             if (Array.isArray(data["units"])) {
                 this.units = [] as any;
                 for (let item of data["units"])
-                    this.units!.push(UnitInfo.fromJS(item));
+                    this.units!.push(BriefUnitInfo.fromJS(item));
             }
         }
     }
@@ -1532,21 +1536,16 @@ export interface ICommandInfo {
     id: number;
     targetCountryId: number;
     targetCountryName?: string | undefined;
-    units?: UnitInfo[] | undefined;
+    units?: BriefUnitInfo[] | undefined;
 }
 
-export class UnitInfo implements IUnitInfo {
+export class BriefUnitInfo implements IBriefUnitInfo {
     id!: number;
     name?: string | undefined;
-    imageUrl?: string | undefined;
-    attackPower!: number;
-    defensePower!: number;
     count!: number;
-    maintenancePearl!: number;
-    maintenanceCoral!: number;
-    costPearl!: number;
+    imageUrl?: string | undefined;
 
-    constructor(data?: IUnitInfo) {
+    constructor(data?: IBriefUnitInfo) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1559,19 +1558,14 @@ export class UnitInfo implements IUnitInfo {
         if (data) {
             this.id = data["id"];
             this.name = data["name"];
-            this.imageUrl = data["imageUrl"];
-            this.attackPower = data["attackPower"];
-            this.defensePower = data["defensePower"];
             this.count = data["count"];
-            this.maintenancePearl = data["maintenancePearl"];
-            this.maintenanceCoral = data["maintenanceCoral"];
-            this.costPearl = data["costPearl"];
+            this.imageUrl = data["imageUrl"];
         }
     }
 
-    static fromJS(data: any): UnitInfo {
+    static fromJS(data: any): BriefUnitInfo {
         data = typeof data === 'object' ? data : {};
-        let result = new UnitInfo();
+        let result = new BriefUnitInfo();
         result.init(data);
         return result;
     }
@@ -1580,27 +1574,17 @@ export class UnitInfo implements IUnitInfo {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["name"] = this.name;
-        data["imageUrl"] = this.imageUrl;
-        data["attackPower"] = this.attackPower;
-        data["defensePower"] = this.defensePower;
         data["count"] = this.count;
-        data["maintenancePearl"] = this.maintenancePearl;
-        data["maintenanceCoral"] = this.maintenanceCoral;
-        data["costPearl"] = this.costPearl;
+        data["imageUrl"] = this.imageUrl;
         return data; 
     }
 }
 
-export interface IUnitInfo {
+export interface IBriefUnitInfo {
     id: number;
     name?: string | undefined;
-    imageUrl?: string | undefined;
-    attackPower: number;
-    defensePower: number;
     count: number;
-    maintenancePearl: number;
-    maintenanceCoral: number;
-    costPearl: number;
+    imageUrl?: string | undefined;
 }
 
 export class CommandDetails implements ICommandDetails {
@@ -1694,15 +1678,15 @@ export interface IUnitDetails {
 export class CountryInfo implements ICountryInfo {
     round!: number;
     rank!: number;
-    armyInfo?: BriefUnitInfo[] ;
+    armyInfo?: BriefUnitInfo[] | undefined;
     pearls!: number;
     corals!: number;
     pearlsPerRound!: number;
     coralsPerRound!: number;
     event?: EventInfo | undefined;
     unseenReports!: number;
-    buildings?: BriefCreationInfo[] ;
-    researches?: BriefCreationInfo[] ;
+    buildings?: BriefCreationInfo[] | undefined;
+    researches?: BriefCreationInfo[] | undefined;
 
     constructor(data?: ICountryInfo) {
         if (data) {
@@ -1780,59 +1764,15 @@ export class CountryInfo implements ICountryInfo {
 export interface ICountryInfo {
     round: number;
     rank: number;
-    armyInfo?: BriefUnitInfo[] ;
+    armyInfo?: BriefUnitInfo[] | undefined;
     pearls: number;
     corals: number;
     pearlsPerRound: number;
     coralsPerRound: number;
     event?: EventInfo | undefined;
     unseenReports: number;
-    buildings?: BriefCreationInfo[] ;
-    researches?: BriefCreationInfo[] ;
-}
-
-export class BriefUnitInfo implements IBriefUnitInfo {
-    id!: number;
-    count!: number;
-    imageUrl?: string | undefined;
-
-    constructor(data?: IBriefUnitInfo) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(data?: any) {
-        if (data) {
-            this.id = data["id"];
-            this.count = data["count"];
-            this.imageUrl = data["imageUrl"];
-        }
-    }
-
-    static fromJS(data: any): BriefUnitInfo {
-        data = typeof data === 'object' ? data : {};
-        let result = new BriefUnitInfo();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["count"] = this.count;
-        data["imageUrl"] = this.imageUrl;
-        return data; 
-    }
-}
-
-export interface IBriefUnitInfo {
-    id: number;
-    count: number;
-    imageUrl?: string | undefined;
+    buildings?: BriefCreationInfo[] | undefined;
+    researches?: BriefCreationInfo[] | undefined;
 }
 
 export class EventInfo implements IEventInfo {
@@ -1881,9 +1821,10 @@ export class EventInfo implements IEventInfo {
 
 export interface IEventInfo {
     id: number;
-    name?: string;
-    flavourtext?: string;
-    imageUrl?: string;
+    name?: string | undefined;
+    description?: string | undefined;
+    flavourtext?: string | undefined;
+    imageUrl?: string | undefined;
 }
 
 export class BriefCreationInfo implements IBriefCreationInfo {
@@ -1891,6 +1832,7 @@ export class BriefCreationInfo implements IBriefCreationInfo {
     count!: number;
     inProgressCount!: number;
     imageUrl?: string | undefined;
+    iconImageUrl?: string | undefined;
 
     constructor(data?: IBriefCreationInfo) {
         if (data) {
@@ -1907,6 +1849,7 @@ export class BriefCreationInfo implements IBriefCreationInfo {
             this.count = data["count"];
             this.inProgressCount = data["inProgressCount"];
             this.imageUrl = data["imageUrl"];
+            this.iconImageUrl = data["iconImageUrl"];
         }
     }
 
@@ -1923,6 +1866,7 @@ export class BriefCreationInfo implements IBriefCreationInfo {
         data["count"] = this.count;
         data["inProgressCount"] = this.inProgressCount;
         data["imageUrl"] = this.imageUrl;
+        data["iconImageUrl"] = this.iconImageUrl;
         return data; 
     }
 }
@@ -1932,6 +1876,7 @@ export interface IBriefCreationInfo {
     count: number;
     inProgressCount: number;
     imageUrl?: string | undefined;
+    iconImageUrl?: string | undefined;
 }
 
 export class CombatInfo implements ICombatInfo {
@@ -2036,6 +1981,70 @@ export interface ICombatInfo {
     pealLoot: number;
     coralLoot: number;
     isSeen: boolean;
+}
+
+export class UnitInfo implements IUnitInfo {
+    id!: number;
+    name?: string | undefined;
+    imageUrl?: string | undefined;
+    attackPower!: number;
+    defensePower!: number;
+    maintenancePearl!: number;
+    maintenanceCoral!: number;
+    costPearl!: number;
+
+    constructor(data?: IUnitInfo) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(data?: any) {
+        if (data) {
+            this.id = data["id"];
+            this.name = data["name"];
+            this.imageUrl = data["imageUrl"];
+            this.attackPower = data["attackPower"];
+            this.defensePower = data["defensePower"];
+            this.maintenancePearl = data["maintenancePearl"];
+            this.maintenanceCoral = data["maintenanceCoral"];
+            this.costPearl = data["costPearl"];
+        }
+    }
+
+    static fromJS(data: any): UnitInfo {
+        data = typeof data === 'object' ? data : {};
+        let result = new UnitInfo();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["imageUrl"] = this.imageUrl;
+        data["attackPower"] = this.attackPower;
+        data["defensePower"] = this.defensePower;
+        data["maintenancePearl"] = this.maintenancePearl;
+        data["maintenanceCoral"] = this.maintenanceCoral;
+        data["costPearl"] = this.costPearl;
+        return data; 
+    }
+}
+
+export interface IUnitInfo {
+    id: number;
+    name?: string | undefined;
+    imageUrl?: string | undefined;
+    attackPower: number;
+    defensePower: number;
+    maintenancePearl: number;
+    maintenanceCoral: number;
+    costPearl: number;
 }
 
 export class PurchaseDetails implements IPurchaseDetails {
