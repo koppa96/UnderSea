@@ -14,5 +14,7 @@ namespace StrategyGame.Model.Entities.Resources
         public ICollection<ResearchResource> ResearchResources { get; set; }
 
         public ICollection<CountryResource> CountryResources { get; set; }
+
+        public ICollection<UnitResource> UnitResources { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using StrategyGame.Model.Entities.Frontend;
+using StrategyGame.Model.Entities.Resources;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -19,25 +20,9 @@ namespace StrategyGame.Model.Entities
         /// </summary>
         public int DefensePower { get; set; }
 
-        /// <summary>
-        /// Gets or sets the amount of pearls the unit costs.
-        /// </summary>
-        public int CostPearl { get; set; }
+        public IEnumerable<UnitResource> Cost { get; set; }
 
-        /// <summary>
-        /// Gets or sets the amount of corals the unit costs.
-        /// </summary>
-        public int CostCoral { get; set; }
-
-        /// <summary>
-        /// Gets or sets the maintenance of the unit in pearls.
-        /// </summary>
-        public int MaintenancePearl { get; set; }
-
-        /// <summary>
-        /// Gets or sets the maintenance of the unit in corals.
-        /// </summary>
-        public int MaintenanceCoral { get; set; }
+        public IEnumerable<UnitResource> Maintenance { get; set; }
 
         /// <summary>
         /// Gets or sets the content of the unit.
