@@ -1,6 +1,7 @@
 using AutoMapper;
 using StrategyGame.Bll.Dto.Sent;
 using StrategyGame.Model.Entities;
+using System.Linq;
 
 namespace StrategyGame.Bll.Mapping
 {
@@ -12,7 +13,12 @@ namespace StrategyGame.Bll.Mapping
                 .ForMember(dest => dest.Name, conf => conf.MapFrom(src => src.Content.Name))
                 .ForMember(dest => dest.Description, conf => conf.MapFrom(src => src.Content.Description))
                 .ForMember(dest => dest.ImageUrl, conf => conf.MapFrom(src => src.Content.ImageUrl))
-                .ForMember(dest => dest.Cost, conf => conf.MapFrom(src => src.CostPearl))
+                .ForMember(dest => dest.Cost, conf => conf.MapFrom(src => src.Cost.Select(c => new ResourceInfo
+                {
+                    Name = c.ResourceType.Content.Name,
+                    Amount = (int)c.Amount,
+                    ImageUrl = c.ResourceType.Content.ImageUrl
+                })))
                 .ForMember(dest => dest.Count, conf => conf.MapFrom(src => 0));
         }
     }

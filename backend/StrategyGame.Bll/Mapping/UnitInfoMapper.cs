@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using StrategyGame.Bll.Dto.Sent;
 using StrategyGame.Model.Entities;
+using System.Linq;
 
 namespace StrategyGame.Bll.Mapping
 {
@@ -14,7 +15,8 @@ namespace StrategyGame.Bll.Mapping
         {
             CreateMap<UnitType, UnitInfo>()
                 .ForMember(dest => dest.Name, conf => conf.MapFrom(src => src.Content.Name))
-                .ForMember(dest => dest.ImageUrl, conf => conf.MapFrom(src => src.Content.ImageUrl));
+                .ForMember(dest => dest.ImageUrl, conf => conf.MapFrom(src => src.Content.ImageUrl))
+                .ForMember(dest => dest.Cost, conf => conf.MapFrom(src => src.Cost));
 
             CreateMap<Division, UnitInfo>()
                 .ForMember(dest => dest.Id, conf => conf.MapFrom(src => src.Unit.Id))
@@ -22,9 +24,12 @@ namespace StrategyGame.Bll.Mapping
                 .ForMember(dest => dest.ImageUrl, conf => conf.MapFrom(src => src.Unit.Content.ImageUrl))
                 .ForMember(dest => dest.AttackPower, conf => conf.MapFrom(src => src.Unit.AttackPower))
                 .ForMember(dest => dest.DefensePower, conf => conf.MapFrom(src => src.Unit.DefensePower))
-                .ForMember(dest => dest.MaintenanceCoral, conf => conf.MapFrom(src => src.Unit.MaintenanceCoral))
-                .ForMember(dest => dest.MaintenancePearl, conf => conf.MapFrom(src => src.Unit.MaintenancePearl))
-                .ForMember(dest => dest.CostPearl, conf => conf.MapFrom(src => src.Unit.CostPearl));
+                .ForMember(dest => dest.Cost, conf => conf.MapFrom(src => src.Unit.Cost.Select(c => new ResourceInfo
+                {
+                    Name = c.ResourceType.Content.Name,
+                    Amount = (int)c.Amount,
+                    ImageUrl = c.ResourceType.Content.ImageUrl
+                })));
         }
     }
 }
