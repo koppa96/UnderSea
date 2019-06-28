@@ -3,12 +3,14 @@ using Microsoft.AspNetCore.Mvc;
 using StrategyGame.Bll.Exceptions;
 using StrategyGame.Bll.Services.Logger;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace StrategyGame.Api
 {
+    /// <summary>
+    /// Provides a middleware that logs any exception using an <see cref="IExceptionLogger"/>, 
+    /// and provides an appropriate error to the user.
+    /// </summary>
     public class ExceptionHandlingMiddleware
     {
         private readonly RequestDelegate _next;

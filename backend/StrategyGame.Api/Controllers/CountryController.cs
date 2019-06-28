@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StrategyGame.Bll.Dto.Sent.Country;
 using StrategyGame.Bll.Services.Country;
+using System.Threading.Tasks;
 
 namespace StrategyGame.Api.Controllers
 {
+    /// <summary>
+    /// API endpoint to manage countries.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]

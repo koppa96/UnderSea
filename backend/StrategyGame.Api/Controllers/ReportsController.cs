@@ -2,13 +2,14 @@
 using Microsoft.AspNetCore.Mvc;
 using StrategyGame.Bll.Dto.Sent;
 using StrategyGame.Bll.Services.Reports;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace StrategyGame.Api.Controllers
 {
+    /// <summary>
+    /// API endpoint to manage reports.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]

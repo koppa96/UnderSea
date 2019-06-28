@@ -1,5 +1,4 @@
-﻿using StrategyGame.Bll.Services.TurnHandling;
-using StrategyGame.Dal;
+﻿using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
 using System;
 
@@ -17,7 +16,7 @@ namespace StrategyGame.Bll.EffectParsing
         /// Gets the name of the <see cref="Effect"/> that can be handled by the parser.
         /// </summary>
         public string HandledEffectName { get; }
-        
+
         /// <summary>
         /// Gets the action run by the <see cref="TryParse(Effect, CountryModifierBuilder)"/> when the effect's name matches the <see cref="HandledEffectName"/>.
         /// </summary>

@@ -1,5 +1,4 @@
-﻿using StrategyGame.Bll.Dto.Sent.Country;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace StrategyGame.Bll.Dto.Sent
 {

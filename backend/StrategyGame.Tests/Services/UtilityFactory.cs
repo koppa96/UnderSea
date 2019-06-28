@@ -4,9 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using StrategyGame.Bll.Extensions;
 using StrategyGame.Bll.Mapping;
 using StrategyGame.Dal;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace StrategyGame.Tests.Services
@@ -52,7 +49,7 @@ namespace StrategyGame.Tests.Services
                 Mapper.Initialize(mapperConfiguration);
                 mapperInitialized = true;
             }
-            
+
             return Mapper.Instance;
         }
     }

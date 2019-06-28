@@ -19,20 +19,7 @@ namespace StrategyGame.Tests.Services
         public async Task Initialize()
         {
             context = await UtilityFactory.CreateContextAsync();
-            turnService = new TurnHandlingService(new ModifierParserContainer(new AbstractEffectModifierParser[]
-                {
-                    new BarrackSpaceEffectParser(),
-                    new CoralProductionEffectParser(),
-                    new PearlProductionEffectParser(),
-                    new HarvestModifierEffectParser(),
-                    new PopulationEffectParser(),
-                    new TaxModifierEffectParser(),
-                    new UnitDefenseEffectParser(),
-                    new UnitAttackEffectParser(),
-                    new AddBuildingEffectParser(),
-                    new IncreaseUnitAttackEffectParser(),
-                    new BuildingCoralProductionEffectParser()
-                }));
+            turnService = new TurnHandlingService(ModifierParserContainer.CreateDefault());
         }
 
         [TestMethod]
@@ -191,7 +178,7 @@ namespace StrategyGame.Tests.Services
                 c.Divisions.Sum(d => d.Count * d.Unit.MaintenanceCoral));
             var pearlMaintenance = country.Commands.Sum(c =>
                 c.Divisions.Sum(d => d.Count * d.Unit.MaintenancePearl));
-            
+
             country.Corals = 50000;
             country.Pearls = 50000;
 

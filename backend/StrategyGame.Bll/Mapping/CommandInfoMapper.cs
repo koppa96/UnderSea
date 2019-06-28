@@ -5,6 +5,9 @@ using StrategyGame.Model.Entities;
 
 namespace StrategyGame.Bll.Mapping
 {
+    /// <summary>
+    /// Provides mappings between <see cref="Command"/> and <see cref="CommandInfo"/>.
+    /// </summary>
     public class CommandInfoMapper : Profile
     {
         public CommandInfoMapper()

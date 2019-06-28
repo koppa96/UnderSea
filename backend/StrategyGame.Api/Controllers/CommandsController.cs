@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StrategyGame.Bll.Dto.Received;
 using StrategyGame.Bll.Dto.Sent;
 using StrategyGame.Bll.Services.Commands;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace StrategyGame.Api.Controllers
 {
+    /// <summary>
+    /// API endpoint to manage commands.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]

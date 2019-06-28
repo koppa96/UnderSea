@@ -2,9 +2,6 @@
 
 namespace StrategyGame.Bll.Dto.Sent.Country
 {
-    /// <summary>
-    /// Contains information about the current country.
-    /// </summary>
     public class CountryInfo
     {
         public ulong Round { get; set; }

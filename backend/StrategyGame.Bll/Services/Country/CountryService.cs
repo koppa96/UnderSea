@@ -97,7 +97,8 @@ namespace StrategyGame.Bll.Services.Country
 
             info.Round = globals.Round;
             info.CoralsPerRound = (long)Math.Round(mods.CoralProduction * mods.HarvestModifier);
-            info.PearlsPerRound = (long)Math.Round(mods.PearlProduction * mods.TaxModifier);
+            info.PearlsPerRound = (long)Math.Round(mods.Population * globals.BaseTaxation * mods.TaxModifier
+                + mods.PearlProduction);
 
             // Start with all buildings and researches
             var totalBuildings = await Context.BuildingTypes.Include(r => r.Content)

@@ -1,12 +1,12 @@
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using StrategyGame.Bll.Dto.Sent;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace StrategyGame.Bll.Services.Reports
 {
@@ -46,7 +46,8 @@ namespace StrategyGame.Bll.Services.Reports
                 .SingleAsync(c => c.ParentUser.UserName == username);
 
             return country.Attacks.Where(r => !r.IsDeletedByAttacker)
-                .Select(r => {
+                .Select(r =>
+                {
                     var combatInfo = _mapper.Map<CombatReport, CombatInfo>(r);
                     combatInfo.IsAttack = true;
                     combatInfo.IsWon = r.DidAttackerWin;
@@ -58,7 +59,8 @@ namespace StrategyGame.Bll.Services.Reports
                     combatInfo.IsSeen = r.IsSeenByAttacker;
                     return combatInfo;
                 }).Concat(country.Defenses.Where(r => !r.IsDeletedByDefender)
-                    .Select(r => {
+                    .Select(r =>
+                    {
                         var combatInfo = _mapper.Map<CombatReport, CombatInfo>(r);
                         combatInfo.IsAttack = false;
                         combatInfo.IsWon = !r.DidAttackerWin;
@@ -69,7 +71,7 @@ namespace StrategyGame.Bll.Services.Reports
                         combatInfo.LostUnits = r.Losses.Select(d => _mapper.Map<Division, UnitInfo>(d));
                         combatInfo.IsSeen = r.IsSeenByDefender;
                         return combatInfo;
-                }));
+                    }));
         }
 
         public async Task SetSeenAsync(string username, int reportId)

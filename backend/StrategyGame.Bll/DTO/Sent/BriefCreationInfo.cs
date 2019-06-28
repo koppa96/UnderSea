@@ -1,4 +1,4 @@
-﻿namespace StrategyGame.Bll.Dto.Sent.Country
+﻿namespace StrategyGame.Bll.Dto.Sent
 {
     public class BriefCreationInfo
     {

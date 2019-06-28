@@ -15,7 +15,7 @@ namespace StrategyGame.Bll.Services.Buildings
         /// Gets the buildings for the player.
         /// </summary>
         /// <returns>The information about the buildings</returns>
-         Task<IEnumerable<CreationInfo>> GetBuildingsAsync();
+        Task<IEnumerable<CreationInfo>> GetBuildingsAsync();
 
         /// <summary>
         /// Starts the building of a building for the player.
@@ -26,6 +26,6 @@ namespace StrategyGame.Bll.Services.Buildings
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the id of the building is invalid</exception>
         /// <exception cref="InProgressException">Thrown when when a building is already in progress</exception>
         /// <returns>A task that can be awaited</returns>
-         Task StartBuildingAsync(string username, int buildingId);
+        Task StartBuildingAsync(string username, int buildingId);
     }
 }

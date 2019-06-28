@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using StrategyGame.Bll.Dto.Sent;
-using StrategyGame.Bll.Dto.Sent.Country;
 using StrategyGame.Bll.DTO.Received;
 using StrategyGame.Bll.EffectParsing;
 using StrategyGame.Bll.Exceptions;
@@ -75,7 +74,7 @@ namespace StrategyGame.Bll.Services.Units
                 {
                     throw new ArgumentException("Invalid amount.");
                 }
-                
+
                 // Check cost
                 long costPearl = unit.CostPearl * purchase.Count;
                 long costCoral = unit.CostCoral * purchase.Count;

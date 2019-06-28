@@ -19,7 +19,7 @@ namespace StrategyGame.Tests.Services
         public async Task Initialize()
         {
             context = await UtilityFactory.CreateContextAsync();
-            
+
             buildingService = new BuildingService(context, UtilityFactory.CreateMapper());
         }
 

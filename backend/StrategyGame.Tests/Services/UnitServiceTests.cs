@@ -21,21 +21,7 @@ namespace StrategyGame.Tests.Services
         public async Task Initialize()
         {
             context = await UtilityFactory.CreateContextAsync();
-            unitService = new UnitService(context,
-                new ModifierParserContainer(new AbstractEffectModifierParser[]
-                {
-                    new BarrackSpaceEffectParser(),
-                    new CoralProductionEffectParser(),
-                    new PearlProductionEffectParser(),
-                    new HarvestModifierEffectParser(),
-                    new PopulationEffectParser(),
-                    new TaxModifierEffectParser(),
-                    new UnitDefenseEffectParser(),
-                    new UnitAttackEffectParser(),
-                    new AddBuildingEffectParser(),
-                    new IncreaseUnitAttackEffectParser(),
-                    new BuildingCoralProductionEffectParser()
-                }), UtilityFactory.CreateMapper());
+            unitService = new UnitService(context, ModifierParserContainer.CreateDefault(), UtilityFactory.CreateMapper());
         }
 
         [TestMethod]
