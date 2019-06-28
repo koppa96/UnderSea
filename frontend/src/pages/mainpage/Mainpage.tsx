@@ -11,6 +11,7 @@ import { MainPageProps } from "./Interface";
 import { RankConnected } from "./rank/connect";
 import { ProfileContainerConnected } from "../../components/profileContainer/connect";
 import { WarConnected } from "./war/connect";
+import { DevelopmentConnected } from "./development/connect";
 //import { ArmyConnected } from "./army/connect";
 
 export class MainPage extends React.Component<MainPageProps> {
@@ -42,7 +43,7 @@ export class MainPage extends React.Component<MainPageProps> {
                 <BuildingsConnected />
               </Route>
               <Route path="/account/development">
-                <Development />
+                <DevelopmentConnected />
               </Route>
               <Route path="/account/war">
                 <WarConnected />

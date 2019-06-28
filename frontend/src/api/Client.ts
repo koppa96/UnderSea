@@ -8,6 +8,7 @@
 // ReSharper disable InconsistentNaming
 
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { number } from 'prop-types';
 
 export class AccountsClient {
     private instance: AxiosInstance;

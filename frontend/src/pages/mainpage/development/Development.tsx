@@ -1,16 +1,18 @@
 import React from "react";
 import { ComponentHeader } from "../../../components/componentHeader";
 import { DevelopmentItem } from "./developmentItem";
+import { DevelopmentProps } from "./Interface";
 
-export class Development extends React.Component {
+export class Development extends React.Component<DevelopmentProps> {
   componentDidMount() {
     document.title = "Development";
   }
-  onChecked(e: React.ChangeEvent<HTMLInputElement>){
-    console.log("sd")
+  onChecked(e: React.ChangeEvent<HTMLInputElement>) {
+    console.log("sd");
   }
 
   render() {
+    const { development, error, loading } = this.props.totalDevelopment;
     return (
       <div className="main-component">
         <ComponentHeader
@@ -19,11 +21,16 @@ export class Development extends React.Component {
           description={description}
         />
         <div className="development-page hide-scroll">
-          {mockData.length > 0 &&
-            mockData.map(item => (
+          {development.length > 0 &&
+            development.map(item => (
               <label key={item.id}>
-                <input value={item.id} className="sr-only" type="checkbox" onChange={(e)=>this.onChecked(e)}/>
-                <DevelopmentItem development={item} />
+                <input
+                  value={item.id}
+                  className="sr-only"
+                  type="radio"
+                  onChange={e => this.onChecked(e)}
+                />
+                ideideiideideiieiided
               </label>
             ))}
         </div>
@@ -32,7 +39,7 @@ export class Development extends React.Component {
     );
   }
 }
-
+/* <DevelopmentItem development={item} />*/
 const mockData = [
   {
     id: "1",
