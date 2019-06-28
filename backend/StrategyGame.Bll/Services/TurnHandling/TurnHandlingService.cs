@@ -108,6 +108,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
             var postCombat = context.Countries
                 .Include(c => c.Commands)
                     .ThenInclude(c => c.Divisions)
+                .Include(c => c.Attacks)
                 .Include(c => c.Buildings)
                     .ThenInclude(b => b.Building)
                         .ThenInclude(b => b.Effects)

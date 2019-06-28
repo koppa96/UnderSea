@@ -46,6 +46,6 @@ namespace StrategyGame.Model.Entities
         /// <summary>
         /// Gets or sets the collection of divisions that contain the unit type.
         /// </summary>
-        public virtual ICollection<Division> ContainingDivisions { get; set; } = new HashSet<Division>();
+        public virtual ICollection<Division> ContainingDivisions { get; set; }
     }
 }

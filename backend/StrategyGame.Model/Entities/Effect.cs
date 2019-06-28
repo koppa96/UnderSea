@@ -25,16 +25,16 @@ namespace StrategyGame.Model.Entities
         /// <summary>
         /// Gets or sets the collection of buildings that are using this effect.
         /// </summary>
-        public ICollection<BuildingEffect> AffectedBuildings { get; set; } = new HashSet<BuildingEffect>();
+        public ICollection<BuildingEffect> AffectedBuildings { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of researches that are using this effect.
         /// </summary>
-        public ICollection<ResearchEffect> AffectedResearches { get; set; } = new HashSet<ResearchEffect>();
+        public ICollection<ResearchEffect> AffectedResearches { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of events that are using this effect.
         /// </summary>
-        public ICollection<EventEffect> AffectedEvents { get; set; } = new HashSet<EventEffect>();
+        public ICollection<EventEffect> AffectedEvents { get; set; }
     }
 }

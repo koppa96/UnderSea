@@ -95,11 +95,15 @@ namespace StrategyGame.Tests.Services
                 .Include(c => c.ParentUser)
                 .Include(c => c.Commands)
                     .ThenInclude(c => c.Divisions)
+                .Include(c => c.Attacks)
+                .Include(c => c.Defenses)
                 .SingleAsync(x => x.ParentUser.UserName == username);
             var poorCountry = await context.Countries
                 .Include(c => c.ParentUser)
                 .Include(c => c.Commands)
                     .ThenInclude(c => c.Divisions)
+                .Include(c => c.Attacks)
+                .Include(c => c.Defenses)
                 .SingleAsync(x => x.ParentUser.UserName == username2);
             poorCountry.Corals = 50000;
             poorCountry.Pearls = 50000;
@@ -144,6 +148,7 @@ namespace StrategyGame.Tests.Services
             var country = await context.Countries
                 .Include(c => c.ParentUser)
                 .Include(c => c.Commands)
+                    .ThenInclude(c => c.Divisions)
                 .SingleAsync(x => x.ParentUser.UserName == username);
 
             country.Corals = 500;

@@ -39,16 +39,16 @@ namespace StrategyGame.Model.Entities
         /// <summary>
         /// Gets the collection of effects this research provides.
         /// </summary>
-        public virtual ICollection<ResearchEffect> Effects { get; set; } = new HashSet<ResearchEffect>();
+        public virtual ICollection<ResearchEffect> Effects { get; set; }
 
         /// <summary>
         /// Gets the collection of researches of this type that are completed.
         /// </summary>
-        public virtual ICollection<CountryResearch> CompletedResearches { get; set; } = new HashSet<CountryResearch>();
+        public virtual ICollection<CountryResearch> CompletedResearches { get; set; }
 
         /// <summary>
         /// Gets the collection of researches of this type that are being researched.
         /// </summary>
-        public virtual ICollection<InProgressResearch> InProgressResearches { get; set; } = new HashSet<InProgressResearch>();
+        public virtual ICollection<InProgressResearch> InProgressResearches { get; set; }
     }
 }

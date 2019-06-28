@@ -50,41 +50,41 @@ namespace StrategyGame.Model.Entities
         /// <summary>
         /// Gets the collection of buildings that are within the country.
         /// </summary>
-        public virtual ICollection<CountryBuilding> Buildings { get; set; } = new HashSet<CountryBuilding>();
+        public virtual ICollection<CountryBuilding> Buildings { get; set; }
 
         /// <summary>
         /// Gets the collection of researches completed by the country.
         /// </summary>
-        public virtual ICollection<CountryResearch> Researches { get; set; } = new HashSet<CountryResearch>();
+        public virtual ICollection<CountryResearch> Researches { get; set; }
 
         /// <summary>
         /// Gets the collection of buildings that are within the country.
         /// </summary>
-        public virtual ICollection<InProgressBuilding> InProgressBuildings { get; set; } = new HashSet<InProgressBuilding>();
+        public virtual ICollection<InProgressBuilding> InProgressBuildings { get; set; }
 
         /// <summary>
         /// Gets the collection of researches completed by the country.
         /// </summary>
-        public virtual ICollection<InProgressResearch> InProgressResearches { get; set; } = new HashSet<InProgressResearch>();
+        public virtual ICollection<InProgressResearch> InProgressResearches { get; set; }
 
         /// <summary>
         /// Gets the collection of commands issues by the country for the current turn.
         /// </summary>
-        public virtual ICollection<Command> Commands { get; set; } = new HashSet<Command>();
+        public virtual ICollection<Command> Commands { get; set; }
 
         /// <summary>
         /// Gets the collection of commands targetting the country.
         /// </summary>
-        public virtual ICollection<Command> IncomingAttacks { get; set; } = new HashSet<Command>();
+        public virtual ICollection<Command> IncomingAttacks { get; set; }
 
         /// <summary>
         /// Gets the collection of combat reports about offensive actions of the country.
         /// </summary>
-        public virtual ICollection<CombatReport> Attacks { get; set; } = new HashSet<CombatReport>();
+        public virtual ICollection<CombatReport> Attacks { get; set; }
 
         /// <summary>
         /// Gets the collection of combat reports about defensive actions of the country.
         /// </summary>
-        public virtual ICollection<CombatReport> Defenses { get; set; } = new HashSet<CombatReport>();
+        public virtual ICollection<CombatReport> Defenses { get; set; }
     }
 }

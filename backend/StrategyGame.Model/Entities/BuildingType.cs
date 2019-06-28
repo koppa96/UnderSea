@@ -36,16 +36,16 @@ namespace StrategyGame.Model.Entities
         /// <summary>
         /// Gets the collection of effects this building provides.
         /// </summary>
-        public virtual ICollection<BuildingEffect> Effects { get; set; } = new HashSet<BuildingEffect>();
+        public virtual ICollection<BuildingEffect> Effects { get; set; }
 
         /// <summary>
         /// Gets the collection of buildings of this type that are completed.
         /// </summary>
-        public virtual ICollection<CountryBuilding> CompletedBuildings { get; set; } = new HashSet<CountryBuilding>();
+        public virtual ICollection<CountryBuilding> CompletedBuildings { get; set; }
 
         /// <summary>
         /// Gets the collection of buildings of this type that are being built.
         /// </summary>
-        public virtual ICollection<InProgressBuilding> InProgressBuildings { get; set; } = new HashSet<InProgressBuilding>();
+        public virtual ICollection<InProgressBuilding> InProgressBuildings { get; set; }
     }
 }
