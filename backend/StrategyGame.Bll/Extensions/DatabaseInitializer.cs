@@ -245,7 +245,8 @@ namespace StrategyGame.Bll.Extensions
 
             // Effects, Buildings, researches
             // áramlásirányító
-            var popIn = new Effect { Name = KnownValues.PopulationIncrease, Value = 50 };
+            var popIn = new Effect { Name = KnownValues.PopulationIncrease, Value = 50,
+                Parameter = pearl.Id.ToString() + ":" + 25 };
             var cp = new Effect { Name = KnownValues.ResourceProductionIncrease, Value = 200, Parameter = coral.Id.ToString() };
             var currentController = new BuildingType
             {
@@ -513,7 +514,6 @@ namespace StrategyGame.Bll.Extensions
             // globals
             context.GlobalValues.Add(new GlobalValue
             {
-                BaseTaxation = 25,
                 Round = 1,
                 StartingBarrackSpace = 0,
                 StartingPopulation = 0,

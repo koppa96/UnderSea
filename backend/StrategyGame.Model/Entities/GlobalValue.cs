@@ -24,11 +24,6 @@ namespace StrategyGame.Model.Entities
         public int StartingBarrackSpace { get; set; }
         
         /// <summary>
-        /// Gets or sets the base taxation (pearl production / population) of a country.
-        /// </summary>
-        public int BaseTaxation { get; set; }
-
-        /// <summary>
         /// Gets or sets the percentage of units lost in a lost battle.
         /// </summary>
         public double UnitLossOnLostBatle { get; set; }

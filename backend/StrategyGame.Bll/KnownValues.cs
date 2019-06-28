@@ -7,18 +7,20 @@
     {
         /// <summary>
         /// An effect that increases end-of-turn coral production by the set amount. 
-        /// Value is an integer, target is the ID of the resource.
+        /// Value is an integer, parameter is the ID of the resource.
         /// </summary>
         public const string ResourceProductionIncrease = "resource-production";
 
         /// <summary>
         /// An effect that increases end-of-turn production by the set amount for every building of a type. 
-        /// Value is an integer, target is the target building's ID, and the resource's ID, separated by a semicolon.
+        /// Value is an integer, parameter is the target building's ID, and the resource's ID, separated by a semicolon.
         /// </summary>
         public const string BuildingProductionIncrease = "building-production";
 
         /// <summary>
-        /// An effect that increases the population by the set amount. Value is an integer.
+        /// An effect that increases the population by the set amount. Value is an integer,
+        /// parameter is the list of resource IDs the population makes, and the amount they make in the following way:
+        /// res:amount;res:amount
         /// </summary>
         public const string PopulationIncrease = "population-increase";
 
