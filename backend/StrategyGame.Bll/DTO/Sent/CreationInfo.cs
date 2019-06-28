@@ -7,6 +7,6 @@
         public string Description { get; set; }
         public string ImageUrl { get; set; }
         public string IconImageUrl { get; set; }
-        public int Cost { get; set; }
+        public IEnumerable<ResourceInfo> Cost { get; set; }
     }
 }
