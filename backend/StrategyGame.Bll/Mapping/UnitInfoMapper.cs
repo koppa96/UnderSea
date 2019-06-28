@@ -18,8 +18,13 @@ namespace StrategyGame.Bll.Mapping
 
             CreateMap<UnitType, BriefUnitInfo>()
                 .ForMember(dest => dest.Name, conf => conf.MapFrom(src => src.Content.Name))
-                .ForMember(dest => dest.ImageUrl, conf => conf.MapFrom(src => src.Content.ImageUrl))
-                .ForMember(dest => dest.Id, conf => conf.MapFrom(src => src.Id));
+                .ForMember(dest => dest.ImageUrl, conf => conf.MapFrom(src => src.Content.ImageUrl));
+
+            CreateMap<Division, BriefUnitInfo>()
+                .ForMember(dest => dest.Id, conf => conf.MapFrom(src => src.Unit.Id))
+                .ForMember(dest => dest.Name, conf => conf.MapFrom(src => src.Unit.Content.Name))
+                .ForMember(dest => dest.ImageUrl, conf => conf.MapFrom(src => src.Unit.Content.ImageUrl))
+                .ForMember(dest => dest.TotalCount, conf => conf.MapFrom(src => src.Count));;
 
             CreateMap<Division, UnitInfo>()
                 .ForMember(dest => dest.Id, conf => conf.MapFrom(src => src.Unit.Id))

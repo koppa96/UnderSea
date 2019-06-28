@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using StrategyGame.Bll.Dto.Sent;
 using StrategyGame.Bll.EffectParsing;
 using StrategyGame.Dal;
@@ -8,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace StrategyGame.Bll.Extensions
 {
@@ -98,25 +96,51 @@ namespace StrategyGame.Bll.Extensions
         }
 
         /// <summary>
-        /// Gets all <see cref="UnitInfo"/>s from all commands and divisions of a country, including units the country does not yet have.
-        /// The commands, divisions, unit types and unit contents must be included in the country.
+        /// Gets all <see cref="UnitInfo"/>s from all divisions of a collection of commands.
+        /// The divisions, unit types and unit contents must be included in the country.
         /// </summary>
-        /// <param name="country">The country to get units for.</param>
-        /// <param name="context">The database to use.</param>
+        /// <param name="commands">The collection of commands to get units for.</param>
         /// <param name="mapper">The mapper used to convert <see cref="UnitType"/> to <see cref="UnitInfo"/>.</param>
         /// <returns>The list of units.</returns>
         /// <exception cref="ArgumentNullException">Thrown if an argument was null.</exception>
-        public static async Task<IEnumerable<BriefUnitInfo>> GetAllBriefUnitInfoAsync(this Country country, UnderSeaDatabaseContext context,
-            IMapper mapper)
+        public static List<BriefUnitInfo> GetAllBriefUnitInfo(this IEnumerable<Command> commands, IMapper mapper)
         {
-            if (country == null)
+            var units = new Dictionary<int, BriefUnitInfo>();
+
+            foreach (var command in commands)
             {
-                throw new ArgumentNullException(nameof(country));
+                var newInfos = command.GetAllBriefUnitInfo(mapper);
+
+                foreach (var info in newInfos)
+                {
+                    if (units.ContainsKey(info.Id))
+                    {
+                        units[info.Id].TotalCount += info.TotalCount;
+                        units[info.Id].DefendingCount += info.DefendingCount;
+                    }
+                    else
+                    {
+                        units.Add(info.Id, info);
+                    }
+                }
             }
 
-            if (context == null)
+            return units.Values.ToList();
+        }
+
+        /// <summary>
+        /// Gets all <see cref="UnitInfo"/>s from all divisions of a command.
+        /// The divisions, unit types and unit contents must be included in the country.
+        /// </summary>
+        /// <param name="command">The command to get units for.</param>
+        /// <param name="mapper">The mapper used to convert <see cref="UnitType"/> to <see cref="UnitInfo"/>.</param>
+        /// <returns>The list of units.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if an argument was null.</exception>
+        public static List<BriefUnitInfo> GetAllBriefUnitInfo(this Command command, IMapper mapper)
+        {
+            if (command == null)
             {
-                throw new ArgumentNullException(nameof(context));
+                throw new ArgumentNullException(nameof(command));
             }
 
             if (mapper == null)
@@ -124,20 +148,16 @@ namespace StrategyGame.Bll.Extensions
                 throw new ArgumentNullException(nameof(mapper));
             }
 
-            var flattened = await context.UnitTypes
-                .Include(u => u.Content)
-                .ToDictionaryAsync(x => x, x => 0);
-
-            foreach (var div in country.Commands.SelectMany(c => c.Divisions))
+            return command.Divisions.Select(x =>
             {
-                flattened[div.Unit] += div.Count;
-            }
+                var info = mapper.Map<Division, BriefUnitInfo>(x);
 
-            return flattened.Select(d =>
-            {
-                var ui = mapper.Map<UnitType, BriefUnitInfo>(d.Key);
-                ui.Count = d.Value;
-                return ui;
+                if (command.ParentCountry.Equals(command.TargetCountry))
+                {
+                    info.DefendingCount = info.TotalCount;
+                }
+
+                return info;
             }).ToList();
         }
 

@@ -1538,7 +1538,8 @@ export interface ICommandInfo {
 export class BriefUnitInfo implements IBriefUnitInfo {
     id!: number;
     name?: string | undefined;
-    count!: number;
+    totalCount!: number;
+    defendingCount!: number;
     imageUrl?: string | undefined;
 
     constructor(data?: IBriefUnitInfo) {
@@ -1554,7 +1555,8 @@ export class BriefUnitInfo implements IBriefUnitInfo {
         if (data) {
             this.id = data["id"];
             this.name = data["name"];
-            this.count = data["count"];
+            this.totalCount = data["totalCount"];
+            this.defendingCount = data["defendingCount"];
             this.imageUrl = data["imageUrl"];
         }
     }
@@ -1570,7 +1572,8 @@ export class BriefUnitInfo implements IBriefUnitInfo {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["name"] = this.name;
-        data["count"] = this.count;
+        data["totalCount"] = this.totalCount;
+        data["defendingCount"] = this.defendingCount;
         data["imageUrl"] = this.imageUrl;
         return data; 
     }
@@ -1579,7 +1582,8 @@ export class BriefUnitInfo implements IBriefUnitInfo {
 export interface IBriefUnitInfo {
     id: number;
     name?: string | undefined;
-    count: number;
+    totalCount: number;
+    defendingCount: number;
     imageUrl?: string | undefined;
 }
 

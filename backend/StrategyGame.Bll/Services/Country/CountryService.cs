@@ -145,7 +145,7 @@ namespace StrategyGame.Bll.Services.Country
             info.Buildings = totalBuildings.Select(x => x.Value).ToList();
             info.Researches = totalResearches.Select(x => x.Value).ToList();
 
-            info.ArmyInfo = await country.GetAllBriefUnitInfoAsync(Context, Mapper);
+            info.ArmyInfo = country.Commands.GetAllBriefUnitInfo(Mapper);
 
             info.UnseenReports = country.Attacks.Count(r => !r.IsSeenByAttacker) + country.Defenses.Count(r => !r.IsSeenByDefender);
 

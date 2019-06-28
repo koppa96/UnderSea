@@ -34,7 +34,7 @@ namespace StrategyGame.Tests.Services
         public async Task TestGetCountryUnits(string username)
         {
             var info = await countryService.GetCountryInfoAsync(username);
-            Assert.IsTrue(info.ArmyInfo.Any(a => a.Count > 0));
+            Assert.IsTrue(info.ArmyInfo.Any(a => a.TotalCount > 0));
         }
 
         [TestMethod]

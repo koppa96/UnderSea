@@ -31,7 +31,7 @@ namespace StrategyGame.Tests.Services
             var id = (await context.UnitTypes.FirstAsync()).Id;
 
             var units = await unitService.CreateUnitAsync(username, new[] { new PurchaseDetails { UnitId = id, Count = 10 } });
-            Assert.AreEqual(units.Single(u => u.Id == id).Count, 10);
+            Assert.AreEqual(units.Single(u => u.Id == id).TotalCount, 10);
         }
 
         [TestMethod]

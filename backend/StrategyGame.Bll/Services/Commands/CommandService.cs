@@ -195,13 +195,7 @@ namespace StrategyGame.Bll.Services.Commands
         public CommandInfo ToCommandInfo(Command command, IMapper mapper)
         {
             var commandInfo = mapper.Map<Command, CommandInfo>(command);
-            commandInfo.Units = command.Divisions.Select(d =>
-            {
-                var unitInfo = mapper.Map<UnitType, BriefUnitInfo>(d.Unit);
-                unitInfo.Count = d.Count;
-                return unitInfo;
-            });
-
+            commandInfo.Units = command.GetAllBriefUnitInfo(mapper);
             return commandInfo;
         }
     }

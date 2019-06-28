@@ -110,7 +110,8 @@ namespace StrategyGame.Bll.Services.Units
                 country.Corals -= costCoral;
 
                 var info = Mapper.Map<UnitType, BriefUnitInfo>(unit);
-                info.Count = targetDiv.Count;
+                info.TotalCount = targetDiv.Count;
+                info.DefendingCount = targetDiv.Count;
                 unitInfos.Add(info);
             }
 
