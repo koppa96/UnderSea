@@ -27,9 +27,8 @@ namespace StrategyGame.Bll.EffectParsing
                 {
                     new BarrackSpaceEffectParser(),
                     new ResourceProductionEffectParser(),
-                    new HarvestModifierEffectParser(),
+                    new ResourceModifierEffectParser(),
                     new PopulationEffectParser(),
-                    new TaxModifierEffectParser(),
                     new UnitDefenseEffectParser(),
                     new UnitAttackEffectParser(),
                     new AddBuildingEffectParser(),

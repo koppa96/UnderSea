@@ -676,8 +676,11 @@ namespace StrategyGame.Bll.Extensions
                 BaseDefensePower = 10,
                 TotalAttackPower = 1337,
                 TotalDefensePower = 60,
-                PearlLoot = 50,
-                CoralLoot = 1731,
+                Loot = new[] 
+                {
+                    new ReportResource { ResourceType = context.ResourceTypes.First(), Amount = 1000 },
+                    new ReportResource { ResourceType = context.ResourceTypes.Skip(1).First(), Amount = 2000 }
+                },
                 Round = 0
             });
 

@@ -26,7 +26,7 @@ namespace StrategyGame.Tests.Services
                     new PearlProductionEffectParser(),
                     new HarvestModifierEffectParser(),
                     new PopulationEffectParser(),
-                    new TaxModifierEffectParser(),
+                    new ResourceModifierEffectParser(),
                     new UnitDefenseEffectParser(),
                     new UnitAttackEffectParser(),
                     new AddBuildingEffectParser(),
