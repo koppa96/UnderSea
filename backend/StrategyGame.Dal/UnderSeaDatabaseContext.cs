@@ -135,6 +135,8 @@ namespace StrategyGame.Dal
 
         public DbSet<ResearchResource> ResearchResources { get; set; }
 
+        public DbSet<UnitResource> UnitResources { get; set; }
+
         #endregion
 
         /// <summary>
@@ -205,6 +207,18 @@ namespace StrategyGame.Dal
             builder.Entity<ResearchResource>()
                 .HasOne(rr => rr.ResourceType)
                 .WithMany(r => r.ResearchResources);
+
+            builder.Entity<UnitResource>()
+                .HasOne(ur => ur.Entity)
+                .WithMany(u => u.Cost);
+
+            builder.Entity<UnitResource>()
+                .HasOne(ur => ur.Entity)
+                .WithMany(u => u.Maintenance);
+
+            builder.Entity<UnitResource>()
+                .HasOne(ur => ur.ResourceType)
+                .WithMany(r => r.UnitResources);
 
             // Combat report
             builder.Entity<CombatReport>()
