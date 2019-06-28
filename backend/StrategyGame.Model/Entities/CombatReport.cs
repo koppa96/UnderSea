@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using StrategyGame.Model.Entities.Resources;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StrategyGame.Model.Entities
@@ -88,20 +89,12 @@ namespace StrategyGame.Model.Entities
         /// Gets or sets the total defensepower.
         /// </summary>
         public double TotalDefensePower { get; set; }
-
-        /// <summary>
-        /// Gets or sets the amount of pearl loot the <see cref="Attacker"/> acquired as the result of the combat.
-        /// </summary>
-        public long PearlLoot { get; set; }
-
-        /// <summary>
-        /// Gets or sets the amount of coral loot the <see cref="Attacker"/> acquired as the result of the combat.
-        /// </summary>
-        public long CoralLoot { get; set; }
-
+        
         /// <summary>
         /// Gets or sets the round when the combat happened.
         /// </summary>
         public ulong Round { get; set; }
+
+        public ICollection<ReportResource> Loot { get; set; }
     }
 }

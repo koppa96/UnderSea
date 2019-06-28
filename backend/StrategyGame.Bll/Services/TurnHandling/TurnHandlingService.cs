@@ -51,8 +51,12 @@ namespace StrategyGame.Bll.Services.TurnHandling
                             .ThenInclude(r => r.Effect)
                 .Include(c => c.InProgressBuildings)
                     .ThenInclude(b => b.Building)
+                        .ThenInclude(b => b.Effects)
+                            .ThenInclude(b => b.Effect)
                 .Include(c => c.InProgressResearches)
                     .ThenInclude(r => r.Research)
+                        .ThenInclude(r => r.Effects)
+                            .ThenInclude(r => r.Effect)
                 .Include(c => c.CurrentEvent)
                     .ThenInclude(e => e.Effects)
                             .ThenInclude(e => e.Effect);

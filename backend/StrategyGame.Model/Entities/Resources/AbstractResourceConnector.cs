@@ -9,6 +9,6 @@ namespace StrategyGame.Model.Entities.Resources
     {
         public TEntity Entity { get; set; }
         public ResourceType ResourceType { get; set; }
-        public int Amount { get; set; }
+        public long Amount { get; set; }
     }
 }

@@ -13,6 +13,11 @@ namespace StrategyGame.Bll.EffectParsing
         public Dictionary<int, long> ResourceProductions { get; set; } = new Dictionary<int, long>();
 
         /// <summary>
+        /// Gets or sets the dictionary that contains resource modifier values, by the resource's ID.
+        /// </summary>
+        public Dictionary<int, double> ResourceModifiers { get; set; } = new Dictionary<int, double>();
+
+        /// <summary>
         /// Gets or sets the current population of the country.
         /// </summary>
         public int Population { get; set; }
@@ -36,17 +41,7 @@ namespace StrategyGame.Bll.EffectParsing
         /// Gets or sets the defense modifier for units of the country.
         /// </summary>
         public double DefenseModifier { get; set; } = 1;
-
-        /// <summary>
-        /// Gets or sets the tax (pearl production) modifier for the country.
-        /// </summary>
-        public double TaxModifier { get; set; } = 1;
-
-        /// <summary>
-        /// Gets or sets the coral production modifier for the country.
-        /// </summary>
-        public double HarvestModifier { get; set; } = 1;
-        
+                
         /// <summary>
         /// Gets or sets if the current event of the country was ignored because it could not be applied.
         /// </summary>

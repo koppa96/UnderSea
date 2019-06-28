@@ -2,6 +2,7 @@
 using StrategyGame.Bll.Extensions;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
+using StrategyGame.Model.Entities.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -76,12 +77,17 @@ namespace StrategyGame.Bll.Services.TurnHandling
                 country.CurrentEvent = null;
             }
 
-            // #2: Tax
-            country.Pearls += (long)Math.Round(builder.Population * globals.BaseTaxation * builder.TaxModifier
-                + builder.PearlProduction);
-
-            // #3: Coral (harvest)
-            country.Corals += (long)Math.Round(builder.CoralProduction * builder.HarvestModifier);
+            // #2: Resources
+            foreach (var resource in country.Resources)
+            {
+                if (builder.ResourceProductions.ContainsKey(resource.ResourceType.Id))
+                {
+                    var mod = builder.ResourceModifiers.ContainsKey(resource.ResourceType.Id)
+                        ? builder.ResourceModifiers[resource.ResourceType.Id]
+                        : 1.0;
+                    resource.Amount += (long)Math.Round(builder.ResourceProductions[resource.ResourceType.Id] * mod);
+                }
+            }
 
             // #4: Pay soldiers
             DesertUnits(country);
@@ -175,19 +181,20 @@ namespace StrategyGame.Bll.Services.TurnHandling
                     BaseAttackPower = attackBase,
                     BaseDefensePower = defenseBase,
                     Round = globals.Round,
-                    PearlLoot = 0,
-                    CoralLoot = 0,
+                    Loot = new List<ReportResource>(0),
                     Losses = losses
                 };
 
                 if (attackPower > defensePower)
                 {
-                    var pearlLoot = (long)Math.Round(country.Pearls * globals.LootPercentage);
-                    var coralLoot = (long)Math.Round(country.Corals * globals.LootPercentage);
-                    country.Pearls -= pearlLoot;
-                    country.Corals -= coralLoot;
-                    report.CoralLoot = coralLoot;
-                    report.PearlLoot = pearlLoot;
+                    var loots = country.Resources.ToDictionary(x => x, x => (long)Math.Round(globals.LootPercentage * x.Amount));
+
+                    foreach (var res in country.Resources)
+                    {
+                        res.Amount -= loots[res];
+                    }
+
+                    report.Loot = loots.Select(x => new ReportResource { Amount = x.Value, ResourceType = x.Key.ResourceType }).ToList();
                 }
 
                 context.Reports.Add(report);
@@ -237,8 +244,10 @@ namespace StrategyGame.Bll.Services.TurnHandling
 
             foreach (var attack in country.Attacks.Where(x => x.DidAttackerWin && x.Round == globals.Round))
             {
-                country.Pearls += attack.PearlLoot;
-                country.Corals += attack.CoralLoot;
+                foreach (var res in attack.Loot)
+                {
+                    country.Resources.Single(r => r.ResourceType.Id == res.ResourceType.Id).Amount += res.Amount;
+                }
             }
 
             foreach (var attack in country.Commands.Where(c => c.Id != defenders.Id).ToList())
@@ -397,48 +406,55 @@ namespace StrategyGame.Bll.Services.TurnHandling
         /// <param name="country">The country to delete from.</param>
         protected void DesertUnits(Model.Entities.Country country)
         {
-            long pearlUpkeep = 0;
-            long coralUpkeep = 0;
+            var totalMaintenance = new Dictionary<int, long>();
             foreach (var comm in country.Commands)
             {
                 foreach (var div in comm.Divisions)
                 {
-                    pearlUpkeep += div.Count * div.Unit.MaintenancePearl;
-                    coralUpkeep += div.Count * div.Unit.MaintenanceCoral;
+                    foreach (var res in div.Unit.Maintenance)
+                    {
+                        if (totalMaintenance.ContainsKey(res.ResourceType.Id))
+                        {
+                            totalMaintenance[res.ResourceType.Id] += res.Amount;
+                        }
+                        else
+                        {
+                            totalMaintenance.Add(res.ResourceType.Id, res.Amount);
+                        }
+                    }
                 }
             }
 
-            if (coralUpkeep > country.Corals || pearlUpkeep > country.Pearls)
+            if (totalMaintenance.Any(x => x.Value > country.Resources.Single(r => r.ResourceType.Id == x.Key).Amount))
             {
-                long pearlDeficit = Math.Max(pearlUpkeep - country.Pearls, 0);
-                long coralDeficit = Math.Max(coralUpkeep - country.Corals, 0);
-
-                foreach (var div in country.Commands.SelectMany(c => c.Divisions).OrderBy(d => d.Unit.CostPearl))
+                foreach (var div in country.Commands.SelectMany(c => c.Divisions).OrderBy(d => d.Unit.Cost.First()))
                 {
-                    long requiredPearlReduction = (long)Math.Ceiling((double)pearlDeficit / div.Unit.MaintenancePearl);
-                    long requiredCoralReduction = (long)Math.Ceiling((double)coralDeficit / div.Unit.MaintenanceCoral);
+                    var requiredReductions = div.Unit.Maintenance.ToDictionary(x => x.ResourceType.Id,
+                        x =>
+                        (long)Math.Ceiling(Math.Max(totalMaintenance[x.ResourceType.Id]
+                        - country.Resources.Single(r => r.ResourceType.Id == x.ResourceType.Id).Amount, 0)
+                        / (double)x.Amount));
 
-                    int desertedAmount = (int)Math.Min(Math.Max(requiredCoralReduction, requiredPearlReduction), div.Count);
+                    int desertedAmount = (int)Math.Min(requiredReductions.Max(x => x.Value), div.Count);
 
                     div.Count -= desertedAmount;
 
-                    pearlDeficit -= desertedAmount * div.Unit.MaintenancePearl;
-                    pearlUpkeep -= desertedAmount * div.Unit.MaintenancePearl;
-                    coralDeficit -= desertedAmount * div.Unit.MaintenanceCoral;
-                    coralUpkeep -= desertedAmount * div.Unit.MaintenanceCoral;
+                    foreach (var maint in div.Unit.Maintenance)
+                    {
+                        totalMaintenance[maint.ResourceType.Id] -= desertedAmount * maint.Amount;
+                    }
 
-                    if (coralUpkeep <= country.Corals && pearlUpkeep <= country.Pearls)
+                    if (totalMaintenance.All(x => x.Value > country.Resources.Single(r => r.ResourceType.Id == x.Key).Amount))
                     {
                         break;
                     }
                 }
             }
 
-            pearlUpkeep = Math.Max(0, pearlUpkeep);
-            coralUpkeep = Math.Max(0, coralUpkeep);
-
-            country.Pearls -= pearlUpkeep;
-            country.Corals -= coralUpkeep;
+            foreach (var maint in totalMaintenance)
+            {
+                country.Resources.Single(r => r.ResourceType.Id == maint.Key).Amount -= Math.Max(0, maint.Value);
+            }
         }
 
         #endregion
