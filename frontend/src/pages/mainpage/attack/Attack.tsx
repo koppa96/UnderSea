@@ -2,11 +2,17 @@ import * as React from "react";
 import { ComponentHeader } from "../../../components/componentHeader";
 import { AttackItem } from "./attackItem";
 import { TargetProps } from "./interface";
+import { ITargetInfo } from "../../../api/Client";
+import CheckMark from "./../../../assets/images/check_mark.png";
+
+const initFilter: ITargetInfo[] = [];
 
 export class Attack extends React.Component<TargetProps> {
   componentDidMount() {
-    document.title = "Támadás";
-    this.props.getTargets();
+    document.title = title;
+    if (!this.props.targets.isLoaded) {
+      this.props.getTargets();
+    }
   }
 
   state = {
@@ -16,40 +22,91 @@ export class Attack extends React.Component<TargetProps> {
         unitId: 1,
         amount: 1
       }
-    ]
+    ],
+    filtered: "",
+
+    filteredrank: initFilter
   };
 
+  filter = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { targets } = this.props;
+    this.setState({ filtered: e.target.value });
+    if (e.target.value.length > 2) {
+      var filteredrank: ITargetInfo[] = [];
+      targets.targets.forEach(x => {
+        if (x.countryName && x.countryName.startsWith(e.target.value)) {
+          filteredrank.push(x);
+        }
+        this.setState({ filteredrank: filteredrank }, () =>
+          console.log("filter", this.state.filteredrank)
+        );
+      });
+    }
+  };
   render() {
-    const { targets, unit } = this.props;
+    const { targets, units } = this.props;
+    console.log("total targets: ", targets);
     return (
       <div className="main-component">
         <ComponentHeader title={title} />
         <div className="attack-page hide-scroll">
           <div>
             <span>1. Jelöld ki, kit szeretnél megtámadni:</span>
-            <input className="rank-input" placeholder="Felhasználónév" />
+            <input
+              onChange={e => this.filter(e)}
+              className="rank-input"
+              placeholder="Felhasználónév"
+            />
+
             <ul className="rank-page">
-              {targets.map(item => (
-                <li
-                  key={item.countryId}
-                  onClick={() => this.setState({ targetid: item.countryId })}
-                >
-                  <span>{item.countryName}</span>
-                  ide
-                </li>
-              ))}
+              {targets.isLoaded ? (
+                this.state.filtered.length > 2 ? (
+                  this.state.filteredrank.map(item => (
+                    <li
+                      key={item.countryId}
+                      onClick={() =>
+                        this.setState({ targetCountryId: item.countryId })
+                      }
+                    >
+                      <span>{item.countryName}</span>
+                      {item.countryId === this.state.targetCountryId && (
+                        <div className="circle">
+                          <img src={CheckMark} alt="Checkmark" />
+                        </div>
+                      )}
+                    </li>
+                  ))
+                ) : (
+                  targets.targets.map(item => (
+                    <li
+                      key={item.countryId}
+                      onClick={() =>
+                        this.setState({ targetCountryId: item.countryId })
+                      }
+                    >
+                      <span>{item.countryName}</span>
+                      {item.countryId === this.state.targetCountryId && (
+                        <div className="circle">
+                          <img src={CheckMark} alt="Checkmark" />
+                        </div>
+                      )}
+                    </li>
+                  ))
+                )
+              ) : (
+                <span>Betöltés...</span>
+              )}
             </ul>
           </div>
 
           <div>
             <span>2. Állítsd be, kiket küldesz harcba:</span>
-            {unit.map(item => (
+            {units.map(item => (
               <AttackItem
                 id={item.id}
                 imageUrl={item.imageUrl}
                 name={item.name}
                 defendingCount={item.defendingCount}
-                totalCount={item.totalCount}
               />
             ))}
           </div>
@@ -60,4 +117,4 @@ export class Attack extends React.Component<TargetProps> {
   }
 }
 const title: string = "Támadás";
-/* {item.checked && <div className="circle">.</div>}*/
+/* */

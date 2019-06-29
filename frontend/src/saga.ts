@@ -10,6 +10,7 @@ import { watchDevelopmentFetchRequest } from "./pages/mainpage/development/store
 import { watchAddResearchRequest } from "./pages/mainpage/development/store/actions/saga.post";
 import { watcAttackTargetRequest } from "./pages/mainpage/attack/store/actions/saga.post";
 import { watchBuildingActions } from "./pages/mainpage/buildings/store/sagaCombiner";
+import { watchTargetActions } from "./pages/mainpage/attack/store/sagaCombiner";
 
 export function* rootSaga() {
   yield all([
@@ -22,6 +23,6 @@ export function* rootSaga() {
     call(watchWarFetchRequest),
     call(watchDevelopmentFetchRequest),
     call(watchAddResearchRequest),
-    call(watcAttackTargetRequest)
+    call(watchTargetActions)
   ]);
 }

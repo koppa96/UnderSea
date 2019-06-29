@@ -1,20 +1,23 @@
 import { ITargetInfo, IBriefUnitInfo, ICommandInfo } from "../../../api/Client";
+import { TargetState } from "./store/store";
 
 export interface Attack {
   id: number;
   name: string;
   checked: boolean;
 }
-interface OutProp {
-  unitId: number;
-  count: number;
+export interface defendingTrop {
+  imageUrl: string | null;
+  id: number;
+  defendingCount: number;
+  name: string;
 }
 
 export interface NativeProps {}
 
 export interface MappedProps {
-  targets: ITargetInfo[];
-  unit: IBriefUnitInfo[];
+  targets: TargetState;
+  units: defendingTrop[];
 }
 
 export interface DispatchedProps {

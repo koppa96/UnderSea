@@ -1,4 +1,7 @@
-import { ITargetInfo } from "../../../../../api/Client";
+export interface ITargetInfo {
+  countryId: number;
+  countryName?: string | undefined;
+}
 
 //ACTIONTYPES
 export interface IGetTargetActionsTypes {
@@ -13,9 +16,7 @@ export const GetTargetActions: IGetTargetActionsTypes = {
   ERROR: "TARGET_ERROR_GET_TARGET"
 };
 
-export interface ISuccesParamState {
-  targets: ITargetInfo[];
-}
+export type IGetTargetListResponse = ITargetInfo[];
 
 //ACTIONHOZ
 export interface IRequestActionGetTarget {
@@ -23,11 +24,11 @@ export interface IRequestActionGetTarget {
 }
 export interface ISuccesActionGetTarget {
   type: IGetTargetActionsTypes["SUCCES"];
-  params: ISuccesParamState;
+  data: IGetTargetListResponse;
 }
 export interface IErrorActionGetTarget {
   type: IGetTargetActionsTypes["ERROR"];
-  params?: string;
+  error?: string;
 }
 
 //REDUCERHEZ
@@ -41,13 +42,13 @@ export const GetTargetActionCreator = (): IRequestActionGetTarget => ({
   type: GetTargetActions.REQUEST
 });
 
-export const fetchError = (params?: string): IErrorActionGetTarget => ({
+export const fetchError = (error?: string): IErrorActionGetTarget => ({
   type: GetTargetActions.ERROR,
-  params
+  error
 });
 export const fetchSucces = (
-  params: ISuccesParamState
+  data: IGetTargetListResponse
 ): ISuccesActionGetTarget => ({
   type: GetTargetActions.SUCCES,
-  params
+  data
 });

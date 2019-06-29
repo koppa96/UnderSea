@@ -10,7 +10,7 @@ export const NavBarIcon = (props: NavBarIconProp) => {
   const image = props.imageUrl
     ? BasePortUrl + "/" + props.imageUrl
     : props.name
-    ? props.name === "kagyló"
+    ? props.name === "gyöngy"
       ? PearlImage
       : props.name === "koral"
       ? CoralImage

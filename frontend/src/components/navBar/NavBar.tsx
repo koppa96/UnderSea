@@ -45,7 +45,7 @@ export class NavBar extends React.Component<NavBarProps> {
               count={navbarPearl ? navbarPearl : 0}
               id={1}
               info={navbarPearlPerRound + "/kör"}
-              name="kagyló"
+              name="gyöngy"
             />
             <ul className="nav navbar-nav">
               {navbarBuildings &&

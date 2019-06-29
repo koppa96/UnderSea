@@ -7,7 +7,9 @@ export class Buildings extends React.Component<BuildingProps> {
   componentDidMount() {
     document.title = title;
     console.log("Building mounted");
-    this.props.getAllBuilding();
+    if (!this.props.ownedBuildingState.isLoaded) {
+      this.props.getAllBuilding();
+    }
   }
   state = {
     id: -1,
@@ -66,9 +68,9 @@ export class Buildings extends React.Component<BuildingProps> {
           description={description}
         />
         <div className="building-page hide-scroll">
-          {ownedBuildingState.isRequesting ? (
-            <span>Betöltés...</span>
-          ) : (
+          {ownedBuildingState.isRequesting && <span>Betöltés...</span>}
+
+          {ownedBuildingState.isLoaded &&
             ownedBuildingState.buildings.length > 0 &&
             ownedBuildingState.buildings.map(item => {
               const curentCount = count.find(c => c.id === item.id);
@@ -97,8 +99,7 @@ export class Buildings extends React.Component<BuildingProps> {
                   />
                 </label>
               );
-            })
-          )}
+            })}
         </div>
         <span>{error && error}</span>
         <button

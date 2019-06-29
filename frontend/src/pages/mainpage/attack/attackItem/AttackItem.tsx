@@ -1,8 +1,9 @@
 import React from "react";
 import { IBriefUnitInfo } from "../../../../api/Client";
 import { BasePortUrl } from "../../../..";
+import { defendingTrop } from "../interface";
 
-export class AttackItem extends React.Component<IBriefUnitInfo> {
+export class AttackItem extends React.Component<defendingTrop> {
   state = {
     value: 0
   };

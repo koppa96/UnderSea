@@ -12,20 +12,22 @@ export const TargetReducer = (
     case GetTargetActions.REQUEST:
       return {
         ...state,
-        loading: true
+        isRequesting: true
       };
     case GetTargetActions.SUCCES:
-      console.log("action.param.targets", action.params.targets);
+      console.log("action.data", action.data);
       return {
         ...state,
-        loading: false,
-        targets: action.params.targets
+        isRequesting: false,
+        isLoaded: true,
+        targets: action.data
       };
     case GetTargetActions.ERROR:
       return {
         ...state,
-        loading: false,
-        error: action.params ? action.params : "Ismeretlen hiba"
+        isRequesting: false,
+        isLoaded: true,
+        error: action.error ? action.error : "Beállítási hiba"
       };
 
     default:

@@ -4,15 +4,28 @@ import { connect } from "react-redux";
 import { Attack } from "./Attack";
 import { GetTargetActionCreator } from "./store/actions/GetAttackAction.get";
 import { PostTargetActionCreator } from "./store/actions/AddAttackAction.post";
-import { DispatchedProps, MappedProps } from "./interface";
+import { DispatchedProps, MappedProps, defendingTrop } from "./interface";
 
 const mapStateToProps = (state: IApllicationState): MappedProps => {
   const { model } = state.app.pages.mainpage;
-  const tempUnit = model ? (model.armyInfo ? model.armyInfo : []) : [];
+  const tempUnit = model ? model.armyInfo : [];
+  console.log("model.armyInfo:", model && model.armyInfo);
+  console.log("tempUnit check", tempUnit);
+  console.log("target: ", state.app.pages.target.targets);
+  var addUnit: defendingTrop[] = [];
+  tempUnit &&
+    tempUnit.forEach(item =>
+      addUnit.push({
+        id: item.id,
+        defendingCount: item.defendingCount,
+        name: item.name ? item.name : "ismeretlen név",
+        imageUrl: item.imageUrl ? item.imageUrl : null
+      })
+    );
 
   return {
-    unit: tempUnit,
-    targets: state.app.pages.target.targets
+    units: addUnit,
+    targets: state.app.pages.target
   };
 };
 
