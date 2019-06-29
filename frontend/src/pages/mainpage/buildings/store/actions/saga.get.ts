@@ -1,35 +1,45 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 
+import axios from "axios";
 import {
   fetchSucces,
   IRequestActionGetBuilding,
-  ISuccesParamState,
   fetchError,
-  GetBuildingActions
+  GetBuildingActions,
+  IGetBuildingRespone
 } from "./BuildingAction.get";
 import { BuildingsClient, ICreationInfo } from "../../../../../api/Client";
+import { registerAxiosConfig } from "../../../../../config/axiosConfig";
 
-export const beginFetchBuilding = () => {
-  const getCountry = new BuildingsClient();
-  const tempData = getCountry.getBuildings();
-  return tempData;
+const beginFetchBuilding = async () => {
+  const instance = axios.create();
+  registerAxiosConfig();
+
+  try {
+    const response = await axios.get("/api/Buildings");
+    console.log("buildings fetched", response.data);
+
+    return response.data;
+  } catch (error) {
+    console.log("buildings fetch error", error);
+
+    throw new Error(error);
+  }
 };
 
-function* handleLogin(action: IRequestActionGetBuilding) {
-  console.log("SAGA-BUILDING");
+function* handleGetBuildings(action: IRequestActionGetBuilding) {
   try {
-    const data: ICreationInfo[] = yield call(beginFetchBuilding);
-    const response: ISuccesParamState = { buildings: data };
-    yield put(fetchSucces(response));
+    const data = yield call(beginFetchBuilding);
+    yield put(fetchSucces(data));
   } catch (err) {
     if (err) {
-      yield put(fetchError("Hiba történt"));
+      yield put(fetchError(err));
     } else {
-      yield put(fetchError("An unknown error occured."));
+      yield put(fetchError("Ismeretlen hiba történt"));
     }
   }
 }
 
 export function* watchBuildingFetchRequest() {
-  yield takeEvery(GetBuildingActions.REQUEST, handleLogin);
+  yield takeEvery(GetBuildingActions.REQUEST, handleGetBuildings);
 }

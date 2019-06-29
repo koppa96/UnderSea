@@ -1,6 +1,7 @@
 import * as React from "react";
 import { BuildingProps } from "./Interface";
 import { BasePortUrl } from "../../../..";
+import QuestionMark from "./../../assets/images/question.svg";
 
 export const BuildingItem = (props: BuildingProps) => {
   const { title, description, price, amount, imageUrl } = props;
@@ -12,7 +13,7 @@ export const BuildingItem = (props: BuildingProps) => {
         <p>{title}</p>
         <p>{description}</p>
         <div>
-          <p>{amount}</p>
+          <p>{amount} db</p>
           <p>{price}</p>
         </div>
       </div>

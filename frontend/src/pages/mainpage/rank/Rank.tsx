@@ -16,13 +16,13 @@ export class Rank extends React.Component<RankProps> {
     filteredrank: initFilter
   };
 
-  filter = () => {
+  filter = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { totalRank } = this.props;
-
-    if (this.state.filtered.length > 2) {
+    this.setState({ filtered: e.target.value });
+    if (e.target.value.length > 2) {
       var filteredrank: IRankInfo[] = [];
       totalRank.rank.forEach(x => {
-        if (x.name && x.name.startsWith(this.state.filtered)) {
+        if (x.name && x.name.startsWith(e.target.value)) {
           filteredrank.push(x);
         }
         this.setState({ filteredrank: filteredrank }, () =>
@@ -36,12 +36,10 @@ export class Rank extends React.Component<RankProps> {
     const { totalRank } = this.props;
 
     return (
-      <div className="main-component rank-width" onKeyDown={this.filter}>
+      <div className="main-component rank-width">
         <ComponentHeader title={title} />
         <input
-          onChange={e =>
-            this.setState({ ...this.state, filtered: e.target.value })
-          }
+          onChange={e => this.filter(e)}
           className="rank-input"
           placeholder="Felhasználónév"
         />

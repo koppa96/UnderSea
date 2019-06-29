@@ -4,72 +4,65 @@ import { NavBarProps } from "./Interface";
 
 export class NavBar extends React.Component<NavBarProps> {
   render() {
-    //2x render?
-    const rank = this.props.navbar.navBarIcons && (
-      <span>{this.props.navbar.navBarIcons.rank}.hely</span>
-    );
-    const round = this.props.navbar.navBarIcons && (
-      <span>{this.props.navbar.navBarIcons.round}.kör</span>
-    );
-    const navbarBuildings =
-      this.props.navbar.navBarIcons && this.props.navbar.navBarIcons.buildings;
-    const navbarArmy =
-      this.props.navbar.navBarIcons && this.props.navbar.navBarIcons.armyInfo;
-    const navbarPearl =
-      this.props.navbar.navBarIcons && this.props.navbar.navBarIcons.pearls;
-    const navbarCollar =
-      this.props.navbar.navBarIcons && this.props.navbar.navBarIcons.corals;
+    const { navBarIcons } = this.props.navbar;
+    const rank = navBarIcons && <span>{navBarIcons.rank}.hely</span>;
+    const round = navBarIcons && <span>{navBarIcons.round}.kör</span>;
+    const navbarBuildings = navBarIcons && navBarIcons.buildings;
+    const navbarArmy = navBarIcons && navBarIcons.armyInfo;
+    const navbarPearl = navBarIcons && navBarIcons.pearls;
+    const navbarCollar = navBarIcons && navBarIcons.corals;
 
-    const navbarPearlPerRound =
-      this.props.navbar.navBarIcons &&
-      this.props.navbar.navBarIcons.pearlsPerRound;
-    const navbarCoralPerRound =
-      this.props.navbar.navBarIcons &&
-      this.props.navbar.navBarIcons.coralsPerRound;
+    const navbarPearlPerRound = navBarIcons && navBarIcons.pearlsPerRound;
+    const navbarCoralPerRound = navBarIcons && navBarIcons.coralsPerRound;
     return (
       <div className="navbar-bg">
         <div className="navbar-color ">
-          <div>
-            {rank}
+          <div className="navbar-info">
+            {navBarIcons && navBarIcons.rank > 0 && rank}
             {round}
           </div>
-          <ul className="nav navbar-nav">
-            {navbarArmy &&
-              navbarArmy.map(item => (
-                <li key={item.id}>
-                  <NavBarIcon
-                    id={item.id}
-                    imageUrl={item.imageUrl ? item.imageUrl : ""}
-                    count={item.totalCount ? item.totalCount : 0}
-                  />
-                </li>
-              ))}
+          <div className="navbar-wrapper">
+            <ul className="nav navbar-nav">
+              {navbarArmy &&
+                navbarArmy.map(item => (
+                  <li key={item.id}>
+                    <NavBarIcon
+                      id={item.id}
+                      imageUrl={item.imageUrl && item.imageUrl}
+                      count={item.totalCount && item.totalCount}
+                      name={item.name && item.name}
+                    />
+                  </li>
+                ))}
+            </ul>
             <NavBarIcon
               count={navbarCollar ? navbarCollar : 0}
-              money={false}
               id={0}
               info={navbarCoralPerRound + "/kör"}
+              name="koral"
             />
             <NavBarIcon
               count={navbarPearl ? navbarPearl : 0}
-              money={true}
               id={1}
               info={navbarPearlPerRound + "/kör"}
+              name="kagyló"
             />
-            {navbarBuildings &&
-              navbarBuildings.map(item => (
-                <li key={item.id}>
-                  <NavBarIcon
-                    id={item.id}
-                    imageUrl={item.iconImageUrl ? item.iconImageUrl : ""}
-                    count={item.count ? item.count : 0}
-                    info={
-                      item.inProgressCount ? item.count + " épül" : "0 épül"
-                    }
-                  />
-                </li>
-              ))}
-          </ul>
+            <ul className="nav navbar-nav">
+              {navbarBuildings &&
+                navbarBuildings.map(item => (
+                  <li key={item.id}>
+                    <NavBarIcon
+                      id={item.id}
+                      imageUrl={item.iconImageUrl ? item.iconImageUrl : ""}
+                      count={item.count ? item.count : 0}
+                      info={
+                        item.inProgressCount ? item.count + " épül" : "0 épül"
+                      }
+                    />
+                  </li>
+                ))}
+            </ul>
+          </div>
         </div>
       </div>
     );

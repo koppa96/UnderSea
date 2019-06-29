@@ -8,32 +8,20 @@ import { ICreationInfo } from "../../../api/Client";
 import { BuildingAddActionCreator } from "./store/actions/BuildingAction.post";
 
 const mapStateToProps = (state: IApllicationState): MappedProps => {
-  const { buildings } = state.app.pages.buildings;
+  const { buildings } = state.app.pages;
   const { model } = state.app.pages.mainpage;
 
-  const temp: ICreationInfo[] = [];
-  const newModel = model ? (model.buildings ? model.buildings : []) : [];
-  for (let index = 0; index < newModel.length; index++) {
-    for (let index2 = 0; index2 < buildings.length; index2++) {
-      if (newModel[index].id === buildings[index2].id) {
-        temp.push({
-          count: newModel[index].count,
-          cost: buildings[index2].cost,
-          description: buildings[index2].description,
-          id: buildings[index2].id,
-          imageUrl: buildings[index2].imageUrl,
-          name: buildings[index2].name
-        });
-      }
-    }
-  }
-
   return {
-    boughtBuildingState: {
-      ...state.app.pages.buildings,
-      buildings: temp
-    },
-
+    ownedBuildingState: buildings,
+    count: model
+      ? model.buildings
+        ? model.buildings.map(info => ({
+            id: info.id,
+            count: info.count,
+            inProgress: info.inProgressCount > 0 ? true : false
+          }))
+        : []
+      : [],
     totalpearl: model ? model.pearls : 0,
     totalcoral: model ? model.corals : 0
   };

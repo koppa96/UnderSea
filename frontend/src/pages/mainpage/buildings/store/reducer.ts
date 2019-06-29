@@ -1,5 +1,5 @@
 import { buildingInitialState, BuildingState } from "./store";
-import { GetBuildingActions, IActions } from "./actions/BuildingAction.get";
+import { GetBuildingActions, IGetActions } from "./actions/BuildingAction.get";
 import {
   IAddBuildingActions,
   AddBuildingActions
@@ -7,26 +7,27 @@ import {
 
 export const BuildingReducer = (
   state = buildingInitialState,
-  action: IActions | IAddBuildingActions
+  action: IGetActions | IAddBuildingActions
 ): BuildingState => {
   switch (action.type) {
     case GetBuildingActions.REQUEST:
       return {
         ...state,
-        loading: true
+        isRequesting: true
       };
     case GetBuildingActions.SUCCES:
-      console.log("action.param.building", action.params.buildings);
       return {
         ...state,
-        loading: false,
-        buildings: action.params.buildings
+        isRequesting: false,
+        isLoaded: true,
+        buildings: action.data
       };
     case GetBuildingActions.ERROR:
       return {
         ...state,
-        loading: false,
-        error: action.params ? action.params : "Ismeretlen hiba"
+        isRequesting: false,
+        isLoaded: true,
+        error: action.error ? action.error : "Beállítási hiba"
       };
 
     case AddBuildingActions.REQUEST:
@@ -45,7 +46,7 @@ export const BuildingReducer = (
         isPostRequesting: false
       };
     default:
-      const check: never = action;
+      // const check: never = action.type;
       return state;
   }
 };

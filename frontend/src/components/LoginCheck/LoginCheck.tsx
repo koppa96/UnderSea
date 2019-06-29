@@ -6,9 +6,11 @@ export class LoginCheck extends React.Component<LogCheckProps> {
   render = () => {
     const { children, login, serverLogin } = this.props;
 
-    return (login && serverLogin) || (!login && !serverLogin) ? (
+    const loggedin = localStorage.getItem("access_token");
+
+    return (login && loggedin) || (!login && !loggedin) ? (
       children
-    ) : serverLogin ? (
+    ) : loggedin ? (
       <Redirect to="/" />
     ) : (
       <Redirect to="/login" />

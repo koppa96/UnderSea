@@ -8,8 +8,8 @@ import {
 interface NativeProps {}
 
 export interface MappedProps {
-  boughtBuildingState?: BuildingState;
-  buildingCount?: countProp[];
+  ownedBuildingState: BuildingState;
+  count: Array<{ id: number; count: number, inProgress:boolean }>;
   totalpearl: number;
   totalcoral: number;
 }

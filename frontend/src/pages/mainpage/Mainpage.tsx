@@ -28,43 +28,41 @@ export class MainPage extends React.Component<MainPageProps> {
 
   render() {
     return (
-      <div>
-        <div className="main-page">
-          <NavBarConnected />
-          <div className="mainpage-content">
-            <div className="side-menu">
-              <Menu />
-              <div>
-                <ProfileContainerConnected />
-                <h3 className="undersea-font-mainpage">UNDERSEA</h3>
-              </div>
+      <div className="main-page">
+        <NavBarConnected />
+        <div className="mainpage-content">
+          <div className="side-menu">
+            <Menu />
+            <div>
+              <ProfileContainerConnected />
+              <h3 className="undersea-font-mainpage">UNDERSEA</h3>
             </div>
-            <main>
-              <Switch>
-                <Route path="/account/buildings">
-                  <BuildingsConnected />
-                </Route>
-                <Route path="/account/development">
-                  <DevelopmentConnected />
-                </Route>
-                <Route path="/account/war">
-                  <WarConnected />
-                </Route>
-                <Route path="/account/attack">
-                  <AttackConnected />
-                </Route>
-                <Route path="/account/rank">
-                  <RankConnected />
-                </Route>
-                <Route path="/account/army">
-                  <ArmyConnected isNative />
-                </Route>
-                <Route path="/account/gyak">
-                  <TestConnected isNative />
-                </Route>
-              </Switch>
-            </main>
           </div>
+          <main>
+            <Switch>
+              <Route path="/account/buildings">
+                <BuildingsConnected />
+              </Route>
+              <Route path="/account/development">
+                <DevelopmentConnected />
+              </Route>
+              <Route path="/account/war">
+                <WarConnected />
+              </Route>
+              <Route path="/account/attack">
+                <AttackConnected />
+              </Route>
+              <Route path="/account/rank">
+                <RankConnected />
+              </Route>
+              <Route path="/account/army">
+                <ArmyConnected isNative />
+              </Route>
+              <Route path="/account/gyak">
+                <TestConnected isNative />
+              </Route>
+            </Switch>
+          </main>
         </div>
       </div>
     );

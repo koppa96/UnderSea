@@ -1,53 +1,20 @@
-import * as React from "react";
-import { Route, Switch } from "react-router-dom";
-import { Register } from "./pages/account/register/index";
-
-import axios from "axios";
-import "./app.scss";
-import { NotFound } from "./pages/notFound/index";
-import { LoginConnected } from "./pages/account/login/connect";
-import { LoginCheckConnected } from "./components/LoginCheck/connect";
-import { MainPageConnected } from "./pages/mainpage/connect";
-import { BasePortUrl } from ".";
+import axios, { AxiosStatic } from "axios";
+import { BasePortUrl } from "..";
 import qs from "qs";
 
-export const App = () => {
-  const loggedin = true;
-
-  //TODO: Router kiszervezés
-  return (
-    <div className="App">
-      <div className="bg-image">
-        <Switch>
-          <Route exact path="/">
-            <LoginCheckConnected login={loggedin}>
-              <MainPageConnected />
-            </LoginCheckConnected>
-          </Route>
-          <Route path="/account">
-            <LoginCheckConnected login={loggedin}>
-              <MainPageConnected />
-            </LoginCheckConnected>
-          </Route>
-          <Route path="/register" component={Register} />
-
-          <Route path="/login">
-            <LoginCheckConnected login={!loggedin}>
-              <LoginConnected />
-            </LoginCheckConnected>
-          </Route>
-          <Route component={NotFound} />
-        </Switch>
-      </div>
-    </div>
-  );
-};
-export const registeraxios = () => {
-  axios.defaults.baseURL = BasePortUrl;
+export const registerAxiosConfig = () => {
   axios.interceptors.request.use(request => {
     console.log("Starting Request", request);
     return request;
   });
+
+  axios.defaults.headers.common = {
+    Authorization: localStorage.getItem("access_token"),
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
+    "Content-Type": "application/json"
+  };
+
   axios.interceptors.response.use(
     function(response) {
       return response;
@@ -57,7 +24,7 @@ export const registeraxios = () => {
 
       if (error.response.status === 401 && !originalRequest._retry) {
         originalRequest._retry = true;
-
+        console.log("Denied request, begin refresh token connect");
         const refreshToken = window.localStorage.getItem("refresh_token");
 
         const config = {
@@ -76,10 +43,10 @@ export const registeraxios = () => {
           grant_type: "refresh_token"
         });
         const url = BasePortUrl + "connect/token";
-        console.log(url, "axios url");
+
         const instance = axios.create();
         const { data } = await instance.post(url, requestBody, config);
-        console.log(data, "axios data");
+
         window.localStorage.setItem("access_token", data.token);
         window.localStorage.setItem("refresh_token", data.refreshToken);
         axios.defaults.headers.common["Authorization"] = "Bearer " + data.token;

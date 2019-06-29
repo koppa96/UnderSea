@@ -10,32 +10,39 @@ export class Buildings extends React.Component<BuildingProps> {
     this.props.getAllBuilding();
   }
   state = {
-    buildIDs: {
-      id: -1,
-      count: -1
-    }
+    id: -1,
+
+    selectedBuilding: false,
+    exceedMoney: false
   };
 
   addBuildingByID = (e: React.MouseEvent<HTMLInputElement>) => {
     const currentValue = e.currentTarget.value;
-    const { boughtBuildingState } = this.props;
-    const sendBuilding =
-      boughtBuildingState &&
-      boughtBuildingState.buildings.find(x => x.id === +currentValue);
-    const temp = {
-      id: sendBuilding ? sendBuilding.id : -1,
-      count: sendBuilding ? sendBuilding.count : -1
-    };
-    console.log(sendBuilding);
+    const { count, ownedBuildingState, totalpearl } = this.props;
+    const sendBuilding = count.find(x => x.id === +currentValue);
 
+    console.log("Kiválasztott épület: ", sendBuilding);
+
+    const checkMoney = ownedBuildingState.buildings.find(
+      item => item.id === +currentValue
+    );
+    var tempMoneyChecker = false;
+    if (!checkMoney || checkMoney.cost > totalpearl) {
+      tempMoneyChecker = true;
+    }
     this.setState({
-      buildIDs: temp
+      buildIDs: sendBuilding ? sendBuilding.id : -1,
+      selectedBuilding: true,
+      exceedMoney: tempMoneyChecker
     });
   };
 
   render() {
-    const { addBuilding, boughtBuildingState, totalpearl } = this.props;
-    const error = boughtBuildingState ? boughtBuildingState.error : "";
+    const { addBuilding, ownedBuildingState, totalpearl, count } = this.props;
+    const error = ownedBuildingState.error && ownedBuildingState.error;
+
+    const tempProgress = count.find(item => item.inProgress === true);
+
     return (
       <div className="main-component">
         <ComponentHeader
@@ -44,16 +51,17 @@ export class Buildings extends React.Component<BuildingProps> {
           description={description}
         />
         <div className="building-page hide-scroll">
-          {boughtBuildingState ? (
-            boughtBuildingState.loading ? (
-              <span>Betöltés...</span>
-            ) : (
-              boughtBuildingState &&
-              boughtBuildingState.buildings.map(item => (
+          {ownedBuildingState.isRequesting ? (
+            <span>Betöltés...</span>
+          ) : (
+            ownedBuildingState.buildings.length > 0 &&
+            ownedBuildingState.buildings.map(item => {
+              const curentCount = count.find(c => c.id === item.id);
+              return (
                 <label key={item.id}>
                   {totalpearl >= item.cost && (
                     <input
-                      onClick={this.addBuildingByID}
+                      onClick={e => this.addBuildingByID(e)}
                       value={item.id}
                       name="select"
                       className="sr-only"
@@ -62,7 +70,7 @@ export class Buildings extends React.Component<BuildingProps> {
                   )}
                   <BuildingItem
                     id={item.id}
-                    amount={item.count}
+                    amount={curentCount ? curentCount.count : 0}
                     title={item.name ? item.name : ""}
                     price={item.cost + " Gyöngy/darab"}
                     description={
@@ -73,15 +81,24 @@ export class Buildings extends React.Component<BuildingProps> {
                     imageUrl={item.imageUrl ? item.imageUrl : ""}
                   />
                 </label>
-              ))
-            )
-          ) : (
-            <span>{error}</span>
+              );
+            })
           )}
         </div>
-        <button onClick={() => addBuilding(this.state.buildIDs.id)}>
-          {boughtBuildingState
-            ? boughtBuildingState.isPostRequesting
+        <span>{error && error}</span>
+        <button
+          disabled={
+            !this.state.selectedBuilding ||
+            ownedBuildingState.isPostRequesting ||
+            this.state.exceedMoney ||
+            !tempProgress
+          }
+          onClick={() => addBuilding(this.state.id)}
+        >
+          {tempProgress
+            ? "Épül"
+            : ownedBuildingState
+            ? ownedBuildingState.isPostRequesting
               ? "Töltés"
               : "Megveszem"
             : "Hiba"}

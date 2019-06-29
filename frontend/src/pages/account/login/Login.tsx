@@ -87,12 +87,5 @@ export class Login extends React.Component<LoginProps> {
       </div>
     );
   }
-
-  //   handleChange = (e: React.FormEvent<HTMLInputElement>) => {
-  //     e.preventDefault();
-  //     this.setState({
-  //       [e.currentTarget.name]: e.currentTarget.value
-  //     });
-  //   };
 }
 export default Login;

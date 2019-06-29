@@ -8,8 +8,11 @@
 // ReSharper disable InconsistentNaming
 
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { registeraxios } from '../App';
 
 export class AccountsClient {
+    
+
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -17,9 +20,12 @@ export class AccountsClient {
     constructor(baseUrl?: string, instance?: AxiosInstance) {
         this.instance = instance ? instance : axios.create();
         this.baseUrl = baseUrl ? baseUrl : "";
+        this.instance.defaults.headers.common["Authorization"] =localStorage.getItem("access_token")
     }
 
     getAccount(): Promise<UserInfo> {
+       
+        console.log("instance",this.instance)
         let url_ = this.baseUrl + "/api/Accounts/me";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -400,6 +406,7 @@ export class CommandsClient {
     constructor(baseUrl?: string, instance?: AxiosInstance) {
         this.instance = instance ? instance : axios.create();
         this.baseUrl = baseUrl ? baseUrl : "";
+        this.instance.defaults.headers.common["Authorization"] =localStorage.getItem("access_token")
     }
 
     getCommands(): Promise<CommandInfo[]> {
@@ -623,6 +630,7 @@ export class CountryClient {
     constructor(baseUrl?: string, instance?: AxiosInstance) {
         this.instance = instance ? instance : axios.create();
         this.baseUrl = baseUrl ? baseUrl : "";
+        this.instance.defaults.headers.common["Authorization"] =localStorage.getItem("access_token")
     }
 
     getCurrentState(): Promise<CountryInfo> {
@@ -636,7 +644,6 @@ export class CountryClient {
                 "Accept": "application/json"
             }
         };
-
         return this.instance.request(options_).then((_response: AxiosResponse) => {
             return this.processGetCurrentState(_response);
         });
@@ -676,6 +683,7 @@ export class MaintenanceClient {
     constructor(baseUrl?: string, instance?: AxiosInstance) {
         this.instance = instance ? instance : axios.create();
         this.baseUrl = baseUrl ? baseUrl : "";
+        this.instance.defaults.headers.common["Authorization"] =localStorage.getItem("access_token")
     }
 
     endTurn(): Promise<FileResponse | null> {
@@ -723,6 +731,7 @@ export class ReportsClient {
     constructor(baseUrl?: string, instance?: AxiosInstance) {
         this.instance = instance ? instance : axios.create();
         this.baseUrl = baseUrl ? baseUrl : "";
+        this.instance.defaults.headers.common["Authorization"] =localStorage.getItem("access_token")
     }
 
     getBattleInfo(): Promise<CombatInfo[]> {
@@ -874,6 +883,7 @@ export class ResearchesClient {
     constructor(baseUrl?: string, instance?: AxiosInstance) {
         this.instance = instance ? instance : axios.create();
         this.baseUrl = baseUrl ? baseUrl : "";
+        this.instance.defaults.headers.common["Authorization"] =localStorage.getItem("access_token")
     }
 
     getResearches(): Promise<CreationInfo[]> {
@@ -984,6 +994,7 @@ export class UnitsClient {
     constructor(baseUrl?: string, instance?: AxiosInstance) {
         this.instance = instance ? instance : axios.create();
         this.baseUrl = baseUrl ? baseUrl : "";
+        this.instance.defaults.headers.common["Authorization"] =localStorage.getItem("access_token")
     }
 
     getAllUnits(): Promise<UnitInfo[]> {

@@ -1,4 +1,11 @@
-import { ICreationInfo } from "../../../../../api/Client";
+export interface ICreationInfo {
+  id: number;
+  name?: string | undefined;
+  description?: string | undefined;
+  imageUrl?: string | undefined;
+  iconImageUrl?: string | undefined;
+  cost: number;
+}
 
 //ACTIONTYPES
 export interface IGetBuildingActionsTypes {
@@ -13,9 +20,7 @@ export const GetBuildingActions: IGetBuildingActionsTypes = {
   ERROR: "BUILDING_ERROR_GET_BUILDING"
 };
 
-export interface ISuccesParamState {
-  buildings: ICreationInfo[];
-}
+export type IGetBuildingRespone = ICreationInfo[];
 
 //ACTIONHOZ
 export interface IRequestActionGetBuilding {
@@ -23,15 +28,15 @@ export interface IRequestActionGetBuilding {
 }
 export interface ISuccesActionGetBuilding {
   type: IGetBuildingActionsTypes["SUCCES"];
-  params: ISuccesParamState;
+  data: IGetBuildingRespone;
 }
 export interface IErrorActionGetBuilding {
   type: IGetBuildingActionsTypes["ERROR"];
-  params?: string;
+  error: string | null;
 }
 
 //REDUCERHEZ
-export type IActions =
+export type IGetActions =
   | IRequestActionGetBuilding
   | ISuccesActionGetBuilding
   | IErrorActionGetBuilding;
@@ -41,13 +46,13 @@ export const GetBuildingActionCreator = (): IRequestActionGetBuilding => ({
   type: GetBuildingActions.REQUEST
 });
 
-export const fetchError = (params?: string): IErrorActionGetBuilding => ({
+export const fetchError = (error: string | null): IErrorActionGetBuilding => ({
   type: GetBuildingActions.ERROR,
-  params
+  error
 });
 export const fetchSucces = (
-  params: ISuccesParamState
+  data: IGetBuildingRespone
 ): ISuccesActionGetBuilding => ({
   type: GetBuildingActions.SUCCES,
-  params
+  data
 });

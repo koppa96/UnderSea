@@ -1,14 +1,16 @@
-import { ICreationInfo } from "../../../../api/Client";
+import { ICreationInfo } from "./actions/BuildingAction.get";
 
 export interface BuildingState {
-  isPostRequesting: boolean;
   buildings: ICreationInfo[];
-  loading: boolean;
+  isPostRequesting: boolean;
+  isRequesting: boolean;
+  isLoaded: boolean;
   error?: string;
 }
 
 export const buildingInitialState: BuildingState = {
   isPostRequesting: false,
-  buildings: [],
-  loading: false
+  isRequesting: false,
+  isLoaded: false,
+  buildings: []
 };
