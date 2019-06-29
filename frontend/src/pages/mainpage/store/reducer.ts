@@ -38,8 +38,7 @@ export const MainpageReducer = (
     case AddBuildingActions.REQUEST:
       return {
         ...state,
-        loading: true,
-        lastBuilding: action.params
+        loading: true
       };
     case AddBuildingActions.SUCCES:
       const newBuilding = state.model
@@ -47,10 +46,12 @@ export const MainpageReducer = (
           ? state.model.buildings
           : []
         : [];
+      var totalBought = 0;
       for (let index = 0; index < newBuilding.length; index++) {
-        if (newBuilding[index].id === state.lastBuilding) {
+        if (newBuilding[index].id === action.data.id) {
           newBuilding[index].inProgressCount =
             newBuilding[index].inProgressCount + 1;
+          totalBought = totalBought + action.data.cost;
         }
       }
 
@@ -60,7 +61,8 @@ export const MainpageReducer = (
         model: state.model
           ? {
               ...state.model,
-              buildings: newBuilding
+              buildings: newBuilding,
+              pearls: state.model.pearls - totalBought
             }
           : undefined
       };
@@ -68,9 +70,7 @@ export const MainpageReducer = (
       return {
         ...state,
         loading: false,
-        error: action.params
-          ? action.params
-          : "Ismeretlen hiba" + state.lastBuilding + " hozzáadásnál"
+        error: action.error ? action.error : "Ismeretlen hiba hozzáadásnál"
       };
     case ArmyActions.REQUEST:
       return {

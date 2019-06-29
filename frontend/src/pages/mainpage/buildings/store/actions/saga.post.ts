@@ -1,27 +1,39 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 
+import axios from "axios";
 import {
   AddBuildingActions,
   fetchError,
   fetchSucces,
   IActionRequestAddBuilding
 } from "./BuildingAction.post";
-import { BuildingsClient } from "../../../../../api/Client";
+import { registerAxiosConfig } from "../../../../../config/axiosConfig";
 
-export const beginToAddBuilding = (id: number): Promise<void> => {
-  const startBuilding = new BuildingsClient();
-  return startBuilding.startBuilding(id);
+const beginToAddBuilding = (id: number): Promise<void> | any => {
+  console.log("Beginig buy building", id);
+
+  const url = "/api/Buildings/" + id;
+  const instance = axios.create();
+  registerAxiosConfig();
+  return instance
+    .post(url)
+    .then(response => {
+      return response;
+    })
+    .catch(error => {
+      throw new Error(error);
+    });
 };
-
 function* handleAddBuilding(action: IActionRequestAddBuilding) {
   try {
-    yield call(beginToAddBuilding, action.params);
-    yield put(fetchSucces());
+    yield call(beginToAddBuilding, action.params.id);
+    yield put(fetchSucces(action.params));
   } catch (err) {
     if (err) {
-      yield put(fetchError(err));
+      console.log("Building hiba", err);
+      yield put(fetchError("Sajnos valami hiba történt vásárlás közben"));
     } else {
-      yield put(fetchError("An unknown error occured."));
+      yield put(fetchError("Ismeretlen hiba"));
     }
   }
 }

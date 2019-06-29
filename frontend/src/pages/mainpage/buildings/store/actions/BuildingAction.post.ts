@@ -1,3 +1,5 @@
+import { RequestBuildingParams } from "../store";
+
 //ACTIONTYPES
 export interface IBuildingActionsTypes {
   REQUEST: "BUILDING_REQUEST_BUILDING_CREATE";
@@ -14,16 +16,17 @@ export const AddBuildingActions: IBuildingActionsTypes = {
 //ACTIONHOZ
 export interface IActionRequestAddBuilding {
   type: IBuildingActionsTypes["REQUEST"];
-  params: number;
+  params: RequestBuildingParams;
 }
 
 export interface IActionSuccesAddBuilding {
   type: IBuildingActionsTypes["SUCCES"];
+  data: RequestBuildingParams;
 }
 
 export interface IActionErrorAddBuilding {
   type: IBuildingActionsTypes["ERROR"];
-  params?: string;
+  error?: string;
 }
 
 //REDUCERHEZ
@@ -34,15 +37,18 @@ export type IAddBuildingActions =
 
 //ACTIONCREATORHOZ
 export const BuildingAddActionCreator = (
-  params: number
+  params: RequestBuildingParams
 ): IActionRequestAddBuilding => ({
   type: AddBuildingActions.REQUEST,
   params
 });
-export const fetchError = (params?: string): IActionErrorAddBuilding => ({
+export const fetchError = (error?: string): IActionErrorAddBuilding => ({
   type: AddBuildingActions.ERROR,
-  params
+  error
 });
-export const fetchSucces = (): IActionSuccesAddBuilding => ({
-  type: AddBuildingActions.SUCCES
+export const fetchSucces = (
+  data: RequestBuildingParams
+): IActionSuccesAddBuilding => ({
+  type: AddBuildingActions.SUCCES,
+  data
 });

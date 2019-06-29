@@ -14,3 +14,8 @@ export const buildingInitialState: BuildingState = {
   isLoaded: false,
   buildings: []
 };
+
+export interface RequestBuildingParams {
+  id: number;
+  cost: number;
+}

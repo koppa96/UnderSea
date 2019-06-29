@@ -1,25 +1,16 @@
-import { BuildingState } from "./store/store";
-import {
-  IBriefCreationInfo,
-  BriefCreationInfo,
-  ICreationInfo
-} from "../../../api/Client";
+import { BuildingState, RequestBuildingParams } from "./store/store";
 
 interface NativeProps {}
 
 export interface MappedProps {
   ownedBuildingState: BuildingState;
-  count: Array<{ id: number; count: number, inProgress:boolean }>;
+  count: Array<{ id: number; count: number; inProgress: boolean }>;
   totalpearl: number;
   totalcoral: number;
 }
-export interface countProp {
-  id: number;
-  count: number;
-}
 
 export interface DispachedProps {
-  addBuilding: (params: number) => void;
+  addBuilding: (params: RequestBuildingParams) => void;
   getAllBuilding: () => void;
 }
 

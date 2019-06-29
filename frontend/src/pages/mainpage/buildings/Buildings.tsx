@@ -11,7 +11,7 @@ export class Buildings extends React.Component<BuildingProps> {
   }
   state = {
     id: -1,
-
+    cost: 0,
     selectedBuilding: false,
     exceedMoney: false
   };
@@ -31,11 +31,26 @@ export class Buildings extends React.Component<BuildingProps> {
       tempMoneyChecker = true;
     }
     this.setState({
-      buildIDs: sendBuilding ? sendBuilding.id : -1,
+      id: sendBuilding ? sendBuilding.id : -1,
       selectedBuilding: true,
       exceedMoney: tempMoneyChecker
     });
   };
+
+  beginAddBuilding() {
+    const { addBuilding, ownedBuildingState, totalpearl } = this.props;
+    const costOfBuilding = ownedBuildingState.buildings.find(
+      item => item.id == this.state.id
+    );
+
+    console.log(costOfBuilding, "costofBuiilding undefined");
+    console.log(costOfBuilding && costOfBuilding.cost, "costofBuiilding cost");
+
+    if (costOfBuilding && costOfBuilding.cost <= totalpearl) {
+      console.log("eljutottam ide");
+      addBuilding({ id: this.state.id, cost: costOfBuilding.cost });
+    }
+  }
 
   render() {
     const { addBuilding, ownedBuildingState, totalpearl, count } = this.props;
@@ -90,10 +105,9 @@ export class Buildings extends React.Component<BuildingProps> {
           disabled={
             !this.state.selectedBuilding ||
             ownedBuildingState.isPostRequesting ||
-            this.state.exceedMoney ||
-            !tempProgress
+            !this.state.exceedMoney
           }
-          onClick={() => addBuilding(this.state.id)}
+          onClick={() => this.beginAddBuilding()}
         >
           {tempProgress
             ? "Épül"

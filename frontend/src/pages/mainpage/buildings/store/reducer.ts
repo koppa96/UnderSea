@@ -43,10 +43,11 @@ export const BuildingReducer = (
     case AddBuildingActions.ERROR:
       return {
         ...state,
-        isPostRequesting: false
+        isPostRequesting: false,
+        error: action.error ? action.error : "Ismeretlen hiba beállításnál"
       };
     default:
-      // const check: never = action.type;
+      const check: never = action;
       return state;
   }
 };
