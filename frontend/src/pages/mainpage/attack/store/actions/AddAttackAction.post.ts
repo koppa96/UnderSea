@@ -1,4 +1,9 @@
-import { ICommandInfo } from "../../../../../api/Client";
+import { IUnitDetails } from "../../interface";
+
+export interface ICommandDetails {
+  targetCountryId: number;
+  units?: IUnitDetails[] | undefined;
+}
 
 //ACTIONTYPES
 export interface IPostTargetActionsTypes {
@@ -16,14 +21,15 @@ export const PostAttackActions: IPostTargetActionsTypes = {
 //ACTIONHOZ
 export interface IRequestActionPostTarget {
   type: IPostTargetActionsTypes["REQUEST"];
-  params: ICommandInfo;
+  params: ICommandDetails;
 }
 export interface ISuccesActionPostTarget {
   type: IPostTargetActionsTypes["SUCCES"];
+  data: ICommandDetails;
 }
 export interface IErrorActionPostTarget {
   type: IPostTargetActionsTypes["ERROR"];
-  params?: string;
+  error?: string;
 }
 
 //REDUCERHEZ
@@ -34,16 +40,19 @@ export type IPostTargetActions =
 
 //ACTIONCREATORHOZ
 export const PostTargetActionCreator = (
-  params: ICommandInfo
+  params: ICommandDetails
 ): IRequestActionPostTarget => ({
   type: PostAttackActions.REQUEST,
   params
 });
 
-export const fetchError = (params?: string): IErrorActionPostTarget => ({
+export const fetchError = (error?: string): IErrorActionPostTarget => ({
   type: PostAttackActions.ERROR,
-  params
+  error
 });
-export const fetchSucces = (): ISuccesActionPostTarget => ({
-  type: PostAttackActions.SUCCES
+export const fetchSucces = (
+  data: ICommandDetails
+): ISuccesActionPostTarget => ({
+  type: PostAttackActions.SUCCES,
+  data
 });

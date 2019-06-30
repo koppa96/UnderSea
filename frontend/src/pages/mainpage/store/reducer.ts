@@ -8,11 +8,15 @@ import {
   IArmyActions,
   ArmyActions
 } from "../army/store/actions/ArmyActions.post";
-import { BriefUnitInfo } from "../../../api/Client";
+import { BriefUnitInfo, IBriefUnitInfo } from "../../../api/Client";
+import {
+  IPostTargetActions,
+  PostAttackActions
+} from "../attack/store/actions/AddAttackAction.post";
 
 export const MainpageReducer = (
   state = initialMainpageResponseState,
-  action: IActions | IAddBuildingActions | IArmyActions
+  action: IActions | IAddBuildingActions | IArmyActions | IPostTargetActions
 ): MainpageResponseState => {
   switch (action.type) {
     case MainpageActions.REQUEST:
@@ -114,9 +118,41 @@ export const MainpageReducer = (
           ? action.params
           : "Ismeretlen hiba az egységek hozzáadásnál"
       };
-
+    case PostAttackActions.REQUEST:
+      return {
+        ...state
+      };
+    case PostAttackActions.ERROR:
+      return {
+        ...state
+      };
+    case PostAttackActions.SUCCES:
+      const newUnits: BriefUnitInfo[] = [];
+      action.data.units &&
+        action.data.units.map(item => {
+          state.model &&
+            state.model.armyInfo &&
+            state.model.armyInfo.map(x => {
+              if (x.id === item.unitId) {
+                var tempdata = x;
+                tempdata.defendingCount = tempdata.defendingCount - item.amount;
+                newUnits.push(tempdata);
+              } else {
+                newUnits.push(x);
+              }
+            });
+        });
+      return {
+        ...state,
+        model: state.model
+          ? {
+              ...state.model,
+              armyInfo: { ...newUnits }
+            }
+          : undefined
+      };
     default:
-      const check: never = action;
+      //  const check: never = action;
       return state;
   }
 };

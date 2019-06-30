@@ -56,6 +56,15 @@
   background-color: $primary-color;
   border: #428dff 2px solid;
   border-radius: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  > img {
+    width: 80%;
+    height: 80%;
+    margin-right: auto;
+    margin-left: auto;
+  }
 }
 
 .bg-image {

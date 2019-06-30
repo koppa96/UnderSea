@@ -104,9 +104,7 @@ export class Buildings extends React.Component<BuildingProps> {
         <span>{error && error}</span>
         <button
           disabled={
-            !this.state.selectedBuilding ||
-            ownedBuildingState.isPostRequesting ||
-            !this.state.exceedMoney
+            !this.state.selectedBuilding || ownedBuildingState.isPostRequesting
           }
           onClick={() => this.beginAddBuilding()}
         >

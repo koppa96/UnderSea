@@ -1,11 +1,12 @@
 import * as React from "react";
 import { ComponentHeader } from "../../../components/componentHeader";
 import { AttackItem } from "./attackItem";
-import { TargetProps } from "./interface";
+import { TargetProps, IUnitDetails } from "./interface";
 import { ITargetInfo } from "../../../api/Client";
 import CheckMark from "./../../../assets/images/check_mark.png";
 
 const initFilter: ITargetInfo[] = [];
+const initUnit: IUnitDetails[] = [];
 
 export class Attack extends React.Component<TargetProps> {
   componentDidMount() {
@@ -17,12 +18,7 @@ export class Attack extends React.Component<TargetProps> {
 
   state = {
     targetCountryId: -1,
-    units: [
-      {
-        unitId: 1,
-        amount: 1
-      }
-    ],
+    units: initUnit,
     filtered: "",
 
     filteredrank: initFilter
@@ -43,9 +39,19 @@ export class Attack extends React.Component<TargetProps> {
       });
     }
   };
+
+  addUnit = (id: number, count: number) => {
+    const filteredUnit = this.state.units.filter(item => item.unitId !== id);
+    if (count <= 0) {
+      this.setState({ units: [...filteredUnit] });
+    } else {
+      this.setState({
+        units: [...filteredUnit, { unitId: id, amount: count }]
+      });
+    }
+  };
   render() {
     const { targets, units } = this.props;
-    console.log("total targets: ", targets);
     return (
       <div className="main-component">
         <ComponentHeader title={title} />
@@ -101,17 +107,33 @@ export class Attack extends React.Component<TargetProps> {
 
           <div>
             <span>2. Állítsd be, kiket küldesz harcba:</span>
+            <span>Támadáshoz 1 parancsnokra szükséged van</span>
             {units.map(item => (
               <AttackItem
                 id={item.id}
                 imageUrl={item.imageUrl}
                 name={item.name}
                 defendingCount={item.defendingCount}
+                setTrop={this.addUnit}
               />
             ))}
           </div>
         </div>
-        <button>Megtámadom!</button>
+        <button
+          disabled={
+            this.state.targetCountryId < 1 || this.state.units.length < 2
+          }
+          onClick={() =>
+            this.props.attackTarget({
+              targetCountryId: this.state.targetCountryId,
+              units: this.state.units
+            })
+          }
+        >
+          {this.state.targetCountryId < 1 || this.state.units.length < 2
+            ? "Válassz"
+            : "Megtámadom"}
+        </button>
       </div>
     );
   }

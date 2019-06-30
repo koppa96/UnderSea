@@ -7,17 +7,25 @@
   }
   > div {
     flex: 1;
-    > span {
+    > span:first-of-type {
       font-family: OpenSansBold;
+      margin-bottom: 5px;
+    }
+    > span {
       font-size: 16px;
       color: white;
+      font-family: OpenSansRegular;
+      display: block;
+      margin-bottom: 15px;
     }
     input {
       margin-top: 20px;
     }
     ul {
+      overflow: auto;
       li {
         justify-content: space-between;
+        cursor: pointer;
       }
     }
   }

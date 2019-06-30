@@ -4,15 +4,15 @@ import {
   IRequestActionPostTarget,
   IPostTargetActions,
   fetchError,
-  fetchSucces
+  fetchSucces,
+  ICommandDetails
 } from "./AddAttackAction.post";
-import { ICommandInfo } from "../../../../../api/Client";
 import { call, put, takeEvery } from "redux-saga/effects";
 export const asd = 0;
 
 // TODO: create error handling (dont use any)
 const beginAddUnits = (
-  attackTarget: ICommandInfo
+  attackTarget: ICommandDetails
 ): Promise<IPostTargetActions> | any => {
   console.log("Army megvesz", attackTarget);
   const config = {
@@ -34,10 +34,9 @@ const beginAddUnits = (
 };
 
 function* handleAttackTarget(action: IRequestActionPostTarget) {
-  const params = action.params;
   try {
     const response = yield call(beginAddUnits, action.params);
-    yield put(fetchSucces());
+    yield put(fetchSucces(action.params));
   } catch (err) {
     console.log(err);
     const ErrorMEssage: string = "Sajnos valami hiba történt vásárlás közben";

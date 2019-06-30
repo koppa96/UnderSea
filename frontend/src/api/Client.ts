@@ -1648,7 +1648,7 @@ export class CommandDetails implements ICommandDetails {
 
 export interface ICommandDetails {
     targetCountryId: number;
-    units?: UnitDetails[] | undefined;
+    units?: IUnitDetails[] | undefined;
 }
 
 export class UnitDetails implements IUnitDetails {
