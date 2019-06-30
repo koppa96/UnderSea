@@ -1,14 +1,14 @@
-import { IRankInfo } from "../../../../api/Client";
+import { IRankInfo } from "./actions/RankAction.get";
 
 export interface RankState {
   rank: IRankInfo[];
-  loading: boolean;
+  isRequesting: boolean;
+  isLoaded: boolean;
   error?: string;
 }
 
-
 export const rankInitialState: RankState = {
-    rank: [],
-    loading: false
-  };
-  
+  rank: [],
+  isRequesting: false,
+  isLoaded: false
+};

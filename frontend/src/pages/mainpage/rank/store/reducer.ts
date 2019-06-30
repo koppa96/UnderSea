@@ -9,19 +9,20 @@ export const RankReducer = (
     case GetRankActions.REQUEST:
       return {
         ...state,
-        loading: true
+        isRequesting: true
       };
     case GetRankActions.SUCCES:
-      console.log("action.param.building", action.params.ranks);
       return {
         ...state,
-        loading: false,
+        isRequesting: false,
+        isLoaded: true,
         rank: action.params.ranks
       };
     case GetRankActions.ERROR:
       return {
         ...state,
-        loading: false,
+        isRequesting: false,
+        isLoaded: true,
         error: action.params ? action.params : "Ismeretlen hiba"
       };
 

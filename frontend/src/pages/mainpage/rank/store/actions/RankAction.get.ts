@@ -1,5 +1,8 @@
-import { IRankInfo } from "../../../../../api/Client";
-
+export interface IRankInfo {
+  name?: string | undefined;
+  rank: number;
+  score?: string | undefined;
+}
 //ACTIONTYPES
 export interface IGetRankActionsTypes {
   REQUEST: "RANK_REQUEST_GET_RANK";

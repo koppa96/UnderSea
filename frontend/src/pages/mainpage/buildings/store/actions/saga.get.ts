@@ -16,7 +16,7 @@ const beginFetchBuilding = async () => {
   registerAxiosConfig();
 
   try {
-    const response = await axios.get("/api/Buildings");
+    const response = await instance.get("/api/Buildings");
     console.log("buildings fetched", response.data);
 
     return response.data;

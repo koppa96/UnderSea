@@ -2,6 +2,7 @@ import React from "react";
 import { ArmyItemResponse } from "./Interface";
 import { BasePortUrl } from "../../../..";
 import { ArmyInfoWoCount } from "../store/actions/ArmyActions.get";
+import QuestionMark from "./../../../../assets/images/question.svg";
 
 interface ArmyProps {
   unit: ArmyInfoWoCount;
@@ -39,10 +40,16 @@ export class ArmyItem extends React.Component<ArmyProps> {
       defensePower
     } = this.props.unit;
     const { currentTroop } = this.state;
+    var image;
+    if (imageUrl === null || imageUrl.length < 1) {
+      image = QuestionMark;
+    } else {
+      image = BasePortUrl + imageUrl;
+    }
     return (
       <div className="solider-item">
         <div className="rectangle army-rectangle">
-          <img alt="solider" src={BasePortUrl + imageUrl} />
+          <img alt="solider" src={image} />
         </div>
         <h3>{name}</h3>
         <div>

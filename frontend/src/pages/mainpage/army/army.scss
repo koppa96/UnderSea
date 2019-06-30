@@ -15,9 +15,12 @@ $local-rectaangle-size: 116px;
   .army-rectangle {
     height: $local-rectaangle-size;
     width: $local-rectaangle-size;
+    display: flex;
+    justify-content: center;
+    align-content: center;
     img {
-      width: 100%;
-      height: 100%;
+      width: 80%;
+      height: 80%;
     }
   }
 

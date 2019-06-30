@@ -8,7 +8,9 @@ const initFilter: IRankInfo[] = [];
 export class Rank extends React.Component<RankProps> {
   componentDidMount() {
     document.title = title;
-    this.props.getAllBuilding();
+    if (!this.props.totalRank.isLoaded) {
+      this.props.getAllBuilding();
+    }
   }
 
   state = {
@@ -44,7 +46,7 @@ export class Rank extends React.Component<RankProps> {
           placeholder="Felhasználónév"
         />
 
-        {totalRank.loading ? (
+        {totalRank.isRequesting ? (
           <span>Betöltés...</span>
         ) : this.state.filtered.length > 2 ? (
           <ul className="rank-page">
