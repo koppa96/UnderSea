@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Nito.AsyncEx;
 using StrategyGame.Bll.DTO.Received;
 using StrategyGame.Bll.EffectParsing;
 using StrategyGame.Bll.Exceptions;
@@ -21,7 +22,8 @@ namespace StrategyGame.Tests.Services
         public async Task Initialize()
         {
             context = await UtilityFactory.CreateContextAsync();
-            unitService = new UnitService(context, ModifierParserContainer.CreateDefault(), UtilityFactory.CreateMapper());
+            unitService = new UnitService(context, new AsyncReaderWriterLock(), ModifierParserContainer.CreateDefault(),
+                UtilityFactory.CreateMapper());
         }
 
         [TestMethod]

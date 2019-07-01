@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using StrategyGame.Bll.Dto.Sent;
 using StrategyGame.Bll.Services.Buildings;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace StrategyGame.Api.Controllers
@@ -37,8 +38,11 @@ namespace StrategyGame.Api.Controllers
         [ProducesResponseType(200)]
         public async Task<ActionResult> StartBuildingAsync(int id)
         {
-            await _buildingService.StartBuildingAsync(User.Identity.Name, id);
-            return Ok();
+            using (var src = new CancellationTokenSource(Constants.DefaultTurnEndTimeout))
+            {
+                await _buildingService.StartBuildingAsync(User.Identity.Name, id, src.Token);
+                return Ok();
+            }
         }
     }
 }

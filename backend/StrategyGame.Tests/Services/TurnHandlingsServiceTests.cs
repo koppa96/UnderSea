@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Nito.AsyncEx;
 using StrategyGame.Bll.EffectParsing;
 using StrategyGame.Bll.Services.TurnHandling;
 using StrategyGame.Dal;
@@ -19,7 +20,7 @@ namespace StrategyGame.Tests.Services
         public async Task Initialize()
         {
             context = await UtilityFactory.CreateContextAsync();
-            turnService = new TurnHandlingService(ModifierParserContainer.CreateDefault());
+            turnService = new TurnHandlingService(ModifierParserContainer.CreateDefault(), new AsyncReaderWriterLock());
         }
 
         [TestMethod]
