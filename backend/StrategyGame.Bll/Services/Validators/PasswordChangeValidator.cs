@@ -1,8 +1,5 @@
 ﻿using FluentValidation;
 using StrategyGame.Bll.Dto.Received.UserManagement;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace StrategyGame.Bll.Services.Validators
 {

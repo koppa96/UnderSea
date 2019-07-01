@@ -2,10 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using StrategyGame.Bll.Dto.Received.UserManagement;
 using StrategyGame.Dal;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -43,7 +40,7 @@ namespace StrategyGame.Bll.Services.Validators
             return await _context.Users.AllAsync(u => u.UserName != username, token);
         }
 
-        public bool ValidPassword(string password)
+        public static bool ValidPassword(string password)
         {
             var hasUpper = password.Any(c => char.IsUpper(c));
             var hasLower = password.Any(c => char.IsLower(c));
