@@ -91,6 +91,7 @@ export const MainpageReducer = (
             action.data.unitsToAdd.forEach(unit => {
               if (unit.unitId === armyunit.id) {
                 armyunit.totalCount += unit.count;
+                armyunit.defendingCount += unit.count;
                 costPearl += unit.price * unit.count;
               }
             });
