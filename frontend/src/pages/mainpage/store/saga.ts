@@ -7,9 +7,11 @@ import {
   MainpageActions
 } from "./actions/MainpageAction.get";
 import { CountryClient, CountryInfo, ICountryInfo } from "../../../api/Client";
+import { registerAxiosConfig } from "../../../config/axiosConfig";
 
 export const beginToFetchMainpage = (): Promise<CountryInfo> => {
   const getCountry = new CountryClient();
+  registerAxiosConfig();
   const tempData = getCountry.getCurrentState();
 
   return tempData;

@@ -14,6 +14,7 @@ export class NavBar extends React.Component<NavBarProps> {
 
     const navbarPearlPerRound = navBarIcons && navBarIcons.pearlsPerRound;
     const navbarCoralPerRound = navBarIcons && navBarIcons.coralsPerRound;
+    console.log("navbararmy", navbarArmy);
     return (
       <div className="navbar-bg">
         <div className="navbar-color ">
@@ -57,7 +58,9 @@ export class NavBar extends React.Component<NavBarProps> {
                       imageUrl={item.iconImageUrl ? item.iconImageUrl : ""}
                       count={item.count ? item.count : 0}
                       info={
-                        item.inProgressCount ? item.count + " épül" : "0 épül"
+                        item.inProgressCount
+                          ? item.inProgressCount + " épül"
+                          : "0 épül"
                       }
                     />
                   </li>
