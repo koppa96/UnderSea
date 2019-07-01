@@ -3,7 +3,10 @@ import { MappedProps, DispachedProps } from "./Interface";
 import { Dispatch, bindActionCreators } from "redux";
 import { Army } from "./Army";
 import { connect } from "react-redux";
-import { ArmyUnitAddActionCreator } from "./store/actions/ArmyActions.post";
+import {
+  ArmyUnitAddActionCreator,
+  ArmyUnitResetActionCreator
+} from "./store/actions/ArmyActions.post";
 import { getArmy } from "./store/actions/ArmyActions.get";
 
 const mapStateToProps = (state: IApllicationState): MappedProps => {
@@ -22,7 +25,8 @@ const mapDispatchToProps = (dispatch: Dispatch): DispachedProps =>
   bindActionCreators(
     {
       addUnits: ArmyUnitAddActionCreator,
-      getArmy
+      getArmy,
+      resetUnits: ArmyUnitResetActionCreator
     },
     dispatch
   );

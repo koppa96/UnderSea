@@ -13,19 +13,27 @@ export const ArmyReducer = (
     case ArmyActions.REQUEST:
       return {
         ...state,
-        isPostRequesting: true
+        isPostRequesting: true,
+        isPostSuccessFull: false
       };
     case ArmyActions.SUCCESS:
       return {
         ...state,
         isPostRequesting: false,
-        units: state.units
+        units: state.units,
+        error: null,
+        isPostSuccessFull: true
       };
     case ArmyActions.ERROR:
       return {
         ...state,
         isPostRequesting: false,
         error: action.params
+      };
+    case ArmyActions.RESET:
+      return {
+        ...state,
+        isPostSuccessFull: false
       };
     case getArmyActions.REQUEST:
       return {

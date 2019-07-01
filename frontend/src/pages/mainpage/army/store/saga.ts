@@ -17,14 +17,6 @@ export const asd = 0;
 
 // TODO: create error handling (dont use any)
 const beginAddUnits = (unitsToAdd: ArmyUnit[]): Promise<IArmyActions> | any => {
-  console.log("Army megvesz", unitsToAdd);
-  const config = {
-    headers: {
-      Authorization: localStorage.getItem("access_token"),
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token"
-    }
-  };
   const url = "api/Units";
   return axios
     .post(url, unitsToAdd)
@@ -34,17 +26,12 @@ const beginAddUnits = (unitsToAdd: ArmyUnit[]): Promise<IArmyActions> | any => {
     .catch(error => {
       throw new Error(error);
     });
-
-  //         const axiosClient = new UnitsClient
-  // const data = new PurchaseDetails(unit)
-  // return axiosClient.create(unitsToAdd)
 };
 
 const getUnits = () => {
   return axios
     .get("/api/Units")
     .then(response => {
-      console.log(response.data, "army get");
       return response.data;
     })
     .catch(error => {
