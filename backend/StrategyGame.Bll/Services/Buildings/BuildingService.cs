@@ -33,11 +33,12 @@ namespace StrategyGame.Bll.Services.Buildings
         public async Task StartBuildingAsync(string username, int buildingId)
         {
             var country = await _context.Countries.Include(c => c.InProgressBuildings)
+                    .ThenInclude(b => b.Building)
                 .SingleAsync(c => c.ParentUser.UserName == username);
 
-            if (country.InProgressBuildings.Count > 0)
+            if (country.InProgressBuildings.Any(b => b.Building.Id == buildingId))
             {
-                throw new InProgressException("The country already has a building in progress.");
+                throw new InProgressException("There is already a building of this type in progress.");
             }
 
             var buildingType = await _context.BuildingTypes.FindAsync(buildingId);
