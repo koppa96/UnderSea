@@ -65,7 +65,7 @@ export class Development extends React.Component<DevelopmentProps> {
           disabled={buttonState}
           className={buttonClass}
         >
-          Megveszem
+          Elkezdem
         </button>
       </div>
     );
