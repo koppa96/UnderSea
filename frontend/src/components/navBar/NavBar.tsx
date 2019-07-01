@@ -14,7 +14,7 @@ export class NavBar extends React.Component<NavBarProps> {
 
     const navbarPearlPerRound = navBarIcons && navBarIcons.pearlsPerRound;
     const navbarCoralPerRound = navBarIcons && navBarIcons.coralsPerRound;
-    console.log("navbararmy", navbarArmy);
+
     return (
       <div className="navbar-bg">
         <div className="navbar-color ">

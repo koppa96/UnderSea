@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
 import ReactDOM from "react-dom";
-import { App, registeraxios } from "./App";
+import { App } from "./App";
 import axios from "axios";
 import * as serviceWorker from "./serviceWorker";
 import { Provider } from "react-redux";
@@ -22,7 +22,6 @@ const { store } = configureStore(history);
 //   outputDir: '.',
 //   useStaticMethod:true
 // });
-registeraxios();
 ReactDOM.render(
   <Provider store={store}>
     <ConnectedRouter history={history}>

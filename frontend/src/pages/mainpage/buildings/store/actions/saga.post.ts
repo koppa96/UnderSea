@@ -8,14 +8,15 @@ import {
   IActionRequestAddBuilding
 } from "./BuildingAction.post";
 import { registerAxiosConfig } from "../../../../../config/axiosConfig";
+import { BasePortUrl } from "../../../../..";
 
 const beginToAddBuilding = (id: number): Promise<void> | any => {
   console.log("Beginig buy building", id);
 
-  const url = "/api/Buildings/" + id;
+  const url = BasePortUrl + "/api/Buildings/" + id;
   const instance = axios.create();
-  registerAxiosConfig();
-  return instance
+  const configured = registerAxiosConfig(instance);
+  return configured
     .post(url)
     .then(response => {
       return response;

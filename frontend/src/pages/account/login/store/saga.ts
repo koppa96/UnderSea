@@ -10,6 +10,7 @@ import {
   IActions,
   IActionLoginRequest
 } from "./actions/LoginAction.post";
+import { BasePortUrl } from "../../../..";
 
 export const beginToLogin = (
   name: string,
@@ -31,7 +32,7 @@ export const beginToLogin = (
     scope: "offline_access undersea_api",
     grant_type: "password"
   });
-  const url = "connect/token";
+  const url = BasePortUrl + "connect/token";
 
   const resp = axios
     .post(url, requestBody, config)
