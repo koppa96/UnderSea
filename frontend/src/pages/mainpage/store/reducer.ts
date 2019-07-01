@@ -8,15 +8,28 @@ import {
   IArmyActions,
   ArmyActions
 } from "../army/store/actions/ArmyActions.post";
-import { BriefUnitInfo, IBriefUnitInfo } from "../../../api/Client";
+import {
+  BriefUnitInfo,
+  IBriefUnitInfo,
+  BriefCreationInfo
+} from "../../../api/Client";
 import {
   IPostTargetActions,
   PostAttackActions
 } from "../attack/store/actions/AddAttackAction.post";
+import {
+  IAddDevelopmentActions,
+  AddDevelopmentActions
+} from "../development/store/actions/DevelopmentAction.post";
 
 export const MainpageReducer = (
   state = initialMainpageResponseState,
-  action: IActions | IAddBuildingActions | IArmyActions | IPostTargetActions
+  action:
+    | IActions
+    | IAddBuildingActions
+    | IArmyActions
+    | IPostTargetActions
+    | IAddDevelopmentActions
 ): MainpageResponseState => {
   switch (action.type) {
     case MainpageActions.REQUEST:
@@ -38,6 +51,38 @@ export const MainpageReducer = (
         ...state,
         loading: false,
         error: action.params
+      };
+    case AddDevelopmentActions.SUCCES:
+      var devs =
+        state.model && state.model.researches && state.model.researches;
+      var tempDev: BriefCreationInfo | undefined;
+      var tempPearls = state.model && state.model.pearls;
+
+      if (devs !== undefined) {
+        tempDev = devs.find(r => r.id == action.data);
+        if (tempDev !== undefined) {
+          devs.forEach(dev => {
+            if (tempDev !== undefined)
+              if (dev.id === tempDev.id) {
+                dev.inProgressCount = 1;
+              }
+          });
+        }
+        if (tempPearls && tempDev !== undefined) {
+          //TODO mockolt adat at kell kotni a researchstoreba
+          tempPearls -= 1000;
+        }
+      }
+      return {
+        ...state,
+        loading: false,
+        model: state.model
+          ? {
+              ...state.model,
+              researches: devs,
+              pearls: tempPearls ? tempPearls : 0
+            }
+          : undefined
       };
     case AddBuildingActions.REQUEST:
       return {

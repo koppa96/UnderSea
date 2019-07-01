@@ -19,11 +19,12 @@ export interface IActionRequestAddDevelopment {
 
 export interface IActionSuccesAddDevelopment {
   type: IAddDevelopmentActionsTypes["SUCCES"];
+  data: number;
 }
 
 export interface IActionErrorAddDevelopment {
   type: IAddDevelopmentActionsTypes["ERROR"];
-  params?: string;
+  reason?: string;
 }
 
 //REDUCERHEZ
@@ -40,11 +41,14 @@ export const AddDevelopmentRequestActionCreator = (
   params
 });
 export const AddDevelopmentErrorActionCreator = (
-  params?: string
+  reason?: string
 ): IActionErrorAddDevelopment => ({
   type: AddDevelopmentActions.ERROR,
-  params
+  reason
 });
-export const AddDevelopmentSuccessActionCreator = (): IActionSuccesAddDevelopment => ({
-  type: AddDevelopmentActions.SUCCES
+export const AddDevelopmentSuccessActionCreator = (
+  data: number
+): IActionSuccesAddDevelopment => ({
+  type: AddDevelopmentActions.SUCCES,
+  data
 });

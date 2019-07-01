@@ -8,9 +8,6 @@ export class Development extends React.Component<DevelopmentProps> {
     document.title = "Development";
     this.props.getAllDevelopment();
   }
-  onChecked(e: React.ChangeEvent<HTMLInputElement>) {
-    console.log("sd");
-  }
 
   state = {
     id: -1
