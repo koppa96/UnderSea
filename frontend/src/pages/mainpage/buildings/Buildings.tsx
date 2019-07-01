@@ -60,14 +60,12 @@ export class Buildings extends React.Component<BuildingProps> {
 
     const tempProgress = count.find(item => item.inProgress === true);
 
-    var buttonNotPushable = false;
-    if (
+    const buttonState =
       this.state.selectedBuilding === false ||
       ownedBuildingState.isPostRequesting ||
-      this.state.exceedMoney
-    ) {
-      buttonNotPushable = true;
-    }
+      this.state.exceedMoney ||
+      tempProgress !== undefined;
+    const buttonClass = buttonState ? "button-disabled" : "button";
 
     return (
       <div className="main-component">
@@ -85,15 +83,14 @@ export class Buildings extends React.Component<BuildingProps> {
               const curentCount = count.find(c => c.id === item.id);
               return (
                 <label key={item.id}>
-                  {totalpearl >= item.cost && (
-                    <input
-                      onClick={e => this.addBuildingByID(e)}
-                      value={item.id}
-                      name="select"
-                      className="sr-only"
-                      type="radio"
-                    />
-                  )}
+                  <input
+                    onClick={e => this.addBuildingByID(e)}
+                    value={item.id}
+                    name="select"
+                    className="sr-only"
+                    type="radio"
+                  />
+
                   <BuildingItem
                     id={item.id}
                     amount={curentCount ? curentCount.count : 0}
@@ -111,7 +108,8 @@ export class Buildings extends React.Component<BuildingProps> {
             })}
         </div>
         <button
-          disabled={buttonNotPushable}
+          disabled={buttonState}
+          className={buttonClass}
           onClick={() => this.beginAddBuilding()}
         >
           {tempProgress
@@ -126,9 +124,6 @@ export class Buildings extends React.Component<BuildingProps> {
     );
   }
 }
-/*
-                
-                />*/
 
 const title: string = "Épületek";
 const mainDescription: string = "Kattints rá, amelyiket szeretnéd megvenni.";
