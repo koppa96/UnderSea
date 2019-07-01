@@ -25,7 +25,7 @@ export class MainPage extends React.Component<MainPageProps> {
     this.props.beginFetchMainpage();
 
     const connection = new signalR.HubConnectionBuilder()
-      .withUrl("https://" + BasePortUrl + "hub", {
+      .withUrl(BasePortUrl + "hub", {
         accessTokenFactory: async () =>
           localStorage.getItem("access_token") || ""
       })
@@ -34,6 +34,9 @@ export class MainPage extends React.Component<MainPageProps> {
 
     connection.start().then(function() {
       console.log("connected");
+    });
+    connection.on("ReceiveResultsAsync", country => {
+      console.log("Country signalR", country);
     });
   }
 
