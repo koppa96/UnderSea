@@ -9,6 +9,7 @@ import { configureStore } from "./config/ConfigureStore";
 import { createBrowserHistory } from "history";
 import { ConnectedRouter } from "connected-react-router";
 import qs from "qs";
+import { AppConnected } from "./connect";
 
 export const BasePortUrl = "https://localhost:44355/";
 
@@ -26,7 +27,7 @@ ReactDOM.render(
   <Provider store={store}>
     <ConnectedRouter history={history}>
       <React.StrictMode>
-        <App />
+        <AppConnected />
       </React.StrictMode>
     </ConnectedRouter>
   </Provider>,

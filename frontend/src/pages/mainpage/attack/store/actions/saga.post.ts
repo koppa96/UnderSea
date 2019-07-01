@@ -9,6 +9,7 @@ import {
 } from "./AddAttackAction.post";
 import { call, put, takeEvery } from "redux-saga/effects";
 import { ICommandInfo } from "../../../war/store/actions/WarAction.get";
+import { BasePortUrl } from "../../../../..";
 export const asd = 0;
 
 // TODO: create error handling (dont use any)
@@ -23,7 +24,7 @@ const beginAddUnits = (
       "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token"
     }
   };
-  const url = "api/Commands";
+  const url = BasePortUrl + "api/Commands";
   return axios
     .post(url, attackTarget)
     .then(response => {

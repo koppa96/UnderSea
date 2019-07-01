@@ -54,22 +54,19 @@ export const registerAxiosConfig = (instance: AxiosInstance) => {
           .post(url, requestBody, config)
           .then(res => {
             console.log(res);
-            // console.log("datatatatatata", data);
-            // localStorage.setItem("access_token", data.token);
-            // localStorage.setItem("refresh_token", data.refreshToken);
-            // tokeninstance.defaults.headers.common["Authorization"] =
-            //   "Bearer " + data.token;
-            // originalRequest.headers["Authorization"] = "Bearer " + data.token;
-            // return axios(originalRequest);
+            console.log("datatatatatata", res.data);
+            localStorage.setItem("access_token", res.data.token);
+            localStorage.setItem("refresh_token", res.data.refreshToken);
+            tokeninstance.defaults.headers.common["Authorization"] =
+              "Bearer " + res.data.token;
+            originalRequest.headers["Authorization"] =
+              "Bearer " + res.data.token;
+            return axios(originalRequest);
           })
           .catch(err => {
             console.log(err);
           });
-      } else {
-        // localStorage.removeItem("access_token");
-        //  localStorage.removeItem("refresh_token");
       }
-
       console.log("oo utolso");
       return Promise.reject(error);
     }

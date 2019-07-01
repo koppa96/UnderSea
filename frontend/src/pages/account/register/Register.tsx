@@ -1,6 +1,7 @@
 import * as React from "react";
 import axios from "axios";
 
+import Wave from "./../../../assets/images/wave.svg";
 import { Form } from "reactstrap";
 import { RegisterProps, RegisterState } from "./Interface";
 import { Link } from "react-router-dom";
@@ -96,8 +97,10 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
     const { error } = this.state;
     return (
       <div className="mainpage-width">
-        <h1 className="undersea-font-form">UNDERSEA</h1>
-
+        <div>
+          <img className="wave" src={Wave} alt="wave" />
+          <h1 className="undersea-font-form">UNDERSEA</h1>
+        </div>
         <div className="form-bg mainpage-width">
           <h3 className="form-font">Regisztráció</h3>
           <Form onSubmit={this.handleSubmit}>

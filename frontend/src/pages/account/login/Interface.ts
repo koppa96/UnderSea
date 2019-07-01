@@ -5,10 +5,12 @@ export interface NativeProps {}
 export interface MappedProps {
   error?: string;
   loading: boolean;
+  succes: boolean;
 }
 
 export interface DispatchedProps {
   beginlogin: (params: IRequestParamState) => void;
+  getUserInfo: () => void;
 }
 
 export type LoginProps = NativeProps & MappedProps & DispatchedProps;
