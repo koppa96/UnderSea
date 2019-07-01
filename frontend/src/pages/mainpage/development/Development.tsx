@@ -15,6 +15,21 @@ export class Development extends React.Component<DevelopmentProps> {
 
   render() {
     const { totalDevelopment, totalResourcesDesc } = this.props;
+    var inProgress = false;
+    this.props.totalResourcesDesc.forEach(dev => {
+      if (dev.inProgressCount > 0) {
+        inProgress = true;
+      }
+    });
+
+    const buttonState =
+      this.state.id === -1 ||
+      this.props.totalDevelopment.isPostRequesting ||
+      this.props.totalDevelopment.loading ||
+      inProgress
+        ? true
+        : false;
+    const buttonClass = buttonState ? "button-disabled" : "button";
     return (
       <div className="main-component">
         <ComponentHeader
@@ -45,7 +60,11 @@ export class Development extends React.Component<DevelopmentProps> {
             );
           })}
         </div>
-        <button onClick={() => this.props.addDevelopment(this.state.id)}>
+        <button
+          onClick={() => this.props.addDevelopment(this.state.id)}
+          disabled={buttonState}
+          className={buttonClass}
+        >
           Megveszem
         </button>
       </div>
