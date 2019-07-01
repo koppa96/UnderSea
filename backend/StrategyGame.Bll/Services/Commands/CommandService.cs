@@ -110,6 +110,7 @@ namespace StrategyGame.Bll.Services.Commands
                     .ThenInclude(d => d.Unit)
                         .ThenInclude(u => u.Content)
                 .Include(c => c.TargetCountry)
+                .Include(c => c.ParentCountry)
                 .Where(c => c.ParentCountry.ParentUser.UserName == username && !c.ParentCountry.Equals(c.TargetCountry))
                 .ToListAsync();
 
