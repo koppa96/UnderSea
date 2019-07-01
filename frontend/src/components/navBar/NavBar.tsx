@@ -31,6 +31,7 @@ export class NavBar extends React.Component<NavBarProps> {
                       imageUrl={item.imageUrl && item.imageUrl}
                       count={item.totalCount && item.totalCount}
                       name={item.name && item.name}
+                      info={item.defendingCount + " véd"}
                     />
                   </li>
                 ))}

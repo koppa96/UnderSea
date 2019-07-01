@@ -101,7 +101,6 @@ export class Buildings extends React.Component<BuildingProps> {
               );
             })}
         </div>
-        <span>{error && error}</span>
         <button
           disabled={
             !this.state.selectedBuilding || ownedBuildingState.isPostRequesting
