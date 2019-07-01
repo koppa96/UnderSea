@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities.Logging;
 using System;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace StrategyGame.Bll.Services.Logger
@@ -11,42 +11,48 @@ namespace StrategyGame.Bll.Services.Logger
     public class DbLogger : IDbLogger
     {
         private readonly ILogger _logger;
-        private readonly UnderSeaDatabaseContext _context;
+        private readonly DbContextOptions<UnderSeaDatabaseContext> _options;
 
-        public DbLogger(ILogger<DbLogger> logger, UnderSeaDatabaseContext context)
+        public DbLogger(ILogger<DbLogger> logger, DbContextOptions<UnderSeaDatabaseContext> options)
         {
             _logger = logger;
-            _context = context;
+            _options = options;
         }
 
         public async Task LogExceptionAsync(Exception e)
         {
-            _logger.LogError(e.Message, e);
-
-            var exceptionLog = new ExceptionLog
+            using (var context = new UnderSeaDatabaseContext(_options))
             {
-                ExceptionType = e.GetType().Name,
-                Message = e.Message,
-                ThrownAt = DateTime.UtcNow,
-                StackTrace = e.StackTrace
-            };
+                _logger.LogError(e.Message, e);
 
-            _context.ExceptionLogs.Add(exceptionLog);
-            await _context.SaveChangesAsync();
+                var exceptionLog = new ExceptionLog
+                {
+                    ExceptionType = e.GetType().Name,
+                    Message = e.Message,
+                    ThrownAt = DateTime.UtcNow,
+                    StackTrace = e.StackTrace
+                };
+
+                context.ExceptionLogs.Add(exceptionLog);
+                await context.SaveChangesAsync();
+            }
         }
 
         public async Task LogRequestAsync(HttpContext context)
         {
-            var requestLog = new RequestLog
+            using (var dbContext = new UnderSeaDatabaseContext(_options))
             {
-                Method = context.Request.Method,
-                ResponseStatus = context.Response.StatusCode,
-                Url = context.Request.Path.Value,
-                Timestamp = DateTime.UtcNow
-            };
+                var requestLog = new RequestLog
+                {
+                    Method = context.Request.Method,
+                    ResponseStatus = context.Response.StatusCode,
+                    Url = context.Request.Path.Value,
+                    Timestamp = DateTime.UtcNow
+                };
 
-            _context.RequestLogs.Add(requestLog);
-            await _context.SaveChangesAsync();
+                dbContext.RequestLogs.Add(requestLog);
+                await dbContext.SaveChangesAsync();
+            }
         }
     }
 }
