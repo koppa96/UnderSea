@@ -42,6 +42,7 @@ namespace StrategyGame.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<PasswordHasherOptions>(options => options.IterationCount = 100000);
             services.Configure<IdentityOptions>(options =>
             {
                 options.Password.RequireNonAlphanumeric = false;
