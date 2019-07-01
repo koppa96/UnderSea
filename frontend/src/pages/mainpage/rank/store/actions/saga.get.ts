@@ -6,9 +6,9 @@ import {
   IRequestActionGetRank,
   ISuccesParamState,
   fetchError,
-  fetchSucces
+  fetchSucces,
+  IRankInfo
 } from "./RankAction.get";
-import { IRankInfo, AccountsClient } from "../../../../../api/Client";
 import { registerAxiosConfig } from "../../../../../config/axiosConfig";
 
 const beginFetchRank = async () => {

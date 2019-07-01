@@ -135,9 +135,9 @@ export const MainpageReducer = (
         state.model.armyInfo.forEach(x => {
           var tempIdUnit =
             action.data.units &&
-            action.data.units.find(item => item.unitId === x.id);
+            action.data.units.find(item => item.id === x.id);
           if (tempIdUnit) {
-            x.defendingCount = x.defendingCount - tempIdUnit.amount;
+            x.defendingCount = x.defendingCount - tempIdUnit.totalCount;
           }
           newUnits.push(x);
         });

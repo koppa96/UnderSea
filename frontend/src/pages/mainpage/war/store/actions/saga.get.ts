@@ -1,27 +1,37 @@
 import { call, put, takeEvery } from "redux-saga/effects";
-import {
-  CommandsClient,
-  ICombatInfo,
-  ICommandInfo
-} from "../../../../api/Client";
+
 import {
   IRequestActionGetWar,
   ISuccesParamState,
   fetchSucces,
   fetchError,
-  GetWarActions
-} from "./actions/WarAction.get";
+  GetWarActions,
+  ICommandInfo
+} from "./WarAction.get";
 
-export const beginFetchBuilding = () => {
-  const getWaredList = new CommandsClient();
-  const tempData = getWaredList.getCommands();
-  return tempData;
+import axios from "axios";
+import { registerAxiosConfig } from "../../../../../config/axiosConfig";
+
+const beginFetchWar = async () => {
+  const instance = axios.create();
+  registerAxiosConfig();
+
+  try {
+    const response = await axios.get("/api/Commands");
+    console.log("war fetched", response.data);
+
+    return response.data;
+  } catch (error) {
+    console.log("war fetch error", error);
+
+    throw new Error(error);
+  }
 };
 
 function* handleFetch(action: IRequestActionGetWar) {
   console.log("SAGA-War");
   try {
-    const data: ICommandInfo[] = yield call(beginFetchBuilding);
+    const data: ICommandInfo[] = yield call(beginFetchWar);
     const response: ISuccesParamState = { wars: data };
     yield put(fetchSucces(response));
   } catch (err) {

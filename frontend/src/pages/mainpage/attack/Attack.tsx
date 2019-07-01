@@ -121,7 +121,10 @@ export class Attack extends React.Component<TargetProps> {
         </div>
         <button
           disabled={
-            this.state.targetCountryId < 1 || this.state.units.length < 2
+            this.props.targets.isRequesting ||
+            this.props.targets.isPostRequesting ||
+            this.state.targetCountryId < 1 ||
+            this.state.units.length < 2
           }
           onClick={() =>
             this.props.attackTarget({
@@ -130,7 +133,11 @@ export class Attack extends React.Component<TargetProps> {
             })
           }
         >
-          {this.state.targetCountryId < 1 || this.state.units.length < 2
+          {this.props.targets.isRequesting
+            ? "Töltés"
+            : this.props.targets.isPostRequesting
+            ? "Töltés"
+            : this.state.targetCountryId < 1 || this.state.units.length < 2
             ? "Válassz"
             : "Megtámadom"}
         </button>

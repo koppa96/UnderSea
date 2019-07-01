@@ -1,12 +1,16 @@
-import { ICommandInfo } from "../../../../api/Client";
+import { ICommandInfo } from "./actions/WarAction.get";
 
 export interface WarState {
   war: ICommandInfo[];
-  loading: boolean;
+  isPostRequesting: boolean;
+  isRequesting: boolean;
+  isLoaded: boolean;
   error?: string;
 }
 
 export const WarInitialState: WarState = {
   war: [],
-  loading: false
+  isPostRequesting: false,
+  isRequesting: false,
+  isLoaded: false
 };

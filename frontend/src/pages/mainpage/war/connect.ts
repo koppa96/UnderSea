@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { GetWarActionCreator } from "./store/actions/WarAction.get";
 import { War } from "./War";
 import { DispachedProps, MappedProps } from "./Interface";
+import { DeleteWarActionCreator } from "./store/actions/WarAction.delete";
 
 const mapStateToProps = (state: IApllicationState): MappedProps => {
   return {
@@ -14,7 +15,8 @@ const mapStateToProps = (state: IApllicationState): MappedProps => {
 const mapDispatchToProps = (dispatch: Dispatch): DispachedProps =>
   bindActionCreators(
     {
-      getAllWar: GetWarActionCreator
+      getAllWar: GetWarActionCreator,
+      deleteById: DeleteWarActionCreator
     },
 
     dispatch

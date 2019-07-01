@@ -11,9 +11,11 @@ import {
   ISuccesParamState,
   GetDevelopmentActions
 } from "./DevelopmnetAction.get";
+import { registerAxiosConfig } from "../../../../../config/axiosConfig";
 
 export const beginFetchDevelopment = () => {
   const getResearch = new ResearchesClient();
+  registerAxiosConfig();
   const tempData = getResearch.getResearches();
   return tempData;
 };
