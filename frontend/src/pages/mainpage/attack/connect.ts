@@ -16,6 +16,7 @@ const mapStateToProps = (state: IApllicationState): MappedProps => {
   tempUnit &&
     tempUnit.forEach(item =>
       addUnit.push({
+        count: item.totalCount,
         id: item.id,
         defendingCount: item.defendingCount,
         name: item.name ? item.name : "ismeretlen név",

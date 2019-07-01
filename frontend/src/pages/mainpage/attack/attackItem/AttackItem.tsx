@@ -1,5 +1,4 @@
 import React from "react";
-import { IBriefUnitInfo } from "../../../../api/Client";
 import { BasePortUrl } from "../../../..";
 import { defendingTrop } from "../interface";
 

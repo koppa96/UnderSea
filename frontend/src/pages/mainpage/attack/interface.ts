@@ -12,6 +12,7 @@ export interface defendingTrop {
   defendingCount: number;
   name: string;
   setTrop?: Function;
+  count: number;
 }
 
 export interface IUnitDetails {

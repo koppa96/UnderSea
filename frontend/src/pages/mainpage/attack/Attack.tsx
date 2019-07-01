@@ -52,6 +52,12 @@ export class Attack extends React.Component<TargetProps> {
   };
   render() {
     const { targets, units } = this.props;
+    const buttonState =
+      this.props.targets.isRequesting ||
+      this.props.targets.isPostRequesting ||
+      this.state.targetCountryId < 1 ||
+      this.state.units.length < 2;
+    const buttonClass = buttonState ? "button-disabled" : "button";
     return (
       <div className="main-component">
         <ComponentHeader title={title} />
@@ -110,6 +116,7 @@ export class Attack extends React.Component<TargetProps> {
             <span>Támadáshoz 1 parancsnokra szükséged van</span>
             {units.map(item => (
               <AttackItem
+                count={item.count}
                 id={item.id}
                 imageUrl={item.imageUrl}
                 name={item.name}
@@ -120,18 +127,20 @@ export class Attack extends React.Component<TargetProps> {
           </div>
         </div>
         <button
-          disabled={
-            this.props.targets.isRequesting ||
-            this.props.targets.isPostRequesting ||
-            this.state.targetCountryId < 1 ||
-            this.state.units.length < 2
-          }
-          onClick={() =>
+          className={buttonClass}
+          disabled={buttonState}
+          onClick={() => {
             this.props.attackTarget({
               targetCountryId: this.state.targetCountryId,
               units: this.state.units
-            })
-          }
+            });
+            this.setState({
+              targetCountryId: -1,
+              units: initUnit,
+              filtered: "",
+              filteredrank: initFilter
+            });
+          }}
         >
           {this.props.targets.isRequesting
             ? "Töltés"
