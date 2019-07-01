@@ -1,5 +1,4 @@
 import React from "react";
-import { ArmyItemResponse } from "./Interface";
 import { BasePortUrl } from "../../../..";
 import { ArmyInfoWoCount } from "../store/actions/ArmyActions.get";
 import QuestionMark from "./../../../../assets/images/question.svg";
@@ -36,6 +35,17 @@ export class ArmyItem extends React.Component<ArmyProps> {
         this.props.currentTroops(this.props.unit.id, this.state.currentTroop)
       );
   };
+  handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!Number.isInteger(+e.target.value)) {
+      return;
+    }
+    this.setState({ currentTroop: +e.target.value });
+    this.props.currentTroops(
+      this.props.unit.id,
+      e.target.value,
+      this.props.unit.costPearl
+    );
+  };
   render() {
     const {
       imageUrl,
@@ -46,7 +56,6 @@ export class ArmyItem extends React.Component<ArmyProps> {
       attackPower,
       defensePower
     } = this.props.unit;
-    const { currentTroop } = this.state;
     var image;
     if (imageUrl === null || imageUrl.length < 1) {
       image = QuestionMark;
@@ -84,7 +93,14 @@ export class ArmyItem extends React.Component<ArmyProps> {
           <div onClick={this.removeTroop} className="circle">
             <p>-</p>
           </div>
-          <span>{currentTroop}</span>
+
+          <input
+            type="text"
+            value={this.state.currentTroop}
+            className="input-field"
+            onChange={e => this.handleInputChange(e)}
+          />
+
           <div onClick={this.addTroop} className="circle">
             <p>+</p>
           </div>
