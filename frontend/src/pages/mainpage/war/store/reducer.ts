@@ -63,7 +63,7 @@ export const WarReducer = (
       return {
         ...state,
         isPostRequesting: false,
-        war: state.war.filter(item => item.id !== action.data)
+        war: state.war.filter(item => item.id !== action.data.id)
       };
     default:
       const check: never = action;

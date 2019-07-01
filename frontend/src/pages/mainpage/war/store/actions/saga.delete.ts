@@ -30,7 +30,7 @@ const beginFetchWar = async (id: number) => {
 
 function* handleDelete(action: IActionRequestDeleteWar) {
   try {
-    const data = yield call(beginFetchWar, action.params);
+    const data = yield call(beginFetchWar, action.params.id);
     yield put(fetchSucces(action.params));
   } catch (err) {
     if (err) {

@@ -42,7 +42,7 @@ export class War extends React.Component<WarProps> {
                     <span>"Nincsenek egységek"</span>
                   )}
                   <div
-                    onClick={() => this.props.deleteById(item.id)}
+                    onClick={() => this.props.deleteById(item)}
                     className="circle"
                   >
                     <img alt="del" src={Deletemark} />

@@ -13,10 +13,19 @@ import {
   IPostTargetActions,
   PostAttackActions
 } from "../attack/store/actions/AddAttackAction.post";
+import {
+  IDeleteWarActions,
+  DeleteWarActions
+} from "../war/store/actions/WarAction.delete";
 
 export const MainpageReducer = (
   state = initialMainpageResponseState,
-  action: IActions | IAddBuildingActions | IArmyActions | IPostTargetActions
+  action:
+    | IActions
+    | IAddBuildingActions
+    | IArmyActions
+    | IPostTargetActions
+    | IDeleteWarActions
 ): MainpageResponseState => {
   switch (action.type) {
     case MainpageActions.REQUEST:
@@ -148,6 +157,37 @@ export const MainpageReducer = (
           ? {
               ...state.model,
               armyInfo: newUnits
+            }
+          : undefined
+      };
+    case DeleteWarActions.REQUEST:
+      return {
+        ...state
+      };
+    case DeleteWarActions.ERROR:
+      return {
+        ...state
+      };
+    case DeleteWarActions.SUCCES:
+      const backUnits: BriefUnitInfo[] = [];
+      state.model &&
+        state.model.armyInfo &&
+        state.model.armyInfo.forEach(x => {
+          var tempIdUnit =
+            action.data.units &&
+            action.data.units.find(item => item.id === x.id);
+          if (tempIdUnit) {
+            x.defendingCount = x.defendingCount + tempIdUnit.totalCount;
+          }
+          backUnits.push(x);
+        });
+
+      return {
+        ...state,
+        model: state.model
+          ? {
+              ...state.model,
+              armyInfo: backUnits
             }
           : undefined
       };

@@ -1,3 +1,13 @@
+import { ICommandInfo } from "./WarAction.get";
+
+export interface IBriefUnitInfo {
+  id: number;
+  name?: string | undefined;
+  totalCount: number;
+  defendingCount: number;
+  imageUrl?: string | undefined;
+}
+
 //ACTIONTYPES
 export interface IDeleteWarActionsTypes {
   REQUEST: "WAR_REQUEST_WAR_DELETE";
@@ -14,12 +24,12 @@ export const DeleteWarActions: IDeleteWarActionsTypes = {
 //ACTIONHOZ
 export interface IActionRequestDeleteWar {
   type: IDeleteWarActionsTypes["REQUEST"];
-  params: number;
+  params: ICommandInfo;
 }
 
 export interface IActionSuccesDeleteWar {
   type: IDeleteWarActionsTypes["SUCCES"];
-  data: number;
+  data: ICommandInfo;
 }
 
 export interface IActionErrorDeleteWar {
@@ -35,7 +45,7 @@ export type IDeleteWarActions =
 
 //ACTIONCREATORHOZ
 export const DeleteWarActionCreator = (
-  params: number
+  params: ICommandInfo
 ): IActionRequestDeleteWar => ({
   type: DeleteWarActions.REQUEST,
   params
@@ -44,7 +54,7 @@ export const fetchError = (error?: string): IActionErrorDeleteWar => ({
   type: DeleteWarActions.ERROR,
   error
 });
-export const fetchSucces = (data: number): IActionSuccesDeleteWar => ({
+export const fetchSucces = (data: ICommandInfo): IActionSuccesDeleteWar => ({
   type: DeleteWarActions.SUCCES,
   data
 });

@@ -1,4 +1,5 @@
 import { WarState } from "./store/store";
+import { ICommandInfo } from "./store/actions/WarAction.get";
 
 interface NativeProps {}
 
@@ -7,7 +8,7 @@ export interface MappedProps {
 }
 export interface DispachedProps {
   getAllWar: () => void;
-  deleteById: (params: number) => void;
+  deleteById: (params: ICommandInfo) => void;
 }
 
 export type WarProps = NativeProps & MappedProps & DispachedProps;

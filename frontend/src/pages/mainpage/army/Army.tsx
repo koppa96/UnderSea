@@ -108,7 +108,9 @@ export class Army extends React.Component<ArmyProps, InitialState> {
         >
           {ownedUnitState.isPostRequesting ? "töltés.." : "Megveszem"}
         </button>
-        {ownedUnitState.error && <p>{ownedUnitState.error}</p>}
+        {ownedUnitState.error && (
+          <p className="common-error-text">{ownedUnitState.error}</p>
+        )}
       </div>
     );
   }

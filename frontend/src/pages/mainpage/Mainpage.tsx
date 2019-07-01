@@ -15,11 +15,26 @@ import { DevelopmentConnected } from "./development/connect";
 import { AttackConnected } from "./attack/connect";
 import Wave from "./../../assets/images/wave.svg";
 
+import * as signalR from "@aspnet/signalr";
+import { BasePortUrl } from "../..";
+
 export class MainPage extends React.Component<MainPageProps> {
   componentDidMount() {
     document.title = "Ország";
 
     this.props.beginFetchMainpage();
+
+    const connection = new signalR.HubConnectionBuilder()
+      .withUrl("https://" + BasePortUrl + "hub", {
+        accessTokenFactory: async () =>
+          localStorage.getItem("access_token") || ""
+      })
+      .configureLogging(signalR.LogLevel.Information)
+      .build();
+
+    connection.start().then(function() {
+      console.log("connected");
+    });
   }
 
   render() {
