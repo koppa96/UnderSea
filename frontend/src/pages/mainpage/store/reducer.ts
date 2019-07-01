@@ -8,26 +8,20 @@ import {
   IArmyActions,
   ArmyActions
 } from "../army/store/actions/ArmyActions.post";
-import { BriefUnitInfo, IBriefUnitInfo } from "../../../api/Client";
-import {
-  BriefUnitInfo,
-  IBriefUnitInfo,
-  BriefCreationInfo
-} from "../../../api/Client";
+
 import {
   IPostTargetActions,
   PostAttackActions
 } from "../attack/store/actions/AddAttackAction.post";
 import {
-<<<<<<< HEAD
   IDeleteWarActions,
   DeleteWarActions
 } from "../war/store/actions/WarAction.delete";
-=======
+import {
   IAddDevelopmentActions,
   AddDevelopmentActions
 } from "../development/store/actions/DevelopmentAction.post";
->>>>>>> aadeedc3d68f1cb39459e6f18f57c364b608756e
+import { BriefCreationInfo, BriefUnitInfo } from "../../../api/Client";
 
 export const MainpageReducer = (
   state = initialMainpageResponseState,
@@ -36,11 +30,8 @@ export const MainpageReducer = (
     | IAddBuildingActions
     | IArmyActions
     | IPostTargetActions
-<<<<<<< HEAD
-    | IDeleteWarActions
-=======
     | IAddDevelopmentActions
->>>>>>> aadeedc3d68f1cb39459e6f18f57c364b608756e
+    | IDeleteWarActions
 ): MainpageResponseState => {
   switch (action.type) {
     case MainpageActions.REQUEST:
