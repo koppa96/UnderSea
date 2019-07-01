@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using StrategyGame.Model.Entities;
 using StrategyGame.Model.Entities.Frontend;
+using StrategyGame.Model.Entities.Logging;
 using System;
 
 namespace StrategyGame.Dal
@@ -121,6 +122,8 @@ namespace StrategyGame.Dal
 
         public DbSet<ExceptionLog> ExceptionLogs { get; set; }
 
+        public DbSet<RequestLog> RequestLogs { get; set; }
+
         #endregion
 
         /// <summary>
@@ -154,6 +157,7 @@ namespace StrategyGame.Dal
             EventContents = Set<EventContent>();
             GlobalValues = Set<GlobalValue>();
             ExceptionLogs = Set<ExceptionLog>();
+            RequestLogs = Set<RequestLog>();
         }
 
         /// <summary>

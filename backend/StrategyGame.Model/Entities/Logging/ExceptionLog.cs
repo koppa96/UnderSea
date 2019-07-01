@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace StrategyGame.Model.Entities
+namespace StrategyGame.Model.Entities.Logging
 {
     /// <summary>
     /// Represents an exception in the UnderSea database.

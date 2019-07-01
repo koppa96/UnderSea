@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NSwag.CodeGeneration.TypeScript;
 using StrategyGame.Api.Hubs;
+using StrategyGame.Api.Middlewares;
 using StrategyGame.Bll;
 using StrategyGame.Bll.EffectParsing;
 using StrategyGame.Bll.Services.Buildings;
@@ -128,7 +129,7 @@ namespace StrategyGame.Api
             services.AddTransient<IBuildingService, BuildingService>();
             services.AddTransient<IUnitService, UnitService>();
             services.AddTransient<ICommandService, CommandService>();
-            services.AddTransient<IExceptionLogger, ExceptionLogger>();
+            services.AddTransient<IDbLogger, DbLogger>();
 
             // User ID provider for SignalR Hub
             services.AddTransient<IUserIdProvider, UserIdProvider>();
@@ -141,6 +142,7 @@ namespace StrategyGame.Api
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseMiddleware<RequestLoggerMiddleware>();
             app.UseMiddleware<ExceptionHandlingMiddleware>();
 
             app.UseHttpsRedirection();

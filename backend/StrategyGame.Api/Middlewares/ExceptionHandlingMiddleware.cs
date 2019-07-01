@@ -5,10 +5,10 @@ using StrategyGame.Bll.Services.Logger;
 using System;
 using System.Threading.Tasks;
 
-namespace StrategyGame.Api
+namespace StrategyGame.Api.Middlewares
 {
     /// <summary>
-    /// Provides a middleware that logs any exception using an <see cref="IExceptionLogger"/>, 
+    /// Provides a middleware that logs any exception using an <see cref="IDbLogger"/>, 
     /// and provides an appropriate error to the user.
     /// </summary>
     public class ExceptionHandlingMiddleware
@@ -20,7 +20,7 @@ namespace StrategyGame.Api
             _next = next;
         }
 
-        public async Task InvokeAsync(HttpContext context, IExceptionLogger logger)
+        public async Task InvokeAsync(HttpContext context, IDbLogger logger)
         {
             try
             {
