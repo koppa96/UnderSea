@@ -129,26 +129,25 @@ export const MainpageReducer = (
       };
     case PostAttackActions.SUCCES:
       const newUnits: BriefUnitInfo[] = [];
-      action.data.units &&
-        action.data.units.map(item => {
-          state.model &&
-            state.model.armyInfo &&
-            state.model.armyInfo.map(x => {
-              if (x.id === item.unitId) {
-                var tempdata = x;
-                tempdata.defendingCount = tempdata.defendingCount - item.amount;
-                newUnits.push(tempdata);
-              } else {
-                newUnits.push(x);
-              }
-            });
+
+      state.model &&
+        state.model.armyInfo &&
+        state.model.armyInfo.forEach(x => {
+          var tempIdUnit =
+            action.data.units &&
+            action.data.units.find(item => item.unitId === x.id);
+          if (tempIdUnit) {
+            x.defendingCount = x.defendingCount - tempIdUnit.amount;
+          }
+          newUnits.push(x);
         });
+      console.log("pushed new unit", newUnits);
       return {
         ...state,
         model: state.model
           ? {
               ...state.model,
-              armyInfo: { ...newUnits }
+              armyInfo: newUnits
             }
           : undefined
       };

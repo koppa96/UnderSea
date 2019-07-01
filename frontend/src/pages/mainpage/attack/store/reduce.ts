@@ -39,9 +39,14 @@ export const TargetReducer = (
         isPostRequesting: true
       };
     case PostAttackActions.SUCCES:
+      var newTargets = state.targets.filter(
+        x => x.countryId !== action.data.targetCountryId
+      );
+
       return {
         ...state,
-        isPostRequesting: false
+        isPostRequesting: false,
+        targets: newTargets
       };
     case PostAttackActions.ERROR:
       return {
