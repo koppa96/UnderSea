@@ -80,15 +80,8 @@ namespace StrategyGame.Bll.Services.Units
                 {
                     var unit = unitTypes.Single(u => u.Id == purchase.UnitId);
 
-                    if (unit == null)
-                    {
-                        throw new ArgumentOutOfRangeException(nameof(purchase.UnitId), "No unit found by the provided ID.");
-                    }
-
-                    if (!unit.IsPurchasable)
-                    {
-                        throw new InvalidOperationException("Can not purchase ranked up unit.");
-                    }
+                var builder = country.ParseAllEffectForCountry(Context, globals, Parsers, false);
+                var totalUnits = country.Commands.Sum(c => c.Divisions.Sum(d => d.Count));
 
                     if (purchase.Count < 0)
                     {
@@ -104,8 +97,7 @@ namespace StrategyGame.Bll.Services.Units
                         throw new LimitReachedException("Unit count limit reached.");
                     }
 
-                    var defenders = country.GetAllDefending();
-                    var targetDiv = defenders.Divisions.SingleOrDefault(d => d.Unit.Id == purchase.UnitId);
+                country.Purchase(unit, Context, purchase.Count);
 
                     if (targetDiv == null)
                     {
