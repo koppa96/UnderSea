@@ -103,8 +103,6 @@ namespace StrategyGame.Bll.Services.Units
                     throw new ArgumentException("Purchase amount must be positive.");
                 }
 
-                country.Purchase(unit, Context, purchase.Count);
-
                 var builder = country.ParseAllEffectForCountry(Context, globals, Parsers, false);
                 var totalUnits = country.Commands.Sum(c => c.Divisions.Sum(d => d.Count));
 
@@ -127,8 +125,7 @@ namespace StrategyGame.Bll.Services.Units
                     targetDiv.Count += purchase.Count;
                 }
 
-                country.Pearls -= costPearl;
-                country.Corals -= costCoral;
+                country.Purchase(unit, Context, purchase.Count);
 
                 var info = Mapper.Map<UnitType, UnitInfo>(unit);
                 info.Count = targetDiv.Count;
