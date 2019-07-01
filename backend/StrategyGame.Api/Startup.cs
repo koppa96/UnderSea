@@ -19,6 +19,7 @@ using StrategyGame.Bll.Services.Buildings;
 using StrategyGame.Bll.Services.Commands;
 using StrategyGame.Bll.Services.Country;
 using StrategyGame.Bll.Services.Logger;
+using StrategyGame.Bll.Services.Reports;
 using StrategyGame.Bll.Services.Researches;
 using StrategyGame.Bll.Services.TurnHandling;
 using StrategyGame.Bll.Services.Units;
@@ -129,6 +130,7 @@ namespace StrategyGame.Api
             services.AddTransient<IBuildingService, BuildingService>();
             services.AddTransient<IUnitService, UnitService>();
             services.AddTransient<ICommandService, CommandService>();
+            services.AddTransient<IReportService, ReportService>();
             services.AddTransient<IDbLogger, DbLogger>();
 
             // User ID provider for SignalR Hub
