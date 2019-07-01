@@ -63,6 +63,23 @@ namespace StrategyGame.Tests.Services
 
         [TestMethod]
         [DataRow("TheRich")]
+        public async Task TestStartBuildingDifferentType(string username)
+        {
+            var buildingId = (await context.BuildingTypes.FirstAsync()).Id;
+            var otherBuildingId = (await context.BuildingTypes.FirstAsync(b => b.Id != buildingId)).Id;
+
+            await buildingService.StartBuildingAsync(username, buildingId);
+            await buildingService.StartBuildingAsync(username, otherBuildingId);
+
+            var inProgress = await context.InProgressBuildings
+                .Where(b => b.ParentCountry.ParentUser.UserName == username)
+                .ToListAsync();
+
+            Assert.AreEqual(2, inProgress.Count);
+        }
+
+        [TestMethod]
+        [DataRow("TheRich")]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public async Task TestStartBuildingNotExisting(string username)
         {
