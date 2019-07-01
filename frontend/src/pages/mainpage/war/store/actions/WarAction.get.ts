@@ -1,4 +1,15 @@
-import { ICommandInfo } from "../../../../../api/Client";
+export interface ICommandInfo {
+  id: number;
+  targetCountryId: number;
+  targetCountryName?: string | undefined;
+  units?: IBriefUnitInfo[] | undefined;
+}
+
+export interface IBriefUnitInfo {
+  id: number;
+  name?: string | undefined;
+  totalCount: number;
+}
 
 //ACTIONTYPES
 export interface IGetWarActionsTypes {
@@ -23,11 +34,11 @@ export interface IRequestActionGetWar {
 }
 export interface ISuccesActionGetWar {
   type: IGetWarActionsTypes["SUCCES"];
-  params: ISuccesParamState;
+  data: ISuccesParamState;
 }
 export interface IErrorActionGetWar {
   type: IGetWarActionsTypes["ERROR"];
-  params?: string;
+  error?: string;
 }
 
 //REDUCERHEZ
@@ -41,13 +52,11 @@ export const GetWarActionCreator = (): IRequestActionGetWar => ({
   type: GetWarActions.REQUEST
 });
 
-export const fetchError = (params?: string): IErrorActionGetWar => ({
+export const fetchError = (error?: string): IErrorActionGetWar => ({
   type: GetWarActions.ERROR,
-  params
+  error
 });
-export const fetchSucces = (
-  params: ISuccesParamState
-): ISuccesActionGetWar => ({
+export const fetchSucces = (data: ISuccesParamState): ISuccesActionGetWar => ({
   type: GetWarActions.SUCCES,
-  params
+  data
 });

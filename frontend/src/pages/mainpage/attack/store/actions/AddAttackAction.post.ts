@@ -1,4 +1,5 @@
 import { IUnitDetails } from "../../interface";
+import { ICommandInfo } from "../../../war/store/actions/WarAction.get";
 
 export interface ICommandDetails {
   targetCountryId: number;
@@ -25,7 +26,7 @@ export interface IRequestActionPostTarget {
 }
 export interface ISuccesActionPostTarget {
   type: IPostTargetActionsTypes["SUCCES"];
-  data: ICommandDetails;
+  data: ICommandInfo;
 }
 export interface IErrorActionPostTarget {
   type: IPostTargetActionsTypes["ERROR"];
@@ -50,9 +51,7 @@ export const fetchError = (error?: string): IErrorActionPostTarget => ({
   type: PostAttackActions.ERROR,
   error
 });
-export const fetchSucces = (
-  data: ICommandDetails
-): ISuccesActionPostTarget => ({
+export const fetchSucces = (data: ICommandInfo): ISuccesActionPostTarget => ({
   type: PostAttackActions.SUCCES,
   data
 });

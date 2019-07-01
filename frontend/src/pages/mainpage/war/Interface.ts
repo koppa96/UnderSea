@@ -7,6 +7,7 @@ export interface MappedProps {
 }
 export interface DispachedProps {
   getAllWar: () => void;
+  deleteById: (params: number) => void;
 }
 
 export type WarProps = NativeProps & MappedProps & DispachedProps;
