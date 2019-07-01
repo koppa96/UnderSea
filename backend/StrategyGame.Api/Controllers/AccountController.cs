@@ -10,6 +10,7 @@ using StrategyGame.Model.Entities;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace StrategyGame.Api.Controllers
@@ -135,13 +136,16 @@ namespace StrategyGame.Api.Controllers
                 return BadRequest(result.Errors);
             }
 
-            await _countryService.CreateAsync(data.Username, data.CountryName);
-            return StatusCode(201, new UserInfo
+            using (var src = new CancellationTokenSource(Constants.DefaultTurnEndTimeout))
             {
-                Username = user.UserName,
-                Email = user.Email,
-                ProfileImageUrl = user.ImageUrl
-            });
+                await _countryService.CreateAsync(data.Username, data.CountryName, src.Token);
+                return StatusCode(201, new UserInfo
+                {
+                    Username = user.UserName,
+                    Email = user.Email,
+                    ProfileImageUrl = user.ImageUrl
+                });
+            }
         }
 
         [HttpGet]

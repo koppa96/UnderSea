@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Nito.AsyncEx;
 using StrategyGame.Bll.Dto.Sent;
 using StrategyGame.Bll.Dto.Sent.Country;
 using StrategyGame.Bll.EffectParsing;
@@ -9,6 +10,7 @@ using StrategyGame.Model.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace StrategyGame.Bll.Services.Country
@@ -16,46 +18,50 @@ namespace StrategyGame.Bll.Services.Country
     public class CountryService : ICountryService
     {
         protected IMapper Mapper { get; }
-
         protected UnderSeaDatabaseContext Context { get; }
-
         protected ModifierParserContainer Parsers { get; }
+        protected AsyncReaderWriterLock TurnEndLock { get; }
 
-        public CountryService(IMapper mapper, UnderSeaDatabaseContext context, ModifierParserContainer parsers)
+        public CountryService(IMapper mapper, UnderSeaDatabaseContext context, AsyncReaderWriterLock turnEndLock,
+            ModifierParserContainer parsers)
         {
             Mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             Context = context ?? throw new ArgumentNullException(nameof(context));
             Parsers = parsers ?? throw new ArgumentNullException(nameof(parsers));
+            TurnEndLock = turnEndLock ?? throw new ArgumentNullException(nameof(turnEndLock));
         }
 
-        public async Task CreateAsync(string username, string countryName)
+        public async Task CreateAsync(string username, string countryName, CancellationToken turnEndWaitToken)
         {
-            var user = await Context.Users.SingleAsync(u => u.UserName == username);
-            var globals = await Context.GlobalValues
-                .Include(g => g.FirstStartingBuilding)
-                .Include(g => g.SecondStartingBuilding)
-                .SingleAsync();
-
-            var country = new Model.Entities.Country()
+            using (var lck = await TurnEndLock.ReaderLockAsync(turnEndWaitToken))
             {
-                Name = countryName,
-                ParentUser = user,
-                Corals = globals.StartingCorals,
-                Pearls = globals.StartingPearls,
-                Score = -1,
-                Rank = -1,
-                CreatedRound = globals.Round
-            };
+                var user = await Context.Users.SingleAsync(u => u.UserName == username);
+                var globals = await Context.GlobalValues
+                    .Include(g => g.FirstStartingBuilding)
+                    .Include(g => g.SecondStartingBuilding)
+                    .SingleAsync();
 
-            var defenders = new Command { ParentCountry = country, TargetCountry = country };
+                var country = new Model.Entities.Country()
+                {
+                    Name = countryName,
+                    ParentUser = user,
+                    Corals = globals.StartingCorals,
+                    Pearls = globals.StartingPearls,
+                    Score = -1,
+                    Rank = -1,
+                    CreatedRound = globals.Round
+                };
 
-            Context.Countries.Add(country);
-            Context.Commands.Add(defenders);
-            Context.CountryBuildings.AddRange(
-                new CountryBuilding { ParentCountry = country, Count = 1, Building = globals.FirstStartingBuilding },
-                new CountryBuilding { ParentCountry = country, Count = 1, Building = globals.SecondStartingBuilding });
+                var defenders = new Command { ParentCountry = country, TargetCountry = country };
 
-            await Context.SaveChangesAsync();
+                Context.Countries.Add(country);
+                Context.Commands.Add(defenders);
+                Context.CountryBuildings.AddRange(
+                    new CountryBuilding { ParentCountry = country, Count = 1, Building = globals.FirstStartingBuilding },
+                    new CountryBuilding { ParentCountry = country, Count = 1, Building = globals.SecondStartingBuilding });
+
+                await Context.SaveChangesAsync();
+            }
         }
 
         public async Task<CountryInfo> GetCountryInfoAsync(string username)

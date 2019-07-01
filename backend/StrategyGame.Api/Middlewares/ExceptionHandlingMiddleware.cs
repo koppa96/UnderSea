@@ -70,6 +70,17 @@ namespace StrategyGame.Api.Middlewares
                 });
             }
 
+            if (e is OperationCanceledException || e is TaskCanceledException)
+            {
+                context.Response.StatusCode = StatusCodes.Status418ImATeapot;
+                return context.Response.WriteJsonAsync(new ProblemDetails
+                {
+                    Status = StatusCodes.Status418ImATeapot,
+                    Title = "I'm a teapot",
+                    Detail = "Turn-end in progress, retry later."
+                });
+            }
+
             context.Response.StatusCode = 500;
             return context.Response.WriteJsonAsync(new ProblemDetails
             {

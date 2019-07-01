@@ -2,6 +2,7 @@
 using StrategyGame.Bll.Dto.Sent;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace StrategyGame.Bll.Services.Commands
@@ -23,21 +24,25 @@ namespace StrategyGame.Bll.Services.Commands
         /// </summary>
         /// <param name="username">The name of the user</param>
         /// <param name="details">The details of the command</param>
+        /// <param name="turnEndWaitToken">The token that can be used to cancel waiting for an in-progress end-of-turn calculation.</param>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the target country is not found or a unit type is not found</exception>
         /// <exception cref="ArgumentException">Thrown when there are not enough units to start this command</exception>
         /// <exception cref="InvalidOperationException">Thrown when no leaders are assigned to the command</exception>
+        /// <exception cref="TaskCanceledException">Thrown if the operation was cancelled.</exception>
         /// <returns>The CommandInfo representing the command</returns>
-        Task<CommandInfo> AttackTargetAsync(string username, CommandDetails details);
+        Task<CommandInfo> AttackTargetAsync(string username, CommandDetails details, CancellationToken turnEndWaitToken = default);
 
         /// <summary>
         /// Deletes the command with the given id.
         /// </summary>
         /// <param name="username">The name of the user</param>
         /// <param name="commandId">The identifier of the command</param>
+        /// <param name="turnEndWaitToken">The token that can be used to cancel waiting for an in-progress end-of-turn calculation.</param>
         /// <exception cref="UnauthorizedAccessException">Thrown when the user is not authorized to delete that command</exception>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the command does not exist</exception>
+        /// <exception cref="TaskCanceledException">Thrown if the operation was cancelled.</exception>
         /// <returns>A task that can be awaited</returns>
-        Task DeleteCommandAsync(string username, int commandId);
+        Task DeleteCommandAsync(string username, int commandId, CancellationToken turnEndWaitToken = default);
 
         /// <summary>
         /// Changes an existing command to the given details.
@@ -45,11 +50,14 @@ namespace StrategyGame.Bll.Services.Commands
         /// <param name="username">The name of the user</param>
         /// <param name="commandId">The identifier of the command</param>
         /// <param name="details">The new details</param>
+        /// <param name="turnEndWaitToken">The token that can be used to cancel waiting for an in-progress end-of-turn calculation.</param>
         /// <exception cref="InvalidOperationException">Thrown when the modified command would not contain a leader</exception>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the target country is not found or a unit type is not found</exception>
         /// <exception cref="ArgumentException">Thrown when there are not enough units to start this command</exception>
         /// <exception cref="UnauthorizedAccessException">Thrown when the command is not issued by the modifying user</exception>
+        /// <exception cref="TaskCanceledException">Thrown if the operation was cancelled.</exception>
         /// <returns></returns>
-        Task<CommandInfo> UpdateCommandAsync(string username, int commandId, CommandDetails details);
+        Task<CommandInfo> UpdateCommandAsync(string username, int commandId,
+            CommandDetails details, CancellationToken turnEndWaitToken = default);
     }
 }
