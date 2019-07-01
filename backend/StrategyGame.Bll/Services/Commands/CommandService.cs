@@ -37,6 +37,11 @@ namespace StrategyGame.Bll.Services.Commands
                 throw new ArgumentOutOfRangeException(nameof(details.TargetCountryId), "Invalid country id.");
             }
 
+            if (country.Commands.Any(c => c.TargetCountry.Equals(targetCountry)))
+            {
+                throw new InvalidOperationException("Target country is already attacked.");
+            }
+
             var defendingCommand = country.GetAllDefending();
             var attackingCommand = new Command
             {
