@@ -142,3 +142,19 @@ button {
     rgba(159, 255, 240, 1)
   );
 }
+.button-disabled {
+  color: $secondary-color;
+  text-align: center;
+  font-family: Baloo;
+  font-size: 18px;
+  border-radius: 100px;
+  min-width: 190px;
+  border: none;
+  min-height: 50px;
+  box-shadow: 0 3px 6px rgba(59, 125, 189, 1);
+  background-image: linear-gradient(
+    to right,
+    rgb(15, 122, 129),
+    rgb(124, 190, 180)
+  );
+}

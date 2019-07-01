@@ -33,16 +33,18 @@ export type IAddDevelopmentActions =
   | IActionErrorAddDevelopment;
 
 //ACTIONCREATORHOZ
-export const AddDevelopmentAddActionCreator = (
+export const AddDevelopmentRequestActionCreator = (
   params: number
 ): IActionRequestAddDevelopment => ({
   type: AddDevelopmentActions.REQUEST,
   params
 });
-export const fetchError = (params?: string): IActionErrorAddDevelopment => ({
+export const AddDevelopmentErrorActionCreator = (
+  params?: string
+): IActionErrorAddDevelopment => ({
   type: AddDevelopmentActions.ERROR,
   params
 });
-export const fetchSucces = (): IActionSuccesAddDevelopment => ({
+export const AddDevelopmentSuccessActionCreator = (): IActionSuccesAddDevelopment => ({
   type: AddDevelopmentActions.SUCCES
 });

@@ -8,6 +8,7 @@ interface NativeProps {
 export interface MappedProps {
   ownedUnitState: ArmyState;
   count: Array<{ id: number; count: number }>;
+  pearls: number;
 }
 
 export interface DispachedProps {

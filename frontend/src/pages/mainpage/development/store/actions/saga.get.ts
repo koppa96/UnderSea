@@ -1,13 +1,9 @@
 import { call, put, takeEvery, all } from "redux-saga/effects";
-import {
-  AccountsClient,
-  ResearchesClient,
-  ICreationInfo
-} from "../../../../../api/Client";
+import { ResearchesClient, ICreationInfo } from "../../../../../api/Client";
 import {
   IRequestActionGetDevelopment,
-  fetchSucces,
-  fetchError,
+  GetDevelopmentSuccessActionCreator,
+  GetDevelopmentErrorActionCreator,
   ISuccesParamState,
   GetDevelopmentActions
 } from "./DevelopmnetAction.get";
@@ -21,16 +17,15 @@ export const beginFetchDevelopment = () => {
 };
 
 function* handleLogin(action: IRequestActionGetDevelopment) {
-  console.log("SAGA-Development");
   try {
     const data: ICreationInfo[] = yield call(beginFetchDevelopment);
     const response: ISuccesParamState = { description: data };
-    yield put(fetchSucces(response));
+    yield put(GetDevelopmentSuccessActionCreator(response));
   } catch (err) {
     if (err) {
-      yield put(fetchError("Hiba történt"));
+      yield put(GetDevelopmentErrorActionCreator("Hiba történt"));
     } else {
-      yield put(fetchError("An unknown error occured."));
+      yield put(GetDevelopmentErrorActionCreator("An unknown error occured."));
     }
   }
 }

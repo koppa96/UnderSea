@@ -1,9 +1,9 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { ResearchesClient } from "../../../../../api/Client";
 import {
-  fetchError,
+  AddDevelopmentErrorActionCreator,
   IActionRequestAddDevelopment,
-  fetchSucces,
+  AddDevelopmentSuccessActionCreator,
   AddDevelopmentActions
 } from "./DevelopmentAction.post";
 
@@ -16,12 +16,12 @@ export const beginToAddResearch = (id: number): Promise<void> => {
 function* handleAddResearch(action: IActionRequestAddDevelopment) {
   try {
     yield call(beginToAddResearch, action.params);
-    yield put(fetchSucces());
+    yield put(AddDevelopmentSuccessActionCreator());
   } catch (err) {
     if (err) {
-      yield put(fetchError(err));
+      yield put(AddDevelopmentErrorActionCreator(err));
     } else {
-      yield put(fetchError("An unknown error occured."));
+      yield put(AddDevelopmentErrorActionCreator("An unknown error occured."));
     }
   }
 }

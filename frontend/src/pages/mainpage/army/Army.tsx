@@ -8,6 +8,8 @@ interface InitialState {
   units: ArmyUnit[];
   unitsAdded: boolean;
   reset: boolean;
+  priceAll: number;
+  disableButton: boolean;
 }
 
 export class Army extends React.Component<ArmyProps, InitialState> {
@@ -20,7 +22,9 @@ export class Army extends React.Component<ArmyProps, InitialState> {
   state: InitialState = {
     units: [],
     unitsAdded: false,
-    reset: false
+    reset: false,
+    priceAll: 0,
+    disableButton: false
   };
 
   componentDidUpdate = async () => {
@@ -41,6 +45,17 @@ export class Army extends React.Component<ArmyProps, InitialState> {
       temp.push({ unitId: id, count: troop, price: price });
     }
 
+    var priceTemp = 0;
+    this.state.units.forEach(unit => {
+      priceTemp += unit.price * unit.count;
+    });
+    this.setState({ priceAll: priceTemp });
+    if (priceTemp > this.props.pearls) {
+      this.setState({ disableButton: true });
+    } else {
+      this.setState({ disableButton: false });
+    }
+
     this.setState({ units: temp });
     if (temp.some(item => item.count !== 0)) {
       this.setState({ unitsAdded: true });
@@ -51,10 +66,20 @@ export class Army extends React.Component<ArmyProps, InitialState> {
 
   render() {
     const { addUnits, ownedUnitState, count } = this.props;
+    const buttonState =
+      !this.state.unitsAdded ||
+      ownedUnitState.isPostRequesting ||
+      this.state.disableButton;
+    const buttonClass = buttonState ? "button-disabled" : "button";
+
     return (
       <div className="main-component army-component">
         <ComponentHeader title={title} mainDescription={mainDescription} />
         {ownedUnitState.isRequesting && "loading..."}
+        <div className="army-text">
+          <span>Összes ár: </span>
+          <span>{this.state.priceAll}</span>
+        </div>
 
         {ownedUnitState.isLoaded && (
           <div className="army-page hide-scroll">
@@ -75,7 +100,8 @@ export class Army extends React.Component<ArmyProps, InitialState> {
         )}
 
         <button
-          disabled={!this.state.unitsAdded || ownedUnitState.isPostRequesting}
+          disabled={buttonState}
+          className={buttonClass}
           onClick={() => {
             addUnits({ unitsToAdd: this.state.units });
           }}

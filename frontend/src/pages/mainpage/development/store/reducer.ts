@@ -18,13 +18,13 @@ export const DevelopmentReducer = (
       return {
         ...state,
         loading: false,
-        development: action.params.description
+        development: action.data.description
       };
     case GetDevelopmentActions.ERROR:
       return {
         ...state,
         loading: false,
-        error: action.params ? action.params : "Ismeretlen hiba"
+        error: action.reason ? action.reason : "Ismeretlen hiba"
       };
 
     default:

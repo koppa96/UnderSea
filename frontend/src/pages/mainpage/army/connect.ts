@@ -12,6 +12,7 @@ import { getArmy } from "./store/actions/ArmyActions.get";
 const mapStateToProps = (state: IApllicationState): MappedProps => {
   const { model } = state.app.pages.mainpage;
   return {
+    pearls: model ? model.pearls : 0,
     ownedUnitState: state.app.pages.Army,
     count: model
       ? model.armyInfo

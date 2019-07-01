@@ -23,11 +23,11 @@ export interface IRequestActionGetDevelopment {
 }
 export interface ISuccesActionGetDevelopment {
   type: IGetDevelopmentActionsTypes["SUCCES"];
-  params: ISuccesParamState;
+  data: ISuccesParamState;
 }
 export interface IErrorActionGetDevelopment {
   type: IGetDevelopmentActionsTypes["ERROR"];
-  params?: string;
+  reason?: string;
 }
 
 //REDUCERHEZ
@@ -37,17 +37,19 @@ export type IGetDevelopmentActions =
   | IErrorActionGetDevelopment;
 
 //ACTIONCREATORHOZ
-export const GetDevelopmentActionCreator = (): IRequestActionGetDevelopment => ({
+export const GetDevelopmentRequestActionCreator = (): IRequestActionGetDevelopment => ({
   type: GetDevelopmentActions.REQUEST
 });
 
-export const fetchError = (params?: string): IErrorActionGetDevelopment => ({
+export const GetDevelopmentErrorActionCreator = (
+  params?: string
+): IErrorActionGetDevelopment => ({
   type: GetDevelopmentActions.ERROR,
-  params
+  reason: params
 });
-export const fetchSucces = (
+export const GetDevelopmentSuccessActionCreator = (
   params: ISuccesParamState
 ): ISuccesActionGetDevelopment => ({
   type: GetDevelopmentActions.SUCCES,
-  params
+  data: params
 });

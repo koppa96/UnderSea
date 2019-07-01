@@ -3,8 +3,8 @@ import { IApllicationState } from "../../../store";
 import { Dispatch, bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { Development } from "./Development";
-import { GetDevelopmentActionCreator } from "./store/actions/DevelopmnetAction.get";
-import { AddDevelopmentAddActionCreator } from "./store/actions/DevelopmentAction.post";
+import { GetDevelopmentRequestActionCreator } from "./store/actions/DevelopmnetAction.get";
+import { AddDevelopmentRequestActionCreator } from "./store/actions/DevelopmentAction.post";
 
 const mapStateToProps = (state: IApllicationState): MappedProps => {
   const { model } = state.app.pages.mainpage;
@@ -19,8 +19,8 @@ const mapStateToProps = (state: IApllicationState): MappedProps => {
 const mapDispatchToProps = (dispatch: Dispatch): DispachedProps =>
   bindActionCreators(
     {
-      getAllDevelopment: GetDevelopmentActionCreator,
-      addDevelopment: AddDevelopmentAddActionCreator
+      getAllDevelopment: GetDevelopmentRequestActionCreator,
+      addDevelopment: AddDevelopmentRequestActionCreator
     },
 
     dispatch
