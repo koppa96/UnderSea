@@ -1,13 +1,18 @@
 .war-component {
+  min-width: 750px;
+  min-height: 650px;
+
   @media screen and (max-width: 1200px) {
     max-width: 800px;
   }
 
   @media screen and (max-width: 1050px) {
     max-width: 650px;
+    min-width: 450px;
   }
   @media screen and (max-width: 880px) {
     max-width: 500px;
+    min-width: 300px;
   }
 }
 .war-page::-webkit-scrollbar {

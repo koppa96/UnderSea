@@ -28,7 +28,7 @@ export const beginToAddResearch = (id: number): Promise<void> => {
 function* handleAddResearch(action: IActionRequestAddDevelopment) {
   try {
     yield call(beginToAddResearch, action.params);
-    yield put(AddDevelopmentSuccessActionCreator());
+    yield put(AddDevelopmentSuccessActionCreator(action.params));
   } catch (err) {
     if (err) {
       yield put(AddDevelopmentErrorActionCreator(err));

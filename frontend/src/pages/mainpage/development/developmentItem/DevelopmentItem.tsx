@@ -1,5 +1,4 @@
 import * as React from "react";
-import BuildingImg from "./../../../../assets/images/development-bg.png";
 import { DevelopmentProps } from "./Interface";
 import { BasePortUrl } from "../../../..";
 import Checkmark from "./../../../../assets/images/check_mark.png";
@@ -12,12 +11,11 @@ export const DevelopmentItem = (props: DevelopmentProps) => {
       ? BasePortUrl + info.imageUrl
       : QuestionMark
     : QuestionMark;
-  console.log(image, "image");
   return (
     <div className="development-item">
       <div className="development-img">
         {inProgress !== undefined && inProgress !== 0 && (
-          <p>{inProgress} épül</p>
+          <p>Fejlesztés alatt</p>
         )}
         {count > 0 && (
           <div className="checkmark">
@@ -31,6 +29,7 @@ export const DevelopmentItem = (props: DevelopmentProps) => {
       <div>
         <p className="building-font-bold">{info && info.name}</p>
         <p>{info && info.description}</p>
+        <p className="development-price">Ár: {info && info.cost} gyöngy</p>
         <div />
       </div>
     </div>

@@ -2,10 +2,11 @@ import React from "react";
 import { BasePortUrl } from "../../../..";
 import { ArmyInfoWoCount } from "../store/actions/ArmyActions.get";
 import QuestionMark from "./../../../../assets/images/question.svg";
+import { number } from "prop-types";
 
 interface ArmyProps {
   unit: ArmyInfoWoCount;
-  currentTroops: Function;
+  currentTroops: (id: number, troop: number, price: number) => void;
   count: number;
   reset: boolean;
 }
@@ -32,7 +33,7 @@ export class ArmyItem extends React.Component<ArmyProps> {
   removeTroop = () => {
     if (this.state.currentTroop > 0)
       this.setState({ currentTroop: this.state.currentTroop - 1 }, () =>
-        this.props.currentTroops(this.props.unit.id, this.state.currentTroop)
+        this.props.currentTroops(this.props.unit.id, this.state.currentTroop, 0)
       );
   };
   handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,7 +43,7 @@ export class ArmyItem extends React.Component<ArmyProps> {
     this.setState({ currentTroop: +e.target.value });
     this.props.currentTroops(
       this.props.unit.id,
-      e.target.value,
+      +e.target.value,
       this.props.unit.costPearl
     );
   };
