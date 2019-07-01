@@ -29,7 +29,7 @@ export class Buildings extends React.Component<BuildingProps> {
       item => item.id === +currentValue
     );
     var tempMoneyChecker = false;
-    if (!checkMoney || checkMoney.cost > totalpearl) {
+    if (checkMoney && checkMoney.cost > totalpearl) {
       tempMoneyChecker = true;
     }
     this.setState({
@@ -59,6 +59,15 @@ export class Buildings extends React.Component<BuildingProps> {
     const error = ownedBuildingState.error && ownedBuildingState.error;
 
     const tempProgress = count.find(item => item.inProgress === true);
+
+    var buttonNotPushable = false;
+    if (
+      this.state.selectedBuilding === false ||
+      ownedBuildingState.isPostRequesting ||
+      this.state.exceedMoney
+    ) {
+      buttonNotPushable = true;
+    }
 
     return (
       <div className="main-component">
@@ -102,9 +111,7 @@ export class Buildings extends React.Component<BuildingProps> {
             })}
         </div>
         <button
-          disabled={
-            !this.state.selectedBuilding || ownedBuildingState.isPostRequesting
-          }
+          disabled={buttonNotPushable}
           onClick={() => this.beginAddBuilding()}
         >
           {tempProgress

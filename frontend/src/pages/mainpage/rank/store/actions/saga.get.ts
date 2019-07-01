@@ -10,13 +10,14 @@ import {
   IRankInfo
 } from "./RankAction.get";
 import { registerAxiosConfig } from "../../../../../config/axiosConfig";
+import { BasePortUrl } from "../../../../..";
 
 const beginFetchRank = async () => {
   const instance = axios.create();
-  registerAxiosConfig();
+  const configured = registerAxiosConfig(instance);
 
   try {
-    const response = await axios.get("/api/Accounts/ranked");
+    const response = await configured.get(BasePortUrl + "api/Accounts/ranked");
     console.log("rank fetched", response.data);
 
     return response.data;

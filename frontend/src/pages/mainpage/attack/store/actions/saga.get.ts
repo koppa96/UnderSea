@@ -9,13 +9,14 @@ import {
 
 import axios from "axios";
 import { registerAxiosConfig } from "../../../../../config/axiosConfig";
+import { BasePortUrl } from "../../../../..";
 
 const beginFetchTargets = async () => {
   const instance = axios.create();
-  registerAxiosConfig();
+  const configured = registerAxiosConfig(instance);
 
   try {
-    const response = await axios.get("/api/Accounts");
+    const response = await configured.get(BasePortUrl + "api/Accounts");
     console.log("targets fetched", response.data);
 
     return response.data;

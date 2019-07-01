@@ -11,13 +11,14 @@ import {
 
 import axios from "axios";
 import { registerAxiosConfig } from "../../../../../config/axiosConfig";
+import { BasePortUrl } from "../../../../..";
 
 const beginFetchWar = async () => {
   const instance = axios.create();
-  registerAxiosConfig();
+  const configured = registerAxiosConfig(instance);
 
   try {
-    const response = await axios.get("/api/Commands");
+    const response = await configured.get(BasePortUrl + "api/Commands");
     console.log("war fetched", response.data);
 
     return response.data;

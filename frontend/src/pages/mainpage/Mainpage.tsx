@@ -13,17 +13,13 @@ import { ProfileContainerConnected } from "../../components/profileContainer/con
 import { WarConnected } from "./war/connect";
 import { DevelopmentConnected } from "./development/connect";
 import { AttackConnected } from "./attack/connect";
-//import { ArmyConnected } from "./army/connect";
+import Wave from "./../../assets/images/wave.svg";
 
 export class MainPage extends React.Component<MainPageProps> {
-  // constuct
   componentDidMount() {
-    // document.title = "Ország";
-    console.log("MainPage mount");
+    document.title = "Ország";
+
     this.props.beginFetchMainpage();
-  }
-  componentDidUpdate() {
-    console.log("MainPage Update");
   }
 
   render() {
@@ -35,7 +31,10 @@ export class MainPage extends React.Component<MainPageProps> {
             <Menu />
             <div>
               <ProfileContainerConnected />
-              <h3 className="undersea-font-mainpage">UNDERSEA</h3>
+              <div>
+                <img className="main-wave" src={Wave} alt="wave" />
+                <h3 className="undersea-font-mainpage">UNDERSEA</h3>
+              </div>
             </div>
           </div>
           <main>

@@ -10,13 +10,14 @@ import {
 } from "./BuildingAction.get";
 import { BuildingsClient, ICreationInfo } from "../../../../../api/Client";
 import { registerAxiosConfig } from "../../../../../config/axiosConfig";
+import { BasePortUrl } from "../../../../..";
 
 const beginFetchBuilding = async () => {
   const instance = axios.create();
-  registerAxiosConfig();
+  const configured = registerAxiosConfig(instance);
 
   try {
-    const response = await instance.get("/api/Buildings");
+    const response = await configured.get(BasePortUrl + "api/Buildings");
     console.log("buildings fetched", response.data);
 
     return response.data;

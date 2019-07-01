@@ -36,10 +36,6 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
       this.setState({ error: "A jelszónak számot kell tartalmazni" });
       return false;
     }
-    if (/[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password) === false) {
-      this.setState({ error: "A jelszónak spec karaktert kell tartalmazni" });
-      return false;
-    }
     if (/[ !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(name) === true) {
       this.setState({ error: "A felhasználó nem tartalmazhat spec karaktert" });
       return false;

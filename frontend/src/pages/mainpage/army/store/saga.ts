@@ -13,12 +13,17 @@ import {
 import { call, put, takeEvery, all } from "redux-saga/effects";
 import { ArmyUnit } from "./store";
 import axios from "axios";
+import { BasePortUrl } from "../../../..";
+import { registerAxiosConfig } from "../../../../config/axiosConfig";
 export const asd = 0;
 
 // TODO: create error handling (dont use any)
 const beginAddUnits = (unitsToAdd: ArmyUnit[]): Promise<IArmyActions> | any => {
-  const url = "api/Units";
-  return axios
+  const url = BasePortUrl + "api/Units";
+  const instance = axios.create();
+  const configured = registerAxiosConfig(instance);
+
+  return configured
     .post(url, unitsToAdd)
     .then(response => {
       return response;
@@ -29,8 +34,11 @@ const beginAddUnits = (unitsToAdd: ArmyUnit[]): Promise<IArmyActions> | any => {
 };
 
 const getUnits = () => {
-  return axios
-    .get("/api/Units")
+  const url = BasePortUrl + "api/Units";
+  const instance = axios.create();
+  const configured = registerAxiosConfig(instance);
+  return configured
+    .get(url)
     .then(response => {
       return response.data;
     })

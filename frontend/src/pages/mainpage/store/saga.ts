@@ -9,12 +9,22 @@ import {
 import { CountryClient, CountryInfo, ICountryInfo } from "../../../api/Client";
 import { registerAxiosConfig } from "../../../config/axiosConfig";
 
-export const beginToFetchMainpage = (): Promise<CountryInfo> => {
-  const getCountry = new CountryClient();
-  registerAxiosConfig();
-  const tempData = getCountry.getCurrentState();
+import axios from "axios";
+import { BasePortUrl } from "../../..";
+const beginToFetchMainpage = async () => {
+  const instance = axios.create();
+  const configured = registerAxiosConfig(instance);
 
-  return tempData;
+  try {
+    const response = await configured.get(BasePortUrl + "api/Country");
+    console.log("war fetched", response.data);
+
+    return response.data;
+  } catch (error) {
+    console.log("war fetch error", error);
+
+    throw new Error(error);
+  }
 };
 
 function* handleLogin(action: IActionMainpageRequest) {

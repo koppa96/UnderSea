@@ -8,7 +8,7 @@
 // ReSharper disable InconsistentNaming
 
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { registeraxios } from '../App';
+
 
 export class AccountsClient {
     

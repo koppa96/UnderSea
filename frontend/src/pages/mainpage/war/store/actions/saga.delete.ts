@@ -8,13 +8,16 @@ import {
   fetchSucces,
   fetchError
 } from "./WarAction.delete";
+import { BasePortUrl } from "../../../../..";
 
 const beginFetchWar = async (id: number) => {
   const instance = axios.create();
-  registerAxiosConfig();
+  const configured = registerAxiosConfig(instance);
 
   try {
-    const response = await axios.delete("/api/Commands/" + id);
+    const response = await configured.delete(
+      BasePortUrl + "api/Commands/" + id
+    );
     console.log("war deleted", response);
 
     return response.data;

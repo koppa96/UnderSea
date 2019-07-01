@@ -15,7 +15,7 @@ import { registerAxiosConfig } from "../../../../../config/axiosConfig";
 
 export const beginFetchDevelopment = () => {
   const getResearch = new ResearchesClient();
-  registerAxiosConfig();
+  //registerAxiosConfig();
   const tempData = getResearch.getResearches();
   return tempData;
 };
