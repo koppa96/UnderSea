@@ -14,10 +14,13 @@
 .undersea-font-form {
   @extend .undersea-font-big;
   @extend .undersea-font;
-  padding-top: 153px;
 
   @media screen {
   }
+}
+.wave {
+  margin-bottom: -25%;
+  margin-top: 130px;
 }
 .loading-circle {
   width: 30px;

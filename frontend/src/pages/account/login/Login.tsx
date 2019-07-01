@@ -1,6 +1,6 @@
 import * as React from "react";
 import "./../../../assets/scss/forms.scss";
-
+import Wave from "./../../../assets/images/wave.svg";
 import { Form } from "reactstrap";
 import { LoginProps, LoginState } from "./Interface";
 import { Link } from "react-router-dom";
@@ -28,7 +28,10 @@ export class Login extends React.Component<LoginProps> {
     const { error, loading } = this.props;
     return (
       <div className="mainpage-width">
-        <h1 className="undersea-font-form">UNDERSEA</h1>
+        <div>
+          <img className="wave" src={Wave} alt="wave" />
+          <h1 className="undersea-font-form">UNDERSEA</h1>
+        </div>
 
         <div className="form-wrapper">
           <div className="form-blur" />
