@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Hangfire;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -14,6 +16,7 @@ using NSwag.CodeGeneration.TypeScript;
 using StrategyGame.Api.Hubs;
 using StrategyGame.Api.Middlewares;
 using StrategyGame.Bll;
+using StrategyGame.Bll.DTO.Received;
 using StrategyGame.Bll.EffectParsing;
 using StrategyGame.Bll.Services.Buildings;
 using StrategyGame.Bll.Services.Commands;
@@ -23,8 +26,10 @@ using StrategyGame.Bll.Services.Researches;
 using StrategyGame.Bll.Services.TurnHandling;
 using StrategyGame.Bll.Services.Units;
 using StrategyGame.Bll.Services.UserTracker;
+using StrategyGame.Bll.Services.Validators;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
+using System.Collections.Generic;
 using System.IO;
 
 namespace StrategyGame.Api
@@ -85,7 +90,8 @@ namespace StrategyGame.Api
                 });
             });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                .AddFluentValidation(options => options.RegisterValidatorsFromAssemblyContaining<PurchaseValidator>());
 
             services.AddSignalR();
 

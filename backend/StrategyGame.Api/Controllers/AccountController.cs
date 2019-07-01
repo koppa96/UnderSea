@@ -95,7 +95,7 @@ namespace StrategyGame.Api.Controllers
                 {
                     Status = 400,
                     Title = "Bad Request",
-                    Detail = "Invalid new password. The password must contain at least 6 characters, and at least one uppercase, one lowercase and on number."
+                    Detail = result.Errors.First().Description
                 });
             }
 
@@ -122,11 +122,6 @@ namespace StrategyGame.Api.Controllers
         [ProducesResponseType(400)]
         public async Task<ActionResult> CreateAccountAsnyc([FromBody] RegisterData data)
         {
-            if (await _userManager.FindByNameAsync(data.Username) != null)
-            {
-                return BadRequest("Duplicate username");
-            }
-
             var user = new User()
             {
                 UserName = data.Username,
