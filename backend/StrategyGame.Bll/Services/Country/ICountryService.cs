@@ -1,6 +1,7 @@
 ﻿using StrategyGame.Bll.Dto.Sent;
 using StrategyGame.Bll.Dto.Sent.Country;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace StrategyGame.Bll.Services.Country
@@ -15,8 +16,10 @@ namespace StrategyGame.Bll.Services.Country
         /// </summary>
         /// <param name="username">The name of the owner</param>
         /// <param name="countryName">The name of the country</param>
+        /// <param name="turnEndWaitToken">The token that can be used to cancel waiting for an in-progress end-of-turn calculation.</param>
         /// <returns>The task representing the operation.</returns>
-        Task CreateAsync(string username, string countryName);
+        /// <exception cref="TaskCanceledException">Thrown if the operation was cancelled.</exception>
+        Task CreateAsync(string username, string countryName, CancellationToken turnEndWaitToken = default);
 
         /// <summary>
         /// Gets the general information about a user's country.

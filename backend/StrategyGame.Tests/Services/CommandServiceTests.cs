@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Nito.AsyncEx;
 using StrategyGame.Bll.Dto.Received;
 using StrategyGame.Bll.Services.Commands;
 using StrategyGame.Dal;
@@ -21,7 +22,7 @@ namespace StrategyGame.Tests.Services
         public async Task Initialize()
         {
             context = await UtilityFactory.CreateContextAsync();
-            commandService = new CommandService(context, UtilityFactory.CreateMapper());
+            commandService = new CommandService(context, new AsyncReaderWriterLock(), UtilityFactory.CreateMapper());
         }
 
         private async Task<CommandDetails> SetUpValidAttackAsync(string attacker, string target)

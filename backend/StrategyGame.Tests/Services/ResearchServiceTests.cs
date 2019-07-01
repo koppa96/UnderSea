@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Nito.AsyncEx;
 using StrategyGame.Bll.Exceptions;
 using StrategyGame.Bll.Services.Researches;
 using StrategyGame.Dal;
@@ -19,7 +20,7 @@ namespace StrategyGame.Tests.Services
         public async Task Initialize()
         {
             context = await UtilityFactory.CreateContextAsync();
-            researchService = new ResearchService(context, UtilityFactory.CreateMapper());
+            researchService = new ResearchService(context, new AsyncReaderWriterLock(), UtilityFactory.CreateMapper());
         }
 
         [TestMethod]

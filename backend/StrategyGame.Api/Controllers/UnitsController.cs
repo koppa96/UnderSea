@@ -4,6 +4,7 @@ using StrategyGame.Bll.Dto.Sent;
 using StrategyGame.Bll.DTO.Received;
 using StrategyGame.Bll.Services.Units;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace StrategyGame.Api.Controllers
@@ -35,7 +36,10 @@ namespace StrategyGame.Api.Controllers
         [ProducesResponseType(201)]
         public async Task<ActionResult<IEnumerable<BriefUnitInfo>>> CreateAsync([FromBody] IEnumerable<PurchaseDetails> purchases)
         {
-            return Ok(await _unitService.CreateUnitAsync(User.Identity.Name, purchases));
+            using (var src = new CancellationTokenSource(Constants.DefaultTurnEndTimeout))
+            {
+                return Ok(await _unitService.CreateUnitAsync(User.Identity.Name, purchases, src.Token));
+            }
         }
 
         [HttpDelete("{id}/{count}")]
@@ -45,8 +49,11 @@ namespace StrategyGame.Api.Controllers
         [ProducesResponseType(204)]
         public async Task<ActionResult> DeleteAsync(int id, int count)
         {
-            await _unitService.DeleteUnitsAsync(User.Identity.Name, id, count);
-            return NoContent();
+            using (var src = new CancellationTokenSource(Constants.DefaultTurnEndTimeout))
+            {
+                await _unitService.DeleteUnitsAsync(User.Identity.Name, id, count, src.Token);
+                return NoContent();
+            }
         }
     }
 }

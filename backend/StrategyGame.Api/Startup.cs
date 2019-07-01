@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Nito.AsyncEx;
 using NSwag.CodeGeneration.TypeScript;
 using StrategyGame.Api.Hubs;
 using StrategyGame.Api.Middlewares;
@@ -123,6 +124,7 @@ namespace StrategyGame.Api
 
             services.AddSingleton(ModifierParserContainer.CreateDefault());
             services.AddSingleton<IUserTracker, UserTracker>();
+            services.AddSingleton<AsyncReaderWriterLock>();
 
             services.AddTransient<ITurnHandlingService, TurnHandlingService>();
             services.AddTransient<ICountryService, CountryService>();

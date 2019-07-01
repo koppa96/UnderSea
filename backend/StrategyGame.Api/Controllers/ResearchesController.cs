@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using StrategyGame.Bll.Dto.Sent;
 using StrategyGame.Bll.Services.Researches;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace StrategyGame.Api.Controllers
@@ -37,8 +38,11 @@ namespace StrategyGame.Api.Controllers
         [ProducesResponseType(200)]
         public async Task<ActionResult> StartResearchAsync(int id)
         {
-            await _researchService.StartResearchAsync(User.Identity.Name, id);
-            return Ok();
+            using (var src = new CancellationTokenSource(Constants.DefaultTurnEndTimeout))
+            {
+                await _researchService.StartResearchAsync(User.Identity.Name, id, src.Token);
+                return Ok();
+            }
         }
     }
 }

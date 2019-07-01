@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Nito.AsyncEx;
 using StrategyGame.Bll.EffectParsing;
 using StrategyGame.Bll.Services.Country;
 using StrategyGame.Dal;
@@ -18,7 +19,7 @@ namespace StrategyGame.Tests.Services
         {
             context = await UtilityFactory.CreateContextAsync();
             countryService = new CountryService(UtilityFactory.CreateMapper(), context,
-                ModifierParserContainer.CreateDefault());
+                new AsyncReaderWriterLock(), ModifierParserContainer.CreateDefault());
         }
 
         [TestMethod]
