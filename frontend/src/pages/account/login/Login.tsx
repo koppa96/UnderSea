@@ -13,7 +13,9 @@ export class Login extends React.Component<LoginProps> {
     },
     error: null
   };
-
+  componentDidUpdate() {
+    this.props.getUserInfo();
+  }
   handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     this.props.beginlogin({

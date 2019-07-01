@@ -13,7 +13,7 @@ import { BasePortUrl } from "../../../../..";
 const beginToAddBuilding = (id: number): Promise<void> | any => {
   console.log("Beginig buy building", id);
 
-  const url = BasePortUrl + "/api/Buildings/" + id;
+  const url = BasePortUrl + "api/Buildings/" + id;
   const instance = axios.create();
   const configured = registerAxiosConfig(instance);
   return configured

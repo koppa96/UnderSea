@@ -41,7 +41,7 @@ function* handleFetch(action: IRequestActionGetProfile) {
     yield put(fetchSucces(response));
   } catch (err) {
     if (err) {
-      yield put(fetchError(err));
+      yield put(fetchError("Hiba történt"));
     } else {
       yield put(fetchError("An unknown error occured."));
     }
