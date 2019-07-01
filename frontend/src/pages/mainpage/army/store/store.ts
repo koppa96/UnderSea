@@ -10,12 +10,14 @@ export interface ArmyUnit {
 export interface ArmyState {
   isPostRequesting: boolean;
   isRequesting: boolean;
+  isPostSuccessFull: boolean;
   isLoaded: boolean;
   error: string | null;
   units: ArmyInfoWoCount[];
 }
 export const ArmyInitialState: ArmyState = {
   isPostRequesting: false,
+  isPostSuccessFull: false,
   isRequesting: false,
   isLoaded: false,
   error: null,

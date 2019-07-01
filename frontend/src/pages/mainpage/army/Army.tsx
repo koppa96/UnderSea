@@ -4,13 +4,10 @@ import { ArmyItem } from "./ArmyItem";
 import { ArmyProps } from "./Interface";
 import { ArmyUnit } from "./store/store";
 
-interface Unit {
-  unitId: number;
-  count: number;
-}
 interface InitialState {
   units: ArmyUnit[];
   unitsAdded: boolean;
+  reset: boolean;
 }
 
 export class Army extends React.Component<ArmyProps, InitialState> {
@@ -22,10 +19,20 @@ export class Army extends React.Component<ArmyProps, InitialState> {
   }
   state: InitialState = {
     units: [],
-    unitsAdded: false
+    unitsAdded: false,
+    reset: false
   };
 
-  currentSoldiers = (id: number, troop: number, price: number) => {
+  componentDidUpdate = async () => {
+    if (!this.state.reset && this.props.ownedUnitState.isPostSuccessFull) {
+      await this.setState({ reset: true, units: [], unitsAdded: false });
+      this.props.resetUnits();
+      this.setState({ reset: false });
+    }
+  };
+
+  currentSoldiers = async (id: number, troop: number, price: number) => {
+    this.setState({ reset: false });
     const temp = this.state.units;
     const index = this.state.units.findIndex(unit => unit.unitId === id);
     if (index !== undefined && index !== -1) {
@@ -60,6 +67,7 @@ export class Army extends React.Component<ArmyProps, InitialState> {
                     unit={item}
                     count={curentCount ? curentCount.count : 0}
                     currentTroops={this.currentSoldiers}
+                    reset={this.state.reset}
                   />
                 );
               })}
@@ -68,7 +76,9 @@ export class Army extends React.Component<ArmyProps, InitialState> {
 
         <button
           disabled={!this.state.unitsAdded || ownedUnitState.isPostRequesting}
-          onClick={() => addUnits({ unitsToAdd: this.state.units })}
+          onClick={() => {
+            addUnits({ unitsToAdd: this.state.units });
+          }}
         >
           {ownedUnitState.isPostRequesting ? "töltés.." : "Megveszem"}
         </button>

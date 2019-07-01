@@ -8,12 +8,19 @@ interface ArmyProps {
   unit: ArmyInfoWoCount;
   currentTroops: Function;
   count: number;
+  reset: boolean;
 }
 
 export class ArmyItem extends React.Component<ArmyProps> {
   state = {
     currentTroop: 0
   };
+
+  componentWillReceiveProps() {
+    if (this.props.reset) {
+      this.setState({ currentTroop: 0 });
+    }
+  }
 
   addTroop = () =>
     this.setState({ currentTroop: this.state.currentTroop + 1 }, () =>
@@ -46,6 +53,7 @@ export class ArmyItem extends React.Component<ArmyProps> {
     } else {
       image = BasePortUrl + imageUrl;
     }
+
     return (
       <div className="solider-item">
         <div className="rectangle army-rectangle">

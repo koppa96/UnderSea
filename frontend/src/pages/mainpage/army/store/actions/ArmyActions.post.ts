@@ -8,12 +8,14 @@ export interface IArmyActionsTypes {
   REQUEST: "ARMY_REQUEST_ADD_UNITS";
   SUCCESS: "ARMY_SUCCESS_ADD_UNITS";
   ERROR: "ARMY_ERROR_ADD_UNITS";
+  RESET: "ARMY_SUCCESS_RESET_UNITS";
 }
 
 export const ArmyActions: IArmyActionsTypes = {
   REQUEST: "ARMY_REQUEST_ADD_UNITS",
   SUCCESS: "ARMY_SUCCESS_ADD_UNITS",
-  ERROR: "ARMY_ERROR_ADD_UNITS"
+  ERROR: "ARMY_ERROR_ADD_UNITS",
+  RESET: "ARMY_SUCCESS_RESET_UNITS"
 };
 
 export interface IActionAddArmyUnitRequest {
@@ -30,10 +32,19 @@ export interface IActionAddArmyUnitError {
   params: string | null;
 }
 
+export interface IActionArmyUnitReset {
+  type: IArmyActionsTypes["RESET"];
+}
+
 export type IArmyActions =
   | IActionAddArmyUnitRequest
   | IActionAddArmyUnitSucces
-  | IActionAddArmyUnitError;
+  | IActionAddArmyUnitError
+  | IActionArmyUnitReset;
+
+export const ArmyUnitResetActionCreator = () => ({
+  type: ArmyActions.RESET
+});
 
 export const ArmyUnitAddActionCreator = (
   params: IRequestParamState

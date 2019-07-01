@@ -13,6 +13,7 @@ export interface MappedProps {
 export interface DispachedProps {
   addUnits: (params: IRequestParamState) => void;
   getArmy: () => void;
+  resetUnits: () => void;
 }
 
 export type ArmyProps = NativeProps & MappedProps & DispachedProps;
