@@ -31,7 +31,7 @@ export class Army extends React.Component<ArmyProps, InitialState> {
     if (!this.state.reset && this.props.ownedUnitState.isPostSuccessFull) {
       await this.setState({ reset: true, units: [], unitsAdded: false });
       this.props.resetUnits();
-      this.setState({ reset: false });
+      this.setState({ reset: false, priceAll: 0 });
     }
   };
 

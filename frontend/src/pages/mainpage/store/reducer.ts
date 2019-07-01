@@ -138,6 +138,7 @@ export const MainpageReducer = (
                 armyunit.totalCount += unit.count;
                 armyunit.defendingCount += unit.count;
                 costPearl += unit.price * unit.count;
+                console.log(armyunit.totalCount);
               }
             });
           });
