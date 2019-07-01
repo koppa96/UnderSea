@@ -1491,7 +1491,6 @@ export interface ICreationInfo {
     imageUrl?: string | undefined;
     iconImageUrl?: string | undefined;
     cost: number;
-    count:number;
 }
 
 export class CommandInfo implements ICommandInfo {

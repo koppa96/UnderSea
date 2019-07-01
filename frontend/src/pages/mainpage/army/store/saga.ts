@@ -26,7 +26,7 @@ const beginAddUnits = (unitsToAdd: ArmyUnit[]): Promise<IArmyActions> | any => {
   return configured
     .post(url, unitsToAdd)
     .then(response => {
-      return response;
+      return response.data;
     })
     .catch(error => {
       throw new Error(error);

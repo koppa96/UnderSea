@@ -1,5 +1,5 @@
 import { call, put, takeEvery, all } from "redux-saga/effects";
-import { ResearchesClient, ICreationInfo } from "../../../../../api/Client";
+import { ICreationInfo } from "../../../../../api/Client";
 import {
   IRequestActionGetDevelopment,
   GetDevelopmentSuccessActionCreator,
@@ -7,13 +7,22 @@ import {
   ISuccesParamState,
   GetDevelopmentActions
 } from "./DevelopmnetAction.get";
+import { BasePortUrl } from "../../../../..";
+import axios from "axios";
 import { registerAxiosConfig } from "../../../../../config/axiosConfig";
 
 export const beginFetchDevelopment = () => {
-  const getResearch = new ResearchesClient();
-  //registerAxiosConfig();
-  const tempData = getResearch.getResearches();
-  return tempData;
+  const url = BasePortUrl + "api/Researches";
+  const instance = axios.create();
+  const configured = registerAxiosConfig(instance);
+  return configured
+    .get(url)
+    .then(response => {
+      return response.data;
+    })
+    .catch(error => {
+      throw new Error(error);
+    });
 };
 
 function* handleLogin(action: IRequestActionGetDevelopment) {

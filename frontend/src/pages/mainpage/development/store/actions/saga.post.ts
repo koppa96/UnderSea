@@ -1,16 +1,28 @@
 import { call, put, takeEvery } from "redux-saga/effects";
-import { ResearchesClient } from "../../../../../api/Client";
+
 import {
   AddDevelopmentErrorActionCreator,
   IActionRequestAddDevelopment,
   AddDevelopmentSuccessActionCreator,
   AddDevelopmentActions
 } from "./DevelopmentAction.post";
+import axios from "axios";
+import { BasePortUrl } from "../../../../..";
+import { registerAxiosConfig } from "../../../../../config/axiosConfig";
 
 export const beginToAddResearch = (id: number): Promise<void> => {
-  const startResearch = new ResearchesClient();
   console.log(id, "elkezdtem, a fejlesztést");
-  return startResearch.startResearch(id);
+  const url = BasePortUrl + "api/Researches/" + id;
+  const instance = axios.create();
+  const configured = registerAxiosConfig(instance);
+  return configured
+    .post(url)
+    .then(response => {
+      return response.data;
+    })
+    .catch(err => {
+      throw new Error(err);
+    });
 };
 
 function* handleAddResearch(action: IActionRequestAddDevelopment) {
