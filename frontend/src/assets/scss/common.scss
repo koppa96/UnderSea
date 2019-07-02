@@ -80,6 +80,14 @@
   background-image: url("./assets/images/undersea-bg.png");
   background-repeat: no-repeat;
   background-size: cover;
+  position: relative;
+}
+.bg-image-loggedin {
+  min-height: 100vh;
+  background-image: url("./assets/images/login-bg.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
 }
 
 .mainpage-middle {

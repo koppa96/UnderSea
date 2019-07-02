@@ -13,7 +13,11 @@ export class Reports extends React.Component<ReportsProps> {
   };
 
   reportHandle = (report: ICombatInfo) => {
-    this.setState({ openId: report.id });
+    if (report.id !== this.state.openId) {
+      this.setState({ openId: report.id });
+    } else {
+      this.setState({ openId: null });
+    }
     if (!report.isSeen) {
       this.props.seenReport(report.id);
     }

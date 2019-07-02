@@ -7,7 +7,12 @@ import { MainpageRequestActionCreator } from "./store/actions/MainpageAction.get
 
 const mapStateToProps = (state: IApllicationState): MappedProps => ({
   error: state.app.pages.mainpage.error,
-  loading: state.app.pages.mainpage.loading
+  loading: state.app.pages.mainpage.loading,
+  building: state.app.pages.mainpage.model
+    ? state.app.pages.mainpage.model.buildings
+      ? state.app.pages.mainpage.model.buildings
+      : []
+    : []
 });
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchedProps =>
