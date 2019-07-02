@@ -37,21 +37,28 @@ namespace StrategyGame.Bll.Extensions
         /// </summary>
         /// <param name="country">The <see cref="Country"/> to calculate total maintenance for.</param>
         /// <returns>The maintenance of all units in the country.</returns>
-        public static IEnumerable<(ResourceType Type, long Value)> GetTotalMaintenance(this Country country)
+        public static Dictionary<ResourceType, long> GetTotalMaintenance(this Country country)
         {
-            throw new NotImplementedException();
-            long pearlUpkeep = 0;
-            long coralUpkeep = 0;
+            var total = new Dictionary<ResourceType, long>();
             foreach (var comm in country.Commands)
             {
                 foreach (var div in comm.Divisions)
                 {
-                    //pearlUpkeep += div.Count * div.Unit.MaintenancePearl;
-                    //coralUpkeep += div.Count * div.Unit.MaintenanceCoral;
+                    foreach (var res in div.Unit.Maintenance)
+                    {
+                        if (total.ContainsKey(res.ResourceType))
+                        {
+                            total[res.ResourceType] += div.Count * res.Amount;
+                        }
+                        else
+                        {
+                            total.Add(res.ResourceType, div.Count * res.Amount);
+                        }
+                    }
                 }
             }
 
-            //return (pearlUpkeep, coralUpkeep);
+            return total;
         }
 
         /// <summary>
@@ -222,7 +229,7 @@ namespace StrategyGame.Bll.Extensions
             context.Commands.Remove(command);
         }
 
-        public static void Purchase<TEnity, TConnector>(this Country country, IPurchasable<TEnity, TConnector> purchasable, UnderSeaDatabaseContext context, int count = 1)
+        public static void Purchase<TEnity, TConnector>(this Country country, IPurchasable<TEnity, TConnector> purchasable, int count = 1)
             where TEnity : AbstractEntity<TEnity>
             where TConnector : AbstractResourceConnector<TEnity>
         {

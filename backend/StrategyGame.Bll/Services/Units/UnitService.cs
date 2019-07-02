@@ -117,7 +117,7 @@ namespace StrategyGame.Bll.Services.Units
                         targetDiv.Count += purchase.Count;
                     }
 
-                    country.Purchase(unit, Context, purchase.Count);
+                    country.Purchase(unit, purchase.Count);
 
                     var info = Mapper.Map<UnitType, BriefUnitInfo>(unit);
                     info.TotalCount = targetDiv.Count;

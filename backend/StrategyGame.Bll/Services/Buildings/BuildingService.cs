@@ -111,7 +111,7 @@ namespace StrategyGame.Bll.Services.Buildings
                     throw new ArgumentOutOfRangeException(nameof(buildingId), "No such building id.");
                 }
 
-                country.Purchase(buildingType, _context);
+                country.Purchase(buildingType);
 
                 var inProgressBuilding = new InProgressBuilding
                 {
