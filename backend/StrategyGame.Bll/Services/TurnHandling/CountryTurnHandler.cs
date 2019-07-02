@@ -412,19 +412,19 @@ namespace StrategyGame.Bll.Services.TurnHandling
             {
                 foreach (var div in country.Commands.SelectMany(c => c.Divisions).OrderBy(d => d.Unit.Cost.First()))
                 {
-                    var requiredReductions = div.Unit.Maintenance.ToDictionary(x => x.ResourceType.Id,
+                    var requiredReductions = div.Unit.Cost.ToDictionary(x => x.ResourceType.Id,
                         x =>
                         (long)Math.Ceiling(Math.Max(totalMaintenance[x.ResourceType]
                         - country.Resources.Single(r => r.ResourceType.Id == x.ResourceType.Id).Amount, 0)
-                        / (double)x.Amount));
+                        / (double)x.MaintenanceAmount));
 
                     int desertedAmount = (int)Math.Min(requiredReductions.Max(x => x.Value), div.Count);
 
                     div.Count -= desertedAmount;
 
-                    foreach (var maint in div.Unit.Maintenance)
+                    foreach (var maint in div.Unit.Cost)
                     {
-                        totalMaintenance[maint.ResourceType] -= desertedAmount * maint.Amount;
+                        totalMaintenance[maint.ResourceType] -= desertedAmount * maint.MaintenanceAmount;
                     }
 
                     if (totalMaintenance.All(x => x.Value > country.Resources.Single(r => r.ResourceType.Equals(x.Key)).Amount))

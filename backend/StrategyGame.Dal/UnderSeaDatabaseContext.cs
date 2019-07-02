@@ -21,82 +21,82 @@ namespace StrategyGame.Dal
         /// <summary>
         /// Gets the collection of <see cref="Country"/> in the database.
         /// </summary>
-        public DbSet<Country> Countries { get; }
+        public DbSet<Country> Countries { get; set; }
 
         /// <summary>
         /// Gets the collection of <see cref="RandomEvent"/> in the database.
         /// </summary>
-        public DbSet<RandomEvent> RandomEvents { get; }
+        public DbSet<RandomEvent> RandomEvents { get; set; }
 
         /// <summary>
         /// Gets the collection of <see cref="BuildingType"/> in the database.
         /// </summary>
-        public DbSet<BuildingType> BuildingTypes { get; }
+        public DbSet<BuildingType> BuildingTypes { get; set; }
 
         /// <summary>
         /// Gets the collection of <see cref="ResearchType"/> in the database.
         /// </summary>
-        public DbSet<ResearchType> ResearchTypes { get; }
+        public DbSet<ResearchType> ResearchTypes { get; set; }
 
         /// <summary>
         /// Gets the collection of <see cref="UnitType"/> in the database.
         /// </summary>
-        public DbSet<UnitType> UnitTypes { get; }
+        public DbSet<UnitType> UnitTypes { get; set; }
 
         /// <summary>
         /// Gets the collection of <see cref="Command"/> in the database.
         /// </summary>
-        public DbSet<Command> Commands { get; }
+        public DbSet<Command> Commands { get; set; }
 
         /// <summary>
         /// Gets the collection of <see cref="Division"/> in the database.
         /// </summary>
-        public DbSet<Division> Divisions { get; }
+        public DbSet<Division> Divisions { get; set; }
 
         /// <summary>
         /// Gets the collection of <see cref="CountryResearch"/> in the database.
         /// </summary>
-        public DbSet<CountryResearch> CountryResearches { get; }
+        public DbSet<CountryResearch> CountryResearches { get; set; }
 
         /// <summary>
         /// Gets the collection of <see cref="CountryBuilding"/> in the database.
         /// </summary>
-        public DbSet<CountryBuilding> CountryBuildings { get; }
+        public DbSet<CountryBuilding> CountryBuildings { get; set; }
 
         /// <summary>
         /// Gets the collection of <see cref="InProgressBuilding"/> in the database.
         /// </summary>
-        public DbSet<InProgressBuilding> InProgressBuildings { get; }
+        public DbSet<InProgressBuilding> InProgressBuildings { get; set; }
 
         /// <summary>
         /// Gets the collection of <see cref="InProgressResearch"/> in the database.
         /// </summary>
-        public DbSet<InProgressResearch> InProgressResearches { get; }
+        public DbSet<InProgressResearch> InProgressResearches { get; set; }
 
         /// <summary>
         /// Gets the collection of <see cref="BuildingEffect"/> in the database.
         /// </summary>
-        public DbSet<BuildingEffect> BuildingEffects { get; }
+        public DbSet<BuildingEffect> BuildingEffects { get; set; }
 
         /// <summary>
         /// Gets the collection of <see cref="ResearchEffect"/> in the database.
         /// </summary>
-        public DbSet<ResearchEffect> ResearchEffects { get; }
+        public DbSet<ResearchEffect> ResearchEffects { get; set; }
 
         /// <summary>
         /// Gets the collection of <see cref="EventEffect"/> in the database.
         /// </summary>
-        public DbSet<EventEffect> EventEffects { get; }
+        public DbSet<EventEffect> EventEffects { get; set; }
 
         /// <summary>
         /// Gets the collection of <see cref="Effect"/> in the database.
         /// </summary>
-        public DbSet<Effect> Effects { get; }
+        public DbSet<Effect> Effects { get; set; }
 
         /// <summary>
         /// Gets the collection of <see cref="Effect"/> in the database.
         /// </summary>
-        public DbSet<CombatReport> Reports { get; }
+        public DbSet<CombatReport> Reports { get; set; }
 
         /// <summary>
         /// Gets the collection of <see cref="GlobalValue"/> in the database.
@@ -106,27 +106,27 @@ namespace StrategyGame.Dal
         /// <summary>
         /// Gets the collection of <see cref="BuildingContent"/> in the database.
         /// </summary>
-        public DbSet<BuildingContent> BuildingContents { get; }
+        public DbSet<BuildingContent> BuildingContents { get; set; }
 
         /// <summary>
         /// Gets the collection of <see cref="ResearchContent"/> in the database.
         /// </summary>
-        public DbSet<ResearchContent> ResearchContents { get; }
+        public DbSet<ResearchContent> ResearchContents { get; set; }
 
         /// <summary>
         /// Gets the collection of <see cref="UnitContent"/> in the database.
         /// </summary>
-        public DbSet<UnitContent> UnitContents { get; }
+        public DbSet<UnitContent> UnitContents { get; set; }
 
         /// <summary>
         /// Gets the collection of <see cref="EventContent"/> in the database.
         /// </summary>
-        public DbSet<EventContent> EventContents { get; }
+        public DbSet<EventContent> EventContents { get; set; }
 
         /// <summary>
         /// Gets the collection of <see cref="UnitContent"/> in the database.
         /// </summary>
-        public DbSet<ResourceContent> ResourceContents { get; }
+        public DbSet<ResourceContent> ResourceContents { get; set; }
 
         public DbSet<ExceptionLog> ExceptionLogs { get; set; }
 
@@ -151,8 +151,7 @@ namespace StrategyGame.Dal
         /// <exception cref="ArgumentNullException">Thrown if an argument was null.</exception>
         public UnderSeaDatabaseContext(DbContextOptions<UnderSeaDatabaseContext> options)
             : base(options)
-        {
-        }
+        { }
 
         /// <summary>
         /// Configures the model of the database.

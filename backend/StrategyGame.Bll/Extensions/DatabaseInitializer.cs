@@ -76,8 +76,7 @@ namespace StrategyGame.Bll.Extensions
                 Name = "Zátonyvár",
                 Description = "+200 szállás",
                 ImageUrl = "images/static/buildings/zatonyvar-lg.png",
-                IconImageUrl = "images/static/buildings/zatonyvar-icon.svg" +
-                ""
+                IconImageUrl = "images/static/buildings/zatonyvar-icon.svg"
             };
             var stonemineCont = new BuildingContent
             {
@@ -336,9 +335,11 @@ namespace StrategyGame.Bll.Extensions
             {
                 AttackPower = 10,
                 DefensePower = 5,
-                Maintenance = new[] {
-                    new UnitResource { Amount = 1, ResourceType = pearl },
-                    new UnitResource { Amount = 1, ResourceType = coral }},
+                Cost = new[]
+                {
+                    new UnitResource { MaintenanceAmount = 1, ResourceType = pearl },
+                    new UnitResource { MaintenanceAmount = 1, ResourceType = coral }
+                },
                 IsPurchasable = false,
                 Content = sealCont
             };
@@ -346,9 +347,11 @@ namespace StrategyGame.Bll.Extensions
             {
                 AttackPower = 8,
                 DefensePower = 3,
-                Maintenance = new[] {
-                    new UnitResource { Amount = 1, ResourceType = pearl },
-                    new UnitResource { Amount = 1, ResourceType = coral }},
+                Cost = new[]
+                {
+                    new UnitResource { MaintenanceAmount = 1, ResourceType = pearl },
+                    new UnitResource { MaintenanceAmount = 1, ResourceType = coral }
+                },
                 BattlesToLevelUp = 5,
                 RankedUpType = seal3,
                 IsPurchasable = false,
@@ -358,11 +361,11 @@ namespace StrategyGame.Bll.Extensions
             {
                 AttackPower = 6,
                 DefensePower = 2,
-                Cost = new[] {
-                    new UnitResource {Amount = 50, ResourceType = pearl } },
-                Maintenance = new[] {
-                    new UnitResource { Amount = 1, ResourceType = pearl },
-                    new UnitResource { Amount = 1, ResourceType = coral }},
+                Cost = new[]
+                {
+                    new UnitResource { Amount = 50, MaintenanceAmount = 1, ResourceType = pearl },
+                    new UnitResource { MaintenanceAmount = 1, ResourceType = coral }
+                },
                 BattlesToLevelUp = 3,
                 RankedUpType = seal2,
                 IsPurchasable = true,
@@ -373,9 +376,11 @@ namespace StrategyGame.Bll.Extensions
             {
                 AttackPower = 5,
                 DefensePower = 10,
-                Maintenance = new[] {
-                    new UnitResource { Amount = 1, ResourceType = pearl },
-                    new UnitResource { Amount = 1, ResourceType = coral }},
+                Cost = new[]
+                {
+                    new UnitResource { MaintenanceAmount = 1, ResourceType = pearl },
+                    new UnitResource { MaintenanceAmount = 1, ResourceType = coral }
+                },
                 IsPurchasable = false,
                 Content = ponyCont
             };
@@ -383,9 +388,11 @@ namespace StrategyGame.Bll.Extensions
             {
                 AttackPower = 3,
                 DefensePower = 8,
-                Maintenance = new[] {
-                    new UnitResource { Amount = 1, ResourceType = pearl },
-                    new UnitResource { Amount = 1, ResourceType = coral }},
+                Cost = new[]
+                {
+                    new UnitResource { MaintenanceAmount = 1, ResourceType = pearl },
+                    new UnitResource { MaintenanceAmount = 1, ResourceType = coral }
+                },
                 BattlesToLevelUp = 5,
                 RankedUpType = pony3,
                 IsPurchasable = false,
@@ -395,11 +402,11 @@ namespace StrategyGame.Bll.Extensions
             {
                 AttackPower = 2,
                 DefensePower = 6,
-                Cost = new[] {
-                    new UnitResource {Amount = 50, ResourceType = pearl } },
-                Maintenance = new[] {
-                    new UnitResource { Amount = 1, ResourceType = pearl },
-                    new UnitResource { Amount = 1, ResourceType = coral }},
+                Cost = new[]
+                {
+                    new UnitResource {Amount = 50, MaintenanceAmount = 1, ResourceType = pearl },
+                    new UnitResource { Amount = 1, ResourceType = coral }
+                },
                 BattlesToLevelUp = 3,
                 RankedUpType = pony2,
                 IsPurchasable = true,
@@ -410,9 +417,11 @@ namespace StrategyGame.Bll.Extensions
             {
                 AttackPower = 10,
                 DefensePower = 10,
-                Maintenance = new[] {
-                    new UnitResource { Amount = 3, ResourceType = pearl },
-                    new UnitResource { Amount = 2, ResourceType = coral }},
+                Cost = new[]
+                {
+                    new UnitResource { MaintenanceAmount = 3, ResourceType = pearl },
+                    new UnitResource { MaintenanceAmount = 2, ResourceType = coral }
+                },
                 IsPurchasable = false,
                 Content = lazorCont
             };
@@ -420,9 +429,11 @@ namespace StrategyGame.Bll.Extensions
             {
                 AttackPower = 7,
                 DefensePower = 7,
-                Maintenance = new[] {
-                    new UnitResource { Amount = 1, ResourceType = pearl },
-                    new UnitResource { Amount = 1, ResourceType = coral }},
+                Cost = new[]
+                {
+                    new UnitResource { MaintenanceAmount = 1, ResourceType = pearl },
+                    new UnitResource { MaintenanceAmount = 1, ResourceType = coral }
+                },
                 BattlesToLevelUp = 5,
                 RankedUpType = lazor3,
                 IsPurchasable = false,
@@ -432,11 +443,11 @@ namespace StrategyGame.Bll.Extensions
             {
                 AttackPower = 5,
                 DefensePower = 5,
-                Cost = new[] {
-                    new UnitResource {Amount = 100, ResourceType = pearl } },
-                Maintenance = new[] {
-                    new UnitResource { Amount = 3, ResourceType = pearl },
-                    new UnitResource { Amount = 2, ResourceType = coral }},
+                Cost = new[]
+                {
+                    new UnitResource {Amount = 100, MaintenanceAmount = 3, ResourceType = pearl },
+                    new UnitResource { MaintenanceAmount = 2, ResourceType = coral }
+                },
                 BattlesToLevelUp = 3,
                 RankedUpType = lazor2,
                 IsPurchasable = true,
@@ -447,11 +458,11 @@ namespace StrategyGame.Bll.Extensions
             {
                 AttackPower = 0,
                 DefensePower = 0,
-                Cost = new[] {
-                    new UnitResource {Amount = 400, ResourceType = pearl } },
-                Maintenance = new[] {
-                    new UnitResource { Amount = 4, ResourceType = pearl },
-                    new UnitResource { Amount = 2, ResourceType = coral }},
+                Cost = new[]
+                {
+                    new UnitResource {Amount = 400, MaintenanceAmount = 4, ResourceType = pearl },
+                    new UnitResource { MaintenanceAmount = 2, ResourceType = coral }
+                },
                 BattlesToLevelUp = 3,
                 IsPurchasable = true,
                 Content = leaderCont

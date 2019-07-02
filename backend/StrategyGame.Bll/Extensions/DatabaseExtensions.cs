@@ -44,15 +44,15 @@ namespace StrategyGame.Bll.Extensions
             {
                 foreach (var div in comm.Divisions)
                 {
-                    foreach (var res in div.Unit.Maintenance)
+                    foreach (var res in div.Unit.Cost)
                     {
                         if (total.ContainsKey(res.ResourceType))
                         {
-                            total[res.ResourceType] += div.Count * res.Amount;
+                            total[res.ResourceType] += div.Count * res.MaintenanceAmount;
                         }
                         else
                         {
-                            total.Add(res.ResourceType, div.Count * res.Amount);
+                            total.Add(res.ResourceType, div.Count * res.MaintenanceAmount);
                         }
                     }
                 }
