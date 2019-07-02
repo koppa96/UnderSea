@@ -15,12 +15,14 @@ export class ProfileContainer extends React.Component<ProfileProps> {
     return (
       <div className="profile-bg">
         <div className="rectangle">
-          <img alt="profile" src={BasePortUrl + profile.profileImageUrl} />
+          <Link to="/">
+            <img alt="profile" src={BasePortUrl + profile.profileImageUrl} />
+          </Link>
         </div>
         <span className="profil-margin">
           {profile.username ? profile.username : ""}
         </span>
-        <Link className="profil-margin" to="/">
+        <Link className="profil-margin" to="/account/profile">
           Profil
         </Link>
         <span onClick={this.props.logout} className="logout">

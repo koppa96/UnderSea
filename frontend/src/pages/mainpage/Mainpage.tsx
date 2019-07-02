@@ -14,6 +14,7 @@ import { WarConnected } from "./war/connect";
 import { DevelopmentConnected } from "./development/connect";
 import { AttackConnected } from "./attack/connect";
 import Wave from "./../../assets/images/wave.svg";
+import Profile from "./Profile/Profile";
 
 import * as signalR from "@aspnet/signalr";
 import { BasePortUrl } from "../..";
@@ -80,6 +81,9 @@ export class MainPage extends React.Component<MainPageProps> {
               </Route>
               <Route path="/account/report">
                 <ReportsConnected />
+              </Route>
+              <Route path="/account/profile">
+                <Profile />
               </Route>
             </Switch>
           </main>
