@@ -3,15 +3,17 @@
 
   > li {
     display: flex;
-    flex-direction: column;
+    width: 100%;
     margin-bottom: 24px;
-    > a {
+    > a,
+    div > a {
       color: $secondary-color;
       text-align: center;
       font-family: Baloo;
       font-size: 18px;
       border-radius: 90px;
       flex: 1;
+
       padding-top: 12px;
       padding-bottom: 12px;
       box-shadow: 0 3px 6px rgba(59, 125, 189, 1);
@@ -20,6 +22,32 @@
         rgba(15, 207, 222, 1),
         rgba(159, 255, 240, 1)
       );
+    }
+    > div {
+      height: 51px;
+      width: 100%;
+      position: relative;
+      > p {
+        z-index: 10;
+        position: absolute;
+        right: 0;
+        top: 0;
+        user-select: none;
+        text-align: center;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        background-color: red;
+        color: whitesmoke;
+        box-shadow: 0 0 3px rgb(243, 68, 68);
+      }
+      > a {
+        z-index: 1;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        right: 0;
+      }
     }
   }
 }

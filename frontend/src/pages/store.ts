@@ -19,6 +19,8 @@ import { DevelopmentReducer } from "./mainpage/development/store/reducer";
 import { DevelopmentState } from "./mainpage/development/store/store";
 import { TargetState } from "./mainpage/attack/store/store";
 import { TargetReducer } from "./mainpage/attack/store/reduce";
+import { ReportState } from "./mainpage/reports/store/store";
+import { ReportReducer } from "./mainpage/reports/store/reducer";
 
 export interface PagesState {
   gyakorlas: ManState;
@@ -31,6 +33,7 @@ export interface PagesState {
   war: WarState;
   development: DevelopmentState;
   target: TargetState;
+  reports: ReportState;
 }
 
 export const PagesReducer = combineReducers<PagesState>({
@@ -43,5 +46,6 @@ export const PagesReducer = combineReducers<PagesState>({
   profile: ProfileReducer,
   war: WarReducer,
   development: DevelopmentReducer,
-  target: TargetReducer
+  target: TargetReducer,
+  reports: ReportReducer
 });
