@@ -20,11 +20,13 @@ export class Rank extends React.Component<RankProps> {
 
   filter = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { totalRank } = this.props;
-    this.setState({ filtered: e.target.value });
-    if (e.target.value.length > 2) {
+    const filter = e.target.value.toLowerCase();
+    this.setState({ filtered: filter });
+    if (e.target.value.length > 1) {
       var filteredrank: IRankInfo[] = [];
       totalRank.rank.forEach(x => {
-        if (x.name && x.name.startsWith(e.target.value)) {
+        const name = x.name ? x.name.toLowerCase() : "";
+        if (name.startsWith(filter)) {
           filteredrank.push(x);
         }
         this.setState({ filteredrank: filteredrank }, () =>
@@ -48,10 +50,10 @@ export class Rank extends React.Component<RankProps> {
 
         {totalRank.isRequesting ? (
           <span>Betöltés...</span>
-        ) : this.state.filtered.length > 2 ? (
+        ) : this.state.filtered.length > 1 ? (
           <ul className="rank-page">
             {this.state.filteredrank.map(item => (
-              <li key={item.name}>
+              <li key={item.rank}>
                 <span>{item.rank}.</span>
                 <span>{item.name}</span>
                 <span className="rank-point">{item.score}</span>
@@ -61,7 +63,7 @@ export class Rank extends React.Component<RankProps> {
         ) : (
           <ul className="rank-page">
             {totalRank.rank.map(item => (
-              <li key={item.name}>
+              <li key={item.rank}>
                 <span>{item.rank}.</span>
                 <span>{item.name}</span>
                 <span className="rank-point">{item.score}</span>

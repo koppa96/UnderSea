@@ -26,14 +26,16 @@ export class Attack extends React.Component<TargetProps> {
 
   filter = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { targets } = this.props;
-    this.setState({ filtered: e.target.value });
-    if (e.target.value.length > 2) {
-      var filteredrank: ITargetInfo[] = [];
+    var filter = e.target.value.toLowerCase();
+    this.setState({ filtered: filter });
+    if (e.target.value.length > 0) {
+      var filtered: ITargetInfo[] = [];
       targets.targets.forEach(x => {
-        if (x.countryName && x.countryName.startsWith(e.target.value)) {
-          filteredrank.push(x);
+        const lowerc = x.username ? x.username.toLowerCase() : "";
+        if (lowerc.startsWith(filter)) {
+          filtered.push(x);
         }
-        this.setState({ filteredrank: filteredrank }, () =>
+        this.setState({ filteredrank: filtered }, () =>
           console.log("filter", this.state.filteredrank)
         );
       });
@@ -71,7 +73,7 @@ export class Attack extends React.Component<TargetProps> {
             />
             <ul className="rank-page">
               {targets.isLoaded ? (
-                this.state.filtered.length > 2 ? (
+                this.state.filtered.length > 0 ? (
                   this.state.filteredrank.map(item => (
                     <li
                       key={item.countryId}
@@ -79,7 +81,7 @@ export class Attack extends React.Component<TargetProps> {
                         this.setState({ targetCountryId: item.countryId })
                       }
                     >
-                      <span>{item.countryName}</span>
+                      <span>{item.username}</span>
                       {item.countryId === this.state.targetCountryId && (
                         <div className="circle">
                           <img src={CheckMark} alt="Checkmark" />
@@ -95,7 +97,7 @@ export class Attack extends React.Component<TargetProps> {
                         this.setState({ targetCountryId: item.countryId })
                       }
                     >
-                      <span>{item.countryName}</span>
+                      <span>{item.username}</span>
                       {item.countryId === this.state.targetCountryId && (
                         <div className="circle">
                           <img src={CheckMark} alt="Checkmark" />
@@ -115,6 +117,7 @@ export class Attack extends React.Component<TargetProps> {
             <span>Támadáshoz 1 parancsnokra szükséged van</span>
             {units.map(item => (
               <AttackItem
+                key={item.id}
                 count={item.count}
                 id={item.id}
                 imageUrl={item.imageUrl}
