@@ -1,7 +1,4 @@
-﻿using StrategyGame.Model.Entities.Resources;
-using System.Collections.Generic;
-
-namespace StrategyGame.Model.Entities
+﻿namespace StrategyGame.Model.Entities
 {
     /// <summary>
     /// Represents the global values in the UnderSea database.
@@ -22,7 +19,7 @@ namespace StrategyGame.Model.Entities
         /// Gets or sets the barrack space for a country.
         /// </summary>
         public int StartingBarrackSpace { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the percentage of units lost in a lost battle.
         /// </summary>

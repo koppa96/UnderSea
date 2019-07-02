@@ -22,16 +22,7 @@ namespace StrategyGame.Bll.Services.Country
         /// <returns>The task representing the operation.</returns>
         /// <exception cref="TaskCanceledException">Thrown if the operation was cancelled.</exception>
         Task CreateAsync(string username, string countryName, CancellationToken turnEndWaitToken = default);
-
-        /// <summary>
-        /// Buys a country for the given user with the desired name.
-        /// </summary>
-        /// <param name="username">The name of the owner</param>
-        /// <param name="countryId">The ID of the country to buy from.</param>
-        /// <param name="countryName">The name of the country</param>
-        /// <returns>The task representing the operation.</returns>
-        Task<BriefCountryInfo> BuyAsync(string username, int countryId, string countryName);
-
+        
         /// <summary>
         /// Gets a short info about all of the countries of the user.
         /// </summary>

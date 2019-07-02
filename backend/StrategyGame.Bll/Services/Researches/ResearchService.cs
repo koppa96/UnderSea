@@ -77,7 +77,7 @@ namespace StrategyGame.Bll.Services.Researches
                     throw new ArgumentOutOfRangeException(nameof(researchId), "No such research id.");
                 }
 
-                country.Purchase(researchType, _context);
+                country.Purchase(researchType);
 
                 var inProgressResearch = new InProgressResearch
                 {

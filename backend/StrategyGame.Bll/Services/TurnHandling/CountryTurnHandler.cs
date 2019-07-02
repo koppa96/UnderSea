@@ -406,32 +406,15 @@ namespace StrategyGame.Bll.Services.TurnHandling
         /// <param name="country">The country to delete from.</param>
         protected void DesertUnits(Model.Entities.Country country)
         {
-            var totalMaintenance = new Dictionary<int, long>();
-            foreach (var comm in country.Commands)
-            {
-                foreach (var div in comm.Divisions)
-                {
-                    foreach (var res in div.Unit.Maintenance)
-                    {
-                        if (totalMaintenance.ContainsKey(res.ResourceType.Id))
-                        {
-                            totalMaintenance[res.ResourceType.Id] += res.Amount;
-                        }
-                        else
-                        {
-                            totalMaintenance.Add(res.ResourceType.Id, res.Amount);
-                        }
-                    }
-                }
-            }
+            var totalMaintenance = country.GetTotalMaintenance();
 
-            if (totalMaintenance.Any(x => x.Value > country.Resources.Single(r => r.ResourceType.Id == x.Key).Amount))
+            if (totalMaintenance.Any(x => x.Value > country.Resources.Single(r => r.ResourceType.Equals(x.Key)).Amount))
             {
                 foreach (var div in country.Commands.SelectMany(c => c.Divisions).OrderBy(d => d.Unit.Cost.First()))
                 {
                     var requiredReductions = div.Unit.Maintenance.ToDictionary(x => x.ResourceType.Id,
                         x =>
-                        (long)Math.Ceiling(Math.Max(totalMaintenance[x.ResourceType.Id]
+                        (long)Math.Ceiling(Math.Max(totalMaintenance[x.ResourceType]
                         - country.Resources.Single(r => r.ResourceType.Id == x.ResourceType.Id).Amount, 0)
                         / (double)x.Amount));
 
@@ -441,10 +424,10 @@ namespace StrategyGame.Bll.Services.TurnHandling
 
                     foreach (var maint in div.Unit.Maintenance)
                     {
-                        totalMaintenance[maint.ResourceType.Id] -= desertedAmount * maint.Amount;
+                        totalMaintenance[maint.ResourceType] -= desertedAmount * maint.Amount;
                     }
 
-                    if (totalMaintenance.All(x => x.Value > country.Resources.Single(r => r.ResourceType.Id == x.Key).Amount))
+                    if (totalMaintenance.All(x => x.Value > country.Resources.Single(r => r.ResourceType.Equals(x.Key)).Amount))
                     {
                         break;
                     }
@@ -453,7 +436,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
 
             foreach (var maint in totalMaintenance)
             {
-                country.Resources.Single(r => r.ResourceType.Id == maint.Key).Amount -= Math.Max(0, maint.Value);
+                country.Resources.Single(r => r.ResourceType.Equals(maint.Key)).Amount -= Math.Max(0, maint.Value);
             }
         }
 
