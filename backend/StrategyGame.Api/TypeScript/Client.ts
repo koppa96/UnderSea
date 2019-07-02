@@ -1886,9 +1886,9 @@ export class CombatInfo implements ICombatInfo {
     isWon!: boolean;
     enemyCountryId!: number;
     enemyCountryName?: string | undefined;
-    yourUnits?: UnitInfo[] | undefined;
-    enemyUnits?: UnitInfo[] | undefined;
-    lostUnits?: UnitInfo[] | undefined;
+    yourUnits?: BriefUnitInfo[] | undefined;
+    enemyUnits?: BriefUnitInfo[] | undefined;
+    lostUnits?: BriefUnitInfo[] | undefined;
     pealLoot!: number;
     coralLoot!: number;
     isSeen!: boolean;
@@ -1913,17 +1913,17 @@ export class CombatInfo implements ICombatInfo {
             if (Array.isArray(data["yourUnits"])) {
                 this.yourUnits = [] as any;
                 for (let item of data["yourUnits"])
-                    this.yourUnits!.push(UnitInfo.fromJS(item));
+                    this.yourUnits!.push(BriefUnitInfo.fromJS(item));
             }
             if (Array.isArray(data["enemyUnits"])) {
                 this.enemyUnits = [] as any;
                 for (let item of data["enemyUnits"])
-                    this.enemyUnits!.push(UnitInfo.fromJS(item));
+                    this.enemyUnits!.push(BriefUnitInfo.fromJS(item));
             }
             if (Array.isArray(data["lostUnits"])) {
                 this.lostUnits = [] as any;
                 for (let item of data["lostUnits"])
-                    this.lostUnits!.push(UnitInfo.fromJS(item));
+                    this.lostUnits!.push(BriefUnitInfo.fromJS(item));
             }
             this.pealLoot = data["pealLoot"];
             this.coralLoot = data["coralLoot"];
@@ -1975,9 +1975,9 @@ export interface ICombatInfo {
     isWon: boolean;
     enemyCountryId: number;
     enemyCountryName?: string | undefined;
-    yourUnits?: UnitInfo[] | undefined;
-    enemyUnits?: UnitInfo[] | undefined;
-    lostUnits?: UnitInfo[] | undefined;
+    yourUnits?: BriefUnitInfo[] | undefined;
+    enemyUnits?: BriefUnitInfo[] | undefined;
+    lostUnits?: BriefUnitInfo[] | undefined;
     pealLoot: number;
     coralLoot: number;
     isSeen: boolean;
