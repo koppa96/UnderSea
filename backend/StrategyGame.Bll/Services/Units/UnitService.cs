@@ -71,26 +71,11 @@ namespace StrategyGame.Bll.Services.Units
                 var unitInfos = new List<BriefUnitInfo>();
                 foreach (var purchase in purchases)
                 {
-                    var unit = unitTypes.SingleOrDefault(u => u.Id == purchase.UnitId);
-
-                    if (unit == null)
-                    {
-                        throw new ArgumentOutOfRangeException("Invalid unit id.");
-                    }
-
-                    if (purchase.Count < 0)
-                    {
-                        throw new ArgumentException("Invalid amount.");
-                    }
+                    var unit = unitTypes.Single(u => u.Id == purchase.UnitId);
 
                     // Check cost
                     long costPearl = unit.CostPearl * purchase.Count;
                     long costCoral = unit.CostCoral * purchase.Count;
-
-                    if (costPearl > country.Pearls || costCoral > country.Corals)
-                    {
-                        throw new InvalidOperationException("Units too expensive");
-                    }
 
                     var builder = country.ParseAllEffectForCountry(Context, globals, Parsers, false, false);
                     var totalUnits = country.Commands.Sum(c => c.Divisions.Sum(d => d.Count));
