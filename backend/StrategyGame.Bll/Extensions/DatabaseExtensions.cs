@@ -239,7 +239,7 @@ namespace StrategyGame.Bll.Extensions
 
                 if (countryResource == null || countryResource.Amount < resource.Amount * count)
                 {
-                    throw new ArgumentException("Not enough money.");
+                    throw new ArgumentException("Not enough resource.");
                 }
 
                 countryResource.Amount -= resource.Amount * count;
