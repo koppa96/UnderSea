@@ -152,31 +152,6 @@ namespace StrategyGame.Dal
         public UnderSeaDatabaseContext(DbContextOptions<UnderSeaDatabaseContext> options)
             : base(options)
         {
-            Countries = Set<Country>();
-            BuildingTypes = Set<BuildingType>();
-            ResearchTypes = Set<ResearchType>();
-            UnitTypes = Set<UnitType>();
-            Commands = Set<Command>();
-            Divisions = Set<Division>();
-            CountryResearches = Set<CountryResearch>();
-            CountryBuildings = Set<CountryBuilding>();
-            InProgressBuildings = Set<InProgressBuilding>();
-            InProgressResearches = Set<InProgressResearch>();
-            BuildingEffects = Set<BuildingEffect>();
-            ResearchEffects = Set<ResearchEffect>();
-            Effects = Set<Effect>();
-            RandomEvents = Set<RandomEvent>();
-            EventEffects = Set<EventEffect>();
-            Reports = Set<CombatReport>();
-
-            BuildingContents = Set<BuildingContent>();
-            ResearchContents = Set<ResearchContent>();
-            UnitContents = Set<UnitContent>();
-            EventContents = Set<EventContent>();
-            ResourceContents = Set<ResourceContent>();
-            GlobalValues = Set<GlobalValue>();
-            ExceptionLogs = Set<ExceptionLog>();
-            RequestLogs = Set<RequestLog>();
         }
 
         /// <summary>
@@ -217,10 +192,6 @@ namespace StrategyGame.Dal
             builder.Entity<UnitResource>()
                 .HasOne(ur => ur.Entity)
                 .WithMany(u => u.Cost);
-
-            builder.Entity<UnitResource>()
-                .HasOne(ur => ur.Entity)
-                .WithMany(u => u.Maintenance);
 
             builder.Entity<UnitResource>()
                 .HasOne(ur => ur.ResourceType)

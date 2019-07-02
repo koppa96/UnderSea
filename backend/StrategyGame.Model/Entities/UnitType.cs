@@ -22,8 +22,6 @@ namespace StrategyGame.Model.Entities
 
         public ICollection<UnitResource> Cost { get; set; }
 
-        public ICollection<UnitResource> Maintenance { get; set; }
-
         /// <summary>
         /// Gets or sets the content of the unit.
         /// </summary>
