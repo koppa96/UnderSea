@@ -1,3 +1,5 @@
+import { IBriefUnitInfo } from "../../../war/store/actions/WarAction.get";
+
 export interface ICombatInfo {
   id: number;
   round: number;
@@ -5,24 +7,15 @@ export interface ICombatInfo {
   isWon: boolean;
   enemyCountryId: number;
   enemyCountryName?: string | undefined;
-  yourUnits?: IUnitInfo[] | undefined;
-  enemyUnits?: IUnitInfo[] | undefined;
-  lostUnits?: IUnitInfo[] | undefined;
+  yourUnits?: IBriefUnitInfo[] | undefined;
+  enemyUnits?: IBriefUnitInfo[] | undefined;
+  lostUnits?: IBriefUnitInfo[] | undefined;
   pealLoot: number;
   coralLoot: number;
   isSeen: boolean;
 }
 
-export interface IUnitInfo {
-  id: number;
-  name?: string | undefined;
-  imageUrl?: string | undefined;
-  attackPower: number;
-  defensePower: number;
-  maintenancePearl: number;
-  maintenanceCoral: number;
-  costPearl: number;
-}
+
 
 //ACTIONTYPES
 export interface IGetReportActionsTypes {

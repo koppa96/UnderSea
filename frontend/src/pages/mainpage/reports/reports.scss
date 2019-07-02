@@ -3,3 +3,104 @@
   max-width: 700px;
   min-height: 650px;
 }
+.report-page {
+  overflow: auto;
+  max-height: 100%;
+  width: 100%;
+  padding: 0;
+  border-radius: 24px;
+  list-style-type: none;
+  head {
+    display: flex;
+    flex: row;
+    justify-content: center;
+    padding-top: 10px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid rgba(0, 183, 255, 0.4);
+    .round {
+      flex: 1;
+      padding-left: 30px;
+      font-size: 16px;
+      font-family: OpenSansBold;
+      line-height: 1;
+    }
+    .is-won {
+      flex: 1;
+      padding-left: 30px;
+      font-size: 20px;
+      font-family: OpenSansBold;
+      line-height: 1;
+    }
+    .report-enemy-name {
+      font-size: 20px;
+      font-family: OpenSansBold;
+      margin-right: auto;
+      margin-left: auto;
+      line-height: 1;
+    }
+  }
+  span {
+    color: white;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    font-family: OpenSansRegular;
+    text-align: center;
+    align-content: center;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+
+  li {
+    border-bottom: 4px solid rgba(0, 183, 255, 0.4);
+    margin-bottom: 30px;
+    border-radius: 24px;
+    > .report-info {
+      display: flex;
+      flex-direction: row;
+      > div {
+        flex: 1;
+        > .report-units {
+          font-family: OpenSansBold;
+        }
+      }
+    }
+    .report-loses {
+      border-top: 2px solid rgba(0, 183, 255, 0.4);
+      p {
+        font-family: OpenSansBold;
+        margin-left: 30px;
+        margin-top: 15px;
+        color: white;
+      }
+      span {
+        font-family: OpenSansRegular;
+        text-align: center;
+        margin-top: 15px;
+        color: white;
+      }
+    }
+    .report-total {
+      border-top: 2px solid rgba(0, 183, 255, 0.4);
+      p {
+        font-family: OpenSansBold;
+        margin-left: 30px;
+        font-size: 24px;
+        margin-top: 15px;
+        color: white;
+      }
+      span {
+        font-family: OpenSansRegular;
+        text-align: center;
+        margin-top: 15px;
+        color: white;
+      }
+    }
+  }
+}
+.won-color {
+  background-color: rgba(0, 255, 42, 0.2);
+}
+.lost-color {
+  background-color: rgba(201, 0, 0, 0.2);
+}
