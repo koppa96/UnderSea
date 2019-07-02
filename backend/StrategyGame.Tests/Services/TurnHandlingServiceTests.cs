@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nito.AsyncEx;
 using StrategyGame.Bll.EffectParsing;
+using StrategyGame.Bll.Extensions;
 using StrategyGame.Bll.Services.TurnHandling;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 namespace StrategyGame.Tests.Services
 {
     [TestClass]
-    public class TurnHandlingsServiceTests
+    public class TurnHandlingServiceTests
     {
         private UnderSeaDatabaseContext context;
         private ITurnHandlingService turnService;
@@ -106,8 +107,6 @@ namespace StrategyGame.Tests.Services
                 .Include(c => c.Attacks)
                 .Include(c => c.Defenses)
                 .SingleAsync(x => x.ParentUser.UserName == username2);
-            poorCountry.Corals = 50000;
-            poorCountry.Pearls = 50000;
 
             var unitCount = country.Commands.Sum(c => c.Divisions.Sum(d => d.Count));
 
@@ -152,8 +151,11 @@ namespace StrategyGame.Tests.Services
                     .ThenInclude(c => c.Divisions)
                 .SingleAsync(x => x.ParentUser.UserName == username);
 
-            country.Corals = 500;
-            country.Pearls = 500;
+            foreach (var res in country.Resources)
+            {
+                res.Amount = 500;
+            }
+
             var unitCount = country.Commands.Sum(c =>
                 c.Divisions.Sum(d => d.Count));
 
@@ -163,10 +165,8 @@ namespace StrategyGame.Tests.Services
 
             Assert.IsTrue(unitCount > country.Commands.Sum(c =>
                 c.Divisions.Sum(d => d.Count)));
-            Assert.IsTrue(country.Corals >= 0);
-            Assert.IsTrue(country.Pearls >= 0);
-            Assert.IsTrue(country.Pearls < 500);
-            Assert.IsTrue(country.Pearls < 500);
+            Assert.IsTrue(country.Resources.All(r => r.Amount >= 0));
+            Assert.IsTrue(country.Resources.All(r => r.Amount < 500));
         }
 
         [TestMethod]
@@ -180,18 +180,16 @@ namespace StrategyGame.Tests.Services
                         .ThenInclude(d => d.Unit)
                 .SingleAsync(x => x.ParentUser.UserName == username);
 
-            var coralMaintenance = country.Commands.Sum(c =>
-                c.Divisions.Sum(d => d.Count * d.Unit.MaintenanceCoral));
-            var pearlMaintenance = country.Commands.Sum(c =>
-                c.Divisions.Sum(d => d.Count * d.Unit.MaintenancePearl));
+            var totalMaintenance = country.GetTotalMaintenance();
 
-            country.Corals = 50000;
-            country.Pearls = 50000;
+            foreach (var res in country.Resources)
+            {
+                res.Amount = 50000;
+            }
 
             await turnService.EndTurnAsync(context);
 
-            Assert.IsTrue(country.Corals > 50000 - coralMaintenance);
-            Assert.IsTrue(country.Pearls > 50000 - pearlMaintenance);
+            Assert.IsTrue(country.Resources.All(r => r.Amount > 50000 - totalMaintenance[r.ResourceType]));
         }
 
 

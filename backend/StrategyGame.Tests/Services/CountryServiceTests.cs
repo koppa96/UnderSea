@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Nito.AsyncEx;
 using StrategyGame.Bll.EffectParsing;
 using StrategyGame.Bll.Services.Country;
 using StrategyGame.Dal;
@@ -29,7 +30,7 @@ namespace StrategyGame.Tests.Services
             var info = await countryService.GetCountryInfoAsync(username,
                 (await context.Countries.FirstAsync(c => c.ParentUser.UserName == username)).Id);
 
-            Assert.IsTrue(info.Pearls > 1000);
+            Assert.IsTrue(info.Resources.Count() > 0);
         }
 
         [TestMethod]

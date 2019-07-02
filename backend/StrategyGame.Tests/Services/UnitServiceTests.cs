@@ -27,12 +27,10 @@ namespace StrategyGame.Tests.Services
         }
 
         [TestMethod]
-        [DataRow("TheCommander")]
-        public async Task TestGetUnitInfo(string username)
+        public async Task TestGetUnitInfo()
         {
-            var units = await unitService.GetUnitInfoAsync(username, 
-                (await context.Countries.FirstAsync(c => c.ParentUser.UserName == username)).Id);
-            Assert.IsTrue(units.All(u => u.Count > 0));
+            var units = await unitService.GetUnitInfoAsync();
+            Assert.IsTrue(units.Count() > 0);
         }
 
         [TestMethod]
@@ -40,13 +38,10 @@ namespace StrategyGame.Tests.Services
         public async Task TestBuyUnit(string username)
         {
             var id = (await context.UnitTypes.FirstAsync()).Id;
-
-            await unitService.CreateUnitAsync(username,
+            var units = await unitService.CreateUnitAsync(username,
                 (await context.Countries.FirstAsync(c => c.ParentUser.UserName == username)).Id,
                 new[] { new PurchaseDetails { UnitId = id, Count = 10 } });
-            var units = await unitService.GetUnitInfoAsync(username,
-                (await context.Countries.FirstAsync(c => c.ParentUser.UserName == username)).Id);
-            Assert.AreEqual(units.Single(u => u.Id == id).Count, 10);
+            Assert.AreEqual(units.Single(u => u.Id == id).TotalCount, 10);
         }
 
         [TestMethod]
@@ -55,14 +50,15 @@ namespace StrategyGame.Tests.Services
         {
             var id = (await context.UnitTypes.FirstAsync()).Id;
 
-            await unitService.CreateUnitAsync(username, 
+            await unitService.CreateUnitAsync(username,
                 (await context.Countries.FirstAsync(c => c.ParentUser.UserName == username)).Id,
                 new[] { new PurchaseDetails { UnitId = id, Count = 10 } });
-            await unitService.DeleteUnitsAsync(username, 
+            await unitService.DeleteUnitsAsync(username,
                 (await context.Countries.FirstAsync(c => c.ParentUser.UserName == username)).Id, id, 10);
-            var units = await unitService.GetUnitInfoAsync(username,
-                (await context.Countries.FirstAsync(c => c.ParentUser.UserName == username)).Id);
-            Assert.AreEqual(units.Single(u => u.Id == id).Count, 0);
+
+            Assert.IsTrue(context.Countries
+                .Single(c => c.ParentUser.UserName == username)
+                    .Commands.All(c => c.Divisions.Sum(d => d.Count) == 0));
         }
 
         [TestMethod]
