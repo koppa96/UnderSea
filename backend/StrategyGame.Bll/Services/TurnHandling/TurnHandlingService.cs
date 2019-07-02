@@ -69,7 +69,8 @@ namespace StrategyGame.Bll.Services.TurnHandling
                     .Include(c => c.CurrentEvent)
                         .ThenInclude(e => e.Effects)
                                 .ThenInclude(e => e.Effect)
-                    .Include(c => c.Resources);
+                    .Include(c => c.Resources)
+                        .ThenInclude(r => r.ResourceType);
 
                 var events = await context.RandomEvents
                     .Include(e => e.Effects)
@@ -110,6 +111,9 @@ namespace StrategyGame.Bll.Services.TurnHandling
                                 .ThenInclude(pr => pr.Research)
                                     .ThenInclude(pr => pr.Effects)
                                         .ThenInclude(pr => pr.Effect)
+                    .Include(c => c.IncomingAttacks)
+                        .ThenInclude(c => c.ParentCountry)
+                            .ThenInclude(c => c.ParentUser)
                     .Include(c => c.CurrentEvent)
                         .ThenInclude(e => e.Effects)
                                 .ThenInclude(e => e.Effect)
@@ -136,7 +140,8 @@ namespace StrategyGame.Bll.Services.TurnHandling
                     .Include(c => c.CurrentEvent)
                         .ThenInclude(e => e.Effects)
                             .ThenInclude(e => e.Effect)
-                    .Include(c => c.Resources);
+                    .Include(c => c.Resources)
+                        .ThenInclude(r => r.ResourceType);
 
                 await postCombat.ForEachAsync(c => Handler.HandlePostCombat(context, c, globals));
 

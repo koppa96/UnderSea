@@ -371,13 +371,13 @@ namespace StrategyGame.Bll.Services.TurnHandling
         {
             var totalMaintenance = country.GetTotalMaintenance();
 
-            if (totalMaintenance.Any(x => x.Value > country.Resources.Single(r => r.ResourceType.Equals(x.Key)).Amount))
+            if (totalMaintenance.Any(x => x.Value > country.Resources.Single(r => r.ResourceType.Id == x.Key).Amount))
             {
-                foreach (var div in country.Commands.SelectMany(c => c.Divisions).OrderBy(d => d.Unit.Cost.First()))
+                foreach (var div in country.Commands.SelectMany(c => c.Divisions).OrderBy(d => d.Unit.Cost.First().Amount))
                 {
                     var requiredReductions = div.Unit.Cost.ToDictionary(x => x.ResourceType.Id,
                         x =>
-                        (long)Math.Ceiling(Math.Max(totalMaintenance[x.ResourceType]
+                        (long)Math.Ceiling(Math.Max(totalMaintenance[x.ResourceType.Id]
                         - country.Resources.Single(r => r.ResourceType.Id == x.ResourceType.Id).Amount, 0)
                         / (double)x.MaintenanceAmount));
 
@@ -387,10 +387,10 @@ namespace StrategyGame.Bll.Services.TurnHandling
 
                     foreach (var maint in div.Unit.Cost)
                     {
-                        totalMaintenance[maint.ResourceType] -= desertedAmount * maint.MaintenanceAmount;
+                        totalMaintenance[maint.ResourceType.Id] -= desertedAmount * maint.MaintenanceAmount;
                     }
 
-                    if (totalMaintenance.All(x => x.Value > country.Resources.Single(r => r.ResourceType.Equals(x.Key)).Amount))
+                    if (totalMaintenance.All(x => x.Value > country.Resources.Single(r => r.ResourceType.Id == x.Key).Amount))
                     {
                         break;
                     }
@@ -399,7 +399,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
 
             foreach (var maint in totalMaintenance)
             {
-                country.Resources.Single(r => r.ResourceType.Equals(maint.Key)).Amount -= Math.Max(0, maint.Value);
+                country.Resources.Single(r => r.ResourceType.Id == maint.Key).Amount -= Math.Max(0, maint.Value);
             }
         }
 

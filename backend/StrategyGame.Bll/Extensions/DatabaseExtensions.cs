@@ -37,22 +37,22 @@ namespace StrategyGame.Bll.Extensions
         /// </summary>
         /// <param name="country">The <see cref="Country"/> to calculate total maintenance for.</param>
         /// <returns>The maintenance of all units in the country.</returns>
-        public static Dictionary<ResourceType, long> GetTotalMaintenance(this Country country)
+        public static Dictionary<int, long> GetTotalMaintenance(this Country country)
         {
-            var total = new Dictionary<ResourceType, long>();
+            var total = new Dictionary<int, long>();
             foreach (var comm in country.Commands)
             {
                 foreach (var div in comm.Divisions)
                 {
                     foreach (var res in div.Unit.Cost)
                     {
-                        if (total.ContainsKey(res.ResourceType))
+                        if (total.ContainsKey(res.ResourceType.Id))
                         {
-                            total[res.ResourceType] += div.Count * res.MaintenanceAmount;
+                            total[res.ResourceType.Id] += div.Count * res.MaintenanceAmount;
                         }
                         else
                         {
-                            total.Add(res.ResourceType, div.Count * res.MaintenanceAmount);
+                            total.Add(res.ResourceType.Id, div.Count * res.MaintenanceAmount);
                         }
                     }
                 }
@@ -203,22 +203,15 @@ namespace StrategyGame.Bll.Extensions
             var existing = target.Divisions.SingleOrDefault(d => d.Unit.Id == division.Unit.Id
                 && d.BattleCount == division.BattleCount);
 
-            var newDiv = new Division
+            if (existing == null)
             {
-                BattleCount = division.BattleCount,
-                Count = division.Count,
-                ParentCommand = target,
-                Unit = division.Unit
-            };
-
-            if (existing != null)
+                division.ParentCommand = target;
+            }
+            else
             {
-                newDiv.Count += existing.Count;
+                existing.Count += division.Count;
                 context.Divisions.Remove(existing);
             }
-
-            context.Divisions.Add(newDiv);
-            context.Divisions.Remove(division);
         }
 
         /// <summary>

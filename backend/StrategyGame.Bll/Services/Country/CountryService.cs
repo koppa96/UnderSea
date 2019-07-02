@@ -229,7 +229,7 @@ namespace StrategyGame.Bll.Services.Country
                 perTurn.Add(res.ResourceType, (long)Math.Round(0
                     + (mods.ResourceProductions.ContainsKey(res.ResourceType.Id) ? mods.ResourceProductions[res.ResourceType.Id] : 0
                         * (mods.ResourceModifiers.ContainsKey(res.ResourceType.Id) ? mods.ResourceModifiers[res.ResourceType.Id] : 1))
-                    - (upkeep.ContainsKey(res.ResourceType) ? upkeep[res.ResourceType] : 0)));
+                    - (upkeep.ContainsKey(res.ResourceType.Id) ? upkeep[res.ResourceType.Id] : 0)));
             }
 
             info.ResourcesPerRound = perTurn.Select(r => new ResourceInfo
