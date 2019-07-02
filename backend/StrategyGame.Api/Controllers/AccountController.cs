@@ -10,6 +10,7 @@ using StrategyGame.Model.Entities;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace StrategyGame.Api.Controllers
@@ -95,7 +96,7 @@ namespace StrategyGame.Api.Controllers
                 {
                     Status = 400,
                     Title = "Bad Request",
-                    Detail = "Invalid new password. The password must contain at least 6 characters, and at least one uppercase, one lowercase and on number."
+                    Detail = result.Errors.First().Description
                 });
             }
 
@@ -122,11 +123,6 @@ namespace StrategyGame.Api.Controllers
         [ProducesResponseType(400)]
         public async Task<ActionResult> CreateAccountAsnyc([FromBody] RegisterData data)
         {
-            if (await _userManager.FindByNameAsync(data.Username) != null)
-            {
-                return BadRequest("Duplicate username");
-            }
-
             var user = new User()
             {
                 UserName = data.Username,
@@ -140,13 +136,16 @@ namespace StrategyGame.Api.Controllers
                 return BadRequest(result.Errors);
             }
 
-            await _countryService.CreateAsync(data.Username, data.CountryName);
-            return StatusCode(201, new UserInfo
+            using (var src = new CancellationTokenSource(Constants.DefaultTurnEndTimeout))
             {
-                Username = user.UserName,
-                Email = user.Email,
-                ProfileImageUrl = user.ImageUrl
-            });
+                await _countryService.CreateAsync(data.Username, data.CountryName, src.Token);
+                return StatusCode(201, new UserInfo
+                {
+                    Username = user.UserName,
+                    Email = user.Email,
+                    ProfileImageUrl = user.ImageUrl
+                });
+            }
         }
 
         [HttpGet]

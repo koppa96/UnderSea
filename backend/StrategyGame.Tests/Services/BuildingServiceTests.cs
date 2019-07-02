@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Nito.AsyncEx;
 using StrategyGame.Bll.Exceptions;
 using StrategyGame.Bll.Services.Buildings;
 using StrategyGame.Dal;
@@ -20,7 +21,7 @@ namespace StrategyGame.Tests.Services
         {
             context = await UtilityFactory.CreateContextAsync();
 
-            buildingService = new BuildingService(context, UtilityFactory.CreateMapper());
+            buildingService = new BuildingService(context, new AsyncReaderWriterLock(), UtilityFactory.CreateMapper());
         }
 
         [TestMethod]
@@ -59,6 +60,23 @@ namespace StrategyGame.Tests.Services
 
             await buildingService.StartBuildingAsync(username, buildingId);
             await buildingService.StartBuildingAsync(username, buildingId);
+        }
+
+        [TestMethod]
+        [DataRow("TheRich")]
+        public async Task TestStartBuildingDifferentType(string username)
+        {
+            var buildingId = (await context.BuildingTypes.FirstAsync()).Id;
+            var otherBuildingId = (await context.BuildingTypes.FirstAsync(b => b.Id != buildingId)).Id;
+
+            await buildingService.StartBuildingAsync(username, buildingId);
+            await buildingService.StartBuildingAsync(username, otherBuildingId);
+
+            var inProgress = await context.InProgressBuildings
+                .Where(b => b.ParentCountry.ParentUser.UserName == username)
+                .ToListAsync();
+
+            Assert.AreEqual(2, inProgress.Count);
         }
 
         [TestMethod]

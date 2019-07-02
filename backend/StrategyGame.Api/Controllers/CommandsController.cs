@@ -4,6 +4,7 @@ using StrategyGame.Bll.Dto.Received;
 using StrategyGame.Bll.Dto.Sent;
 using StrategyGame.Bll.Services.Commands;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace StrategyGame.Api.Controllers
@@ -38,7 +39,10 @@ namespace StrategyGame.Api.Controllers
         [ProducesResponseType(200)]
         public async Task<ActionResult<CommandInfo>> AttackTargetAsync([FromBody] CommandDetails command)
         {
-            return Ok(await _commandService.AttackTargetAsync(User.Identity.Name, command));
+            using (var src = new CancellationTokenSource(Constants.DefaultTurnEndTimeout))
+            {
+                return Ok(await _commandService.AttackTargetAsync(User.Identity.Name, command, src.Token));
+            }
         }
 
         [HttpDelete("{id}")]
@@ -47,8 +51,11 @@ namespace StrategyGame.Api.Controllers
         [ProducesResponseType(204)]
         public async Task<ActionResult> DeleteAsync(int id)
         {
-            await _commandService.DeleteCommandAsync(User.Identity.Name, id);
-            return NoContent();
+            using (var src = new CancellationTokenSource(Constants.DefaultTurnEndTimeout))
+            {
+                await _commandService.DeleteCommandAsync(User.Identity.Name, id, src.Token);
+                return NoContent();
+            }
         }
 
         [HttpPatch("{id}")]
@@ -58,7 +65,10 @@ namespace StrategyGame.Api.Controllers
         [ProducesResponseType(200)]
         public async Task<ActionResult<CommandInfo>> UpdateCommandAsync(int id, [FromBody] CommandDetails command)
         {
-            return Ok(await _commandService.UpdateCommandAsync(User.Identity.Name, id, command));
+            using (var src = new CancellationTokenSource(Constants.DefaultTurnEndTimeout))
+            {
+                return Ok(await _commandService.UpdateCommandAsync(User.Identity.Name, id, command, src.Token));
+            }
         }
     }
 }

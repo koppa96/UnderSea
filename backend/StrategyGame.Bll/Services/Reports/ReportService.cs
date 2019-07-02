@@ -33,6 +33,10 @@ namespace StrategyGame.Bll.Services.Reports
                             .ThenInclude(u => u.Content)
                 .Include(c => c.Attacks)
                     .ThenInclude(r => r.Defender)
+                .Include(c => c.Attacks)
+                    .ThenInclude(r => r.Losses)
+                        .ThenInclude(d => d.Unit)
+                            .ThenInclude(u => u.Content)
                 .Include(c => c.Defenses)
                     .ThenInclude(r => r.Attackers)
                         .ThenInclude(d => d.Unit)
@@ -43,6 +47,10 @@ namespace StrategyGame.Bll.Services.Reports
                             .ThenInclude(u => u.Content)
                 .Include(c => c.Defenses)
                     .ThenInclude(r => r.Attacker)
+                .Include(c => c.Defenses)
+                    .ThenInclude(r => r.Losses)
+                        .ThenInclude(d => d.Unit)
+                            .ThenInclude(u => u.Content)
                 .SingleAsync(c => c.ParentUser.UserName == username);
 
             return country.Attacks.Where(r => !r.IsDeletedByAttacker)
@@ -53,9 +61,9 @@ namespace StrategyGame.Bll.Services.Reports
                     combatInfo.IsWon = r.DidAttackerWin;
                     combatInfo.EnemyCountryId = r.Defender.Id;
                     combatInfo.EnemyCountryName = r.Defender.Name;
-                    combatInfo.YourUnits = r.Attackers.Select(d => _mapper.Map<Division, UnitInfo>(d));
-                    combatInfo.EnemyUnits = r.Defenders.Select(d => _mapper.Map<Division, UnitInfo>(d));
-                    combatInfo.LostUnits = r.Losses.Select(d => _mapper.Map<Division, UnitInfo>(d));
+                    combatInfo.YourUnits = r.Attackers.Select(d => _mapper.Map<Division, BriefUnitInfo>(d));
+                    combatInfo.EnemyUnits = r.Defenders.Select(d => _mapper.Map<Division, BriefUnitInfo>(d));
+                    combatInfo.LostUnits = r.Losses.Select(d => _mapper.Map<Division, BriefUnitInfo>(d));
                     combatInfo.IsSeen = r.IsSeenByAttacker;
                     return combatInfo;
                 }).Concat(country.Defenses.Where(r => !r.IsDeletedByDefender)
@@ -66,9 +74,9 @@ namespace StrategyGame.Bll.Services.Reports
                         combatInfo.IsWon = !r.DidAttackerWin;
                         combatInfo.EnemyCountryId = r.Attacker.Id;
                         combatInfo.EnemyCountryName = r.Attacker.Name;
-                        combatInfo.YourUnits = r.Defenders.Select(d => _mapper.Map<Division, UnitInfo>(d));
-                        combatInfo.EnemyUnits = r.Attackers.Select(d => _mapper.Map<Division, UnitInfo>(d));
-                        combatInfo.LostUnits = r.Losses.Select(d => _mapper.Map<Division, UnitInfo>(d));
+                        combatInfo.YourUnits = r.Defenders.Select(d => _mapper.Map<Division, BriefUnitInfo>(d));
+                        combatInfo.EnemyUnits = r.Attackers.Select(d => _mapper.Map<Division, BriefUnitInfo>(d));
+                        combatInfo.LostUnits = r.Losses.Select(d => _mapper.Map<Division, BriefUnitInfo>(d));
                         combatInfo.IsSeen = r.IsSeenByDefender;
                         return combatInfo;
                     }));

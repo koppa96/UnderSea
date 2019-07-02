@@ -5,10 +5,10 @@ using StrategyGame.Bll.Services.Logger;
 using System;
 using System.Threading.Tasks;
 
-namespace StrategyGame.Api
+namespace StrategyGame.Api.Middlewares
 {
     /// <summary>
-    /// Provides a middleware that logs any exception using an <see cref="IExceptionLogger"/>, 
+    /// Provides a middleware that logs any exception using an <see cref="IDbLogger"/>, 
     /// and provides an appropriate error to the user.
     /// </summary>
     public class ExceptionHandlingMiddleware
@@ -20,7 +20,7 @@ namespace StrategyGame.Api
             _next = next;
         }
 
-        public async Task InvokeAsync(HttpContext context, IExceptionLogger logger)
+        public async Task InvokeAsync(HttpContext context, IDbLogger logger)
         {
             try
             {
@@ -67,6 +67,17 @@ namespace StrategyGame.Api
                     Status = 401,
                     Title = "Unauthorized",
                     Detail = e.Message
+                });
+            }
+
+            if (e is OperationCanceledException || e is TaskCanceledException)
+            {
+                context.Response.StatusCode = StatusCodes.Status418ImATeapot;
+                return context.Response.WriteJsonAsync(new ProblemDetails
+                {
+                    Status = StatusCodes.Status418ImATeapot,
+                    Title = "I'm a teapot",
+                    Detail = "Turn-end in progress, retry later."
                 });
             }
 

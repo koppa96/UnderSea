@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Nito.AsyncEx;
 using StrategyGame.Bll.EffectParsing;
 using StrategyGame.Dal;
 using System;
@@ -13,9 +14,12 @@ namespace StrategyGame.Bll.Services.TurnHandling
     {
         protected CountryTurnHandler Handler { get; }
 
-        public TurnHandlingService(ModifierParserContainer parsers)
+        protected AsyncReaderWriterLock TurnEndLock { get; }
+
+        public TurnHandlingService(ModifierParserContainer parsers, AsyncReaderWriterLock turnEndLock)
         {
             Handler = new CountryTurnHandler(parsers ?? throw new ArgumentNullException(nameof(parsers)));
+            TurnEndLock = turnEndLock ?? throw new ArgumentNullException(nameof(turnEndLock));
         }
 
         public async Task EndTurnAsync(UnderSeaDatabaseContext context, CancellationToken cancel = default)
@@ -30,133 +34,135 @@ namespace StrategyGame.Bll.Services.TurnHandling
             //var cnt = context.Countries.Include(c => c.Buildings).FirstOrDefault(x => x.Id == first.ParentCountry.Id);
             //var bdgs2 = cnt.Buildings.FirstOrDefault(x => x.Count == 10);
 
-            var timer = Stopwatch.StartNew();
+            using (var lck = await TurnEndLock.WriterLockAsync())
+            {
+                var timer = Stopwatch.StartNew();
+                var globals = await context.GlobalValues.SingleAsync(cancel);
 
-            var globals = await context.GlobalValues.SingleAsync(cancel);
+                await context.InProgressBuildings.ForEachAsync(b => b.TimeLeft--);
+                await context.InProgressResearches.ForEachAsync(r => r.TimeLeft--);
 
-            await context.InProgressBuildings.ForEachAsync(b => b.TimeLeft--);
-            await context.InProgressResearches.ForEachAsync(r => r.TimeLeft--);
+                // In progress stuff's effects have to be included, as those might turn into actual effects
+                // and if they do, the combat method's include would not find them, causing a null-reference.
+                var preCombat = context.Countries
+                    .Include(c => c.Commands)
+                        .ThenInclude(c => c.Divisions)
+                            .ThenInclude(d => d.Unit)
+                    .Include(c => c.Buildings)
+                        .ThenInclude(b => b.Building)
+                            .ThenInclude(b => b.Effects)
+                                .ThenInclude(b => b.Effect)
+                    .Include(c => c.Researches)
+                        .ThenInclude(r => r.Research)
+                            .ThenInclude(r => r.Effects)
+                                .ThenInclude(r => r.Effect)
+                    .Include(c => c.InProgressBuildings)
+                        .ThenInclude(b => b.Building)
+                            .ThenInclude(b => b.Effects)
+                                .ThenInclude(b => b.Effect)
+                    .Include(c => c.InProgressResearches)
+                        .ThenInclude(r => r.Research)
+                            .ThenInclude(r => r.Effects)
+                                .ThenInclude(r => r.Effect)
+                    .Include(c => c.CurrentEvent)
+                        .ThenInclude(e => e.Effects)
+                                .ThenInclude(e => e.Effect);
 
-            // In progress stuff's effects have to be included, as those might turn into actual effects
-            // and if they do, the combat method's include would not find them, causing a null-reference.
-            var preCombat = context.Countries
-                .Include(c => c.Commands)
-                    .ThenInclude(c => c.Divisions)
-                        .ThenInclude(d => d.Unit)
-                .Include(c => c.Buildings)
-                    .ThenInclude(b => b.Building)
-                        .ThenInclude(b => b.Effects)
-                            .ThenInclude(b => b.Effect)
-                .Include(c => c.Researches)
-                    .ThenInclude(r => r.Research)
-                        .ThenInclude(r => r.Effects)
-                            .ThenInclude(r => r.Effect)
-                .Include(c => c.InProgressBuildings)
-                    .ThenInclude(b => b.Building)
-                        .ThenInclude(b => b.Effects)
-                            .ThenInclude(b => b.Effect)
-                .Include(c => c.InProgressResearches)
-                    .ThenInclude(r => r.Research)
-                        .ThenInclude(r => r.Effects)
-                            .ThenInclude(r => r.Effect)
-                .Include(c => c.CurrentEvent)
-                    .ThenInclude(e => e.Effects)
+                var events = await context.RandomEvents
+                    .Include(e => e.Effects)
+                        .ThenInclude(e => e.Effect)
+                    .ToListAsync();
+
+                await preCombat.ForEachAsync(c => Handler.HandlePreCombat(context, c, globals, events));
+
+                timer.Stop();
+                var preCombatTime = timer.ElapsedMilliseconds;
+                timer.Restart();
+
+                var combat = context.Countries
+                    .Include(c => c.Commands)
+                        .ThenInclude(c => c.Divisions)
+                            .ThenInclude(d => d.Unit)
+                    .Include(c => c.Buildings)
+                        .ThenInclude(b => b.Building)
+                            .ThenInclude(b => b.Effects)
+                                .ThenInclude(b => b.Effect)
+                    .Include(c => c.Researches)
+                        .ThenInclude(r => r.Research)
+                            .ThenInclude(r => r.Effects)
+                                .ThenInclude(r => r.Effect)
+                    .Include(c => c.IncomingAttacks)
+                        .ThenInclude(a => a.Divisions)
+                            .ThenInclude(d => d.Unit)
+                    .Include(c => c.IncomingAttacks)
+                        .ThenInclude(a => a.ParentCountry)
+                            .ThenInclude(pc => pc.Buildings)
+                                .ThenInclude(pb => pb.Building)
+                                    .ThenInclude(pb => pb.Effects)
+                                        .ThenInclude(pb => pb.Effect)
+                    .Include(c => c.IncomingAttacks)
+                        .ThenInclude(a => a.ParentCountry)
+                            .ThenInclude(pc => pc.Researches)
+                                .ThenInclude(pr => pr.Research)
+                                    .ThenInclude(pr => pr.Effects)
+                                        .ThenInclude(pr => pr.Effect)
+                    .Include(c => c.CurrentEvent)
+                        .ThenInclude(e => e.Effects)
+                                .ThenInclude(e => e.Effect);
+
+                await combat.ForEachAsync(c => Handler.HandleCombat(context, c, globals));
+
+                timer.Stop();
+                var combatTime = timer.ElapsedMilliseconds;
+                timer.Restart();
+
+                var postCombat = context.Countries
+                    .Include(c => c.Commands)
+                        .ThenInclude(c => c.Divisions)
+                    .Include(c => c.Attacks)
+                    .Include(c => c.Buildings)
+                        .ThenInclude(b => b.Building)
+                            .ThenInclude(b => b.Effects)
+                                .ThenInclude(b => b.Effect)
+                    .Include(c => c.Researches)
+                        .ThenInclude(r => r.Research)
+                            .ThenInclude(r => r.Effects)
+                                .ThenInclude(r => r.Effect)
+                    .Include(c => c.CurrentEvent)
+                        .ThenInclude(e => e.Effects)
                             .ThenInclude(e => e.Effect);
 
-            var events = await context.RandomEvents
-                .Include(e => e.Effects)
-                    .ThenInclude(e => e.Effect)
-                .ToListAsync();
+                await postCombat.ForEachAsync(c => Handler.HandlePostCombat(context, c, globals));
 
-            await preCombat.ForEachAsync(c => Handler.HandlePreCombat(context, c, globals, events));
+                long index = 0;
+                await context.Countries.OrderByDescending(c => c.Score).ForEachAsync(c => c.Rank = ++index);
 
-            timer.Stop();
-            var preCombatTime = timer.ElapsedMilliseconds;
-            timer.Restart();
+                globals.Round++;
 
-            var combat = context.Countries
-                .Include(c => c.Commands)
-                    .ThenInclude(c => c.Divisions)
-                        .ThenInclude(d => d.Unit)
-                .Include(c => c.Buildings)
-                    .ThenInclude(b => b.Building)
-                        .ThenInclude(b => b.Effects)
-                            .ThenInclude(b => b.Effect)
-                .Include(c => c.Researches)
-                    .ThenInclude(r => r.Research)
-                        .ThenInclude(r => r.Effects)
-                            .ThenInclude(r => r.Effect)
-                .Include(c => c.IncomingAttacks)
-                    .ThenInclude(a => a.Divisions)
-                        .ThenInclude(d => d.Unit)
-                .Include(c => c.IncomingAttacks)
-                    .ThenInclude(a => a.ParentCountry)
-                        .ThenInclude(pc => pc.Buildings)
-                            .ThenInclude(pb => pb.Building)
-                                .ThenInclude(pb => pb.Effects)
-                                    .ThenInclude(pb => pb.Effect)
-                .Include(c => c.IncomingAttacks)
-                    .ThenInclude(a => a.ParentCountry)
-                        .ThenInclude(pc => pc.Researches)
-                            .ThenInclude(pr => pr.Research)
-                                .ThenInclude(pr => pr.Effects)
-                                    .ThenInclude(pr => pr.Effect)
-                .Include(c => c.CurrentEvent)
-                    .ThenInclude(e => e.Effects)
-                            .ThenInclude(e => e.Effect);
+                timer.Stop();
+                var postCombatTime = timer.ElapsedMilliseconds;
+                timer.Restart();
 
-            await combat.ForEachAsync(c => Handler.HandleCombat(context, c, globals));
+                // See comment block at the start of the method as to why a save is needed here
+                await context.SaveChangesAsync();
 
-            timer.Stop();
-            var combatTime = timer.ElapsedMilliseconds;
-            timer.Restart();
+                timer.Stop();
+                var saveTime = timer.ElapsedMilliseconds;
+                timer.Restart();
 
-            var postCombat = context.Countries
-                .Include(c => c.Commands)
-                    .ThenInclude(c => c.Divisions)
-                .Include(c => c.Attacks)
-                .Include(c => c.Buildings)
-                    .ThenInclude(b => b.Building)
-                        .ThenInclude(b => b.Effects)
-                            .ThenInclude(b => b.Effect)
-                .Include(c => c.Researches)
-                    .ThenInclude(r => r.Research)
-                        .ThenInclude(r => r.Effects)
-                            .ThenInclude(r => r.Effect)
-                .Include(c => c.CurrentEvent)
-                    .ThenInclude(e => e.Effects)
-                        .ThenInclude(e => e.Effect);
+                context.InProgressBuildings.RemoveRange(context.InProgressBuildings.Where(b => b.TimeLeft <= 0));
+                context.InProgressResearches.RemoveRange(context.InProgressResearches.Where(r => r.TimeLeft <= 0));
 
-            await postCombat.ForEachAsync(c => Handler.HandlePostCombat(context, c, globals));
+                await context.SaveChangesAsync();
 
-            long index = 0;
-            await context.Countries.OrderByDescending(c => c.Score).ForEachAsync(c => c.Rank = ++index);
-
-            globals.Round++;
-
-            timer.Stop();
-            var postCombatTime = timer.ElapsedMilliseconds;
-            timer.Restart();
-
-            // See comment block at the start of the method as to why a save is needed here
-            await context.SaveChangesAsync();
-
-            timer.Stop();
-            var saveTime = timer.ElapsedMilliseconds;
-            timer.Restart();
-
-            context.InProgressBuildings.RemoveRange(context.InProgressBuildings.Where(b => b.TimeLeft <= 0));
-            context.InProgressResearches.RemoveRange(context.InProgressResearches.Where(r => r.TimeLeft <= 0));
-
-            await context.SaveChangesAsync();
-
-            timer.Stop();
-            Debug.WriteLine("Turn completed, total elapsed time: {0} ms", preCombatTime + postCombatTime + combatTime + saveTime + timer.ElapsedMilliseconds);
-            Debug.WriteLine("   Pre-combat time: {0} ms", preCombatTime);
-            Debug.WriteLine("   Combat time: {0} ms", combatTime);
-            Debug.WriteLine("   Post-combat time: {0} ms", postCombatTime);
-            Debug.WriteLine("   Save time: {0} ms", saveTime);
-            Debug.WriteLine("   In-progress delete time: {0} ms", timer.ElapsedMilliseconds);
+                timer.Stop();
+                Debug.WriteLine("Turn completed, total elapsed time: {0} ms", preCombatTime + postCombatTime + combatTime + saveTime + timer.ElapsedMilliseconds);
+                Debug.WriteLine("   Pre-combat time: {0} ms", preCombatTime);
+                Debug.WriteLine("   Combat time: {0} ms", combatTime);
+                Debug.WriteLine("   Post-combat time: {0} ms", postCombatTime);
+                Debug.WriteLine("   Save time: {0} ms", saveTime);
+                Debug.WriteLine("   In-progress delete time: {0} ms", timer.ElapsedMilliseconds);
+            }
         }
     }
 }

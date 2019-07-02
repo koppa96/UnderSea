@@ -2,7 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using StrategyGame.Model.Entities;
 using StrategyGame.Model.Entities.Frontend;
+using StrategyGame.Model.Entities.Logging;
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace StrategyGame.Dal
 {
@@ -121,6 +124,8 @@ namespace StrategyGame.Dal
 
         public DbSet<ExceptionLog> ExceptionLogs { get; set; }
 
+        public DbSet<RequestLog> RequestLogs { get; set; }
+
         #endregion
 
         /// <summary>
@@ -128,7 +133,7 @@ namespace StrategyGame.Dal
         /// </summary>
         /// <param name="options">The <see cref="DbContextOptions{UnderSeaDatabaseContext}"/> for the database.</param>
         /// <exception cref="ArgumentNullException">Thrown if an argument was null.</exception>
-        public UnderSeaDatabaseContext(DbContextOptions options)
+        public UnderSeaDatabaseContext(DbContextOptions<UnderSeaDatabaseContext> options)
             : base(options)
         {
             Countries = Set<Country>();
@@ -154,6 +159,7 @@ namespace StrategyGame.Dal
             EventContents = Set<EventContent>();
             GlobalValues = Set<GlobalValue>();
             ExceptionLogs = Set<ExceptionLog>();
+            RequestLogs = Set<RequestLog>();
         }
 
         /// <summary>
