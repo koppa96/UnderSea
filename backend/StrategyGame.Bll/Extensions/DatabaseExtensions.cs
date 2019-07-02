@@ -37,20 +37,21 @@ namespace StrategyGame.Bll.Extensions
         /// </summary>
         /// <param name="country">The <see cref="Country"/> to calculate total maintenance for.</param>
         /// <returns>The maintenance of all units in the country.</returns>
-        public static (long PearlUpkeep, long CoralUpkeep) GetTotalMaintenance(this Country country)
+        public static IEnumerable<(ResourceType Type, long Value)> GetTotalMaintenance(this Country country)
         {
+            throw new NotImplementedException();
             long pearlUpkeep = 0;
             long coralUpkeep = 0;
             foreach (var comm in country.Commands)
             {
                 foreach (var div in comm.Divisions)
                 {
-                    pearlUpkeep += div.Count * div.Unit.MaintenancePearl;
-                    coralUpkeep += div.Count * div.Unit.MaintenanceCoral;
+                    //pearlUpkeep += div.Count * div.Unit.MaintenancePearl;
+                    //coralUpkeep += div.Count * div.Unit.MaintenanceCoral;
                 }
             }
 
-            return (pearlUpkeep, coralUpkeep);
+            //return (pearlUpkeep, coralUpkeep);
         }
 
         /// <summary>
@@ -193,43 +194,6 @@ namespace StrategyGame.Bll.Extensions
         public static void MergeInto(this Division division, Command target, UnderSeaDatabaseContext context)
         {
             var existing = target.Divisions.SingleOrDefault(d => d.Unit.Id == division.Unit.Id);
-
-            if (existing == null)
-            {
-                division.ParentCommand = target;
-            }
-            else
-            {
-                existing.Count += division.Count;
-                context.Divisions.Remove(division);
-            }
-        }
-
-        /// <summary>
-        /// Merges the command into the provided command.
-        /// </summary>
-        /// <param name="command">The <see cref="Command"/> to merge.</param>
-        /// <param name="target">The <see cref="Command"/> to merge into.</param>
-        /// <param name="context">The database to use to remove the division if necessary.</param>
-        public static void MergeInto(this Command command, Command target, UnderSeaDatabaseContext context)
-        {
-            foreach (var div in command.Divisions)
-            {
-                div.MergeInto(target, context);
-            }
-
-            context.Commands.Remove(command);
-        }
-
-        /// <summary>
-        /// Merges the division into the provided command.
-        /// </summary>
-        /// <param name="division">The <see cref="Division"/> to merge.</param>
-        /// <param name="target">The <see cref="Command"/> to merge into.</param>
-        /// <param name="context">The database to use to remove the division if necessary.</param>
-        public static void MergeInto(this Division division, Command target, UnderSeaDatabaseContext context)
-        {
-            var existing = target.Divisions.SingleOrDefault(d => d.Unit.Id == division.Unit.Id && d.BattleCount == division.BattleCount);
 
             if (existing == null)
             {

@@ -1,4 +1,6 @@
-﻿namespace StrategyGame.Bll.Dto.Sent
+﻿using System.Collections.Generic;
+
+namespace StrategyGame.Bll.Dto.Sent
 {
     public class CreationInfo
     {

@@ -1,4 +1,5 @@
-﻿using StrategyGame.Bll.Dto.Sent.Country;
+﻿using StrategyGame.Bll.Dto.Received;
+using StrategyGame.Bll.Dto.Sent.Country;
 using System.Threading.Tasks;
 
 namespace StrategyGame.Api.Hubs

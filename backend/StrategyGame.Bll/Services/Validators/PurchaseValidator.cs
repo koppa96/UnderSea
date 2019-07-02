@@ -52,9 +52,10 @@ namespace StrategyGame.Bll.Services.Validators
             var unitTypes = await _context.UnitTypes.ToListAsync();
             var country = await _context.Countries.SingleAsync(c => c.ParentUser.UserName == _user);
 
-            int cost = details.Sum(d => d.Count * unitTypes.SingleOrDefault(u => u.Id == d.UnitId)?.CostPearl ?? 0);
+            throw new System.NotImplementedException();
+            //int cost = details.Sum(d => d.Count * unitTypes.SingleOrDefault(u => u.Id == d.UnitId)?.CostPearl ?? 0);
 
-            return cost <= country.Pearls;
+            //return cost <= country.Pearls;
         }
     }
 }

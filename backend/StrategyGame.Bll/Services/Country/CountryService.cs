@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Nito.AsyncEx;
+using StrategyGame.Bll.Dto.Received;
 using StrategyGame.Bll.Dto.Sent;
 using StrategyGame.Bll.Dto.Sent.Country;
 using StrategyGame.Bll.EffectParsing;
@@ -42,16 +43,21 @@ namespace StrategyGame.Bll.Services.Country
                     .Include(g => g.SecondStartingBuilding)
                     .SingleAsync();
 
-            var country = new Model.Entities.Country()
-            {
-                Name = countryName,
-                ParentUser = user,
-                Resources = (await Context.ResourceTypes.ToListAsync())
-                    .Select(r => new CountryResource { Amount = r.StartingAmount, ResourceType = r }).ToList(),
-                Score = -1,
-                Rank = -1,
-                CreatedRound = globals.Round
-            };
+                if (user.RuledCountries.Count > 0)
+                {
+                    throw new InvalidOperationException("User already has a country");
+                }
+
+                var country = new Model.Entities.Country()
+                {
+                    Name = countryName,
+                    ParentUser = user,
+                    Resources = (await Context.ResourceTypes.ToListAsync())
+                        .Select(r => new CountryResource { Amount = r.StartingAmount, ResourceType = r }).ToList(),
+                    Score = -1,
+                    Rank = -1,
+                    CreatedRound = globals.Round
+                };
 
                 var defenders = new Command { ParentCountry = country, TargetCountry = country };
 
@@ -104,14 +110,16 @@ namespace StrategyGame.Bll.Services.Country
             var info = Mapper.Map<Model.Entities.Country, CountryInfo>(country);
             var globals = await Context.GlobalValues.SingleAsync();
             var mods = country.ParseAllEffectForCountry(Context, globals, Parsers, false, false);
-            var (pearlUpkeep, coralUpkeep) = country.GetTotalMaintenance();
 
-            info.Round = globals.Round;
-            info.CoralsPerRound = (long)Math.Round(mods.CoralProduction * mods.HarvestModifier - coralUpkeep);
-            info.PearlsPerRound = (long)Math.Round(mods.Population * globals.BaseTaxation * mods.TaxModifier
-                + mods.PearlProduction - pearlUpkeep);
+            throw new NotImplementedException();
+            //var (pearlUpkeep, coralUpkeep) = country.GetTotalMaintenance();
 
-            return await GatherInfoAsync(country, globals.Round);
+            //info.Round = globals.Round;
+            //info.CoralsPerRound = (long)Math.Round(mods.CoralProduction * mods.HarvestModifier - coralUpkeep);
+            //info.PearlsPerRound = (long)Math.Round(mods.Population * globals.BaseTaxation * mods.TaxModifier
+            //    + mods.PearlProduction - pearlUpkeep);
+
+            //return await GatherInfoAsync(country, globals.Round);
         }
 
         public async Task<IEnumerable<CountryInfo>> GetCountryInfoAsync(string username)
@@ -270,69 +278,71 @@ namespace StrategyGame.Bll.Services.Country
                 throw new InvalidOperationException("Not enough resources to buy a new country.");
             }
 
-            country.Corals -= globals.NewCountryCoralCost;
-            country.Pearls -= globals.NewCountryPearlCost;
+            throw new NotImplementedException();
+            //country.Corals -= globals.NewCountryCoralCost;
+            //country.Pearls -= globals.NewCountryPearlCost;
 
-            var newCountry = new Model.Entities.Country()
-            {
-                Name = countryName,
-                ParentUser = country.ParentUser,
-                Corals = globals.StartingCorals,
-                Pearls = globals.StartingPearls,
-                Score = -1,
-                Rank = -1,
-                CreatedRound = globals.Round
-            };
+            //var newCountry = new Model.Entities.Country()
+            //{
+            //    Name = countryName,
+            //    ParentUser = country.ParentUser,
+            //    Corals = globals.StartingCorals,
+            //    Pearls = globals.StartingPearls,
+            //    Score = -1,
+            //    Rank = -1,
+            //    CreatedRound = globals.Round
+            //};
 
-            var defenders = new Command { ParentCountry = newCountry, TargetCountry = newCountry };
+            //var defenders = new Command { ParentCountry = newCountry, TargetCountry = newCountry };
 
-            Context.Countries.Add(newCountry);
-            Context.Commands.Add(defenders);
-            Context.CountryBuildings.AddRange(
-                new CountryBuilding { ParentCountry = newCountry, Count = 1, Building = globals.FirstStartingBuilding },
-                new CountryBuilding { ParentCountry = newCountry, Count = 1, Building = globals.SecondStartingBuilding });
+            //Context.Countries.Add(newCountry);
+            //Context.Commands.Add(defenders);
+            //Context.CountryBuildings.AddRange(
+            //    new CountryBuilding { ParentCountry = newCountry, Count = 1, Building = globals.FirstStartingBuilding },
+            //    new CountryBuilding { ParentCountry = newCountry, Count = 1, Building = globals.SecondStartingBuilding });
 
-            await Context.SaveChangesAsync();
+            //await Context.SaveChangesAsync();
 
-            return Mapper.Map<Model.Entities.Country, BriefCountryInfo>(newCountry);
+            //return Mapper.Map<Model.Entities.Country, BriefCountryInfo>(newCountry);
         }
 
         public async Task<string> TransferAsync(string username, TransferDetails details)
         {
-            var sender = await Context.Countries.Include(c => c.ParentUser)
-                .SingleOrDefaultAsync(c => c.Id == details.FromId);
+            throw new NotImplementedException();
+            //var sender = await Context.Countries.Include(c => c.ParentUser)
+            //    .SingleOrDefaultAsync(c => c.Id == details.FromId);
 
-            if (sender == null)
-            {
-                throw new ArgumentOutOfRangeException(nameof(details.FromId), "Invalid sender country id.");
-            }
+            //if (sender == null)
+            //{
+            //    throw new ArgumentOutOfRangeException(nameof(details.FromId), "Invalid sender country id.");
+            //}
 
-            if (sender.ParentUser.UserName != username)
-            {
-                throw new UnauthorizedAccessException("The sender must be your country.");
-            }
+            //if (sender.ParentUser.UserName != username)
+            //{
+            //    throw new UnauthorizedAccessException("The sender must be your country.");
+            //}
 
-            if (sender.Pearls < details.Pearls || sender.Corals < details.Corals)
-            {
-                throw new InvalidOperationException("Not enough money.");
-            }
+            //if (sender.Pearls < details.Pearls || sender.Corals < details.Corals)
+            //{
+            //    throw new InvalidOperationException("Not enough money.");
+            //}
 
-            var receiver = await Context.Countries.Include(c => c.ParentUser)
-                .SingleOrDefaultAsync(c => c.Id == details.ToId);
+            //var receiver = await Context.Countries.Include(c => c.ParentUser)
+            //    .SingleOrDefaultAsync(c => c.Id == details.ToId);
 
-            if (receiver == null)
-            {
-                throw new ArgumentOutOfRangeException(nameof(details.ToId), "Invalid receiver country.");
-            }
+            //if (receiver == null)
+            //{
+            //    throw new ArgumentOutOfRangeException(nameof(details.ToId), "Invalid receiver country.");
+            //}
 
-            sender.Pearls -= details.Pearls;
-            sender.Corals -= details.Corals;
+            //sender.Pearls -= details.Pearls;
+            //sender.Corals -= details.Corals;
 
-            receiver.Pearls += details.Pearls;
-            receiver.Corals += details.Corals;
+            //receiver.Pearls += details.Pearls;
+            //receiver.Corals += details.Corals;
 
-            await Context.SaveChangesAsync();
-            return receiver.ParentUser.UserName;
+            //await Context.SaveChangesAsync();
+            //return receiver.ParentUser.UserName;
         }
     }
 }

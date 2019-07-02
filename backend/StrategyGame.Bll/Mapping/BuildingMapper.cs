@@ -22,7 +22,7 @@ namespace StrategyGame.Bll.Mapping
                     Amount = (int)c.Amount,
                     ImageUrl = c.ResourceType.Content.ImageUrl
                 })))
-                .ForMember(dest => dest.IconImageUrl, conf => conf.MapFrom(src => src.Content.IconImageUrl))
+                .ForMember(dest => dest.IconImageUrl, conf => conf.MapFrom(src => src.Content.IconImageUrl));
 
             CreateMap<BuildingType, BriefCreationInfo>()
                 .ForMember(dest => dest.ImageUrl, conf => conf.MapFrom(src => src.Content.ImageUrl))

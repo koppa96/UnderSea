@@ -75,20 +75,27 @@ namespace StrategyGame.Bll.Services.Units
                     throw new UnauthorizedAccessException("Can't access country not owned by the user.");
                 }
 
-                var unitInfos = new List<UnitInfo>();
+                var unitInfos = new List<BriefUnitInfo>();
                 foreach (var purchase in purchases)
                 {
                     var unit = unitTypes.Single(u => u.Id == purchase.UnitId);
 
-                var builder = country.ParseAllEffectForCountry(Context, globals, Parsers, false);
-                var totalUnits = country.Commands.Sum(c => c.Divisions.Sum(d => d.Count));
+                    if (unit == null)
+                    {
+                        throw new ArgumentOutOfRangeException(nameof(purchase.UnitId), "No unit found by the provided ID.");
+                    }
+
+                    if (!unit.IsPurchasable)
+                    {
+                        throw new InvalidOperationException("Can not purchase ranked up unit.");
+                    }
 
                     if (purchase.Count < 0)
                     {
                         throw new ArgumentException("Purchase amount must be positive.");
                     }
 
-                    var builder = country.ParseAllEffectForCountry(Context, globals, Parsers, false);
+                    var builder = country.ParseAllEffectForCountry(Context, globals, Parsers, false, false);
                     var totalUnits = country.Commands.Sum(c => c.Divisions.Sum(d => d.Count));
 
                     // Check pop-space
@@ -97,7 +104,8 @@ namespace StrategyGame.Bll.Services.Units
                         throw new LimitReachedException("Unit count limit reached.");
                     }
 
-                country.Purchase(unit, Context, purchase.Count);
+                    var defenders = country.GetAllDefending();
+                    var targetDiv = defenders.Divisions.SingleOrDefault(d => d.Unit.Id == purchase.UnitId);
 
                     if (targetDiv == null)
                     {
@@ -111,8 +119,8 @@ namespace StrategyGame.Bll.Services.Units
 
                     country.Purchase(unit, Context, purchase.Count);
 
-                    var info = Mapper.Map<UnitType, UnitInfo>(unit);
-                    info.Count = targetDiv.Count;
+                    var info = Mapper.Map<UnitType, BriefUnitInfo>(unit);
+                    info.TotalCount = targetDiv.Count;
                     unitInfos.Add(info);
                 }
 

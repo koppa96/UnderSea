@@ -21,7 +21,7 @@ namespace StrategyGame.Tests.Services
         {
             context = await UtilityFactory.CreateContextAsync();
 
-            buildingService = new BuildingService(context, UtilityFactory.CreateMapper());
+            buildingService = new BuildingService(context, new AsyncReaderWriterLock(), UtilityFactory.CreateMapper());
         }
 
         [TestMethod]

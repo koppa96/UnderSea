@@ -40,10 +40,10 @@ namespace StrategyGame.Bll.Services.Researches
             using (var lck = await _turnEndLock.ReaderLockAsync(turnEndWaitToken))
             {
                 var country = await _context.Countries.Include(c => c.InProgressResearches)
-                .Include(c => c.Researches)
-                    .ThenInclude(cr => cr.Research)
-                .Include(c => c.ParentUser)
-                .SingleOrDefaultAsync(c => c.Id == countryId);
+                                .Include(c => c.Researches)
+                                    .ThenInclude(cr => cr.Research)
+                                .Include(c => c.ParentUser)
+                                .SingleOrDefaultAsync(c => c.Id == countryId);
 
                 if (country == null)
                 {
@@ -60,25 +60,30 @@ namespace StrategyGame.Bll.Services.Researches
                     throw new InProgressException("The country already has a research in progress.");
                 }
 
-                var researchType = await _context.ResearchTypes.FindAsync(researchId);
+                var research = country.Researches.SingleOrDefault(cr => cr.Research.Id == researchId);
+                if (research != null && research.Count >= research.Research.MaxCompletedAmount)
+                {
+                    throw new LimitReachedException("The max research count has been reached.");
+                }
+
+                var researchType = await _context.ResearchTypes
+                    .Include(b => b.Cost)
+                        .ThenInclude(c => c.ResourceType)
+                            .ThenInclude(r => r.Content)
+                    .SingleOrDefaultAsync(b => b.Id == researchId);
+
                 if (researchType == null)
                 {
                     throw new ArgumentOutOfRangeException(nameof(researchId), "No such research id.");
                 }
 
-                if (researchType.CostPearl > country.Pearls || researchType.CostCoral > country.Corals)
-                {
-                    throw new InvalidOperationException("Not enough money");
-                }
-
-                country.Pearls -= researchType.CostPearl;
-                country.Corals -= researchType.CostCoral;
+                country.Purchase(researchType, _context);
 
                 var inProgressResearch = new InProgressResearch
                 {
                     ParentCountry = country,
                     Research = researchType,
-                    TimeLeft = KnownValues.DefaultResearchTime
+                    TimeLeft = researchType.ResearchTime
                 };
 
                 _context.InProgressResearches.Add(inProgressResearch);
