@@ -204,7 +204,8 @@ namespace StrategyGame.Bll.Extensions
 
             if (existing == null)
             {
-                division.ParentCommand = target;
+                target.Divisions.Add(division);
+                //division.ParentCommand = target;
             }
             else
             {
