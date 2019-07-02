@@ -8,7 +8,6 @@ import { NotFound } from "./pages/notFound/index";
 import { LoginConnected } from "./pages/account/login/connect";
 import { MainPageConnected } from "./pages/mainpage/connect";
 import { BasePortUrl } from ".";
-import qs from "qs";
 import { LoginProps } from "./Interface";
 import { LoginCheck } from "./components/LoginCheck/LoginCheck";
 import { LoginCheckConnected } from "./components/LoginCheck/connect";
@@ -18,20 +17,30 @@ export class App extends React.Component<LoginProps> {
   componentDidMount() {
     this.props.getUserInfo();
   }
+  state = {
+    mountedMainpage: false
+  };
+  mounted = (mount: boolean) => {
+    this.setState({ mountedMainpage: mount });
+  };
 
   render() {
     const { serverResponseLogin } = this.props;
     console.log("serverresponselogin", serverResponseLogin);
     return (
       <div className="App">
-        <div className="bg-image">
+        <div
+          className={
+            this.state.mountedMainpage ? "bg-image-loggedin" : "bg-image"
+          }
+        >
           <Switch>
             <Route exact path="/">
               <LoginCheckConnected
                 login={true}
                 serverResponseLogin={serverResponseLogin}
               >
-                <MainPageConnected />
+                <MainPageConnected mounted={this.mounted} />
               </LoginCheckConnected>
             </Route>
             <Route path="/account">
@@ -39,7 +48,7 @@ export class App extends React.Component<LoginProps> {
                 login={true}
                 serverResponseLogin={serverResponseLogin}
               >
-                <MainPageConnected />
+                <MainPageConnected mounted={this.mounted} />
               </LoginCheckConnected>
             </Route>
             <Route path="/register" component={Register} />
