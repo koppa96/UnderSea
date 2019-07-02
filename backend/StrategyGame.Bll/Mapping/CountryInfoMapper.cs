@@ -2,12 +2,13 @@
 using StrategyGame.Bll.Dto.Sent;
 using StrategyGame.Bll.Dto.Sent.Country;
 using StrategyGame.Model.Entities;
+using StrategyGame.Model.Entities.Resources;
 
 namespace StrategyGame.Bll.Mapping
 {
     /// <summary>
     /// Provides mappings between <see cref="Country"/> and <see cref="CountryInfo"/>, <see cref="Country"/> and <see cref="RankInfo"/>,
-    /// <see cref="CountryBuilding"/> and <see cref="BriefCreationInfo"/>, <see cref="CountryResearch"/> and <see cref="BriefCreationInfo"/>,
+    /// <see cref="CountryyResource"/> and <see cref="BriefCreationInfo"/>, <see cref="CountryResearch"/> and <see cref="BriefCreationInfo"/>,
     /// and <see cref="RandomEvent"/> and <see cref="EventInfo"/>.
     /// </summary>
     public class CountryInfoMapper : Profile
@@ -17,7 +18,7 @@ namespace StrategyGame.Bll.Mapping
             CreateMap<Country, CountryInfo>();
             CreateMap<Country, RankInfo>();
 
-            CreateMap<CountryBuilding, BriefCreationInfo>()
+            CreateMap<CountryyResource, BriefCreationInfo>()
                 .ForMember(dest => dest.ImageUrl, conf => conf.MapFrom(src => src.Building.Content.ImageUrl))
                 .ForMember(dest => dest.IconImageUrl, conf => conf.MapFrom(src => src.Building.Content.IconImageUrl))
                 .ForMember(dest => dest.Id, conf => conf.MapFrom(src => src.Building.Id))
@@ -34,6 +35,10 @@ namespace StrategyGame.Bll.Mapping
                 .ForMember(dest => dest.Description, conf => conf.MapFrom(src => src.Content.Description))
                 .ForMember(dest => dest.ImageUrl, conf => conf.MapFrom(src => src.Content.ImageUrl))
                 .ForMember(dest => dest.Flavourtext, conf => conf.MapFrom(src => src.Content.FlavourText));
+            
+            CreateMap<CountryResource, ResourceInfo>()
+                .ForMember(dest => dest.Name, conf => conf.MapFrom(src => src.ResourceType.Content.Name))
+                .ForMember(dest => dest.ImageUrl, conf => conf.MapFrom(src => src.ResourceType.Content.ImageUrl));
         }
     }
 }

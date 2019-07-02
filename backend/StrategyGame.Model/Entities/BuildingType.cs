@@ -34,7 +34,7 @@ namespace StrategyGame.Model.Entities
         /// <summary>
         /// Gets the collection of buildings of this type that are completed.
         /// </summary>
-        public virtual ICollection<CountryBuilding> CompletedBuildings { get; set; }
+        public virtual ICollection<CountryyResource> CompletedBuildings { get; set; }
 
         /// <summary>
         /// Gets the collection of buildings of this type that are being built.

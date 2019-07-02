@@ -108,6 +108,11 @@ namespace StrategyGame.Tests.Services
                 .Include(c => c.Defenses)
                 .SingleAsync(x => x.ParentUser.UserName == username2);
 
+            foreach (var res in poorCountry.Resources)
+            {
+                res.Amount = 50000;
+            }
+
             var unitCount = country.Commands.Sum(c => c.Divisions.Sum(d => d.Count));
 
             Assert.IsFalse(poorCountry.Attacks.Any());
@@ -153,7 +158,7 @@ namespace StrategyGame.Tests.Services
 
             foreach (var res in country.Resources)
             {
-                res.Amount = 500;
+                res.Amount = 100;
             }
 
             var unitCount = country.Commands.Sum(c =>
@@ -166,7 +171,7 @@ namespace StrategyGame.Tests.Services
             Assert.IsTrue(unitCount > country.Commands.Sum(c =>
                 c.Divisions.Sum(d => d.Count)));
             Assert.IsTrue(country.Resources.All(r => r.Amount >= 0));
-            Assert.IsTrue(country.Resources.All(r => r.Amount < 500));
+            Assert.IsTrue(country.Resources.Any(r => r.Amount < 500));
         }
 
         [TestMethod]
@@ -178,6 +183,7 @@ namespace StrategyGame.Tests.Services
                 .Include(c => c.Commands)
                     .ThenInclude(c => c.Divisions)
                         .ThenInclude(d => d.Unit)
+                .Include(c => c.Resources)
                 .SingleAsync(x => x.ParentUser.UserName == username);
 
             var totalMaintenance = country.GetTotalMaintenance();
@@ -189,7 +195,10 @@ namespace StrategyGame.Tests.Services
 
             await turnService.EndTurnAsync(context);
 
-            Assert.IsTrue(country.Resources.All(r => r.Amount > 50000 - totalMaintenance[r.ResourceType]));
+            Assert.IsTrue(country.Resources.All(r => r.Amount > 50000 -
+                (totalMaintenance.ContainsKey(r.ResourceType) 
+                ? totalMaintenance[r.ResourceType]
+                : 0)));
         }
 
 
@@ -207,7 +216,7 @@ namespace StrategyGame.Tests.Services
                 .Include(c => c.InProgressBuildings)
                 .SingleAsync(x => x.ParentUser.UserName == username);
 
-            country.Buildings.Add(new CountryBuilding { Building = magicBuilding, Count = 1 });
+            country.Buildings.Add(new CountryyResource { Building = magicBuilding, Count = 1 });
 
             await turnService.EndTurnAsync(context);
         }

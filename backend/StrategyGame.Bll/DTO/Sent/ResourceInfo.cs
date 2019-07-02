@@ -6,7 +6,7 @@ namespace StrategyGame.Bll.Dto.Sent
 {
     public class ResourceInfo
     {
-        public int Amount { get; set; }
+        public long Amount { get; set; }
         public string Name { get; set; }
         public string ImageUrl { get; set; }
     }

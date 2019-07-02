@@ -37,7 +37,9 @@ namespace StrategyGame.Bll.Services.Country
         {
             using (var lck = await TurnEndLock.ReaderLockAsync(turnEndWaitToken))
             {
-                var user = await Context.Users.SingleAsync(u => u.UserName == username);
+                var user = await Context.Users
+                    .Include(u => u.RuledCountries)
+                    .SingleAsync(u => u.UserName == username);
                 var globals = await Context.GlobalValues
                     .Include(g => g.FirstStartingBuilding)
                     .Include(g => g.SecondStartingBuilding)
@@ -64,8 +66,8 @@ namespace StrategyGame.Bll.Services.Country
                 Context.Countries.Add(country);
                 Context.Commands.Add(defenders);
                 Context.CountryBuildings.AddRange(
-                    new CountryBuilding { ParentCountry = country, Count = 1, Building = globals.FirstStartingBuilding },
-                    new CountryBuilding { ParentCountry = country, Count = 1, Building = globals.SecondStartingBuilding });
+                    new CountryyResource { ParentCountry = country, Count = 1, Building = globals.FirstStartingBuilding },
+                    new CountryyResource { ParentCountry = country, Count = 1, Building = globals.SecondStartingBuilding });
 
                 await Context.SaveChangesAsync();
             }
@@ -95,6 +97,9 @@ namespace StrategyGame.Bll.Services.Country
                .Include(c => c.Attacks)
                .Include(c => c.Defenses)
                .Include(c => c.ParentUser)
+               .Include(c => c.Resources)
+                    .ThenInclude(r => r.ResourceType)
+                        .ThenInclude(r => r.Content)
                .SingleOrDefaultAsync(c => c.Id == countryId);
 
             if (country == null)
@@ -109,17 +114,8 @@ namespace StrategyGame.Bll.Services.Country
 
             var info = Mapper.Map<Model.Entities.Country, CountryInfo>(country);
             var globals = await Context.GlobalValues.SingleAsync();
-            var mods = country.ParseAllEffectForCountry(Context, globals, Parsers, false, false);
-
-            throw new NotImplementedException();
-            //var (pearlUpkeep, coralUpkeep) = country.GetTotalMaintenance();
-
-            //info.Round = globals.Round;
-            //info.CoralsPerRound = (long)Math.Round(mods.CoralProduction * mods.HarvestModifier - coralUpkeep);
-            //info.PearlsPerRound = (long)Math.Round(mods.Population * globals.BaseTaxation * mods.TaxModifier
-            //    + mods.PearlProduction - pearlUpkeep);
-
-            //return await GatherInfoAsync(country, globals.Round);
+            info.Round = globals.Round;
+            return await GatherInfoAsync(country, globals);
         }
 
         public async Task<IEnumerable<CountryInfo>> GetCountryInfoAsync(string username)
@@ -152,16 +148,16 @@ namespace StrategyGame.Bll.Services.Country
 
             foreach (var c in countries)
             {
-                infos.Add(await GatherInfoAsync(c, globals.Round));
+                infos.Add(await GatherInfoAsync(c, globals));
             }
 
             return infos;
         }
 
-        protected async Task<CountryInfo> GatherInfoAsync(Model.Entities.Country country, ulong round)
+        protected async Task<CountryInfo> GatherInfoAsync(Model.Entities.Country country, GlobalValue globals)
         {
             var info = Mapper.Map<Model.Entities.Country, CountryInfo>(country);
-            info.Round = round;
+            info.Round = globals.Round;
 
             // Start with all buildings and researches
             var totalBuildings = await Context.BuildingTypes.Include(r => r.Content)
@@ -172,7 +168,7 @@ namespace StrategyGame.Bll.Services.Country
             // Map all existing buildings and researches
             foreach (var building in country.Buildings)
             {
-                totalBuildings[building.Building.Id] = Mapper.Map<CountryBuilding, BriefCreationInfo>(building);
+                totalBuildings[building.Building.Id] = Mapper.Map<CountryyResource, BriefCreationInfo>(building);
             }
 
             foreach (var research in country.Researches)
@@ -223,6 +219,25 @@ namespace StrategyGame.Bll.Services.Country
             {
                 info.Event = Mapper.Map<RandomEvent, EventInfo>(country.CurrentEvent);
             }
+
+            var mods = country.ParseAllEffectForCountry(Context, globals, Parsers, false, false);
+            var upkeep = country.GetTotalMaintenance();
+            var perTurn = new Dictionary<ResourceType, long>();
+
+            foreach (var res in country.Resources)
+            {
+                perTurn.Add(res.ResourceType, (long)Math.Round(0
+                    + (mods.ResourceProductions.ContainsKey(res.ResourceType.Id) ? mods.ResourceProductions[res.ResourceType.Id] : 0
+                        * (mods.ResourceModifiers.ContainsKey(res.ResourceType.Id) ? mods.ResourceModifiers[res.ResourceType.Id] : 1))
+                    - (upkeep.ContainsKey(res.ResourceType) ? upkeep[res.ResourceType] : 0)));
+            }
+
+            info.ResourcesPerRound = perTurn.Select(r => new ResourceInfo
+            {
+                Name = r.Key.Content.Name,
+                ImageUrl = r.Key.Content.ImageUrl,
+                Amount = r.Value
+            });
 
             return info;
         }

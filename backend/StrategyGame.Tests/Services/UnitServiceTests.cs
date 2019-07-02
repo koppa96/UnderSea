@@ -37,7 +37,7 @@ namespace StrategyGame.Tests.Services
         [DataRow("TheBuilder")]
         public async Task TestBuyUnit(string username)
         {
-            var id = (await context.UnitTypes.FirstAsync()).Id;
+            var id = (await context.UnitTypes.FirstAsync(u => u.IsPurchasable)).Id;
             var units = await unitService.CreateUnitAsync(username,
                 (await context.Countries.FirstAsync(c => c.ParentUser.UserName == username)).Id,
                 new[] { new PurchaseDetails { UnitId = id, Count = 10 } });
@@ -48,7 +48,7 @@ namespace StrategyGame.Tests.Services
         [DataRow("TheBuilder")]
         public async Task TestDeleteUnit(string username)
         {
-            var id = (await context.UnitTypes.FirstAsync()).Id;
+            var id = (await context.UnitTypes.FirstAsync(u => u.IsPurchasable)).Id;
 
             await unitService.CreateUnitAsync(username,
                 (await context.Countries.FirstAsync(c => c.ParentUser.UserName == username)).Id,
@@ -62,11 +62,19 @@ namespace StrategyGame.Tests.Services
         }
 
         [TestMethod]
-        [DataRow("ThePoor")]
-        [ExpectedException(typeof(InvalidOperationException))]
+        [DataRow("TheBuilder")]
+        [ExpectedException(typeof(ArgumentException))]
         public async Task TestBuyUnitNoMoney(string username)
         {
-            var id = (await context.UnitTypes.FirstAsync()).Id;
+            var id = (await context.UnitTypes.FirstAsync(u => u.IsPurchasable)).Id;
+            var country = await context.Countries
+                .Include(c => c.Resources)
+                .SingleAsync(c => c.ParentUser.UserName == username);
+
+            foreach (var res in country.Resources)
+            {
+                res.Amount = 0;
+            }
 
             await unitService.CreateUnitAsync(username,
                 (await context.Countries.FirstAsync(c => c.ParentUser.UserName == username)).Id,
@@ -78,7 +86,7 @@ namespace StrategyGame.Tests.Services
         [ExpectedException(typeof(LimitReachedException))]
         public async Task TestBuyUnitNoSpace(string username)
         {
-            var id = (await context.UnitTypes.FirstAsync()).Id;
+            var id = (await context.UnitTypes.FirstAsync(u => u.IsPurchasable)).Id;
 
             await unitService.CreateUnitAsync(username,
                 (await context.Countries.FirstAsync(c => c.ParentUser.UserName == username)).Id,

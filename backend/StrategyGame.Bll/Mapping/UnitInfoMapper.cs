@@ -16,7 +16,13 @@ namespace StrategyGame.Bll.Mapping
             CreateMap<UnitType, UnitInfo>()
                 .ForMember(dest => dest.Name, conf => conf.MapFrom(src => src.Content.Name))
                 .ForMember(dest => dest.ImageUrl, conf => conf.MapFrom(src => src.Content.ImageUrl))
-                .ForMember(dest => dest.Cost, conf => conf.MapFrom(src => src.Cost));
+                .ForMember(dest => dest.Cost, conf => conf.MapFrom(src => src.Cost))
+                .ForMember(dest => dest.Cost, conf => conf.MapFrom(src => src.Cost.Select(c => new ResourceInfo
+                {
+                    Name = c.ResourceType.Content.Name,
+                    Amount = (int)c.Amount,
+                    ImageUrl = c.ResourceType.Content.ImageUrl
+                })));
 
             CreateMap<UnitType, BriefUnitInfo>()
                 .ForMember(dest => dest.Name, conf => conf.MapFrom(src => src.Content.Name))

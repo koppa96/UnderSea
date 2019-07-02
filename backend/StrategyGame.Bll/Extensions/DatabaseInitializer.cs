@@ -280,11 +280,11 @@ namespace StrategyGame.Bll.Extensions
             };
 
             // Iszaptraktor
-            var harvMod1 = new Effect { Name = KnownValues.HarvestModifier, Value = 0.1 };
+            var harvMod1 = new Effect { Name = KnownValues.ResourceProductionModifier, Value = 0.1, Parameter = pearl.Id.ToString() };
             var mudT = new ResearchType { Cost = new[] { new ResearchResource { Amount = 1000, ResourceType = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = mudTCont };
 
             // Iszapkombájn
-            var harvMod2 = new Effect { Name = KnownValues.HarvestModifier, Value = 0.15 };
+            var harvMod2 = new Effect { Name = KnownValues.ResourceProductionModifier, Value = 0.15, Parameter = pearl.Id.ToString() };
             var mudC = new ResearchType { Cost = new[] { new ResearchResource { Amount = 1000, ResourceType = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = mudCCont };
 
             // korallfal
@@ -301,7 +301,7 @@ namespace StrategyGame.Bll.Extensions
             var martialArts = new ResearchType { Cost = new[] { new ResearchResource { Amount = 1000, ResourceType = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = cCont };
 
             // Alchemy
-            var taxMod1 = new Effect { Name = KnownValues.TaxationModifier, Value = 0.3 };
+            var taxMod1 = new Effect { Name = KnownValues.ResourceProductionModifier, Value = 0.3, Parameter = pearl.Id.ToString() };
             var alchemy = new ResearchType { Cost = new[] { new ResearchResource { Amount = 1000, ResourceType = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = taxCont };
 
 
@@ -495,7 +495,11 @@ namespace StrategyGame.Bll.Extensions
 
             var badHarvest = new RandomEvent { Content = badhvCont };
             var lessCoral = new Effect
-            { Name = KnownValues.BuildingProductionIncrease, Value = -50 };
+            {
+                Name = KnownValues.BuildingProductionIncrease,
+                Value = -50,
+                Parameter = currentController.Id.ToString() + ";" + coral.Id.ToString()
+            };
 
             var contentPopulation = new RandomEvent { Content = contPopCont };
             var addCurrent = new Effect
@@ -609,12 +613,12 @@ namespace StrategyGame.Bll.Extensions
             var b1 = await context.BuildingTypes.FirstAsync();
             var b2 = await context.BuildingTypes.Skip(1).FirstAsync();
 
-            context.CountryBuildings.AddRange(new CountryBuilding
+            context.CountryBuildings.AddRange(new CountryyResource
             {
                 Building = b1,
                 Count = 1,
                 ParentCountry = bc
-            }, new CountryBuilding
+            }, new CountryyResource
             {
                 Building = b2,
                 Count = 13,
@@ -738,7 +742,7 @@ namespace StrategyGame.Bll.Extensions
                 InProgressBuildings = context.BuildingTypes.Where(b => rng.NextDouble() < 0.5)
                     .Select(b => new InProgressBuilding { TimeLeft = 1, Building = b }).ToList(),
                 Buildings = context.BuildingTypes.Where(b => rng.NextDouble() < 0.5)
-                    .Select(b => new CountryBuilding { Count = rng.Next(1, 5), Building = b }).ToList()
+                    .Select(b => new CountryyResource { Count = rng.Next(1, 5), Building = b }).ToList()
             }).ToList();
 
             foreach (var country in countries)

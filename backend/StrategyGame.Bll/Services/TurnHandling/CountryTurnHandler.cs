@@ -343,58 +343,43 @@ namespace StrategyGame.Bll.Services.TurnHandling
         /// <returns>If the building could be started.</returns>
         protected void CheckAddCompleted(Model.Entities.Country country)
         {
-            var researches = country.InProgressResearches
+            foreach (var research in country.InProgressResearches
                 .Where(r => r.TimeLeft == 0)
-                .GroupBy(r => r.Research)
-                .ToList();
-
-            if (researches.Count > 0)
+                .GroupBy(r => r.Research))
             {
-                foreach (var research in researches)
-                {
-                    var existing = country.Researches.FirstOrDefault(r => r.Research.Equals(research.Key));
+                var existing = country.Researches.FirstOrDefault(r => r.Research.Equals(research.Key));
 
-                    // Add a new research, or update an existing one
-                    if (existing == null)
+                if (existing == null)
+                {
+                    country.Researches.Add(new CountryResearch
                     {
-                        country.Researches.Add(new CountryResearch
-                        {
-                            Research = research.Key,
-                            Count = research.Count()
-                        });
-                    }
-                    else
-                    {
-                        existing.Count += research.Count();
-                    }
+                        Research = research.Key,
+                        Count = research.Count()
+                    });
+                }
+                else
+                {
+                    existing.Count += research.Count();
                 }
             }
 
-            // Get and complete buildings
-            var buildings = country.InProgressBuildings
+            foreach (var building in country.InProgressBuildings
                 .Where(r => r.TimeLeft == 0)
-                .GroupBy(b => b.Building)
-                .ToList();
-
-            if (buildings.Count > 0)
+                .GroupBy(b => b.Building))
             {
-                foreach (var building in buildings)
-                {
-                    var existing = country.Buildings.FirstOrDefault(b => b.Building.Equals(building.Key));
+                var existing = country.Buildings.FirstOrDefault(b => b.Building.Equals(building.Key));
 
-                    // Add a new building, or update an existing one
-                    if (existing == null)
+                if (existing == null)
+                {
+                    country.Buildings.Add(new CountryyResource()
                     {
-                        country.Buildings.Add(new CountryBuilding()
-                        {
-                            Building = building.Key,
-                            Count = building.Count()
-                        });
-                    }
-                    else
-                    {
-                        existing.Count += building.Count();
-                    }
+                        Building = building.Key,
+                        Count = building.Count()
+                    });
+                }
+                else
+                {
+                    existing.Count += building.Count();
                 }
             }
         }

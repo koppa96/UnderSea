@@ -9,7 +9,7 @@
         /// Initializes a new instance of the <see cref="ResourceModifierEffectParser"/>.
         /// </summary>
         public ResourceModifierEffectParser()
-            : base(KnownValues.TaxationModifier, (effect, country, context, builder, doApply) =>
+            : base(KnownValues.ResourceProductionModifier, (effect, country, context, builder, doApply) =>
             {
                 var id = int.Parse(effect.Parameter);
 

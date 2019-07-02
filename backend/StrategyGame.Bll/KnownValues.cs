@@ -6,10 +6,16 @@
     public class KnownValues
     {
         /// <summary>
-        /// An effect that increases end-of-turn coral production by the set amount. 
+        /// An effect that increases end-of-turn resource by the set amount. 
         /// Value is an integer, parameter is the ID of the resource.
         /// </summary>
         public const string ResourceProductionIncrease = "resource-production";
+
+        /// <summary>
+        /// An effect that increases end-of-turn resource by a multiplier. 
+        /// Value is a double, parameter is the ID of the resource.
+        /// </summary>
+        public const string ResourceProductionModifier = "resource-modifier";
 
         /// <summary>
         /// An effect that increases end-of-turn production by the set amount for every building of a type. 
@@ -38,17 +44,7 @@
         /// An effect that increases the defense power of units by the set percent. Value is double where 0.5 is 50%.
         /// </summary>
         public const string UnitDefenseModifier = "unit-defense";
-
-        /// <summary>
-        /// An effect that increases the taxation (pearl production) by the set percent. Value is double where 0.5 is 50%.
-        /// </summary>
-        public const string TaxationModifier = "taxation-modifier";
-
-        /// <summary>
-        /// An effect that increases the taxation (pearl production) by the set percent. Value is double where 0.5 is 50%.
-        /// </summary>
-        public const string HarvestModifier = "harvest-modifier";
-
+        
         /// <summary>
         /// An effect that adds a number of a building to the country. 
         /// Value is integer, the count of buildings, target is the building type's ID.
