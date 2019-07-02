@@ -6,12 +6,12 @@
     public class InProgressBuilding : AbstractEntity<InProgressBuilding>
     {
         /// <summary>
-        /// Gets the parent country this <see cref="CountryyResource"/> belongs to.
+        /// Gets the parent country this <see cref="CountryBuilding"/> belongs to.
         /// </summary>
         public Country ParentCountry { get; set; }
 
         /// <summary>
-        /// Gets the building this <see cref="CountryyResource"/> represents within the country.
+        /// Gets the building this <see cref="CountryBuilding"/> represents within the country.
         /// </summary>
         public BuildingType Building { get; set; }
 

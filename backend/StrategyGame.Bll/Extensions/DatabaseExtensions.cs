@@ -200,18 +200,25 @@ namespace StrategyGame.Bll.Extensions
         /// <param name="context">The database to use to remove the division if necessary.</param>
         public static void MergeInto(this Division division, Command target, UnderSeaDatabaseContext context)
         {
-            var existing = target.Divisions.SingleOrDefault(d => d.Unit.Id == division.Unit.Id);
+            var existing = target.Divisions.SingleOrDefault(d => d.Unit.Id == division.Unit.Id
+                && d.BattleCount == division.BattleCount);
 
-            if (existing == null)
+            var newDiv = new Division
             {
-                target.Divisions.Add(division);
-                //division.ParentCommand = target;
-            }
-            else
+                BattleCount = division.BattleCount,
+                Count = division.Count,
+                ParentCommand = target,
+                Unit = division.Unit
+            };
+
+            if (existing != null)
             {
-                existing.Count += division.Count;
-                context.Divisions.Remove(division);
+                newDiv.Count += existing.Count;
+                context.Divisions.Remove(existing);
             }
+
+            context.Divisions.Add(newDiv);
+            context.Divisions.Remove(division);
         }
 
         /// <summary>
@@ -228,6 +235,20 @@ namespace StrategyGame.Bll.Extensions
             }
 
             context.Commands.Remove(command);
+        }
+
+        public static void IncreaseBattleCount(this Command command)
+        {
+            foreach (var div in command.Divisions)
+            {
+                div.BattleCount++;
+
+                if (div.Unit.CanRankUp && div.BattleCount >= div.Unit.BattlesToLevelUp)
+                {
+                    div.Unit = div.Unit.RankedUpType;
+                    div.BattleCount = 0;
+                }
+            }
         }
 
         public static void Purchase<TEnity, TConnector>(this Country country, IPurchasable<TEnity, TConnector> purchasable, int count = 1)

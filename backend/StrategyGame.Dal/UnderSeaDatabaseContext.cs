@@ -59,9 +59,9 @@ namespace StrategyGame.Dal
         public DbSet<CountryResearch> CountryResearches { get; set; }
 
         /// <summary>
-        /// Gets the collection of <see cref="CountryyResource"/> in the database.
+        /// Gets the collection of <see cref="CountryBuilding"/> in the database.
         /// </summary>
-        public DbSet<CountryyResource> CountryBuildings { get; set; }
+        public DbSet<CountryBuilding> CountryBuildings { get; set; }
 
         /// <summary>
         /// Gets the collection of <see cref="InProgressBuilding"/> in the database.
@@ -281,11 +281,11 @@ namespace StrategyGame.Dal
                 .WithMany(u => u.ContainingDivisions);
 
             //Country - CountryBuilding - BuildingType
-            builder.Entity<CountryyResource>()
+            builder.Entity<CountryBuilding>()
                 .HasOne(cb => cb.ParentCountry)
                 .WithMany(c => c.Buildings);
 
-            builder.Entity<CountryyResource>()
+            builder.Entity<CountryBuilding>()
                 .HasOne(cb => cb.Building)
                 .WithMany(b => b.CompletedBuildings);
 

@@ -8,7 +8,7 @@ namespace StrategyGame.Bll.Mapping
 {
     /// <summary>
     /// Provides mappings between <see cref="Country"/> and <see cref="CountryInfo"/>, <see cref="Country"/> and <see cref="RankInfo"/>,
-    /// <see cref="CountryyResource"/> and <see cref="BriefCreationInfo"/>, <see cref="CountryResearch"/> and <see cref="BriefCreationInfo"/>,
+    /// <see cref="CountryBuilding"/> and <see cref="BriefCreationInfo"/>, <see cref="CountryResearch"/> and <see cref="BriefCreationInfo"/>,
     /// and <see cref="RandomEvent"/> and <see cref="EventInfo"/>.
     /// </summary>
     public class CountryInfoMapper : Profile
@@ -18,7 +18,7 @@ namespace StrategyGame.Bll.Mapping
             CreateMap<Country, CountryInfo>();
             CreateMap<Country, RankInfo>();
 
-            CreateMap<CountryyResource, BriefCreationInfo>()
+            CreateMap<CountryBuilding, BriefCreationInfo>()
                 .ForMember(dest => dest.ImageUrl, conf => conf.MapFrom(src => src.Building.Content.ImageUrl))
                 .ForMember(dest => dest.IconImageUrl, conf => conf.MapFrom(src => src.Building.Content.IconImageUrl))
                 .ForMember(dest => dest.Id, conf => conf.MapFrom(src => src.Building.Id))

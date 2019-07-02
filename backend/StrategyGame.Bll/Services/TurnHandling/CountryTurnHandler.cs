@@ -138,21 +138,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
 
             foreach (var reinforcement in reinforcements)
             {
-                foreach (var div in reinforcement.Divisions)
-                {
-                    var existing = defenders.Divisions.SingleOrDefault(d => d.Unit.Equals(div.Unit));
-
-                    if (existing == null)
-                    {
-                        defenders.Divisions.Add(new Division { Unit = div.Unit, Count = div.Count });
-                    }
-                    else
-                    {
-                        existing.Count += div.Count;
-                    }
-
-                    div.Count = 0;
-                }
+                reinforcement.MergeInto(defenders, context);
             }
 
             foreach (var attack in incomingAttacks)
@@ -187,6 +173,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
 
                 if (attackPower > defensePower)
                 {
+                    attack.IncreaseBattleCount();
                     var loots = country.Resources.ToDictionary(x => x, x => (long)Math.Round(globals.LootPercentage * x.Amount));
 
                     foreach (var res in country.Resources)
@@ -239,7 +226,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
                 + divisionScore * globals.ScoreUnitMultiplier
                 + country.Researches.Count * globals.ScoreResearchMultiplier);
 
-            // Merge all attacking commands into the defense command, delete attacking commands, add the loot, and upgrade units.
+            // Merge all attacking commands into the defense command, delete attacking commands, and add the loot
             var defenders = country.GetAllDefending();
 
             foreach (var attack in country.Attacks.Where(x => x.DidAttackerWin && x.Round == globals.Round))
@@ -250,18 +237,9 @@ namespace StrategyGame.Bll.Services.TurnHandling
                 }
             }
 
-            foreach (var attack in country.Commands.Where(c => c.Id != defenders.Id).ToList())
+            foreach (var attack in country.Commands.Where(c => !c.Equals(defenders)).ToList())
             {
                 attack.MergeInto(defenders, context);
-            }
-
-            foreach (var div in defenders.Divisions)
-            {
-                if (div.Unit.CanRankUp && div.BattleCount >= div.Unit.BattlesToLevelUp)
-                {
-                    div.Unit = div.Unit.RankedUpType;
-                    div.BattleCount = 0;
-                }
             }
         }
 
@@ -371,7 +349,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
 
                 if (existing == null)
                 {
-                    country.Buildings.Add(new CountryyResource()
+                    country.Buildings.Add(new CountryBuilding
                     {
                         Building = building.Key,
                         Count = building.Count()

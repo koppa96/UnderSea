@@ -66,8 +66,8 @@ namespace StrategyGame.Bll.Services.Country
                 Context.Countries.Add(country);
                 Context.Commands.Add(defenders);
                 Context.CountryBuildings.AddRange(
-                    new CountryyResource { ParentCountry = country, Count = 1, Building = globals.FirstStartingBuilding },
-                    new CountryyResource { ParentCountry = country, Count = 1, Building = globals.SecondStartingBuilding });
+                    new CountryBuilding { ParentCountry = country, Count = 1, Building = globals.FirstStartingBuilding },
+                    new CountryBuilding { ParentCountry = country, Count = 1, Building = globals.SecondStartingBuilding });
 
                 await Context.SaveChangesAsync();
             }
@@ -168,7 +168,7 @@ namespace StrategyGame.Bll.Services.Country
             // Map all existing buildings and researches
             foreach (var building in country.Buildings)
             {
-                totalBuildings[building.Building.Id] = Mapper.Map<CountryyResource, BriefCreationInfo>(building);
+                totalBuildings[building.Building.Id] = Mapper.Map<CountryBuilding, BriefCreationInfo>(building);
             }
 
             foreach (var research in country.Researches)

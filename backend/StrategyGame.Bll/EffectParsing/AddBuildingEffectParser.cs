@@ -26,7 +26,7 @@ namespace StrategyGame.Bll.EffectParsing
 
                         if (existing == null)
                         {
-                            country.Buildings.Add(new CountryyResource
+                            country.Buildings.Add(new CountryBuilding
                             {
                                 // TODO async effect parsing?
                                 Building = context.BuildingTypes.Find(id),

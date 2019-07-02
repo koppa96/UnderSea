@@ -86,6 +86,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
                     .Include(c => c.Commands)
                         .ThenInclude(c => c.Divisions)
                             .ThenInclude(d => d.Unit)
+                                .ThenInclude(u => u.RankedUpType)
                     .Include(c => c.Buildings)
                         .ThenInclude(b => b.Building)
                             .ThenInclude(b => b.Effects)

@@ -216,7 +216,7 @@ namespace StrategyGame.Tests.Services
                 .Include(c => c.InProgressBuildings)
                 .SingleAsync(x => x.ParentUser.UserName == username);
 
-            country.Buildings.Add(new CountryyResource { Building = magicBuilding, Count = 1 });
+            country.Buildings.Add(new CountryBuilding { Building = magicBuilding, Count = 1 });
 
             await turnService.EndTurnAsync(context);
         }
