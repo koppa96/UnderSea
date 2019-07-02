@@ -10,22 +10,17 @@ import {
 import { call, put, takeEvery } from "redux-saga/effects";
 import { ICommandInfo } from "../../../war/store/actions/WarAction.get";
 import { BasePortUrl } from "../../../../..";
+import { registerAxiosConfig } from "../../../../../config/axiosConfig";
 export const asd = 0;
 
 // TODO: create error handling (dont use any)
 const beginAddUnits = (
   attackTarget: ICommandDetails
 ): Promise<IPostTargetActions> | any => {
-  console.log("Army megvesz", attackTarget);
-  const config = {
-    headers: {
-      Authorization: localStorage.getItem("access_token"),
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token"
-    }
-  };
   const url = BasePortUrl + "api/Commands";
-  return axios
+  const instance = axios.create();
+  const configured = registerAxiosConfig(instance);
+  return configured
     .post(url, attackTarget)
     .then(response => {
       return response;
@@ -34,7 +29,6 @@ const beginAddUnits = (
       throw new Error(error);
     });
 };
-
 function* handleAttackTarget(action: IRequestActionPostTarget) {
   try {
     const response = yield call(beginAddUnits, action.params);
