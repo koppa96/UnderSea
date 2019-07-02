@@ -69,7 +69,6 @@ export class Attack extends React.Component<TargetProps> {
               className="rank-input"
               placeholder="Felhasználónév"
             />
-
             <ul className="rank-page">
               {targets.isLoaded ? (
                 this.state.filtered.length > 2 ? (
