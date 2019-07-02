@@ -35,55 +35,15 @@ namespace StrategyGame.Bll.Services.Buildings
                 .Select(b => _mapper.Map<BuildingType, CreationInfo>(b));
         }
 
-        public async Task<IEnumerable<BriefCreationInfo>> GetBuildingsAsync(string username, int countryId)
-        {
-            var country = await _context.Countries
-                .Include(c => c.Buildings)
-                    .ThenInclude(cb => cb.Building)
-                        .ThenInclude(b => b.Content)
-                .Include(c => c.ParentUser)
-                .SingleOrDefaultAsync(c => c.Id == countryId);
-
-            if (country == null)
-            {
-                throw new ArgumentOutOfRangeException(nameof(countryId), "Invalid country id.");
-            }
-
-            if (country.ParentUser.UserName != username)
-            {
-                throw new UnauthorizedAccessException("Not your country id.");
-            }
-
-            var creationInfos = country.Buildings.Select(cb =>
-            {
-                var creationInfo = _mapper.Map<BuildingType, BriefCreationInfo>(cb.Building);
-                creationInfo.Count = cb.Count;
-                return creationInfo;
-            }).ToList();
-
-            var buildingTypes = await _context.BuildingTypes.Include(b => b.Content).ToListAsync();
-            foreach (var buildingInfo in buildingTypes)
-            {
-                if (creationInfos.Any(ci => ci.Id == buildingInfo.Id))
-                {
-                    continue;
-                }
-
-                creationInfos.Add(_mapper.Map<BuildingType, BriefCreationInfo>(buildingInfo));
-            }
-
-            return creationInfos;
-        }
-
         public async Task StartBuildingAsync(string username, int countryId, int buildingId, CancellationToken turnEndWaitToken)
         {
             using (var lck = await _turnEndLock.ReaderLockAsync(turnEndWaitToken))
             {
                 var country = await _context.Countries.Include(c => c.InProgressBuildings)
-                .Include(c => c.ParentUser)
-                .Include(c => c.Resources)
-                    .ThenInclude(r => r.ResourceType)
-                .SingleOrDefaultAsync(c => c.Id == countryId);
+                    .Include(c => c.ParentUser)
+                    .Include(c => c.Resources)
+                        .ThenInclude(r => r.ResourceType)
+                    .SingleOrDefaultAsync(c => c.Id == countryId);
 
                 if (country == null)
                 {

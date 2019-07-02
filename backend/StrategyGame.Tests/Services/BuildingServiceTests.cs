@@ -25,32 +25,6 @@ namespace StrategyGame.Tests.Services
         }
 
         [TestMethod]
-        [DataRow("TheBuilder")]
-        public async Task TestGetUserBuildings(string username)
-        {
-            var buildings = await buildingService.GetBuildingsAsync(username,
-                (await context.Countries.FirstAsync(c => c.ParentUser.UserName == username)).Id);
-
-            var dbBuildings = await context.CountryBuildings.Include(cb => cb.Building)
-                .Where(cb => cb.ParentCountry.ParentUser.UserName == username)
-                .ToListAsync();
-
-            foreach (var buildingInfo in buildings)
-            {
-                var dbBuilding = dbBuildings.SingleOrDefault(cb => cb.Building.Id == buildingInfo.Id);
-
-                if (dbBuilding == null)
-                {
-                    Assert.AreEqual(0, buildingInfo.Count);
-                }
-                else
-                {
-                    Assert.AreEqual(dbBuilding.Count, buildingInfo.Count);
-                }
-            }
-        }
-
-        [TestMethod]
         [DataRow("TheRich")]
         public async Task TestStartBuilding(string username)
         {
@@ -100,11 +74,13 @@ namespace StrategyGame.Tests.Services
         [DataRow("TheRich")]
         public async Task TestStartBuildingDifferentType(string username)
         {
+            var countryId = (await context.Countries.FirstAsync(c => c.ParentUser.UserName == username)).Id;
+
             var buildingId = (await context.BuildingTypes.FirstAsync()).Id;
             var otherBuildingId = (await context.BuildingTypes.FirstAsync(b => b.Id != buildingId)).Id;
 
-            await buildingService.StartBuildingAsync(username, buildingId);
-            await buildingService.StartBuildingAsync(username, otherBuildingId);
+            await buildingService.StartBuildingAsync(username, countryId, buildingId);
+            await buildingService.StartBuildingAsync(username, countryId, otherBuildingId);
 
             var inProgress = await context.InProgressBuildings
                 .Where(b => b.ParentCountry.ParentUser.UserName == username)

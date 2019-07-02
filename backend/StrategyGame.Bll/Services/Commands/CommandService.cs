@@ -240,8 +240,8 @@ namespace StrategyGame.Bll.Services.Commands
                 throw new ArgumentException("Not enough units.");
             }
 
-            int transfered = 0, i = 0;
-            while (transfered + from[i].Count <= amount)
+            int transferred = 0, i = 0;
+            while (transferred + from[i].Count <= amount)
             {
                 var division = from[i];
                 var toDivision = to.SingleOrDefault(d => d.BattleCount == division.BattleCount);
@@ -249,7 +249,7 @@ namespace StrategyGame.Bll.Services.Commands
                 if (toDivision == null)
                 {
                     division.ParentCommand = toCommand;
-                    transfered += division.Count;
+                    transferred += division.Count;
                 }
                 else
                 {
@@ -260,29 +260,29 @@ namespace StrategyGame.Bll.Services.Commands
                 i++;
             }
 
-            if (transfered < amount)
+            if (transferred < amount)
             {
-                var splitDivison = from[i];
-                var toDivision = to.SingleOrDefault(d => d.BattleCount == splitDivison.BattleCount);
+                var splitDivision = from[i];
+                var toDivision = to.SingleOrDefault(d => d.BattleCount == splitDivision.BattleCount);
 
                 if (toDivision == null)
                 {
                     var newDivision = new Division
                     {
-                        Unit = splitDivison.Unit,
-                        BattleCount = splitDivison.BattleCount,
-                        Count = amount - transfered,
+                        Unit = splitDivision.Unit,
+                        BattleCount = splitDivision.BattleCount,
+                        Count = amount - transferred,
                         ParentCommand = toCommand
                     };
 
-                    splitDivison.Count -= newDivision.Count;
+                    splitDivision.Count -= newDivision.Count;
                     _context.Divisions.Add(newDivision);
                 }
                 else
                 {
-                    var toBeTransfered = amount - transfered;
-                    toDivision.Count += toBeTransfered;
-                    splitDivison.Count -= toBeTransfered;
+                    var toBeTransferred = amount - transferred;
+                    toDivision.Count += toBeTransferred;
+                    splitDivision.Count -= toBeTransferred;
                 }
 
             }
