@@ -1,5 +1,6 @@
 import { ICombatInfo } from "./store/actions/ReportAction.get";
 import { ReportState } from "./store/store";
+import { removeReport } from "./store/actions/ReportAction.delete";
 
 interface NativeProps {}
 
@@ -8,7 +9,8 @@ export interface MappedProps {
 }
 export interface DispachedProps {
   getAllReports: () => void;
-  // deleteReport:(id:number)=>void
+  seenReport: (id: number) => void;
+  deleteReport: (item: removeReport) => void;
 }
 
 export type ReportsProps = NativeProps & MappedProps & DispachedProps;

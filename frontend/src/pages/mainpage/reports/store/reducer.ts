@@ -1,12 +1,21 @@
 import {
   IGetReportActions,
-  GetReportActions
+  GetReportActions,
+  ICombatInfo
 } from "./actions/ReportAction.get";
 import { reportInitialState, ReportState } from "./store";
+import {
+  IPostReportActions,
+  PostReportActions
+} from "./actions/ReportAction.post";
+import {
+  IDeleteReportActions,
+  DeleteReportActions
+} from "./actions/ReportAction.delete";
 
 export const ReportReducer = (
   state = reportInitialState,
-  action: IGetReportActions
+  action: IGetReportActions | IPostReportActions | IDeleteReportActions
 ): ReportState => {
   switch (action.type) {
     case GetReportActions.REQUEST:
@@ -26,6 +35,46 @@ export const ReportReducer = (
         ...state,
         isRequesting: false,
         isLoaded: true,
+        error: action.error ? action.error : "Beállítási hiba"
+      };
+    case PostReportActions.REQUEST:
+      return {
+        ...state
+      };
+    case PostReportActions.SUCCES:
+      var tempReport: ICombatInfo[] = [];
+      state.report.forEach(item => {
+        if (item.id === action.data) {
+          item.isSeen = true;
+        }
+        tempReport.push(item);
+      });
+
+      return {
+        ...state,
+        report: [...tempReport]
+      };
+    case PostReportActions.ERROR:
+      return {
+        ...state,
+        error: action.error ? action.error : "Beállítási hiba"
+      };
+    case DeleteReportActions.REQUEST:
+      return {
+        ...state
+      };
+    case DeleteReportActions.SUCCES:
+      var tempReport: ICombatInfo[] = state.report.filter(
+        item => item.id !== action.data.id
+      );
+
+      return {
+        ...state,
+        report: [...tempReport]
+      };
+    case DeleteReportActions.ERROR:
+      return {
+        ...state,
         error: action.error ? action.error : "Beállítási hiba"
       };
     default:

@@ -22,6 +22,14 @@ import {
   AddDevelopmentActions
 } from "../development/store/actions/DevelopmentAction.post";
 import { BriefCreationInfo, BriefUnitInfo } from "../../../api/Client";
+import {
+  IPostReportActions,
+  PostReportActions
+} from "../reports/store/actions/ReportAction.post";
+import {
+  IDeleteReportActions,
+  DeleteReportActions
+} from "../reports/store/actions/ReportAction.delete";
 
 export const MainpageReducer = (
   state = initialMainpageResponseState,
@@ -32,6 +40,8 @@ export const MainpageReducer = (
     | IPostTargetActions
     | IAddDevelopmentActions
     | IDeleteWarActions
+    | IPostReportActions
+    | IDeleteReportActions
 ): MainpageResponseState => {
   switch (action.type) {
     case MainpageActions.REQUEST:
@@ -230,8 +240,45 @@ export const MainpageReducer = (
             }
           : undefined
       };
+    case PostReportActions.REQUEST:
+      return {
+        ...state
+      };
+    case PostReportActions.SUCCES:
+      return {
+        ...state,
+        model: state.model
+          ? { ...state.model, unseenReports: state.model.unseenReports - 1 }
+          : undefined
+      };
+    case PostReportActions.ERROR:
+      return {
+        ...state,
+        error: action.error ? action.error : "Beállítási hiba"
+      };
+    case DeleteReportActions.REQUEST:
+      return {
+        ...state
+      };
+    case DeleteReportActions.SUCCES:
+      return {
+        ...state,
+        model: state.model
+          ? {
+              ...state.model,
+              unseenReports: action.data.isSeen
+                ? state.model.unseenReports
+                : state.model.unseenReports - 1
+            }
+          : undefined
+      };
+    case DeleteReportActions.ERROR:
+      return {
+        ...state,
+        error: action.error ? action.error : "Beállítási hiba"
+      };
     default:
-      //  const check: never = action;
+      //  const check: never = action.type;
       return state;
   }
 };

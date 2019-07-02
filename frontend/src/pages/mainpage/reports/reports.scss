@@ -18,6 +18,8 @@
     margin-bottom: 20px;
     border-bottom: 2px solid rgba(0, 183, 255, 0.4);
     .round {
+      margin-top: 10px;
+      margin-bottom: 10px;
       flex: 1;
       padding-left: 30px;
       font-size: 16px;
@@ -25,6 +27,9 @@
       line-height: 1;
     }
     .is-won {
+      margin-top: 10px;
+      margin-bottom: 10px;
+
       flex: 1;
       padding-left: 30px;
       font-size: 20px;
@@ -32,11 +37,26 @@
       line-height: 1;
     }
     .report-enemy-name {
+      margin-top: 10px;
+      margin-bottom: 10px;
       font-size: 20px;
       font-family: OpenSansBold;
       margin-right: auto;
       margin-left: auto;
       line-height: 1;
+    }
+    p {
+      border: 2px solid rgb(0, 90, 126);
+      background-color: rgb(36, 229, 255);
+      max-width: 35px;
+      max-height: 35px;
+      min-width: 35px;
+      min-height: 35px;
+      text-align: center;
+      border-radius: 50%;
+      font-size: 18px;
+      cursor: pointer;
+      margin-right: 30px;
     }
   }
   span {
@@ -55,6 +75,7 @@
     border-bottom: 4px solid rgba(0, 183, 255, 0.4);
     margin-bottom: 30px;
     border-radius: 24px;
+    cursor: pointer;
     > .report-info {
       display: flex;
       flex-direction: row;
@@ -90,17 +111,25 @@
         color: white;
       }
       span {
-        font-family: OpenSansRegular;
+        font-family: OpenSansBold;
         text-align: center;
         margin-top: 15px;
         color: white;
+        font-size: 18px;
       }
     }
   }
 }
-.won-color {
+.won-seen-color {
   background-color: rgba(0, 255, 42, 0.2);
 }
-.lost-color {
+.lost-seen-color {
   background-color: rgba(201, 0, 0, 0.2);
+}
+
+.won-notseen-color {
+  background-color: rgba(0, 255, 42, 0.4);
+}
+.lost-notseen-color {
+  background-color: rgba(201, 0, 0, 0.4);
 }
