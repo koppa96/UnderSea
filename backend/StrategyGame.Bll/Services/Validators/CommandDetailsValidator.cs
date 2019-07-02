@@ -35,7 +35,7 @@ namespace StrategyGame.Bll.Services.Validators
 
         public async Task<bool> TargetCountryExistAsync(int countryId, CancellationToken ct = default)
         {
-            return await _context.Countries.AnyAsync(c => c.Id == countryId && c.Id != countryId, ct);
+            return await _context.Countries.AnyAsync(c => c.Id == countryId, ct);
         }
 
         public async Task<bool> UnitIdsValidAsync(IEnumerable<UnitDetails> details, CancellationToken ct = default)
@@ -63,7 +63,7 @@ namespace StrategyGame.Bll.Services.Validators
             return details.Select(detail => new
             {
                 detail, division = defenders.Divisions.SingleOrDefault(div => div.Unit.Id == detail.UnitId)
-            }).All(x => x.division != null && x.division.Count > x.detail.Amount);
+            }).All(x => x.division != null && x.division.Count >= x.detail.Amount);
         }
     }
 }
