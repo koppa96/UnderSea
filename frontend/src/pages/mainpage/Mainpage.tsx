@@ -17,6 +17,9 @@ import Wave from "./../../assets/images/wave.svg";
 
 import * as signalR from "@aspnet/signalr";
 import { BasePortUrl } from "../..";
+import { Reports } from "./reports/Reports";
+import { MenuConnected } from "../../components/menu/connect";
+import { ReportsConnected } from "./reports/connect";
 
 export class MainPage extends React.Component<MainPageProps> {
   componentDidMount() {
@@ -46,7 +49,7 @@ export class MainPage extends React.Component<MainPageProps> {
         <NavBarConnected />
         <div className="mainpage-content">
           <div className="side-menu">
-            <Menu />
+            <MenuConnected />
             <div>
               <ProfileContainerConnected />
               <div>
@@ -75,8 +78,8 @@ export class MainPage extends React.Component<MainPageProps> {
               <Route path="/account/army">
                 <ArmyConnected isNative />
               </Route>
-              <Route path="/account/gyak">
-                <TestConnected isNative />
+              <Route path="/account/report">
+                <ReportsConnected />
               </Route>
             </Switch>
           </main>
