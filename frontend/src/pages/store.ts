@@ -18,7 +18,7 @@ import { WarReducer } from "./mainpage/war/store/reducer";
 import { DevelopmentReducer } from "./mainpage/development/store/reducer";
 import { DevelopmentState } from "./mainpage/development/store/store";
 import { TargetState } from "./mainpage/attack/store/store";
-import { TargetReducer } from "./mainpage/attack/store/reduce";
+import { TargetReducer } from "./mainpage/attack/store/reducer";
 import { ReportState } from "./mainpage/reports/store/store";
 import { ReportReducer } from "./mainpage/reports/store/reducer";
 
