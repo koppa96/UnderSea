@@ -13,6 +13,8 @@ export class Development extends React.Component<DevelopmentProps> {
     id: -1
   };
 
+  completed = false;
+
   render() {
     const { totalDevelopment, totalResourcesDesc } = this.props;
     var inProgress = false;
@@ -26,9 +28,8 @@ export class Development extends React.Component<DevelopmentProps> {
       this.state.id === -1 ||
       this.props.totalDevelopment.isPostRequesting ||
       this.props.totalDevelopment.loading ||
-      inProgress
-        ? true
-        : false;
+      inProgress ||
+      this.completed;
     const buttonClass = buttonState ? "button-disabled" : "button";
     return (
       <div className="main-component">
@@ -49,7 +50,19 @@ export class Development extends React.Component<DevelopmentProps> {
                   className="sr-only"
                   type="radio"
                   name="select"
-                  onChange={e => this.setState({ id: e.target.value })}
+                  onChange={e => {
+                    this.setState({ id: e.target.value });
+                    this.props.totalResourcesDesc.forEach(dev => {
+                      if (+e.target.value === dev.id) {
+                        if (dev.count > 0) {
+                          this.completed = true;
+                        } else {
+                          this.completed = false;
+                        }
+                      }
+                    });
+                    console.log(this.completed);
+                  }}
                 />
                 <DevelopmentItem
                   count={item.count}
