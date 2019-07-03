@@ -9,6 +9,6 @@ namespace StrategyGame.Model.Entities.Reports
         public Country Country { get; set; }
         public RandomEvent Event { get; set; }
         public ulong Round { get; set; }
-        public bool Seen { get; set; }
+        public bool IsSeen { get; set; }
     }
 }
