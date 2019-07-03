@@ -71,6 +71,9 @@
     rgba(159, 255, 240, 1)
   );
 }
+.form-button:focus {
+  outline: none;
+}
 .form-bg {
   background-color: rgba(255, 255, 255, 0.25);
   padding: 48px;
