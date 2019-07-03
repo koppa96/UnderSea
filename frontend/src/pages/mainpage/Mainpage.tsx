@@ -102,37 +102,6 @@ export class MainPage extends React.Component<MainPageProps> {
               </Switch>
             </main>
           </div>
-<<<<<<< HEAD
-          <main>
-            <Switch>
-              <Route path="/account/buildings">
-                <BuildingsConnected />
-              </Route>
-              <Route path="/account/development">
-                <DevelopmentConnected />
-              </Route>
-              <Route path="/account/war">
-                <WarConnected />
-              </Route>
-              <Route path="/account/attack">
-                <AttackConnected />
-              </Route>
-              <Route path="/account/rank">
-                <RankConnected />
-              </Route>
-              <Route path="/account/army">
-                <ArmyConnected isNative />
-              </Route>
-              <Route path="/account/report">
-                <ReportsConnected />
-              </Route>
-              <Route path="/account/profile">
-                <Profile />
-              </Route>
-            </Switch>
-          </main>
-=======
->>>>>>> frontend-redux-continue
         </div>
       </>
     );
