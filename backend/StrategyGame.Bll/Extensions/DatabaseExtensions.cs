@@ -333,7 +333,7 @@ namespace StrategyGame.Bll.Extensions
             {
                 div.BattleCount++;
 
-                if (div.Unit.CanRankUp && div.BattleCount >= div.Unit.BattlesToLevelUp)
+                if (div.Unit.CanRankUp && div.BattleCount >= div.Unit.BattlesToRankUp)
                 {
                     var existing = command.Divisions.SingleOrDefault(d => d.BattleCount == 0 && d.Unit == div.Unit.RankedUpType);
                     div.Unit = div.Unit.RankedUpType;

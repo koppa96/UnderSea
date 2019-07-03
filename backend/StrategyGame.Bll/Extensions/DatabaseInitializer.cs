@@ -390,7 +390,7 @@ namespace StrategyGame.Bll.Extensions
                     new UnitResource { MaintenanceAmount = 1, Child = pearl },
                     new UnitResource { MaintenanceAmount = 1, Child = coral }
                 },
-                BattlesToLevelUp = 5,
+                BattlesToRankUp = 5,
                 RankedUpType = seal3,
                 IsPurchasable = false,
                 Content = sealCont
@@ -404,7 +404,7 @@ namespace StrategyGame.Bll.Extensions
                     new UnitResource { Amount = 50, MaintenanceAmount = 1, Child = pearl },
                     new UnitResource { MaintenanceAmount = 1, Child = coral }
                 },
-                BattlesToLevelUp = 3,
+                BattlesToRankUp = 3,
                 RankedUpType = seal2,
                 IsPurchasable = true,
                 Content = sealCont
@@ -431,7 +431,7 @@ namespace StrategyGame.Bll.Extensions
                     new UnitResource { MaintenanceAmount = 1, Child = pearl },
                     new UnitResource { MaintenanceAmount = 1, Child = coral }
                 },
-                BattlesToLevelUp = 5,
+                BattlesToRankUp = 5,
                 RankedUpType = pony3,
                 IsPurchasable = false,
                 Content = ponyCont
@@ -445,7 +445,7 @@ namespace StrategyGame.Bll.Extensions
                     new UnitResource {Amount = 50, MaintenanceAmount = 1, Child = pearl },
                     new UnitResource { Amount = 1, Child = coral }
                 },
-                BattlesToLevelUp = 3,
+                BattlesToRankUp = 3,
                 RankedUpType = pony2,
                 IsPurchasable = true,
                 Content = ponyCont
@@ -472,7 +472,7 @@ namespace StrategyGame.Bll.Extensions
                     new UnitResource { MaintenanceAmount = 1, Child = pearl },
                     new UnitResource { MaintenanceAmount = 1, Child = coral }
                 },
-                BattlesToLevelUp = 5,
+                BattlesToRankUp = 5,
                 RankedUpType = lazor3,
                 IsPurchasable = false,
                 Content = lazorCont
@@ -486,7 +486,7 @@ namespace StrategyGame.Bll.Extensions
                     new UnitResource {Amount = 100, MaintenanceAmount = 3, Child = pearl },
                     new UnitResource { MaintenanceAmount = 2, Child = coral }
                 },
-                BattlesToLevelUp = 3,
+                BattlesToRankUp = 3,
                 RankedUpType = lazor2,
                 IsPurchasable = true,
                 Content = lazorCont
@@ -501,7 +501,7 @@ namespace StrategyGame.Bll.Extensions
                     new UnitResource {Amount = 400, MaintenanceAmount = 4, Child = pearl },
                     new UnitResource { MaintenanceAmount = 2, Child = coral }
                 },
-                BattlesToLevelUp = 3,
+                BattlesToRankUp = 3,
                 IsPurchasable = true,
                 Content = leaderCont
             };

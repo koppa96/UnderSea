@@ -19,7 +19,10 @@ namespace StrategyGame.Model.Entities.Units
         /// Gets or sets the defense power of the unit.
         /// </summary>
         public int DefensePower { get; set; }
-
+        
+        /// <summary>
+        /// Gets or sets the costs of the unit.
+        /// </summary>
         public ICollection<UnitResource> Cost { get; set; }
 
         /// <summary>
@@ -32,12 +35,24 @@ namespace StrategyGame.Model.Entities.Units
         /// </summary>
         public virtual ICollection<Division> ContainingDivisions { get; set; }
 
-        public int BattlesToLevelUp { get; set; }
+        /// <summary>
+        /// Gets or sets the amount of battles this unit needs to level up.
+        /// </summary>
+        public int BattlesToRankUp { get; set; }
 
+        /// <summary>
+        /// gets or sets if the unit can be purchased.
+        /// </summary>
         public bool IsPurchasable { get; set; }
 
+        /// <summary>
+        /// Gets or sets the <see cref="UnitType"/> of the next level.
+        /// </summary>
         public UnitType RankedUpType { get; set; }
 
+        /// <summary>
+        /// Gets if the unit can level up.
+        /// </summary>
         [NotMapped]
         public bool CanRankUp => RankedUpType != null;
     }

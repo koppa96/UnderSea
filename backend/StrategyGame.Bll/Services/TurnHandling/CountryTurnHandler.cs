@@ -321,6 +321,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
         /// </summary>
         /// <param name="country">The country to build in. The buildings, researches, 
         /// in progress buildings, researches, and their buildings and researches, must be included.</param>
+        /// <param name="context">The database to use.</param>
         /// <returns>If the building could be started.</returns>
         protected void CheckAddCompleted(Model.Entities.Country country, UnderSeaDatabaseContext context)
         {
