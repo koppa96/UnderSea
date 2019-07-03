@@ -122,8 +122,13 @@ namespace StrategyGame.Bll.Extensions
                 Name = "Parancsnok",
                 Description = "Támadást csak parancsnok tud vezetni",
             };
+            var spyCont = new UnitContent
+            {
+                Name = "Kém",
+                Description = "Ha kémek segítségével információt gyűjthetsz az ellenségeidről."
+            };
 
-            context.UnitContents.AddRange(sealCont, ponyCont, lazorCont, leaderCont);
+            context.UnitContents.AddRange(sealCont, ponyCont, lazorCont, leaderCont, spyCont);
 
             var mudTCont = new ResearchContent
             {
@@ -507,15 +512,28 @@ namespace StrategyGame.Bll.Extensions
                 DefensePower = 0,
                 Cost = new[]
                 {
-                    new UnitResource {Amount = 400, MaintenanceAmount = 4, Child = pearl },
+                    new UnitResource { Amount = 400, MaintenanceAmount = 4, Child = pearl },
                     new UnitResource { MaintenanceAmount = 2, Child = coral }
                 },
                 BattlesToRankUp = 3,
                 IsPurchasable = true,
                 Content = leaderCont
             };
+            // kém
+            var spy = new SpyType
+            {
+                AttackPower = 0,
+                DefensePower = 0,
+                Cost = new []
+                {
+                    new UnitResource {Amount = 50, MaintenanceAmount = 1, Child = pearl}, 
+                    new UnitResource {Amount = 0, MaintenanceAmount = 1, Child = coral}, 
+                },
+                IsPurchasable = true,
+                Content = spyCont
+            };
 
-            context.UnitTypes.AddRange(seal3, seal2, seal, pony3, pony2, pony, lazor3, lazor2, lazor, leader);
+            context.UnitTypes.AddRange(seal3, seal2, seal, pony3, pony2, pony, lazor3, lazor2, lazor, leader, spy);
             await context.SaveChangesAsync();
 
 

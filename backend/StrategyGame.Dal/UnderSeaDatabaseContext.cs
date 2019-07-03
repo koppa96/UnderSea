@@ -251,8 +251,13 @@ namespace StrategyGame.Dal
                 .WithMany(e => e.AffectedEvents);
 
             // Country            
-            builder.Entity<Country>().HasMany(x => x.Researches).WithOne(x => x.Parent);
-            builder.Entity<Country>().HasMany(x => x.Commands).WithOne(x => x.ParentCountry);
+            builder.Entity<Country>()
+                .HasMany(x => x.Researches)
+                .WithOne(x => x.Parent);
+
+            builder.Entity<Country>()
+                .HasMany(x => x.Commands)
+                .WithOne(x => x.ParentCountry);
 
             builder.Entity<Country>()
                 .HasOne(c => c.ParentUser)
@@ -333,6 +338,10 @@ namespace StrategyGame.Dal
 
             // Leader
             builder.Entity<LeaderType>()
+                .HasBaseType<UnitType>();
+
+            // Spy
+            builder.Entity<SpyType>()
                 .HasBaseType<UnitType>();
 
             base.OnModelCreating(builder);
