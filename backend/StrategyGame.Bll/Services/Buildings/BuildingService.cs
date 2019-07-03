@@ -6,6 +6,7 @@ using StrategyGame.Bll.Exceptions;
 using StrategyGame.Bll.Extensions;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
+using StrategyGame.Model.Entities.Creations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,7 +43,7 @@ namespace StrategyGame.Bll.Services.Buildings
                 var country = await _context.Countries.Include(c => c.InProgressBuildings)
                     .Include(c => c.ParentUser)
                     .Include(c => c.Resources)
-                        .ThenInclude(r => r.ResourceType)
+                        .ThenInclude(r => r.Child)
                     .SingleOrDefaultAsync(c => c.Id == countryId);
 
                 if (country == null)
@@ -55,14 +56,14 @@ namespace StrategyGame.Bll.Services.Buildings
                     throw new UnauthorizedAccessException("Not your country id.");
                 }
 
-                if (country.InProgressBuildings.Any(b => b.Building.Id == buildingId))
+                if (country.InProgressBuildings.Any(b => b.Child.Id == buildingId))
                 {
                     throw new InProgressException("There is already a building of this type in progress.");
                 }
 
                 var buildingType = await _context.BuildingTypes
                     .Include(b => b.Cost)
-                        .ThenInclude(c => c.ResourceType)
+                        .ThenInclude(c => c.Child)
                             .ThenInclude(r => r.Content)
                     .SingleOrDefaultAsync(b => b.Id == buildingId);
 
@@ -75,8 +76,8 @@ namespace StrategyGame.Bll.Services.Buildings
 
                 var inProgressBuilding = new InProgressBuilding
                 {
-                    ParentCountry = country,
-                    Building = buildingType,
+                    Parent = country,
+                    Child = buildingType,
                     TimeLeft = buildingType.BuildTime
                 };
                 _context.InProgressBuildings.Add(inProgressBuilding);

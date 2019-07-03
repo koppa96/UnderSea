@@ -1,8 +1,9 @@
-﻿using StrategyGame.Model.Entities.Frontend;
+﻿using StrategyGame.Model.Entities.Effects;
+using StrategyGame.Model.Entities.Frontend;
 using StrategyGame.Model.Entities.Resources;
 using System.Collections.Generic;
 
-namespace StrategyGame.Model.Entities
+namespace StrategyGame.Model.Entities.Creations
 {
     /// <summary>
     /// Represents a building type within the UnderSea database.

@@ -1,9 +1,13 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using StrategyGame.Model.Entities;
+using StrategyGame.Model.Entities.Creations;
+using StrategyGame.Model.Entities.Effects;
 using StrategyGame.Model.Entities.Frontend;
 using StrategyGame.Model.Entities.Logging;
+using StrategyGame.Model.Entities.Reports;
 using StrategyGame.Model.Entities.Resources;
+using StrategyGame.Model.Entities.Units;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -165,35 +169,35 @@ namespace StrategyGame.Dal
                 .WithMany(c => c.Parents);
 
             builder.Entity<CountryResource>()
-                .HasOne(cr => cr.Entity)
+                .HasOne(cr => cr.Parent)
                 .WithMany(c => c.Resources);
 
             builder.Entity<CountryResource>()
-                .HasOne(cr => cr.ResourceType)
+                .HasOne(cr => cr.Child)
                 .WithMany(r => r.CountryResources);
 
             builder.Entity<BuildingResource>()
-                .HasOne(br => br.Entity)
+                .HasOne(br => br.Parent)
                 .WithMany(b => b.Cost);
 
             builder.Entity<BuildingResource>()
-                .HasOne(br => br.ResourceType)
+                .HasOne(br => br.Child)
                 .WithMany(r => r.BuildingResources);
 
             builder.Entity<ResearchResource>()
-                .HasOne(rr => rr.Entity)
+                .HasOne(rr => rr.Parent)
                 .WithMany(r => r.Cost);
 
             builder.Entity<ResearchResource>()
-                .HasOne(rr => rr.ResourceType)
+                .HasOne(rr => rr.Child)
                 .WithMany(r => r.ResearchResources);
 
             builder.Entity<UnitResource>()
-                .HasOne(ur => ur.Entity)
+                .HasOne(ur => ur.Parent)
                 .WithMany(u => u.Cost);
 
             builder.Entity<UnitResource>()
-                .HasOne(ur => ur.ResourceType)
+                .HasOne(ur => ur.Child)
                 .WithMany(r => r.UnitResources);
 
             // Combat report
@@ -236,7 +240,7 @@ namespace StrategyGame.Dal
                 .WithMany(e => e.AffectedEvents);
 
             // Country            
-            builder.Entity<Country>().HasMany(x => x.Researches).WithOne(x => x.ParentCountry);
+            builder.Entity<Country>().HasMany(x => x.Researches).WithOne(x => x.Parent);
             builder.Entity<Country>().HasMany(x => x.Commands).WithOne(x => x.ParentCountry);
 
             builder.Entity<Country>()
@@ -282,38 +286,38 @@ namespace StrategyGame.Dal
 
             //Country - CountryBuilding - BuildingType
             builder.Entity<CountryBuilding>()
-                .HasOne(cb => cb.ParentCountry)
+                .HasOne(cb => cb.Parent)
                 .WithMany(c => c.Buildings);
 
             builder.Entity<CountryBuilding>()
-                .HasOne(cb => cb.Building)
+                .HasOne(cb => cb.Child)
                 .WithMany(b => b.CompletedBuildings);
 
             //Country - CountryResearch - ResearchType
             builder.Entity<CountryResearch>()
-                .HasOne(cr => cr.ParentCountry)
+                .HasOne(cr => cr.Parent)
                 .WithMany(c => c.Researches);
 
             builder.Entity<CountryResearch>()
-                .HasOne(cr => cr.Research)
+                .HasOne(cr => cr.Child)
                 .WithMany(r => r.CompletedResearches);
 
             //Country - InProgressBuilding - BuildingType
             builder.Entity<InProgressBuilding>()
-                .HasOne(ib => ib.ParentCountry)
+                .HasOne(ib => ib.Parent)
                 .WithMany(c => c.InProgressBuildings);
 
             builder.Entity<InProgressBuilding>()
-                .HasOne(ib => ib.Building)
+                .HasOne(ib => ib.Child)
                 .WithMany(b => b.InProgressBuildings);
 
             //Country - InProgressResearch - ResearchType
             builder.Entity<InProgressResearch>()
-                .HasOne(ir => ir.ParentCountry)
+                .HasOne(ir => ir.Parent)
                 .WithMany(c => c.InProgressResearches);
 
             builder.Entity<InProgressResearch>()
-                .HasOne(ir => ir.Research)
+                .HasOne(ir => ir.Child)
                 .WithMany(r => r.InProgressResearches);
 
             // Leader

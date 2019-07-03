@@ -1,8 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
+using StrategyGame.Model.Entities.Creations;
+using StrategyGame.Model.Entities.Effects;
 using StrategyGame.Model.Entities.Frontend;
+using StrategyGame.Model.Entities.Reports;
 using StrategyGame.Model.Entities.Resources;
+using StrategyGame.Model.Entities.Units;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -259,7 +263,7 @@ namespace StrategyGame.Bll.Extensions
             var cp = new Effect { Name = KnownValues.ResourceProductionChange, Value = 200, Parameter = coral.Id.ToString() };
             var currentController = new BuildingType
             {
-                Cost = new[] { new BuildingResource { Amount = 1000, ResourceType = stone } },
+                Cost = new[] { new BuildingResource { Amount = 1000, Child = stone } },
                 BuildTime = 5,
                 MaxCount = -1,
                 Content = currentCont
@@ -269,7 +273,7 @@ namespace StrategyGame.Bll.Extensions
             var bsIn = new Effect { Name = KnownValues.BarrackSpaceChange, Value = 200 };
             var reefCastle = new BuildingType
             {
-                Cost = new[] { new BuildingResource { Amount = 1000, ResourceType = stone } },
+                Cost = new[] { new BuildingResource { Amount = 1000, Child = stone } },
                 BuildTime = 5,
                 MaxCount = -1,
                 Content = reefCastCont
@@ -279,7 +283,7 @@ namespace StrategyGame.Bll.Extensions
             var stIn = new Effect { Name = KnownValues.ResourceProductionChange, Value = 200, Parameter = stone.Id.ToString() };
             var stoneMine = new BuildingType
             {
-                Cost = new[] { new BuildingResource { Amount = 1000, ResourceType = stone } },
+                Cost = new[] { new BuildingResource { Amount = 1000, Child = stone } },
                 BuildTime = 5,
                 MaxCount = -1,
                 Content = reefCastCont
@@ -287,28 +291,28 @@ namespace StrategyGame.Bll.Extensions
 
             // Iszaptraktor
             var harvMod1 = new Effect { Name = KnownValues.ResourceProductionModifier, Value = 0.1, Parameter = pearl.Id.ToString() };
-            var mudT = new ResearchType { Cost = new[] { new ResearchResource { Amount = 1000, ResourceType = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = mudTCont };
+            var mudT = new ResearchType { Cost = new[] { new ResearchResource { Amount = 1000, Child = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = mudTCont };
 
             // Iszapkombájn
             var harvMod2 = new Effect { Name = KnownValues.ResourceProductionModifier, Value = 0.15, Parameter = pearl.Id.ToString() };
-            var mudC = new ResearchType { Cost = new[] { new ResearchResource { Amount = 1000, ResourceType = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = mudCCont };
+            var mudC = new ResearchType { Cost = new[] { new ResearchResource { Amount = 1000, Child = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = mudCCont };
 
             // korallfal
             var defMod1 = new Effect { Name = KnownValues.UnitDefenseModifier, Value = 0.2 };
-            var wall = new ResearchType { Cost = new[] { new ResearchResource { Amount = 1000, ResourceType = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = defCont };
+            var wall = new ResearchType { Cost = new[] { new ResearchResource { Amount = 1000, Child = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = defCont };
 
             // Szonárágyú
             var attMod1 = new Effect { Name = KnownValues.UnitAttackModifier, Value = 0.2 };
-            var canon = new ResearchType { Cost = new[] { new ResearchResource { Amount = 1000, ResourceType = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = attCont };
+            var canon = new ResearchType { Cost = new[] { new ResearchResource { Amount = 1000, Child = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = attCont };
 
             // Harcművészet
             var combModA = new Effect { Name = KnownValues.UnitAttackModifier, Value = 0.1 };
             var combModD = new Effect { Name = KnownValues.UnitDefenseModifier, Value = 0.1 };
-            var martialArts = new ResearchType { Cost = new[] { new ResearchResource { Amount = 1000, ResourceType = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = cCont };
+            var martialArts = new ResearchType { Cost = new[] { new ResearchResource { Amount = 1000, Child = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = cCont };
 
             // Alchemy
             var taxMod1 = new Effect { Name = KnownValues.ResourceProductionModifier, Value = 0.3, Parameter = pearl.Id.ToString() };
-            var alchemy = new ResearchType { Cost = new[] { new ResearchResource { Amount = 1000, ResourceType = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = taxCont };
+            var alchemy = new ResearchType { Cost = new[] { new ResearchResource { Amount = 1000, Child = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = taxCont };
 
 
             // Add effects, buildings, researches
@@ -343,8 +347,8 @@ namespace StrategyGame.Bll.Extensions
                 DefensePower = 5,
                 Cost = new[]
                 {
-                    new UnitResource { MaintenanceAmount = 1, ResourceType = pearl },
-                    new UnitResource { MaintenanceAmount = 1, ResourceType = coral }
+                    new UnitResource { MaintenanceAmount = 1, Child = pearl },
+                    new UnitResource { MaintenanceAmount = 1, Child = coral }
                 },
                 IsPurchasable = false,
                 Content = sealCont
@@ -355,8 +359,8 @@ namespace StrategyGame.Bll.Extensions
                 DefensePower = 3,
                 Cost = new[]
                 {
-                    new UnitResource { MaintenanceAmount = 1, ResourceType = pearl },
-                    new UnitResource { MaintenanceAmount = 1, ResourceType = coral }
+                    new UnitResource { MaintenanceAmount = 1, Child = pearl },
+                    new UnitResource { MaintenanceAmount = 1, Child = coral }
                 },
                 BattlesToLevelUp = 5,
                 RankedUpType = seal3,
@@ -369,8 +373,8 @@ namespace StrategyGame.Bll.Extensions
                 DefensePower = 2,
                 Cost = new[]
                 {
-                    new UnitResource { Amount = 50, MaintenanceAmount = 1, ResourceType = pearl },
-                    new UnitResource { MaintenanceAmount = 1, ResourceType = coral }
+                    new UnitResource { Amount = 50, MaintenanceAmount = 1, Child = pearl },
+                    new UnitResource { MaintenanceAmount = 1, Child = coral }
                 },
                 BattlesToLevelUp = 3,
                 RankedUpType = seal2,
@@ -384,8 +388,8 @@ namespace StrategyGame.Bll.Extensions
                 DefensePower = 10,
                 Cost = new[]
                 {
-                    new UnitResource { MaintenanceAmount = 1, ResourceType = pearl },
-                    new UnitResource { MaintenanceAmount = 1, ResourceType = coral }
+                    new UnitResource { MaintenanceAmount = 1, Child = pearl },
+                    new UnitResource { MaintenanceAmount = 1, Child = coral }
                 },
                 IsPurchasable = false,
                 Content = ponyCont
@@ -396,8 +400,8 @@ namespace StrategyGame.Bll.Extensions
                 DefensePower = 8,
                 Cost = new[]
                 {
-                    new UnitResource { MaintenanceAmount = 1, ResourceType = pearl },
-                    new UnitResource { MaintenanceAmount = 1, ResourceType = coral }
+                    new UnitResource { MaintenanceAmount = 1, Child = pearl },
+                    new UnitResource { MaintenanceAmount = 1, Child = coral }
                 },
                 BattlesToLevelUp = 5,
                 RankedUpType = pony3,
@@ -410,8 +414,8 @@ namespace StrategyGame.Bll.Extensions
                 DefensePower = 6,
                 Cost = new[]
                 {
-                    new UnitResource {Amount = 50, MaintenanceAmount = 1, ResourceType = pearl },
-                    new UnitResource { Amount = 1, ResourceType = coral }
+                    new UnitResource {Amount = 50, MaintenanceAmount = 1, Child = pearl },
+                    new UnitResource { Amount = 1, Child = coral }
                 },
                 BattlesToLevelUp = 3,
                 RankedUpType = pony2,
@@ -425,8 +429,8 @@ namespace StrategyGame.Bll.Extensions
                 DefensePower = 10,
                 Cost = new[]
                 {
-                    new UnitResource { MaintenanceAmount = 3, ResourceType = pearl },
-                    new UnitResource { MaintenanceAmount = 2, ResourceType = coral }
+                    new UnitResource { MaintenanceAmount = 3, Child = pearl },
+                    new UnitResource { MaintenanceAmount = 2, Child = coral }
                 },
                 IsPurchasable = false,
                 Content = lazorCont
@@ -437,8 +441,8 @@ namespace StrategyGame.Bll.Extensions
                 DefensePower = 7,
                 Cost = new[]
                 {
-                    new UnitResource { MaintenanceAmount = 1, ResourceType = pearl },
-                    new UnitResource { MaintenanceAmount = 1, ResourceType = coral }
+                    new UnitResource { MaintenanceAmount = 1, Child = pearl },
+                    new UnitResource { MaintenanceAmount = 1, Child = coral }
                 },
                 BattlesToLevelUp = 5,
                 RankedUpType = lazor3,
@@ -451,8 +455,8 @@ namespace StrategyGame.Bll.Extensions
                 DefensePower = 5,
                 Cost = new[]
                 {
-                    new UnitResource {Amount = 100, MaintenanceAmount = 3, ResourceType = pearl },
-                    new UnitResource { MaintenanceAmount = 2, ResourceType = coral }
+                    new UnitResource {Amount = 100, MaintenanceAmount = 3, Child = pearl },
+                    new UnitResource { MaintenanceAmount = 2, Child = coral }
                 },
                 BattlesToLevelUp = 3,
                 RankedUpType = lazor2,
@@ -466,8 +470,8 @@ namespace StrategyGame.Bll.Extensions
                 DefensePower = 0,
                 Cost = new[]
                 {
-                    new UnitResource {Amount = 400, MaintenanceAmount = 4, ResourceType = pearl },
-                    new UnitResource { MaintenanceAmount = 2, ResourceType = coral }
+                    new UnitResource {Amount = 400, MaintenanceAmount = 4, Child = pearl },
+                    new UnitResource { MaintenanceAmount = 2, Child = coral }
                 },
                 BattlesToLevelUp = 3,
                 IsPurchasable = true,
@@ -580,31 +584,31 @@ namespace StrategyGame.Bll.Extensions
             {
                 Name = "poor",
                 ParentUser = thePoor,
-                Resources = context.ResourceTypes.Select(x => new CountryResource { Amount = 0, ResourceType = x }).ToList()
+                Resources = context.ResourceTypes.Select(x => new CountryResource { Amount = 0, Child = x }).ToList()
             };
             var rc = new Country
             {
                 Name = "rich",
                 ParentUser = theRich,
-                Resources = context.ResourceTypes.Select(x => new CountryResource { Amount = 100000, ResourceType = x }).ToList()
+                Resources = context.ResourceTypes.Select(x => new CountryResource { Amount = 100000, Child = x }).ToList()
             };
             var cc = new Country
             {
                 Name = "attacky",
                 ParentUser = theCommander,
-                Resources = context.ResourceTypes.Select(x => new CountryResource { Amount = x.StartingAmount, ResourceType = x }).ToList()
+                Resources = context.ResourceTypes.Select(x => new CountryResource { Amount = x.StartingAmount, Child = x }).ToList()
             };
             var bc = new Country
             {
                 Name = "poi",
                 ParentUser = theBuilder,
-                Resources = context.ResourceTypes.Select(x => new CountryResource { Amount = x.StartingAmount, ResourceType = x }).ToList()
+                Resources = context.ResourceTypes.Select(x => new CountryResource { Amount = x.StartingAmount, Child = x }).ToList()
             };
             var sc = new Country
             {
                 Name = "science",
                 ParentUser = theResearcher,
-                Resources = context.ResourceTypes.Select(x => new CountryResource { Amount = x.StartingAmount, ResourceType = x }).ToList()
+                Resources = context.ResourceTypes.Select(x => new CountryResource { Amount = x.StartingAmount, Child = x }).ToList()
             };
             context.Countries.AddRange(pc, rc, cc, bc, sc);
 
@@ -621,34 +625,34 @@ namespace StrategyGame.Bll.Extensions
 
             context.CountryBuildings.AddRange(new CountryBuilding
             {
-                Building = b1,
-                Count = 1,
-                ParentCountry = bc
+                Child = b1,
+                Amount = 1,
+                Parent = bc
             }, new CountryBuilding
             {
-                Building = b2,
-                Count = 13,
-                ParentCountry = bc
+                Child = b2,
+                Amount = 13,
+                Parent = bc
             });
 
             context.InProgressBuildings.Add(new InProgressBuilding
-            { Building = context.BuildingTypes.First(), ParentCountry = cc, TimeLeft = 1 });
+            { Child = context.BuildingTypes.First(), Parent = cc, TimeLeft = 1 });
             context.InProgressResearches.Add(new InProgressResearch
-            { Research = context.ResearchTypes.First(), ParentCountry = cc, TimeLeft = 1 });
+            { Child = context.ResearchTypes.First(), Parent = cc, TimeLeft = 1 });
 
             var r1 = await context.ResearchTypes.FirstAsync();
             var r2 = await context.ResearchTypes.Skip(3).FirstAsync();
 
             context.CountryResearches.AddRange(new CountryResearch
             {
-                Research = r1,
-                Count = 1,
-                ParentCountry = sc
+                Child = r1,
+                Amount = 1,
+                Parent = sc
             }, new CountryResearch
             {
-                Research = r2,
-                Count = 1,
-                ParentCountry = sc
+                Child = r2,
+                Amount = 1,
+                Parent = sc
             });
 
             var u1 = await context.UnitTypes.FirstAsync();
@@ -716,8 +720,8 @@ namespace StrategyGame.Bll.Extensions
                 TotalDefensePower = 60,
                 Loot = new[]
                 {
-                    new ReportResource { ResourceType = context.ResourceTypes.First(), Amount = 1000 },
-                    new ReportResource { ResourceType = context.ResourceTypes.Skip(1).First(), Amount = 2000 }
+                    new ReportResource { Child = context.ResourceTypes.First(), Amount = 1000 },
+                    new ReportResource { Child = context.ResourceTypes.Skip(1).First(), Amount = 2000 }
                 },
                 Round = 0
             });
@@ -740,15 +744,15 @@ namespace StrategyGame.Bll.Extensions
             var users = Enumerable.Range(1, count).Select(x => new User { UserName = Guid.NewGuid().ToString() }).ToList();
             var countries = users.Select(x => new Country
             {
-                Resources = context.ResourceTypes.Select(r => new CountryResource { Amount = rng.Next(0, 50000), ResourceType = r }).ToList(),
+                Resources = context.ResourceTypes.Select(r => new CountryResource { Amount = rng.Next(0, 50000), Child = r }).ToList(),
                 ParentUser = x,
                 Name = x.UserName,
                 InProgressResearches = context.ResearchTypes.Where(r => rng.NextDouble() < 0.5)
-                    .Select(r => new InProgressResearch { TimeLeft = 1, Research = r }).ToList(),
+                    .Select(r => new InProgressResearch { TimeLeft = 1, Child = r }).ToList(),
                 InProgressBuildings = context.BuildingTypes.Where(b => rng.NextDouble() < 0.5)
-                    .Select(b => new InProgressBuilding { TimeLeft = 1, Building = b }).ToList(),
+                    .Select(b => new InProgressBuilding { TimeLeft = 1, Child = b }).ToList(),
                 Buildings = context.BuildingTypes.Where(b => rng.NextDouble() < 0.5)
-                    .Select(b => new CountryBuilding { Count = rng.Next(1, 5), Building = b }).ToList()
+                    .Select(b => new CountryBuilding { Amount = rng.Next(1, 5), Child = b }).ToList()
             }).ToList();
 
             foreach (var country in countries)

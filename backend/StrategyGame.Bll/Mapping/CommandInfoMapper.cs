@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using AutoMapper;
 using StrategyGame.Bll.Dto.Sent;
 using StrategyGame.Model.Entities;
+using StrategyGame.Model.Entities.Units;
 
 namespace StrategyGame.Bll.Mapping
 {

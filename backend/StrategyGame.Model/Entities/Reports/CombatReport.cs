@@ -1,8 +1,9 @@
 ﻿using StrategyGame.Model.Entities.Resources;
+using StrategyGame.Model.Entities.Units;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace StrategyGame.Model.Entities
+namespace StrategyGame.Model.Entities.Reports
 {
     /// <summary>
     /// Represents a combat report in the UnderSeaDatabase.

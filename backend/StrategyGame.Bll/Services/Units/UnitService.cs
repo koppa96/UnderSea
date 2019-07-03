@@ -8,6 +8,7 @@ using StrategyGame.Bll.Exceptions;
 using StrategyGame.Bll.Extensions;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
+using StrategyGame.Model.Entities.Units;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,11 +58,11 @@ namespace StrategyGame.Bll.Services.Units
                         .ThenInclude(comm => comm.Divisions)
                             .ThenInclude(d => d.Unit)
                     .Include(c => c.Buildings)
-                        .ThenInclude(b => b.Building)
+                        .ThenInclude(b => b.Child)
                             .ThenInclude(b => b.Effects)
                                 .ThenInclude(bf => bf.Effect)
                     .Include(c => c.Researches)
-                        .ThenInclude(r => r.Research)
+                        .ThenInclude(r => r.Child)
                             .ThenInclude(r => r.Effects)
                    .SingleOrDefaultAsync(c => c.Id == countryId);
 

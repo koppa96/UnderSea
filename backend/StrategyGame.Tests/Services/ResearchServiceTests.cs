@@ -34,12 +34,12 @@ namespace StrategyGame.Tests.Services
                 researchId);
 
             var inProgressResearches = await context.InProgressResearches
-                .Include(r => r.Research)
-                .Where(r => r.ParentCountry.ParentUser.UserName == username)
+                .Include(r => r.Child)
+                .Where(r => r.Parent.ParentUser.UserName == username)
                 .ToListAsync();
 
             Assert.AreEqual(1, inProgressResearches.Count);
-            Assert.AreEqual(researchId, inProgressResearches.Single().Research.Id);
+            Assert.AreEqual(researchId, inProgressResearches.Single().Child.Id);
         }
 
         [TestMethod]
@@ -75,9 +75,9 @@ namespace StrategyGame.Tests.Services
         public async Task TestStartResearchAlreadyFinished(string username)
         {
             var researchId = (await context.CountryResearches
-                .Include(r => r.Research)
-                .Where(r => r.ParentCountry.ParentUser.UserName == username)
-                .FirstAsync()).Research.Id;
+                .Include(r => r.Child)
+                .Where(r => r.Parent.ParentUser.UserName == username)
+                .FirstAsync()).Child.Id;
 
             await researchService.StartResearchAsync(username,
                 (await context.Countries.FirstAsync(c => c.ParentUser.UserName == username)).Id,

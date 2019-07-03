@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using StrategyGame.Bll.Dto.Sent;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
+using StrategyGame.Model.Entities.Reports;
+using StrategyGame.Model.Entities.Units;
 using System;
 using System.Collections.Generic;
 using System.Linq;

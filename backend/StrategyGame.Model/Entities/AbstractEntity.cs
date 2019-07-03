@@ -36,5 +36,23 @@ namespace StrategyGame.Model.Entities
         /// <param name="Other">The other <see cref="AbstractEntity{T}"/>.</param>
         /// <returns>If they were equal.</returns>
         public bool Equals(AbstractEntity<T> Other) => Other is null ? false : Id.Equals(Other.Id);
+
+        /// <summary>
+        /// Compares to instance of <see cref="AbstractEntity{T}"/> for equality.
+        /// </summary>
+        /// <param name="left">The first entity to compare.</param>
+        /// <param name="right">The second entity to compare.</param>
+        /// <returns>If the isntances were equal.</returns>
+        public static bool operator ==(AbstractEntity<T> left, AbstractEntity<T> right)
+            => left?.Equals(right) ?? right is null;
+
+        /// <summary>
+        /// Compares to instance of <see cref="AbstractEntity{T}"/> for inequality.
+        /// </summary>
+        /// <param name="left">The first entity to compare.</param>
+        /// <param name="right">The second entity to compare.</param>
+        /// <returns>If the isntances were inequal.</returns>
+        public static bool operator !=(AbstractEntity<T> left, AbstractEntity<T> right)
+            => !(left == right);
     }
 }

@@ -35,12 +35,12 @@ namespace StrategyGame.Tests.Services
                 buildingId);
 
             var inProgressBuildings = await context.InProgressBuildings
-                .Include(b => b.Building)
-                .Where(b => b.ParentCountry.ParentUser.UserName == username)
+                .Include(b => b.Child)
+                .Where(b => b.Parent.ParentUser.UserName == username)
                 .ToListAsync();
 
             Assert.AreEqual(1, inProgressBuildings.Count);
-            Assert.AreEqual(buildingId, inProgressBuildings.Single().Building.Id);
+            Assert.AreEqual(buildingId, inProgressBuildings.Single().Child.Id);
         }
 
         [TestMethod]
@@ -83,7 +83,7 @@ namespace StrategyGame.Tests.Services
             await buildingService.StartBuildingAsync(username, countryId, otherBuildingId);
 
             var inProgress = await context.InProgressBuildings
-                .Where(b => b.ParentCountry.ParentUser.UserName == username)
+                .Where(b => b.Parent.ParentUser.UserName == username)
                 .ToListAsync();
 
             Assert.AreEqual(2, inProgress.Count);

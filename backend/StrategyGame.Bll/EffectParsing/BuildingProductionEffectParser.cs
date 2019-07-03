@@ -16,7 +16,7 @@ namespace StrategyGame.Bll.EffectParsing
                 var split = effect.Parameter.Split(";");
                 int buildingId = int.Parse(split[0]);
                 int resourceId = int.Parse(split[1]);
-                var resourceAmount = country.Buildings.Count(b => b.Building.Id == buildingId) * (int)effect.Value;
+                var resourceAmount = country.Buildings.Count(b => b.Child.Id == buildingId) * (int)effect.Value;
 
                 if (builder.ResourceProductions.ContainsKey(resourceId))
                 {

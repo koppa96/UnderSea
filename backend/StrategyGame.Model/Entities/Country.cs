@@ -1,4 +1,7 @@
-﻿using StrategyGame.Model.Entities.Resources;
+﻿using StrategyGame.Model.Entities.Creations;
+using StrategyGame.Model.Entities.Reports;
+using StrategyGame.Model.Entities.Resources;
+using StrategyGame.Model.Entities.Units;
 using System.Collections.Generic;
 
 namespace StrategyGame.Model.Entities

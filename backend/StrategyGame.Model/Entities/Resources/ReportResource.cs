@@ -1,5 +1,7 @@
-﻿namespace StrategyGame.Model.Entities.Resources
+﻿using StrategyGame.Model.Entities.Reports;
+
+namespace StrategyGame.Model.Entities.Resources
 {
-    public class ReportResource : AbstractResourceConnector<CombatReport>
+    public class ReportResource : AbstractConnectorWithAmount<CombatReport, ResourceType>
     { }
 }

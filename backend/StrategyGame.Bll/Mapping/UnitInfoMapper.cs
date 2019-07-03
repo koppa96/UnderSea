@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using StrategyGame.Bll.Dto.Sent;
 using StrategyGame.Model.Entities;
+using StrategyGame.Model.Entities.Units;
 using System.Linq;
 
 namespace StrategyGame.Bll.Mapping
@@ -19,9 +20,9 @@ namespace StrategyGame.Bll.Mapping
                 .ForMember(dest => dest.Cost, conf => conf.MapFrom(src => src.Cost))
                 .ForMember(dest => dest.Cost, conf => conf.MapFrom(src => src.Cost.Select(c => new ResourceInfo
                 {
-                    Name = c.ResourceType.Content.Name,
+                    Name = c.Child.Content.Name,
                     Amount = (int)c.Amount,
-                    ImageUrl = c.ResourceType.Content.ImageUrl
+                    ImageUrl = c.Child.Content.ImageUrl
                 })));
 
             CreateMap<UnitType, BriefUnitInfo>()
@@ -42,9 +43,9 @@ namespace StrategyGame.Bll.Mapping
                 .ForMember(dest => dest.DefensePower, conf => conf.MapFrom(src => src.Unit.DefensePower))
                 .ForMember(dest => dest.Cost, conf => conf.MapFrom(src => src.Unit.Cost.Select(c => new ResourceInfo
                 {
-                    Name = c.ResourceType.Content.Name,
+                    Name = c.Child.Content.Name,
                     Amount = (int)c.Amount,
-                    ImageUrl = c.ResourceType.Content.ImageUrl
+                    ImageUrl = c.Child.Content.ImageUrl
                 })));
         }
     }

@@ -2,7 +2,10 @@
 using StrategyGame.Bll.Extensions;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
+using StrategyGame.Model.Entities.Creations;
+using StrategyGame.Model.Entities.Reports;
 using StrategyGame.Model.Entities.Resources;
+using StrategyGame.Model.Entities.Units;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -80,12 +83,12 @@ namespace StrategyGame.Bll.Services.TurnHandling
             // #2: Resources
             foreach (var resource in country.Resources)
             {
-                if (builder.ResourceProductions.ContainsKey(resource.ResourceType.Id))
+                if (builder.ResourceProductions.ContainsKey(resource.Child.Id))
                 {
-                    var mod = builder.ResourceModifiers.ContainsKey(resource.ResourceType.Id)
-                        ? builder.ResourceModifiers[resource.ResourceType.Id]
+                    var mod = builder.ResourceModifiers.ContainsKey(resource.Child.Id)
+                        ? builder.ResourceModifiers[resource.Child.Id]
                         : 1.0;
-                    resource.Amount += (long)Math.Round(builder.ResourceProductions[resource.ResourceType.Id] * mod);
+                    resource.Amount += (long)Math.Round(builder.ResourceProductions[resource.Child.Id] * mod);
                 }
             }
 
@@ -181,7 +184,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
                         res.Amount -= loots[res];
                     }
 
-                    report.Loot = loots.Select(x => new ReportResource { Amount = x.Value, ResourceType = x.Key.ResourceType }).ToList();
+                    report.Loot = loots.Select(x => new ReportResource { Amount = x.Value, Child = x.Key.Child }).ToList();
                 }
 
                 context.Reports.Add(report);
@@ -233,7 +236,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
             {
                 foreach (var res in attack.Loot)
                 {
-                    country.Resources.Single(r => r.ResourceType.Id == res.ResourceType.Id).Amount += res.Amount;
+                    country.Resources.Single(r => r.Child.Id == res.Child.Id).Amount += res.Amount;
                 }
             }
 
@@ -323,47 +326,47 @@ namespace StrategyGame.Bll.Services.TurnHandling
         {
             foreach (var research in country.InProgressResearches
                 .Where(r => r.TimeLeft == 0)
-                .GroupBy(r => r.Research))
+                .GroupBy(r => r.Child))
             {
-                var existing = country.Researches.FirstOrDefault(r => r.Research.Equals(research.Key));
+                var existing = country.Researches.FirstOrDefault(r => r.Child.Equals(research.Key));
 
                 if (existing == null)
                 {
                     var res = new CountryResearch
                     {
-                        ParentCountry = country,
-                        Research = research.Key,
-                        Count = research.Count()
+                        Parent = country,
+                        Child = research.Key,
+                        Amount = research.Count()
                     };
                     country.Researches.Add(res);
                     context.CountryResearches.Add(res);
                 }
                 else
                 {
-                    existing.Count += research.Count();
+                    existing.Amount += research.Count();
                 }
             }
 
             foreach (var building in country.InProgressBuildings
                 .Where(r => r.TimeLeft == 0)
-                .GroupBy(b => b.Building))
+                .GroupBy(b => b.Child))
             {
-                var existing = country.Buildings.FirstOrDefault(b => b.Building.Equals(building.Key));
+                var existing = country.Buildings.FirstOrDefault(b => b.Child.Equals(building.Key));
 
                 if (existing == null)
                 {
                     var res = new CountryBuilding
                     {
-                        ParentCountry = country,
-                        Building = building.Key,
-                        Count = building.Count()
+                        Parent = country,
+                        Child = building.Key,
+                        Amount = building.Count()
                     };
                     country.Buildings.Add(res);
                     context.CountryBuildings.Add(res);
                 }
                 else
                 {
-                    existing.Count += building.Count();
+                    existing.Amount += building.Count();
                 }
             }
         }
@@ -377,14 +380,14 @@ namespace StrategyGame.Bll.Services.TurnHandling
         {
             var totalMaintenance = country.GetTotalMaintenance();
 
-            if (totalMaintenance.Any(x => x.Value > country.Resources.Single(r => r.ResourceType.Id == x.Key).Amount))
+            if (totalMaintenance.Any(x => x.Value > country.Resources.Single(r => r.Child.Id == x.Key).Amount))
             {
                 foreach (var div in country.Commands.SelectMany(c => c.Divisions).OrderBy(d => d.Unit.Cost.First().Amount))
                 {
-                    var requiredReductions = div.Unit.Cost.ToDictionary(x => x.ResourceType.Id,
+                    var requiredReductions = div.Unit.Cost.ToDictionary(x => x.Child.Id,
                         x =>
-                        (long)Math.Ceiling(Math.Max(totalMaintenance[x.ResourceType.Id]
-                        - country.Resources.Single(r => r.ResourceType.Id == x.ResourceType.Id).Amount, 0)
+                        (long)Math.Ceiling(Math.Max(totalMaintenance[x.Child.Id]
+                        - country.Resources.Single(r => r.Child.Id == x.Child.Id).Amount, 0)
                         / (double)x.MaintenanceAmount));
 
                     int desertedAmount = (int)Math.Min(requiredReductions.Max(x => x.Value), div.Count);
@@ -393,10 +396,10 @@ namespace StrategyGame.Bll.Services.TurnHandling
 
                     foreach (var maint in div.Unit.Cost)
                     {
-                        totalMaintenance[maint.ResourceType.Id] -= desertedAmount * maint.MaintenanceAmount;
+                        totalMaintenance[maint.Child.Id] -= desertedAmount * maint.MaintenanceAmount;
                     }
 
-                    if (totalMaintenance.All(x => x.Value > country.Resources.Single(r => r.ResourceType.Id == x.Key).Amount))
+                    if (totalMaintenance.All(x => x.Value > country.Resources.Single(r => r.Child.Id == x.Key).Amount))
                     {
                         break;
                     }
@@ -405,7 +408,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
 
             foreach (var maint in totalMaintenance)
             {
-                country.Resources.Single(r => r.ResourceType.Id == maint.Key).Amount -= Math.Max(0, maint.Value);
+                country.Resources.Single(r => r.Child.Id == maint.Key).Amount -= Math.Max(0, maint.Value);
             }
         }
 

@@ -3,7 +3,7 @@ using StrategyGame.Model.Entities.Resources;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace StrategyGame.Model.Entities
+namespace StrategyGame.Model.Entities.Units
 {
     /// <summary>
     /// Represents a unit type within the UnderSea database.

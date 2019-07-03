@@ -1,4 +1,5 @@
 ﻿using StrategyGame.Model.Entities;
+using StrategyGame.Model.Entities.Creations;
 using System.Diagnostics;
 using System.Linq;
 
@@ -10,7 +11,7 @@ namespace StrategyGame.Bll.EffectParsing
     public class AddRemoveBuildingEffectParser : AbstractEffectModifierParser
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CoralProductionEffectParser"/>.
+        /// Initializes a new instance of the <see cref="AddRemoveBuildingEffectParser"/>.
         /// </summary>
         public AddRemoveBuildingEffectParser()
             : base(KnownValues.AddRemoveBuildingEffect, (effect, country, context, builder, doApply) =>
@@ -22,29 +23,29 @@ namespace StrategyGame.Bll.EffectParsing
 
                     if (count > 0)
                     {
-                        var existing = country.Buildings.SingleOrDefault(b => b.Building.Id == id);
+                        var existing = country.Buildings.SingleOrDefault(b => b.Child.Id == id);
 
                         if (existing == null)
                         {
                             var bld = new CountryBuilding
                             {
                                 // TODO async effect parsing?
-                                Building = context.BuildingTypes.Find(id),
-                                Count = (int)effect.Value,
+                                Child = context.BuildingTypes.Find(id),
+                                Amount = (int)effect.Value,
                             };
                             country.Buildings.Add(bld);
                             context.CountryBuildings.Add(bld);
                         }
                         else
                         {
-                            existing.Count += (int)effect.Value;
+                            existing.Amount += (int)effect.Value;
                         }
                     }
                     else if (count < 0)
                     {
-                        if (country.Buildings.Any(b => b.Building.Id == id && b.Count > 0))
+                        if (country.Buildings.Any(b => b.Child.Id == id && b.Amount > 0))
                         {
-                            country.Buildings.Single(b => b.Building.Id == id).Count--;
+                            country.Buildings.Single(b => b.Child.Id == id).Amount--;
                         }
                         else
                         {

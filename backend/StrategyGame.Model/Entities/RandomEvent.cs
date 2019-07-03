@@ -1,4 +1,5 @@
-﻿using StrategyGame.Model.Entities.Frontend;
+﻿using StrategyGame.Model.Entities.Effects;
+using StrategyGame.Model.Entities.Frontend;
 using System.Collections.Generic;
 
 namespace StrategyGame.Model.Entities

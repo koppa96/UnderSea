@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using StrategyGame.Bll.Services.Validators;
+using StrategyGame.Model.Entities.Units;
 
 namespace StrategyGame.Tests.Services
 {
@@ -18,7 +19,6 @@ namespace StrategyGame.Tests.Services
     {
         private UnderSeaDatabaseContext context;
         private ICommandService commandService;
-        private CommandDetailsValidator validator;
 
         [TestInitialize]
         public async Task Initialize()

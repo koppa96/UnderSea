@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace StrategyGame.Model.Entities
+namespace StrategyGame.Model.Entities.Units
 {
     /// <summary>
     /// Represents a command for the army of a country.

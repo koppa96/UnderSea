@@ -1,4 +1,4 @@
-﻿namespace StrategyGame.Model.Entities
+﻿namespace StrategyGame.Model.Entities.Effects
 {
     /// <summary>
     /// Represents the linking table between <see cref="RandomEvent"/>s and effects.

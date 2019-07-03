@@ -3,7 +3,9 @@ using StrategyGame.Bll.Dto.Sent;
 using StrategyGame.Bll.EffectParsing;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
+using StrategyGame.Model.Entities.Creations;
 using StrategyGame.Model.Entities.Resources;
+using StrategyGame.Model.Entities.Units;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -46,13 +48,13 @@ namespace StrategyGame.Bll.Extensions
                 {
                     foreach (var res in div.Unit.Cost)
                     {
-                        if (total.ContainsKey(res.ResourceType.Id))
+                        if (total.ContainsKey(res.Child.Id))
                         {
-                            total[res.ResourceType.Id] += div.Count * res.MaintenanceAmount;
+                            total[res.Child.Id] += div.Count * res.MaintenanceAmount;
                         }
                         else
                         {
-                            total.Add(res.ResourceType.Id, div.Count * res.MaintenanceAmount);
+                            total.Add(res.Child.Id, div.Count * res.MaintenanceAmount);
                         }
                     }
                 }
@@ -101,12 +103,12 @@ namespace StrategyGame.Bll.Extensions
             // Then regular effects
             var effectparents = country.Buildings.Select(b => new
             {
-                count = b.Count,
-                effects = b.Building.Effects.Select(e => e.Effect)
+                count = b.Amount,
+                effects = b.Child.Effects.Select(e => e.Effect)
             }).Concat(country.Researches.Select(r => new
             {
-                count = r.Count,
-                effects = r.Research.Effects.Select(e => e.Effect)
+                count = r.Amount,
+                effects = r.Child.Effects.Select(e => e.Effect)
             })).ToList();
 
             foreach (var effectParent in effectparents)
@@ -286,13 +288,14 @@ namespace StrategyGame.Bll.Extensions
             }
         }
 
-        public static void Purchase<TEntity, TConnector>(this Country country, IPurchasable<TEntity, TConnector> purchasable, int count = 1)
+        public static void Purchase<TEntity, TConnector>(this Country country,
+            IPurchasable<TEntity, TConnector> purchasable, int count = 1)
             where TEntity : AbstractEntity<TEntity>
-            where TConnector : AbstractResourceConnector<TEntity>
+            where TConnector : AbstractConnectorWithAmount<TEntity, ResourceType>
         {
             foreach (var resource in purchasable.Cost)
             {
-                var countryResource = country.Resources.SingleOrDefault(r => r.ResourceType.Id == resource.ResourceType.Id);
+                var countryResource = country.Resources.SingleOrDefault(r => r.Child.Id == resource.Child.Id);
 
                 if (countryResource == null || countryResource.Amount < resource.Amount * count)
                 {
@@ -301,6 +304,28 @@ namespace StrategyGame.Bll.Extensions
 
                 countryResource.Amount -= resource.Amount * count;
             }
+        }
+
+        public static void AddNewCountry(this User user, GlobalValue globals, string name, UnderSeaDatabaseContext context)
+        {
+            var newCountry = new Country()
+            {
+                Name = name,
+                ParentUser = user,
+                Resources = context.ResourceTypes.ToList()
+                           .Select(r => new CountryResource { Amount = r.StartingAmount, Child = r }).ToList(),
+                Score = -1,
+                Rank = -1,
+                CreatedRound = globals.Round
+            };
+
+            var defenders = new Command { ParentCountry = newCountry, TargetCountry = newCountry };
+
+            context.Countries.Add(newCountry);
+            context.Commands.Add(defenders);
+            context.CountryBuildings.AddRange(
+                new CountryBuilding { Parent = newCountry, Amount = 1, Child = globals.FirstStartingBuilding },
+                new CountryBuilding { Parent = newCountry, Amount = 1, Child = globals.SecondStartingBuilding });
         }
     }
 }

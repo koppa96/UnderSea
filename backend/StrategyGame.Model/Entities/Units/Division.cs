@@ -1,4 +1,4 @@
-﻿namespace StrategyGame.Model.Entities
+﻿namespace StrategyGame.Model.Entities.Units
 {
     /// <summary>
     /// Represents a division, a group of units of the same type, within the UnderSea database.

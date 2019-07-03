@@ -6,6 +6,8 @@ using StrategyGame.Bll.Extensions;
 using StrategyGame.Bll.Services.TurnHandling;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
+using StrategyGame.Model.Entities.Creations;
+using StrategyGame.Model.Entities.Effects;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -196,8 +198,8 @@ namespace StrategyGame.Tests.Services
             await turnService.EndTurnAsync(context);
 
             Assert.IsTrue(country.Resources.All(r => r.Amount > 50000 -
-                (totalMaintenance.ContainsKey(r.ResourceType.Id) 
-                ? totalMaintenance[r.ResourceType.Id]
+                (totalMaintenance.ContainsKey(r.Child.Id) 
+                ? totalMaintenance[r.Child.Id]
                 : 0)));
         }
 
@@ -216,7 +218,7 @@ namespace StrategyGame.Tests.Services
                 .Include(c => c.InProgressBuildings)
                 .SingleAsync(x => x.ParentUser.UserName == username);
 
-            country.Buildings.Add(new CountryBuilding { Building = magicBuilding, Count = 1 });
+            country.Buildings.Add(new CountryBuilding { Child = magicBuilding, Amount = 1 });
 
             await turnService.EndTurnAsync(context);
         }

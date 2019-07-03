@@ -57,6 +57,11 @@
         public const string UnitAttackChange = "change-attack";
 
         /// <summary>
+        /// The effect that creates a new country for the user when it happens.
+        /// </summary>
+        public const string NewCountryEffect = "new-country";
+
+        /// <summary>
         /// The default time to build buildings, in turns.
         /// </summary>
         public const int DefaultBuildingTime = 5;

@@ -1,4 +1,6 @@
-﻿namespace StrategyGame.Model.Entities
+﻿using StrategyGame.Model.Entities.Creations;
+
+namespace StrategyGame.Model.Entities
 {
     /// <summary>
     /// Represents the global values in the UnderSea database.

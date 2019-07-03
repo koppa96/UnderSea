@@ -8,7 +8,9 @@ using StrategyGame.Bll.EffectParsing;
 using StrategyGame.Bll.Extensions;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
+using StrategyGame.Model.Entities.Creations;
 using StrategyGame.Model.Entities.Resources;
+using StrategyGame.Model.Entities.Units;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,25 +52,7 @@ namespace StrategyGame.Bll.Services.Country
                     throw new InvalidOperationException("User already has a country");
                 }
 
-                var country = new Model.Entities.Country()
-                {
-                    Name = countryName,
-                    ParentUser = user,
-                    Resources = (await Context.ResourceTypes.ToListAsync())
-                        .Select(r => new CountryResource { Amount = r.StartingAmount, ResourceType = r }).ToList(),
-                    Score = -1,
-                    Rank = -1,
-                    CreatedRound = globals.Round
-                };
-
-                var defenders = new Command { ParentCountry = country, TargetCountry = country };
-
-                Context.Countries.Add(country);
-                Context.Commands.Add(defenders);
-                Context.CountryBuildings.AddRange(
-                    new CountryBuilding { ParentCountry = country, Count = 1, Building = globals.FirstStartingBuilding },
-                    new CountryBuilding { ParentCountry = country, Count = 1, Building = globals.SecondStartingBuilding });
-
+                user.AddNewCountry(globals, countryName, Context);               
                 await Context.SaveChangesAsync();
             }
         }
@@ -81,24 +65,24 @@ namespace StrategyGame.Bll.Services.Country
                         .ThenInclude(d => d.Unit)
                             .ThenInclude(u => u.Content)
                .Include(c => c.Buildings)
-                    .ThenInclude(b => b.Building)
+                    .ThenInclude(b => b.Child)
                         .ThenInclude(b => b.Content)
                .Include(c => c.Buildings)
-                    .ThenInclude(b => b.Building)
+                    .ThenInclude(b => b.Child)
                         .ThenInclude(b => b.Effects)
                             .ThenInclude(b => b.Effect)
                .Include(c => c.Researches)
-                    .ThenInclude(r => r.Research)
+                    .ThenInclude(r => r.Child)
                         .ThenInclude(r => r.Content)
                .Include(c => c.Researches)
-                    .ThenInclude(r => r.Research)
+                    .ThenInclude(r => r.Child)
                         .ThenInclude(r => r.Effects)
                             .ThenInclude(r => r.Effect)
                .Include(c => c.InProgressBuildings)
-                    .ThenInclude(b => b.Building)
+                    .ThenInclude(b => b.Child)
                         .ThenInclude(b => b.Content)
                .Include(c => c.InProgressResearches)
-                    .ThenInclude(r => r.Research)
+                    .ThenInclude(r => r.Child)
                         .ThenInclude(r => r.Content)
                .Include(c => c.CurrentEvent)
                     .ThenInclude(e => e.Content)
@@ -106,7 +90,7 @@ namespace StrategyGame.Bll.Services.Country
                .Include(c => c.Defenses)
                .Include(c => c.ParentUser)
                .Include(c => c.Resources)
-                    .ThenInclude(r => r.ResourceType)
+                    .ThenInclude(r => r.Child)
                         .ThenInclude(r => r.Content)
                .SingleOrDefaultAsync(c => c.Id == countryId);
 
@@ -134,16 +118,16 @@ namespace StrategyGame.Bll.Services.Country
                            .ThenInclude(d => d.Unit)
                                .ThenInclude(u => u.Content)
                   .Include(c => c.Buildings)
-                       .ThenInclude(b => b.Building)
+                       .ThenInclude(b => b.Child)
                            .ThenInclude(b => b.Content)
                   .Include(c => c.Researches)
-                       .ThenInclude(r => r.Research)
+                       .ThenInclude(r => r.Child)
                            .ThenInclude(r => r.Content)
                   .Include(c => c.InProgressBuildings)
-                       .ThenInclude(b => b.Building)
+                       .ThenInclude(b => b.Child)
                            .ThenInclude(b => b.Content)
                   .Include(c => c.InProgressResearches)
-                       .ThenInclude(r => r.Research)
+                       .ThenInclude(r => r.Child)
                            .ThenInclude(r => r.Content)
                   .Include(c => c.CurrentEvent)
                        .ThenInclude(e => e.Content)
@@ -176,36 +160,36 @@ namespace StrategyGame.Bll.Services.Country
             // Map all existing buildings and researches
             foreach (var building in country.Buildings)
             {
-                totalBuildings[building.Building.Id] = Mapper.Map<CountryBuilding, BriefCreationInfo>(building);
+                totalBuildings[building.Child.Id] = Mapper.Map<CountryBuilding, BriefCreationInfo>(building);
             }
 
             foreach (var research in country.Researches)
             {
-                totalResearches[research.Research.Id] = Mapper.Map<CountryResearch, BriefCreationInfo>(research);
+                totalResearches[research.Child.Id] = Mapper.Map<CountryResearch, BriefCreationInfo>(research);
             }
 
             // Add in progress buildings and researches
             foreach (var building in country.InProgressBuildings)
             {
-                if (totalBuildings[building.Building.Id] == null)
+                if (totalBuildings[building.Child.Id] == null)
                 {
-                    totalBuildings[building.Building.Id] = Mapper.Map<BuildingType, BriefCreationInfo>(building.Building);
+                    totalBuildings[building.Child.Id] = Mapper.Map<BuildingType, BriefCreationInfo>(building.Child);
                 }
                 else
                 {
-                    totalBuildings[building.Building.Id].InProgressCount++;
+                    totalBuildings[building.Child.Id].InProgressCount++;
                 }
             }
 
             foreach (var research in country.InProgressResearches)
             {
-                if (totalResearches[research.Research.Id] == null)
+                if (totalResearches[research.Child.Id] == null)
                 {
-                    totalResearches[research.Research.Id] = Mapper.Map<ResearchType, BriefCreationInfo>(research.Research);
+                    totalResearches[research.Child.Id] = Mapper.Map<ResearchType, BriefCreationInfo>(research.Child);
                 }
                 else
                 {
-                    totalResearches[research.Research.Id].InProgressCount++;
+                    totalResearches[research.Child.Id].InProgressCount++;
                 }
             }
 
@@ -234,10 +218,10 @@ namespace StrategyGame.Bll.Services.Country
 
             foreach (var res in country.Resources)
             {
-                perTurn.Add(res.ResourceType, (long)Math.Round(0
-                    + (mods.ResourceProductions.ContainsKey(res.ResourceType.Id) ? mods.ResourceProductions[res.ResourceType.Id] : 0
-                        * (mods.ResourceModifiers.ContainsKey(res.ResourceType.Id) ? mods.ResourceModifiers[res.ResourceType.Id] : 1))
-                    - (upkeep.ContainsKey(res.ResourceType.Id) ? upkeep[res.ResourceType.Id] : 0)));
+                perTurn.Add(res.Child, (long)Math.Round(0
+                    + (mods.ResourceProductions.ContainsKey(res.Child.Id) ? mods.ResourceProductions[res.Child.Id] : 0
+                        * (mods.ResourceModifiers.ContainsKey(res.Child.Id) ? mods.ResourceModifiers[res.Child.Id] : 1))
+                    - (upkeep.ContainsKey(res.Child.Id) ? upkeep[res.Child.Id] : 0)));
             }
 
             info.ResourcesPerRound = perTurn.Select(r => new ResourceInfo

@@ -1,4 +1,6 @@
-﻿namespace StrategyGame.Model.Entities.Frontend
+﻿using StrategyGame.Model.Entities.Creations;
+
+namespace StrategyGame.Model.Entities.Frontend
 {
     /// <summary>
     /// Represents the content for a building object.

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace StrategyGame.Model.Entities
+namespace StrategyGame.Model.Entities.Effects
 {
     /// <summary>
     /// Represents an effect within the UnderSea database.

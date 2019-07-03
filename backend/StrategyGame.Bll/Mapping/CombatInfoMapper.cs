@@ -1,6 +1,7 @@
 using AutoMapper;
 using StrategyGame.Bll.Dto.Sent;
 using StrategyGame.Model.Entities;
+using StrategyGame.Model.Entities.Reports;
 
 namespace StrategyGame.Bll.Mapping
 {

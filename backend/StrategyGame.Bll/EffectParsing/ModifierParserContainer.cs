@@ -1,5 +1,6 @@
 ﻿using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
+using StrategyGame.Model.Entities.Effects;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

@@ -2,6 +2,7 @@
 using StrategyGame.Bll.Dto.Sent;
 using StrategyGame.Bll.Dto.Sent.Country;
 using StrategyGame.Model.Entities;
+using StrategyGame.Model.Entities.Creations;
 using StrategyGame.Model.Entities.Resources;
 
 namespace StrategyGame.Bll.Mapping
@@ -19,15 +20,15 @@ namespace StrategyGame.Bll.Mapping
             CreateMap<Country, RankInfo>();
 
             CreateMap<CountryBuilding, BriefCreationInfo>()
-                .ForMember(dest => dest.ImageUrl, conf => conf.MapFrom(src => src.Building.Content.ImageUrl))
-                .ForMember(dest => dest.IconImageUrl, conf => conf.MapFrom(src => src.Building.Content.IconImageUrl))
-                .ForMember(dest => dest.Id, conf => conf.MapFrom(src => src.Building.Id))
+                .ForMember(dest => dest.ImageUrl, conf => conf.MapFrom(src => src.Child.Content.ImageUrl))
+                .ForMember(dest => dest.IconImageUrl, conf => conf.MapFrom(src => src.Child.Content.IconImageUrl))
+                .ForMember(dest => dest.Id, conf => conf.MapFrom(src => src.Child.Id))
                 .ForMember(dest => dest.InProgressCount, conf => conf.MapFrom(src => 0));
 
             CreateMap<CountryResearch, BriefCreationInfo>()
-                .ForMember(dest => dest.ImageUrl, conf => conf.MapFrom(src => src.Research.Content.ImageUrl))
-                .ForMember(dest => dest.IconImageUrl, conf => conf.MapFrom(src => src.Research.Content.IconImageUrl))
-                .ForMember(dest => dest.Id, conf => conf.MapFrom(src => src.Research.Id))
+                .ForMember(dest => dest.ImageUrl, conf => conf.MapFrom(src => src.Child.Content.ImageUrl))
+                .ForMember(dest => dest.IconImageUrl, conf => conf.MapFrom(src => src.Child.Content.IconImageUrl))
+                .ForMember(dest => dest.Id, conf => conf.MapFrom(src => src.Child.Id))
                 .ForMember(dest => dest.InProgressCount, conf => conf.MapFrom(src => 0));
 
             CreateMap<RandomEvent, EventInfo>()
@@ -37,8 +38,8 @@ namespace StrategyGame.Bll.Mapping
                 .ForMember(dest => dest.Flavourtext, conf => conf.MapFrom(src => src.Content.FlavourText));
             
             CreateMap<CountryResource, ResourceInfo>()
-                .ForMember(dest => dest.Name, conf => conf.MapFrom(src => src.ResourceType.Content.Name))
-                .ForMember(dest => dest.ImageUrl, conf => conf.MapFrom(src => src.ResourceType.Content.ImageUrl));
+                .ForMember(dest => dest.Name, conf => conf.MapFrom(src => src.Child.Content.Name))
+                .ForMember(dest => dest.ImageUrl, conf => conf.MapFrom(src => src.Child.Content.ImageUrl));
         }
     }
 }
