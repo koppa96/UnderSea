@@ -30,18 +30,23 @@ namespace StrategyGame.Bll.Extensions
             context.CountryBuildings.RemoveRange(context.CountryBuildings);
             context.CountryResearches.RemoveRange(context.CountryResearches);
             context.EventEffects.RemoveRange(context.EventEffects);
+            context.CountryResources.RemoveRange(context.CountryResources);
+            context.BuildingResources.RemoveRange(context.BuildingResources);
+            context.ResearchResources.RemoveRange(context.ResearchResources);
+            context.UnitResources.RemoveRange(context.UnitResources);
+
+            // Purge commands, divisions, units, reports
+            context.Reports.RemoveRange(context.Reports);
+            context.Commands.RemoveRange(context.Commands);
+            context.Divisions.RemoveRange(context.Divisions);
+            context.UnitTypes.RemoveRange(context.UnitTypes);
 
             // Purge contents
             context.BuildingContents.RemoveRange(context.BuildingContents);
             context.ResearchContents.RemoveRange(context.ResearchContents);
             context.UnitContents.RemoveRange(context.UnitContents);
             context.EventContents.RemoveRange(context.EventContents);
-
-            // Purge commands, divisions, and units
-            context.Reports.RemoveRange(context.Reports);
-            context.Commands.RemoveRange(context.Commands);
-            context.Divisions.RemoveRange(context.Divisions);
-            context.UnitTypes.RemoveRange(context.UnitTypes);
+            context.ResourceContents.RemoveRange(context.ResourceContents);
 
             // Purge "static" values
             context.BuildingTypes.RemoveRange(context.BuildingTypes);
@@ -50,6 +55,7 @@ namespace StrategyGame.Bll.Extensions
             context.GlobalValues.RemoveRange(context.GlobalValues);
             context.ResearchTypes.RemoveRange(context.ResearchTypes);
             context.RandomEvents.RemoveRange(context.RandomEvents);
+            context.ResourceTypes.RemoveRange(context.ResourceTypes);
 
             // Purge users
             context.Users.RemoveRange(context.Users);
@@ -237,8 +243,8 @@ namespace StrategyGame.Bll.Extensions
 
             // Resources
             var coral = new ResourceType { Content = coralCont, StartingAmount = 500, NewCountryCost = 100000 };
-            var pearl = new ResourceType { Content = coralCont, StartingAmount = 1000, NewCountryCost = 100000 };
-            var stone = new ResourceType { Content = coralCont, StartingAmount = 1000, NewCountryCost = 100000 };
+            var pearl = new ResourceType { Content = pearlCont, StartingAmount = 1000, NewCountryCost = 100000 };
+            var stone = new ResourceType { Content = stoneCont, StartingAmount = 1000, NewCountryCost = 100000 };
             context.ResourceTypes.AddRange(coral, pearl, stone);
             await context.SaveChangesAsync();
 

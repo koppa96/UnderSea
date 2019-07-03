@@ -43,6 +43,8 @@ namespace StrategyGame.Bll.Services.Researches
                                 .Include(c => c.Researches)
                                     .ThenInclude(cr => cr.Research)
                                 .Include(c => c.ParentUser)
+                                .Include(c => c.Resources)
+                                    .ThenInclude(r => r.ResourceType)
                                 .SingleOrDefaultAsync(c => c.Id == countryId);
 
                 if (country == null)
@@ -69,7 +71,6 @@ namespace StrategyGame.Bll.Services.Researches
                 var researchType = await _context.ResearchTypes
                     .Include(b => b.Cost)
                         .ThenInclude(c => c.ResourceType)
-                            .ThenInclude(r => r.Content)
                     .SingleOrDefaultAsync(b => b.Id == researchId);
 
                 if (researchType == null)

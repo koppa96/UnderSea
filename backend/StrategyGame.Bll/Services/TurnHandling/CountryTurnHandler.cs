@@ -93,7 +93,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
             DesertUnits(country);
 
             // #5: Add buildings that are completed
-            CheckAddCompleted(country);
+            CheckAddCompleted(country, context);
         }
 
         /// <summary>
@@ -319,7 +319,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
         /// <param name="country">The country to build in. The buildings, researches, 
         /// in progress buildings, researches, and their buildings and researches, must be included.</param>
         /// <returns>If the building could be started.</returns>
-        protected void CheckAddCompleted(Model.Entities.Country country)
+        protected void CheckAddCompleted(Model.Entities.Country country, UnderSeaDatabaseContext context)
         {
             foreach (var research in country.InProgressResearches
                 .Where(r => r.TimeLeft == 0)
@@ -329,11 +329,14 @@ namespace StrategyGame.Bll.Services.TurnHandling
 
                 if (existing == null)
                 {
-                    country.Researches.Add(new CountryResearch
+                    var res = new CountryResearch
                     {
+                        ParentCountry = country,
                         Research = research.Key,
                         Count = research.Count()
-                    });
+                    };
+                    country.Researches.Add(res);
+                    context.CountryResearches.Add(res);
                 }
                 else
                 {
@@ -349,11 +352,14 @@ namespace StrategyGame.Bll.Services.TurnHandling
 
                 if (existing == null)
                 {
-                    country.Buildings.Add(new CountryBuilding
+                    var res = new CountryBuilding
                     {
+                        ParentCountry = country,
                         Building = building.Key,
                         Count = building.Count()
-                    });
+                    };
+                    country.Buildings.Add(res);
+                    context.CountryBuildings.Add(res);
                 }
                 else
                 {

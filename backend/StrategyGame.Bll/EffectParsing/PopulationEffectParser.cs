@@ -11,7 +11,8 @@
         public PopulationEffectParser()
             : base(KnownValues.PopulationIncrease, (effect, country, context, builder, doApply) =>
             {
-                builder.Population += (int)effect.Value;
+                var pop = (int)effect.Value;
+                builder.Population += pop;
                 var resources = effect.Parameter.Split(";");
 
                 foreach (var res in resources)
@@ -22,11 +23,11 @@
 
                     if (builder.ResourceProductions.ContainsKey(resId))
                     {
-                        builder.ResourceProductions[resId] += amount;
+                        builder.ResourceProductions[resId] += pop * amount;
                     }
                     else
                     {
-                        builder.ResourceProductions.Add(resId, amount);
+                        builder.ResourceProductions.Add(resId, pop * amount);
                     }
                 }
             })
