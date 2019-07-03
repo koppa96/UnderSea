@@ -33,6 +33,7 @@ using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace StrategyGame.Api
 {
@@ -87,9 +88,15 @@ namespace StrategyGame.Api
             {
                 options.AddDefaultPolicy(policy =>
                 {
-                    policy.AllowAnyOrigin()
+                    var allowedOrigins = Configuration.GetSection("CorsOrigins")
+                        .GetChildren()
+                        .Select(x => x.Value)
+                        .ToArray();
+
+                    policy.WithOrigins(allowedOrigins)
                         .AllowAnyMethod()
-                        .AllowAnyHeader();
+                        .AllowAnyHeader()
+                        .AllowCredentials();
                 });
             });
 
@@ -156,9 +163,11 @@ namespace StrategyGame.Api
             app.UseMiddleware<RequestLoggerMiddleware>();
             app.UseMiddleware<ExceptionHandlingMiddleware>();
 
+            app.UseCors();
+
             app.UseHttpsRedirection();
-            app.UseAuthentication();
             app.UseIdentityServer();
+            app.UseAuthentication();
 
             app.UseOpenApi();
             app.UseSwaggerUi3();
@@ -166,7 +175,6 @@ namespace StrategyGame.Api
             app.UseHangfireServer();
             app.UseHangfireDashboard();
 
-            app.UseCors();
             app.UseMvc();
 
             app.UseSignalR(route => route.MapHub<UnderSeaHub>("/hub"));
