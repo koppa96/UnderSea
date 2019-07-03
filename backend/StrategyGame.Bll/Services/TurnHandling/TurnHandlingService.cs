@@ -70,7 +70,8 @@ namespace StrategyGame.Bll.Services.TurnHandling
                         .ThenInclude(e => e.Effects)
                                 .ThenInclude(e => e.Child)
                     .Include(c => c.Resources)
-                        .ThenInclude(r => r.Child);
+                        .ThenInclude(r => r.Child)
+                    .Include(c => c.ParentUser);
 
                 var events = await context.RandomEvents
                     .Include(e => e.Effects)
