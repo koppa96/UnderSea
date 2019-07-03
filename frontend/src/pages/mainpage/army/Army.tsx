@@ -103,7 +103,8 @@ export class Army extends React.Component<ArmyProps, InitialState> {
           disabled={buttonState}
           className={buttonClass}
           onClick={() => {
-            addUnits({ unitsToAdd: this.state.units });
+            const temp = this.state.units.filter(item => item.count !== 0);
+            addUnits({ unitsToAdd: temp });
           }}
         >
           {ownedUnitState.isPostRequesting ? "töltés.." : "Megveszem"}

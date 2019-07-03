@@ -70,8 +70,7 @@ export class Buildings extends React.Component<BuildingProps> {
         <div className="building-page hide-scroll">
           {ownedBuildingState.isRequesting && <span>Betöltés...</span>}
 
-          {ownedBuildingState.isLoaded &&
-            ownedBuildingState.buildings.length > 0 &&
+          {ownedBuildingState.buildings.length > 0 &&
             ownedBuildingState.buildings.map(item => {
               const curentCount = count.find(c => c.id === item.id);
               return (
