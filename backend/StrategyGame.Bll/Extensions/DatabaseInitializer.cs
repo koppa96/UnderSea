@@ -379,6 +379,7 @@ namespace StrategyGame.Bll.Extensions
                     new UnitResource { MaintenanceAmount = 1, Child = coral }
                 },
                 IsPurchasable = false,
+                CarryCapacity = 10,
                 Content = sealCont
             };
             var seal2 = new UnitType
@@ -393,6 +394,7 @@ namespace StrategyGame.Bll.Extensions
                 BattlesToRankUp = 5,
                 RankedUpType = seal3,
                 IsPurchasable = false,
+                CarryCapacity = 8,
                 Content = sealCont
             };
             var seal = new UnitType
@@ -407,6 +409,7 @@ namespace StrategyGame.Bll.Extensions
                 BattlesToRankUp = 3,
                 RankedUpType = seal2,
                 IsPurchasable = true,
+                CarryCapacity = 5,
                 Content = sealCont
             };
             // csatacsikó
@@ -420,6 +423,7 @@ namespace StrategyGame.Bll.Extensions
                     new UnitResource { MaintenanceAmount = 1, Child = coral }
                 },
                 IsPurchasable = false,
+                CarryCapacity = 30,
                 Content = ponyCont
             };
             var pony2 = new UnitType
@@ -434,6 +438,7 @@ namespace StrategyGame.Bll.Extensions
                 BattlesToRankUp = 5,
                 RankedUpType = pony3,
                 IsPurchasable = false,
+                CarryCapacity = 25,
                 Content = ponyCont
             };
             var pony = new UnitType
@@ -448,6 +453,7 @@ namespace StrategyGame.Bll.Extensions
                 BattlesToRankUp = 3,
                 RankedUpType = pony2,
                 IsPurchasable = true,
+                CarryCapacity = 20,
                 Content = ponyCont
             };
             // lézercápa
@@ -461,6 +467,7 @@ namespace StrategyGame.Bll.Extensions
                     new UnitResource { MaintenanceAmount = 2, Child = coral }
                 },
                 IsPurchasable = false,
+                CarryCapacity = 40,
                 Content = lazorCont
             };
             var lazor2 = new UnitType
@@ -475,6 +482,7 @@ namespace StrategyGame.Bll.Extensions
                 BattlesToRankUp = 5,
                 RankedUpType = lazor3,
                 IsPurchasable = false,
+                CarryCapacity = 30,
                 Content = lazorCont
             };
             var lazor = new UnitType
@@ -489,6 +497,7 @@ namespace StrategyGame.Bll.Extensions
                 BattlesToRankUp = 3,
                 RankedUpType = lazor2,
                 IsPurchasable = true,
+                CarryCapacity = 20,
                 Content = lazorCont
             };
             // hadvezér

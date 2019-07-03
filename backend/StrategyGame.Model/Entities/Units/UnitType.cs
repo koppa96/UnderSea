@@ -19,6 +19,11 @@ namespace StrategyGame.Model.Entities.Units
         /// Gets or sets the defense power of the unit.
         /// </summary>
         public int DefensePower { get; set; }
+
+        /// <summary>
+        /// Gets or sets the total carry capacity of the unit.
+        /// </summary>
+        public int CarryCapacity { get; set; }
         
         /// <summary>
         /// Gets or sets the costs of the unit.

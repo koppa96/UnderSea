@@ -9,6 +9,7 @@ namespace StrategyGame.Bll.Dto.Sent
         public string ImageUrl { get; set; }
         public int AttackPower { get; set; }
         public int DefensePower { get; set; }
+        public int CarryCapacity { get; set; }
         public IEnumerable<ResourceInfo> Cost { get; set; }
         public IEnumerable<ResourceInfo> Maintenance { get; set; }
     }
