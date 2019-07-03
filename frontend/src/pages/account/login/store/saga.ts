@@ -41,6 +41,10 @@ export const beginToLogin = (
         response.data.token_type + " " + response.data.access_token;
       const refresh_token = response.data.refresh_token;
       localStorage.setItem("access_token", access_token);
+      localStorage.setItem(
+        "access_token_not_bearer",
+        response.data.access_token
+      );
       localStorage.setItem("refresh_token", refresh_token);
 
       axios.defaults.headers.common["Authorization"] = localStorage.getItem(

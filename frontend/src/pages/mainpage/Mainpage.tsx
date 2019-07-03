@@ -34,7 +34,7 @@ export class MainPage extends React.Component<MainPageProps> {
     const connection = new signalR.HubConnectionBuilder()
       .withUrl(BasePortUrl + "hub", {
         accessTokenFactory: async () =>
-          localStorage.getItem("access_token") || ""
+          localStorage.getItem("access_token_not_bearer") || ""
         // skipNegotiation: true,
         //  transport: signalR.HttpTransportType.WebSockets
       })
@@ -47,9 +47,9 @@ export class MainPage extends React.Component<MainPageProps> {
     connection.start().then(function() {
       console.log("connected");
     });
-    // connection.on("ReceiveResultsAsync", country => {
-    //   console.log("Country signalR", country);
-    // });
+    connection.on("ReceiveResultsAsync", country => {
+      console.log("Country signalR", country);
+    });
   }
 
   render() {

@@ -55,7 +55,8 @@ export const registerAxiosConfig = (instance: AxiosInstance) => {
           .then(res => {
             console.log(res);
             console.log("datatatatatata", res.data);
-            localStorage.setItem("access_token", res.data.token);
+
+            localStorage.setItem("access_token", "Bearer " + res.data.token);
             localStorage.setItem("refresh_token", res.data.refreshToken);
             tokeninstance.defaults.headers.common["Authorization"] =
               "Bearer " + res.data.token;

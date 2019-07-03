@@ -40,7 +40,7 @@ export class Reports extends React.Component<ReportsProps> {
             <span>Betöltés...</span>
           ) : (
             report.map(item => (
-              <div className="report-container">
+              <div key={item.id} className="report-container">
                 <div
                   title="Törlés"
                   onClick={() =>
@@ -67,7 +67,7 @@ export class Reports extends React.Component<ReportsProps> {
                       : "lost-notseen-color"
                   }
                 >
-                  <head>
+                  <div className="head">
                     <span className="round">{item.round}. kör</span>
                     <span className="is-won">
                       {item.isWon ? "Nyert" : "Vesztett"}
@@ -78,7 +78,7 @@ export class Reports extends React.Component<ReportsProps> {
                         : "Nem található név"}{" "}
                       ellen
                     </span>
-                  </head>
+                  </div>
                   {this.state.openId === item.id && (
                     <>
                       <div className="report-info">
@@ -98,7 +98,7 @@ export class Reports extends React.Component<ReportsProps> {
                           <span className="report-units">Ellenfél egység</span>
                           {item.enemyUnits ? (
                             item.enemyUnits.map(x => (
-                              <span>
+                              <span key={x.id}>
                                 {x.name} {x.totalCount} db
                               </span>
                             ))
@@ -112,7 +112,7 @@ export class Reports extends React.Component<ReportsProps> {
                         <ul>
                           {item.lostUnits &&
                             item.lostUnits.map(x => (
-                              <span>
+                              <span key={x.id}>
                                 {x.name} {x.totalCount} db
                               </span>
                             ))}
