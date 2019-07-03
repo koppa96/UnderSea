@@ -99,6 +99,9 @@ export class MainPage extends React.Component<MainPageProps> {
                 <Route path="/account/report">
                   <ReportsConnected />
                 </Route>
+                <Route path="/account/profile">
+                  <Profile />
+                </Route>
               </Switch>
             </main>
           </div>

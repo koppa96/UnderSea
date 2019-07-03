@@ -12,6 +12,9 @@
   font-size: 16px;
   color: rgba(28, 62, 118, 1);
 }
+.form-input:focus {
+  outline: none;
+}
 .form-error {
   font-size: 18px;
   font-family: Baloo;
