@@ -198,8 +198,8 @@ namespace StrategyGame.Tests.Services
             await turnService.EndTurnAsync(context);
 
             Assert.IsTrue(country.Resources.All(r => r.Amount > 50000 -
-                (totalMaintenance.ContainsKey(r.Child.Id) 
-                ? totalMaintenance[r.Child.Id]
+                (totalMaintenance.ContainsKey(r.Child) 
+                ? totalMaintenance[r.Child]
                 : 0)));
         }
 

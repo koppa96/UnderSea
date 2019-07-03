@@ -236,7 +236,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
             {
                 foreach (var res in attack.Loot)
                 {
-                    country.Resources.Single(r => r.Child.Id == res.Child.Id).Amount += res.Amount;
+                    country.Resources.Single(r => r.Child == res.Child).Amount += res.Amount;
                 }
             }
 
@@ -283,7 +283,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
         {
             var totalLoss = (int)Math.Round(command.Divisions.Sum(d => d.Count) * lostPercentage);
 
-            var losses = new Dictionary<int, Division>();
+            var losses = new Dictionary<UnitType, Division>();
 
             // TODO: Optimize
             if (totalLoss > 0)
@@ -300,13 +300,13 @@ namespace StrategyGame.Bll.Services.TurnHandling
                     targetDiv.Count--;
                     totalLoss--;
 
-                    if (losses.ContainsKey(targetDiv.Unit.Id))
+                    if (losses.ContainsKey(targetDiv.Unit))
                     {
-                        losses[targetDiv.Unit.Id].Count++;
+                        losses[targetDiv.Unit].Count++;
                     }
                     else
                     {
-                        losses.Add(targetDiv.Unit.Id, new Division { Count = 1, Unit = targetDiv.Unit });
+                        losses.Add(targetDiv.Unit, new Division { Count = 1, Unit = targetDiv.Unit });
                     }
                 }
             }
@@ -380,14 +380,14 @@ namespace StrategyGame.Bll.Services.TurnHandling
         {
             var totalMaintenance = country.GetTotalMaintenance();
 
-            if (totalMaintenance.Any(x => x.Value > country.Resources.Single(r => r.Child.Id == x.Key).Amount))
+            if (totalMaintenance.Any(x => x.Value > country.Resources.Single(r => r.Child == x.Key).Amount))
             {
                 foreach (var div in country.Commands.SelectMany(c => c.Divisions).OrderBy(d => d.Unit.Cost.First().Amount))
                 {
-                    var requiredReductions = div.Unit.Cost.ToDictionary(x => x.Child.Id,
+                    var requiredReductions = div.Unit.Cost.ToDictionary(x => x.Child,
                         x =>
-                        (long)Math.Ceiling(Math.Max(totalMaintenance[x.Child.Id]
-                        - country.Resources.Single(r => r.Child.Id == x.Child.Id).Amount, 0)
+                        (long)Math.Ceiling(Math.Max(totalMaintenance[x.Child]
+                        - country.Resources.Single(r => r.Child == x.Child).Amount, 0)
                         / (double)x.MaintenanceAmount));
 
                     int desertedAmount = (int)Math.Min(requiredReductions.Max(x => x.Value), div.Count);
@@ -396,10 +396,10 @@ namespace StrategyGame.Bll.Services.TurnHandling
 
                     foreach (var maint in div.Unit.Cost)
                     {
-                        totalMaintenance[maint.Child.Id] -= desertedAmount * maint.MaintenanceAmount;
+                        totalMaintenance[maint.Child] -= desertedAmount * maint.MaintenanceAmount;
                     }
 
-                    if (totalMaintenance.All(x => x.Value > country.Resources.Single(r => r.Child.Id == x.Key).Amount))
+                    if (totalMaintenance.All(x => x.Value > country.Resources.Single(r => r.Child == x.Key).Amount))
                     {
                         break;
                     }
@@ -408,7 +408,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
 
             foreach (var maint in totalMaintenance)
             {
-                country.Resources.Single(r => r.Child.Id == maint.Key).Amount -= Math.Max(0, maint.Value);
+                country.Resources.Single(r => r.Child == maint.Key).Amount -= Math.Max(0, maint.Value);
             }
         }
 

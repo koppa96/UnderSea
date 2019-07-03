@@ -39,22 +39,22 @@ namespace StrategyGame.Bll.Extensions
         /// </summary>
         /// <param name="country">The <see cref="Country"/> to calculate total maintenance for.</param>
         /// <returns>The maintenance of all units in the country.</returns>
-        public static Dictionary<int, long> GetTotalMaintenance(this Country country)
+        public static Dictionary<ResourceType, long> GetTotalMaintenance(this Country country)
         {
-            var total = new Dictionary<int, long>();
+            var total = new Dictionary<ResourceType, long>();
             foreach (var comm in country.Commands)
             {
                 foreach (var div in comm.Divisions)
                 {
                     foreach (var res in div.Unit.Cost)
                     {
-                        if (total.ContainsKey(res.Child.Id))
+                        if (total.ContainsKey(res.Child))
                         {
-                            total[res.Child.Id] += div.Count * res.MaintenanceAmount;
+                            total[res.Child] += div.Count * res.MaintenanceAmount;
                         }
                         else
                         {
-                            total.Add(res.Child.Id, div.Count * res.MaintenanceAmount);
+                            total.Add(res.Child, div.Count * res.MaintenanceAmount);
                         }
                     }
                 }
