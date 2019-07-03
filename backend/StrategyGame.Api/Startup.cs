@@ -86,14 +86,8 @@ namespace StrategyGame.Api
 
             services.AddCors(options =>
             {
-                options.AddPolicy("PlsWork", policy =>
+                options.AddDefaultPolicy(policy =>
                 {
-<<<<<<< HEAD
-                    policy.WithOrigins("http://localhost:3000")
-                        .AllowAnyMethod()
-                        .AllowCredentials()
-                        .AllowAnyHeader();
-=======
                     var allowedOrigins = Configuration.GetSection("CorsOrigins")
                         .GetChildren()
                         .Select(x => x.Value)
@@ -103,7 +97,7 @@ namespace StrategyGame.Api
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials();
->>>>>>> master
+
                 });
             });
 
@@ -182,10 +176,6 @@ namespace StrategyGame.Api
             app.UseHangfireServer();
             app.UseHangfireDashboard();
 
-<<<<<<< HEAD
-            app.UseCors("PlsWork");
-=======
->>>>>>> master
             app.UseMvc();
 
             app.UseSignalR(route => route.MapHub<UnderSeaHub>("/hub"));
