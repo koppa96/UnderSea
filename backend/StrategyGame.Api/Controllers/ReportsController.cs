@@ -4,6 +4,7 @@ using StrategyGame.Bll.Dto.Sent;
 using StrategyGame.Bll.Services.Reports;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using StrategyGame.Bll.Dto.Sent.Country;
 
 namespace StrategyGame.Api.Controllers
 {
@@ -22,15 +23,15 @@ namespace StrategyGame.Api.Controllers
             _reportService = reportService;
         }
 
-        [HttpGet]
+        [HttpGet("combat/{countryId}")]
         [ProducesResponseType(401)]
         [ProducesResponseType(200)]
-        public async Task<ActionResult<IEnumerable<CombatInfo>>> GetBattleInfoAsync()
+        public async Task<ActionResult<IEnumerable<CombatInfo>>> GetBattleInfoAsync(int countryId)
         {
-            return Ok(await _reportService.GetCombatInfoAsync(User.Identity.Name));
+            return Ok(await _reportService.GetCombatInfoAsync(User.Identity.Name, countryId));
         }
 
-        [HttpPost("seen/{id}")]
+        [HttpPost("combat/seen/{id}")]
         [ProducesResponseType(401)]
         [ProducesResponseType(404)]
         [ProducesResponseType(200)]
@@ -40,13 +41,42 @@ namespace StrategyGame.Api.Controllers
             return Ok();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("combat/{id}")]
         [ProducesResponseType(401)]
         [ProducesResponseType(404)]
         [ProducesResponseType(204)]
         public async Task<ActionResult> DeleteReportAsync(int id)
         {
             await _reportService.DeleteCombatReportAsync(User.Identity.Name, id);
+            return NoContent();
+        }
+
+        [HttpGet("event/{countryId}")]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(200)]
+        public async Task<ActionResult<IEnumerable<EventInfo>>> GetEventInfoAsync(int countryId)
+        {
+            return Ok(await _reportService.GetEventInfoAsync(User.Identity.Name, countryId));
+        }
+
+        [HttpPost("event/seen/{id}")]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(200)]
+        public async Task<ActionResult> SetEventSeenAsync(int id)
+        {
+            await _reportService.SetEventReportSeenAsync(User.Identity.Name, id);
+            return Ok();
+        }
+
+        [HttpDelete("event/{id}")]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(204)]
+        public async Task<ActionResult> DeleteEventReportAsync(int id)
+        {
+            await _reportService.DeleteEventReportAsync(User.Identity.Name, id);
             return NoContent();
         }
     }
