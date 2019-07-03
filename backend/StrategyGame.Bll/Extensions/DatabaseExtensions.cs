@@ -393,5 +393,19 @@ namespace StrategyGame.Bll.Extensions
             context.CountryBuildings.AddRange((await context.BuildingTypes.Where(b => b.IsStarting).ToListAsync())
                 .Select(b => new CountryBuilding { Parent = newCountry, Amount = 1, Child = b }));
         }
+
+        public static Dictionary<int, long> GetTotalProduction(this CountryModifierBuilder builder)
+        {
+            var result = new Dictionary<int, long>(builder.ResourceProductions.Count);
+            foreach (var res in builder.ResourceProductions)
+            {
+                var mod = builder.ResourceModifiers.ContainsKey(res.Key)
+                    ? builder.ResourceModifiers.Single(p => p.Key == res.Key).Value
+                    : 1.0;
+
+                result.Add(res.Key, (long)Math.Round(res.Value * mod));
+            }
+            return result;
+        }
     }
 }

@@ -81,15 +81,9 @@ namespace StrategyGame.Bll.Services.TurnHandling
             }
 
             // #2: Resources
-            foreach (var resource in country.Resources)
+            foreach (var resource in builder.GetTotalProduction())
             {
-                if (builder.ResourceProductions.ContainsKey(resource.Child.Id))
-                {
-                    var mod = builder.ResourceModifiers.ContainsKey(resource.Child.Id)
-                        ? builder.ResourceModifiers[resource.Child.Id]
-                        : 1.0;
-                    resource.Amount += (long)Math.Round(builder.ResourceProductions[resource.Child.Id] * mod);
-                }
+                country.Resources.Single(r => r.Child.Id == resource.Key).Amount += resource.Value;
             }
 
             // #4: Pay soldiers
@@ -146,8 +140,9 @@ namespace StrategyGame.Bll.Services.TurnHandling
 
             foreach (var attack in incomingAttacks)
             {
-                (double attackPower, double attackMods, double attackBase) = GetCurrentUnitPower(attack, globals, true,
-                    attack.ParentCountry.ParseAllEffect(context, globals, Parsers));
+                var attackBuilder = attack.ParentCountry.ParseAllEffect(context, globals, Parsers);
+                (double attackPower, double attackMods, double attackBase) = GetCurrentUnitPower(attack, globals,
+                    true, attackBuilder);
                 (double defensePower, double defenseMods, double defenseBase) = GetCurrentUnitPower(defenders, globals,
                     false, builder);
 
@@ -177,14 +172,14 @@ namespace StrategyGame.Bll.Services.TurnHandling
                 if (attackPower > defensePower)
                 {
                     attack.IncreaseBattleCount(context);
-                    var loots = country.Resources.ToDictionary(x => x, x => (long)Math.Round(globals.LootPercentage * x.Amount));
+                    var loots = CalculateLoot(country, globals.LootPercentage, attack, attackBuilder);
 
-                    foreach (var res in country.Resources)
+                    foreach (var resource in loots)
                     {
-                        res.Amount -= loots[res];
+                        country.Resources.Single(r => r.Child == resource.Key).Amount -= resource.Value;
                     }
-
-                    report.Loot = loots.Select(x => new ReportResource { Amount = x.Value, Child = x.Key.Child }).ToList();
+                    
+                    report.Loot = loots.Select(x => new ReportResource { Amount = x.Value, Child = x.Key }).ToList();
                 }
 
                 context.Reports.Add(report);
@@ -415,6 +410,31 @@ namespace StrategyGame.Bll.Services.TurnHandling
             {
                 country.Resources.Single(r => r.Child == maint.Key).Amount -= Math.Max(0, maint.Value);
             }
+        }
+
+        protected Dictionary<ResourceType, long> CalculateLoot(Model.Entities.Country country, double lootPercentage,
+            Command attack, CountryModifierBuilder builder)
+        {
+            var productions = builder.GetTotalProduction();
+            var maxLoot = country.Resources
+                .OrderBy(r => productions.ContainsKey(r.Child.Id) ? productions[r.Child.Id] : 0)
+                .ToDictionary(x => x.Child, x => (long)Math.Round(lootPercentage * x.Amount));
+            var loots = new Dictionary<ResourceType, long>();
+            var maxCarry = attack.Divisions.Sum(d => (long)d.Count * d.Unit.CarryCapacity);
+
+            foreach (var loot in maxLoot)
+            {
+                var current = Math.Min(maxCarry, loot.Value);
+                maxCarry -= current;
+                loots.Add(loot.Key, current);
+
+                if (maxCarry <= 0)
+                {
+                    break;
+                }
+            }
+
+            return loots;
         }
 
         #endregion
