@@ -3,12 +3,12 @@
     /// <summary>
     /// Represents a parser that can parse effects that increase the defense of the units of a country.
     /// </summary>
-    public class UnitDefenseEffectParser : AbstractEffectModifierParser
+    public class UnitDefenseModifierEffectParser : AbstractEffectModifierParser
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="UnitDefenseEffectParser"/>.
+        /// Initializes a new instance of the <see cref="UnitDefenseModifierEffectParser"/>.
         /// </summary>
-        public UnitDefenseEffectParser()
+        public UnitDefenseModifierEffectParser()
             : base(KnownValues.UnitDefenseModifier, (effect, country, context, builder, doApply)
                   => builder.DefenseModifier += effect.Value)
         { }

@@ -7,13 +7,13 @@ namespace StrategyGame.Bll.EffectParsing
     /// <summary>
     /// Represents a parser that can parse effects that add a building to the country.
     /// </summary>
-    public class AddBuildingEffectParser : AbstractEffectModifierParser
+    public class AddRemoveBuildingEffectParser : AbstractEffectModifierParser
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="CoralProductionEffectParser"/>.
         /// </summary>
-        public AddBuildingEffectParser()
-            : base(KnownValues.AddBuildingEffect, (effect, country, context, builder, doApply) =>
+        public AddRemoveBuildingEffectParser()
+            : base(KnownValues.AddRemoveBuildingEffect, (effect, country, context, builder, doApply) =>
             {
                 if (doApply)
                 {

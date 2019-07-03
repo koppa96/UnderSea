@@ -3,12 +3,12 @@
     /// <summary>
     /// Represents a parser that can parse effects that increase the attack of the units of a country.
     /// </summary>
-    public class UnitAttackEffectParser : AbstractEffectModifierParser
+    public class UnitAttackModifierEffectParser : AbstractEffectModifierParser
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="UnitAttackEffectParser"/>.
+        /// Initializes a new instance of the <see cref="UnitAttackModifierEffectParser"/>.
         /// </summary>
-        public UnitAttackEffectParser()
+        public UnitAttackModifierEffectParser()
             : base(KnownValues.UnitAttackModifier, (effect, country, context, builder, doApply)
                   => builder.AttackModifier += effect.Value)
         { }
