@@ -8,7 +8,8 @@ import { IApllicationState } from "./store";
 const mapStateToProps = (state: IApllicationState): MappedProps => {
   const { username } = state.app.pages.profile.profile;
   return {
-    serverResponseLogin: username && username.length > 1 ? true : false
+    serverResponseLogin: username && username.length > 1 ? true : false,
+    loading: state.app.pages.profile.loading
   };
 };
 

@@ -34,7 +34,9 @@ export class MainPage extends React.Component<MainPageProps> {
     const connection = new signalR.HubConnectionBuilder()
       .withUrl(BasePortUrl + "hub", {
         accessTokenFactory: async () =>
-          localStorage.getItem("access_token") || ""
+          localStorage.getItem("access_token") || "",
+        skipNegotiation: true,
+        transport: signalR.HttpTransportType.WebSockets
       })
       .configureLogging(signalR.LogLevel.Information)
       .build();
@@ -57,7 +59,7 @@ export class MainPage extends React.Component<MainPageProps> {
               item =>
                 item.count > 0 &&
                 item.imageUrl && (
-                  <div className="bg-items-flex">
+                  <div key={item.id} className="bg-items-flex">
                     <img src={BasePortUrl + item.imageUrl} />
                   </div>
                 )

@@ -134,6 +134,7 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
               }
               placeholder="Jelszó"
               name="password"
+              type="password"
             />
 
             <input
@@ -150,6 +151,7 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
               }
               placeholder="Jelszó megerősítése"
               name="repassword"
+              type="password"
             />
             <input
               className="form-input"
@@ -178,7 +180,7 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
                   }
                 })
               }
-              placeholder="A városod neve, amit építesz"
+              placeholder="Az országod neve, amit építesz"
               name="countryname"
             />
             <div className="button-container text-center">
@@ -197,12 +199,5 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
       </div>
     );
   }
-
-  /* handleChange = (e: React.FormEvent<HTMLInputElement>) => {
-    this.setState({
-      [e.currentTarget.name]: e.currentTarget.value
-    });
-  };
-*/
 }
 export default Register;
