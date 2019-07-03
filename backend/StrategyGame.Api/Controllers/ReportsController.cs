@@ -36,7 +36,7 @@ namespace StrategyGame.Api.Controllers
         [ProducesResponseType(200)]
         public async Task<ActionResult> SetSeenAsync(int id)
         {
-            await _reportService.SetSeenAsync(User.Identity.Name, id);
+            await _reportService.SetCombatReportSeenAsync(User.Identity.Name, id);
             return Ok();
         }
 
@@ -46,7 +46,7 @@ namespace StrategyGame.Api.Controllers
         [ProducesResponseType(204)]
         public async Task<ActionResult> DeleteReportAsync(int id)
         {
-            await _reportService.DeleteAsync(User.Identity.Name, id);
+            await _reportService.DeleteCombatReportAsync(User.Identity.Name, id);
             return NoContent();
         }
     }

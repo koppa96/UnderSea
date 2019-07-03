@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using StrategyGame.Bll.Dto.Sent.Country;
 
 namespace StrategyGame.Bll.Services.Reports
 {
@@ -23,7 +24,7 @@ namespace StrategyGame.Bll.Services.Reports
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<CombatInfo>> GetCombatInfoAsync(string username)
+        public async Task<IEnumerable<CombatInfo>> GetCombatInfoAsync(string username, int countryId)
         {
             var country = await _context.Countries.Include(c => c.Attacks)
                     .ThenInclude(r => r.Attackers)
@@ -53,7 +54,18 @@ namespace StrategyGame.Bll.Services.Reports
                     .ThenInclude(r => r.Losses)
                         .ThenInclude(d => d.Unit)
                             .ThenInclude(u => u.Content)
-                .SingleAsync(c => c.ParentUser.UserName == username);
+                .Include(c => c.ParentUser)
+                .SingleOrDefaultAsync(c => c.Id == countryId);
+
+            if (country == null)
+            {
+                throw new ArgumentOutOfRangeException(nameof(countryId), "Invalid country id.");
+            }
+
+            if (country.ParentUser.UserName != username)
+            {
+                throw new UnauthorizedAccessException("Can not view reports of others.");
+            }
 
             return country.Attacks.Where(r => !r.IsDeletedByAttacker)
                 .Select(r =>
@@ -84,7 +96,7 @@ namespace StrategyGame.Bll.Services.Reports
                     }));
         }
 
-        public async Task SetSeenAsync(string username, int reportId)
+        public async Task SetCombatReportSeenAsync(string username, int reportId)
         {
             var report = await _context.Reports.Include(r => r.Attacker)
                     .ThenInclude(c => c.ParentUser)
@@ -113,7 +125,7 @@ namespace StrategyGame.Bll.Services.Reports
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(string username, int reportId)
+        public async Task DeleteCombatReportAsync(string username, int reportId)
         {
             var report = await _context.Reports.Include(r => r.Attacker)
                     .ThenInclude(c => c.ParentUser)
@@ -140,6 +152,67 @@ namespace StrategyGame.Bll.Services.Reports
             }
 
             RemoveReportIfBothDeleted(report);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<EventInfo>> GetEventInfoAsync(string username, int countryId)
+        {
+            var country = await _context.Countries.Include(c => c.ParentUser)
+                .Include(c => c.EventReports)
+                    .ThenInclude(r => r.Event)
+                        .ThenInclude(e => e.Content)
+                .SingleOrDefaultAsync(c => c.Id == countryId);
+
+            if (country == null)
+            {
+                throw new ArgumentOutOfRangeException(nameof(countryId), "Invalid country id.");
+            }
+
+            if (country.ParentUser.UserName != username)
+            {
+                throw new UnauthorizedAccessException("Cannot view reports of others.");
+            }
+
+            return country.EventReports.Select(r => _mapper.Map<EventReport, EventInfo>(r));
+        }
+
+        public async Task SetEventReportSeenAsync(string username, int reportId)
+        {
+            var report = await _context.EventReports.Include(r => r.Country)
+                    .ThenInclude(c => c.ParentUser)
+                .SingleOrDefaultAsync(r => r.Id == reportId);
+
+            if (report == null)
+            {
+                throw new ArgumentOutOfRangeException(nameof(reportId), "Invalid report id.");
+            }
+
+            if (report.Country.ParentUser.UserName != username)
+            {
+                throw new UnauthorizedAccessException("Cannot mark others reports as seen.");
+            }
+
+            report.IsSeen = true;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteEventReportAsync(string username, int reportId)
+        {
+            var report = await _context.EventReports.Include(r => r.Country)
+                    .ThenInclude(c => c.ParentUser)
+                .SingleOrDefaultAsync(r => r.Id == reportId);
+
+            if (report == null)
+            {
+                throw new ArgumentOutOfRangeException(nameof(reportId), "Invalid report id.");
+            }
+
+            if (report.Country.ParentUser.UserName != username)
+            {
+                throw new UnauthorizedAccessException("Cannot delete reports of others.");
+            }
+
+            _context.EventReports.Remove(report);
             await _context.SaveChangesAsync();
         }
 

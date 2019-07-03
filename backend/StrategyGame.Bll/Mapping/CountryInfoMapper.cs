@@ -3,6 +3,7 @@ using StrategyGame.Bll.Dto.Sent;
 using StrategyGame.Bll.Dto.Sent.Country;
 using StrategyGame.Model.Entities;
 using StrategyGame.Model.Entities.Creations;
+using StrategyGame.Model.Entities.Reports;
 using StrategyGame.Model.Entities.Resources;
 
 namespace StrategyGame.Bll.Mapping
@@ -31,11 +32,11 @@ namespace StrategyGame.Bll.Mapping
                 .ForMember(dest => dest.Id, conf => conf.MapFrom(src => src.Child.Id))
                 .ForMember(dest => dest.InProgressCount, conf => conf.MapFrom(src => 0));
 
-            CreateMap<RandomEvent, EventInfo>()
-                .ForMember(dest => dest.Name, conf => conf.MapFrom(src => src.Content.Name))
-                .ForMember(dest => dest.Description, conf => conf.MapFrom(src => src.Content.Description))
-                .ForMember(dest => dest.ImageUrl, conf => conf.MapFrom(src => src.Content.ImageUrl))
-                .ForMember(dest => dest.Flavourtext, conf => conf.MapFrom(src => src.Content.FlavourText));
+            CreateMap<EventReport, EventInfo>()
+                .ForMember(dest => dest.Name, conf => conf.MapFrom(src => src.Event.Content.Name))
+                .ForMember(dest => dest.Description, conf => conf.MapFrom(src => src.Event.Content.Description))
+                .ForMember(dest => dest.ImageUrl, conf => conf.MapFrom(src => src.Event.Content.ImageUrl))
+                .ForMember(dest => dest.FlavorText, conf => conf.MapFrom(src => src.Event.Content.FlavourText));
             
             CreateMap<CountryResource, ResourceInfo>()
                 .ForMember(dest => dest.Name, conf => conf.MapFrom(src => src.Child.Content.Name))

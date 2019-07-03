@@ -201,12 +201,10 @@ namespace StrategyGame.Bll.Services.Country
                 .Select(i => Mapper.Map<UnitType, BriefUnitInfo>(i)).ToListAsync())
                 .ToList();
 
-            info.UnseenReports = country.Attacks.Count(r => !r.IsSeenByAttacker) + country.Defenses.Count(r => !r.IsSeenByDefender);
+            info.UnseenCombatReports = country.Attacks.Count(r => !r.IsSeenByAttacker) + 
+                                       country.Defenses.Count(r => !r.IsSeenByDefender);
 
-            if (country.CurrentEvent != null)
-            {
-                info.Event = Mapper.Map<RandomEvent, EventInfo>(country.CurrentEvent);
-            }
+            info.UnseenEventReports = country.EventReports.Count(r => !r.IsSeen);
 
             var mods = country.ParseAllEffect(Context, globals, Parsers);
             var upkeep = country.GetTotalMaintenance();

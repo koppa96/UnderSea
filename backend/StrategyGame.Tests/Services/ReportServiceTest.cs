@@ -38,7 +38,7 @@ namespace StrategyGame.Tests.Services
         public async Task TestMarkReportSeen(string username)
         {
             var reportId = (await context.Reports.FirstAsync(r => r.Attacker.ParentUser.UserName == username)).Id;
-            await reportService.SetSeenAsync(username, reportId);
+            await reportService.SetCombatReportSeenAsync(username, reportId);
 
             var combatInfos = await reportService.GetCombatInfoAsync(username);
             Assert.IsTrue(combatInfos.First().IsSeen);
@@ -49,7 +49,7 @@ namespace StrategyGame.Tests.Services
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public async Task TestMarkNotExistingReportSeen(string username)
         {
-            await reportService.SetSeenAsync(username, -1);
+            await reportService.SetCombatReportSeenAsync(username, -1);
         }
 
         [TestMethod]
@@ -58,7 +58,7 @@ namespace StrategyGame.Tests.Services
         public async Task TestMarkOthersReportSeen(string username)
         {
             var reportId = (await context.Reports.FirstAsync(r => r.Attacker.ParentUser.UserName != username && r.Defender.ParentUser.UserName != username)).Id;
-            await reportService.SetSeenAsync(username, reportId);
+            await reportService.SetCombatReportSeenAsync(username, reportId);
         }
 
         [TestMethod]
@@ -67,7 +67,7 @@ namespace StrategyGame.Tests.Services
         {
             var reportId = (await context.Reports.FirstAsync()).Id;
 
-            await reportService.DeleteAsync(attacker, reportId);
+            await reportService.DeleteCombatReportAsync(attacker, reportId);
 
             Assert.AreEqual(0, (await reportService.GetCombatInfoAsync(attacker)).Count());
             Assert.AreEqual(1, (await reportService.GetCombatInfoAsync(defender)).Count());
@@ -79,8 +79,8 @@ namespace StrategyGame.Tests.Services
         {
             var reportId = (await context.Reports.FirstAsync()).Id;
 
-            await reportService.DeleteAsync(attacker, reportId);
-            await reportService.DeleteAsync(defender, reportId);
+            await reportService.DeleteCombatReportAsync(attacker, reportId);
+            await reportService.DeleteCombatReportAsync(defender, reportId);
 
             Assert.AreEqual(0, (await reportService.GetCombatInfoAsync(defender)).Count());
             Assert.AreEqual(0, await context.Reports.CountAsync());
@@ -93,7 +93,7 @@ namespace StrategyGame.Tests.Services
         {
             var reportId = (await context.Reports.FirstAsync()).Id;
 
-            await reportService.DeleteAsync(username, reportId);
+            await reportService.DeleteCombatReportAsync(username, reportId);
         }
 
         [TestMethod]
@@ -101,7 +101,7 @@ namespace StrategyGame.Tests.Services
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public async Task TestDeleteNotExistingReport(string username)
         {
-            await reportService.DeleteAsync(username, -1);
+            await reportService.DeleteCombatReportAsync(username, -1);
         }
 
         [TestCleanup]
