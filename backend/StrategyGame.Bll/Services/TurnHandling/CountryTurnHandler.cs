@@ -87,7 +87,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
             DesertUnits(country);
 
             // #5: Add buildings that are completed
-            CheckAddCompleted(country);
+            CheckAddCompleted(country, context);
         }
 
         /// <summary>
@@ -300,7 +300,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
         /// <param name="country">The country to build in. The buildings, researches, 
         /// in progress buildings, researches, and their buildings and researches, must be included.</param>
         /// <returns>If the building could be started.</returns>
-        protected void CheckAddCompleted(Model.Entities.Country country)
+        protected void CheckAddCompleted(Model.Entities.Country country, UnderSeaDatabaseContext context)
         {
             var researches = country.InProgressResearches
                 .Where(r => r.TimeLeft == 0)
@@ -316,11 +316,14 @@ namespace StrategyGame.Bll.Services.TurnHandling
                     // Add a new research, or update an existing one
                     if (existing == null)
                     {
-                        country.Researches.Add(new CountryResearch
+                        var res = new CountryResearch
                         {
+                            ParentCountry = country,
                             Research = research.Key,
                             Count = research.Count()
-                        });
+                        };
+                        country.Researches.Add(res);
+                        context.CountryResearches.Add(res);
                     }
                     else
                     {
@@ -344,11 +347,14 @@ namespace StrategyGame.Bll.Services.TurnHandling
                     // Add a new building, or update an existing one
                     if (existing == null)
                     {
-                        country.Buildings.Add(new CountryBuilding()
+                        var bld = new CountryBuilding()
                         {
+                            ParentCountry = country,
                             Building = building.Key,
                             Count = building.Count()
-                        });
+                        };
+                        country.Buildings.Add(bld);
+                        context.CountryBuildings.Add(bld);
                     }
                     else
                     {
