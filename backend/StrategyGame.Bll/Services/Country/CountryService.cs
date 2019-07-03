@@ -42,17 +42,13 @@ namespace StrategyGame.Bll.Services.Country
                 var user = await Context.Users
                     .Include(u => u.RuledCountries)
                     .SingleAsync(u => u.UserName == username);
-                var globals = await Context.GlobalValues
-                    .Include(g => g.FirstStartingBuilding)
-                    .Include(g => g.SecondStartingBuilding)
-                    .SingleAsync();
 
                 if (user.RuledCountries.Count > 0)
                 {
                     throw new InvalidOperationException("User already has a country");
                 }
 
-                user.AddNewCountry(globals, countryName, Context);               
+                await user.AddNewCountry(countryName, Context);
                 await Context.SaveChangesAsync();
             }
         }
@@ -212,7 +208,7 @@ namespace StrategyGame.Bll.Services.Country
                 info.Event = Mapper.Map<RandomEvent, EventInfo>(country.CurrentEvent);
             }
 
-            var mods = country.ParseAllEffectForCountry(Context, globals, Parsers, false, false);
+            var mods = country.ParseAllEffect(Context, globals, Parsers);
             var upkeep = country.GetTotalMaintenance();
             var perTurn = new Dictionary<ResourceType, long>();
 

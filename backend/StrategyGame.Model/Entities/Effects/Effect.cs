@@ -23,6 +23,11 @@ namespace StrategyGame.Model.Entities.Effects
         public string Parameter { get; set; }
 
         /// <summary>
+        /// Gets or sets if the effect should only be applied once, when the related event / creation happens / finishes.
+        /// </summary>
+        public bool IsOneTime { get; set; }
+
+        /// <summary>
         /// Gets or sets the collection of buildings that are using this effect.
         /// </summary>
         public ICollection<BuildingEffect> AffectedBuildings { get; set; }

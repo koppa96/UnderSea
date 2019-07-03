@@ -1,15 +1,18 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using StrategyGame.Bll.Dto.Sent;
 using StrategyGame.Bll.EffectParsing;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
 using StrategyGame.Model.Entities.Creations;
+using StrategyGame.Model.Entities.Effects;
 using StrategyGame.Model.Entities.Resources;
 using StrategyGame.Model.Entities.Units;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace StrategyGame.Bll.Extensions
 {
@@ -70,11 +73,9 @@ namespace StrategyGame.Bll.Extensions
         /// <param name="context">The database to use.</param>
         /// <param name="globals">The <see cref="GlobalValue"/> to use.</param>
         /// <param name="Parsers">The collection of parsers to use.</param>
-        /// <param name="doApplyEvent">If random events should be applied to the modifier.</param>
-        /// <param name="doApplyPermanent">If effects that have permanenet effects should be applied.</param>
         /// <returns>The builder containing the modifiers for the country</returns>
-        public static CountryModifierBuilder ParseAllEffectForCountry(this Country country, UnderSeaDatabaseContext context,
-            GlobalValue globals, ModifierParserContainer Parsers, bool doApplyEvent, bool doApplyPermanent)
+        public static CountryModifierBuilder ParseAllEffect(this Country country, UnderSeaDatabaseContext context,
+            GlobalValue globals, ModifierParserContainer Parsers)
         {
             if (country == null)
             {
@@ -89,11 +90,11 @@ namespace StrategyGame.Bll.Extensions
             };
 
             // First handle events
-            if (doApplyEvent && country.CurrentEvent != null)
+            if (country.CurrentEvent != null)
             {
-                foreach (var e in country.CurrentEvent.Effects)
+                foreach (var e in country.CurrentEvent.Effects.Where(e => !e.Child.IsOneTime))
                 {
-                    if (!Parsers.TryParse(e.Child, country, context, builder, doApplyPermanent))
+                    if (!Parsers.TryParse(e.Child, country, context, builder, false))
                     {
                         Debug.WriteLine("Event effect with name {0} could not be handled by the provided parsers.",
                             e.Child.Name);
@@ -105,11 +106,15 @@ namespace StrategyGame.Bll.Extensions
             var effectparents = country.Buildings.Select(b => new
             {
                 count = b.Amount,
-                effects = b.Child.Effects.Select(e => e.Child)
+                effects = b.Child.Effects
+                    .Select(e => e.Child)
+                    .Where(e => !e.IsOneTime)
             }).Concat(country.Researches.Select(r => new
             {
                 count = r.Amount,
-                effects = r.Child.Effects.Select(e => e.Child)
+                effects = r.Child.Effects
+                    .Select(e => e.Child)
+                    .Where(e => !e.IsOneTime)
             })).ToList();
 
             foreach (var effectParent in effectparents)
@@ -118,7 +123,7 @@ namespace StrategyGame.Bll.Extensions
                 {
                     foreach (var e in effectParent.effects)
                     {
-                        if (!Parsers.TryParse(e, country, context, builder, doApplyPermanent))
+                        if (!Parsers.TryParse(e, country, context, builder, false))
                         {
                             Debug.WriteLine("Effect with name {0} could not be handled by the provided parsers.", e.Name);
                         }
@@ -127,6 +132,33 @@ namespace StrategyGame.Bll.Extensions
             }
 
             return builder;
+        }
+
+        /// <summary>
+        /// Parses all effects of a country into a <see cref="CountryModifierBuilder"/>.
+        /// </summary>
+        /// <param name="country">The country to parse effects for. Its buildings, researches, events and their effects must be included.</param>
+        /// <param name="effects">The collection of effects to apply.</param>
+        /// <param name="context">The database to use.</param>
+        /// <param name="Parsers">The collection of parsers to use.</param>
+        public static void ApplyOneTime(this Country country, IEnumerable<Effect> effects,
+            UnderSeaDatabaseContext context, ModifierParserContainer Parsers)
+        {
+            if (country == null)
+            {
+                throw new ArgumentNullException(nameof(country));
+            }
+
+            var builder = new CountryModifierBuilder();
+
+            foreach (var e in effects.Where(e => e.IsOneTime))
+            {
+                if (!Parsers.TryParse(e, country, context, builder, true))
+                {
+                    Debug.WriteLine("Event effect with name {0} could not be handled by the provided parsers.",
+                        new[] { e.Name });
+                }
+            }
         }
 
         /// <summary>
@@ -230,6 +262,12 @@ namespace StrategyGame.Bll.Extensions
             context.Commands.Remove(command);
         }
 
+        /// <summary>
+        /// Merges the divisions into the provided command.
+        /// </summary>
+        /// <param name="divisions">The collection of <see cref="Division"/>s to merge.</param>
+        /// <param name="target">The <see cref="Command"/> to merge into.</param>
+        /// <param name="context">The database to use to remove the division if necessary.</param>
         public static void MergeInto(this IEnumerable<Division> divisions, Command target,
             UnderSeaDatabaseContext context)
         {
@@ -239,7 +277,16 @@ namespace StrategyGame.Bll.Extensions
             }
         }
 
-        public static IEnumerable<Division> TakeFrom(this Command command, int unitId, int amount, UnderSeaDatabaseContext context)
+        /// <summary>
+        /// Takes away a specified amount of units of a kind from a command.
+        /// </summary>
+        /// <param name="command">The command to take from.</param>
+        /// <param name="unitId">The ID of the unit to take.</param>
+        /// <param name="amount">The amount of units to take.</param>
+        /// <param name="context">The database to use.</param>
+        /// <returns>The <see cref="Divisions"/>s that were taken away.</returns>
+        public static IEnumerable<Division> TakeFrom(this Command command, int unitId, int amount,
+            UnderSeaDatabaseContext context)
         {
             var takenDivisions = new List<Division>();
             var fromDivisions = command.Divisions.Where(d => d.Unit.Id == unitId);
@@ -275,7 +322,12 @@ namespace StrategyGame.Bll.Extensions
             return takenDivisions;
         }
 
-        public static void IncreaseBattleCount(this Command command)
+        /// <summary>
+        /// Increases the battlecount of the units in the provided command. If the units reach the rank-up count, they are ranked up automatically
+        /// </summary>
+        /// <param name="command">The command to increase the battlecount for.</param>
+        /// <param name="context">The database to use to remove the division if necessary.</param>
+        public static void IncreaseBattleCount(this Command command, UnderSeaDatabaseContext context)
         {
             foreach (var div in command.Divisions)
             {
@@ -283,8 +335,14 @@ namespace StrategyGame.Bll.Extensions
 
                 if (div.Unit.CanRankUp && div.BattleCount >= div.Unit.BattlesToLevelUp)
                 {
+                    var existing = command.Divisions.SingleOrDefault(d => d.BattleCount == 0 && d.Unit == div.Unit.RankedUpType);
                     div.Unit = div.Unit.RankedUpType;
                     div.BattleCount = 0;
+
+                    if (existing != null)
+                    {
+                        div.MergeInto(command, context);
+                    }
                 }
             }
         }
@@ -307,8 +365,16 @@ namespace StrategyGame.Bll.Extensions
             }
         }
 
-        public static void AddNewCountry(this User user, GlobalValue globals, string name, UnderSeaDatabaseContext context)
+        /// <summary>
+        /// Adds a new country with its default data to the specified user.
+        /// </summary>
+        /// <param name="user">The user to add a country for.</param>
+        /// <param name="name">The name of the country.</param>
+        /// <param name="context">The database to use.</param>
+        /// <returns>The task representing the state of the operation.</returns>
+        public static async Task AddNewCountry(this User user, string name, UnderSeaDatabaseContext context)
         {
+            var globals = await context.GlobalValues.SingleAsync();
             var newCountry = new Country()
             {
                 Name = name,
@@ -324,9 +390,8 @@ namespace StrategyGame.Bll.Extensions
 
             context.Countries.Add(newCountry);
             context.Commands.Add(defenders);
-            context.CountryBuildings.AddRange(
-                new CountryBuilding { Parent = newCountry, Amount = 1, Child = globals.FirstStartingBuilding },
-                new CountryBuilding { Parent = newCountry, Amount = 1, Child = globals.SecondStartingBuilding });
+            context.CountryBuildings.AddRange((await context.BuildingTypes.Where(b => b.IsStarting).ToListAsync())
+                .Select(b => new CountryBuilding { Parent = newCountry, Amount = 1, Child = b }));
         }
     }
 }

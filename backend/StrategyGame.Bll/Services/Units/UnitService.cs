@@ -96,7 +96,7 @@ namespace StrategyGame.Bll.Services.Units
                         throw new ArgumentException("Purchase amount must be positive.");
                     }
 
-                    var builder = country.ParseAllEffectForCountry(Context, globals, Parsers, false, false);
+                    var builder = country.ParseAllEffect(Context, globals, Parsers);
                     var totalUnits = country.Commands.Sum(c => c.Divisions.Sum(d => d.Count));
 
                     // Check pop-space

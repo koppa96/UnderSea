@@ -66,16 +66,5 @@ namespace StrategyGame.Model.Entities
         /// Gets or sets the amount of turns before a random event can occur.
         /// </summary>
         public ulong RandomEventGraceTimer { get; set; }
-
-        // TODO: Use a linking table that allows multiple starting buildings
-        /// <summary>
-        /// Gets or sets the first starting building for a new country.
-        /// </summary>
-        public BuildingType FirstStartingBuilding { get; set; }
-
-        /// <summary>
-        /// Gets or sets the second starting building for a new country.
-        /// </summary>
-        public BuildingType SecondStartingBuilding { get; set; }
     }
 }

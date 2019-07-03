@@ -1,9 +1,5 @@
-﻿using StrategyGame.Model.Entities;
-using StrategyGame.Model.Entities.Resources;
-using System;
-using System.Collections.Generic;
+﻿using StrategyGame.Bll.Extensions;
 using System.Linq;
-using System.Text;
 
 namespace StrategyGame.Bll.EffectParsing
 {
@@ -21,9 +17,7 @@ namespace StrategyGame.Bll.EffectParsing
                 if (doApply)
                 {
                     // TODO: async effect parsing?
-                    var globals = context.GlobalValues.Single();
-
-                    
+                    country.ParentUser.AddNewCountry(country.ParentUser.UserName, context).Wait();
                 }
             })
         { }

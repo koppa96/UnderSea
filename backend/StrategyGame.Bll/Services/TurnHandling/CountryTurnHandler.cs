@@ -61,19 +61,19 @@ namespace StrategyGame.Bll.Services.TurnHandling
                 throw new ArgumentNullException(nameof(globals));
             }
 
-            // #1: Add a random event
+            // #1: Add a random event, and apply it if its permanent
             if (country.CreatedRound + globals.RandomEventGraceTimer <= globals.Round
                 && rng.NextDouble() <= globals.RandomEventChance)
             {
                 country.CurrentEvent = allEvents[rng.Next(allEvents.Count)];
+                country.ApplyOneTime(country.CurrentEvent.Effects.Select(e => e.Child), context, Parsers);
             }
             else if (country.CurrentEvent != null)
             {
                 country.CurrentEvent = null;
             }
 
-            // Apply permanent effects here
-            var builder = country.ParseAllEffectForCountry(context, globals, Parsers, true, true);
+            var builder = country.ParseAllEffect(context, globals, Parsers);
 
             if (builder.WasEventIgnored)
             {
@@ -137,7 +137,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
                 .ToList();
 
             var defenders = country.GetAllDefending();
-            var builder = country.ParseAllEffectForCountry(context, globals, Parsers, true, false);
+            var builder = country.ParseAllEffect(context, globals, Parsers);
 
             foreach (var reinforcement in reinforcements)
             {
@@ -147,7 +147,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
             foreach (var attack in incomingAttacks)
             {
                 (double attackPower, double attackMods, double attackBase) = GetCurrentUnitPower(attack, globals, true,
-                    attack.ParentCountry.ParseAllEffectForCountry(context, globals, Parsers, true, false));
+                    attack.ParentCountry.ParseAllEffect(context, globals, Parsers));
                 (double defensePower, double defenseMods, double defenseBase) = GetCurrentUnitPower(defenders, globals,
                     false, builder);
 
@@ -176,7 +176,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
 
                 if (attackPower > defensePower)
                 {
-                    attack.IncreaseBattleCount();
+                    attack.IncreaseBattleCount(context);
                     var loots = country.Resources.ToDictionary(x => x, x => (long)Math.Round(globals.LootPercentage * x.Amount));
 
                     foreach (var res in country.Resources)
@@ -215,7 +215,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
                 throw new ArgumentNullException(nameof(globals));
             }
 
-            var builder = country.ParseAllEffectForCountry(context, globals, Parsers, true, false);
+            var builder = country.ParseAllEffect(context, globals, Parsers);
 
             long divisionScore = 0;
             foreach (var comm in country.Commands)
@@ -328,6 +328,8 @@ namespace StrategyGame.Bll.Services.TurnHandling
                 .Where(r => r.TimeLeft == 0)
                 .GroupBy(r => r.Child))
             {
+                country.ApplyOneTime(Enumerable.Repeat(research.Key.Effects.Select(e => e.Child), research.Count())
+                    .SelectMany(x => x), context, Parsers);
                 var existing = country.Researches.FirstOrDefault(r => r.Child.Equals(research.Key));
 
                 if (existing == null)
@@ -351,6 +353,8 @@ namespace StrategyGame.Bll.Services.TurnHandling
                 .Where(r => r.TimeLeft == 0)
                 .GroupBy(b => b.Child))
             {
+                country.ApplyOneTime(Enumerable.Repeat(building.Key.Effects.Select(e => e.Child), building.Count())
+                    .SelectMany(x => x), context, Parsers);
                 var existing = country.Buildings.FirstOrDefault(b => b.Child.Equals(building.Key));
 
                 if (existing == null)

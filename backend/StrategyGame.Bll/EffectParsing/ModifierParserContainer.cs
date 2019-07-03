@@ -33,7 +33,8 @@ namespace StrategyGame.Bll.EffectParsing
                     new UnitAttackModifierEffectParser(),
                     new AddRemoveBuildingEffectParser(),
                     new UnitAttackChangeEffectParser(),
-                    new BuildingProductionEffectParser()
+                    new BuildingProductionEffectParser(),
+                    new NewCountryEffectParser()
                 });
         }
 
@@ -82,14 +83,14 @@ namespace StrategyGame.Bll.EffectParsing
         /// <param name="country">The country to parse the effect for.</param>
         /// <param name="context">The database to use.</param>
         /// <param name="builder">The <see cref="CountryModifierBuilder"/> to store the effect's effects in.</param>
-        /// <param name="doApplyPermanent">If effects that have permanenet effects should be applied.</param>
+        /// <param name="doApplyOnetime">If effects that have permanenet effects should be applied.</param>
         /// <returns>If the effect was parsed by any parsers.</returns>
         /// <exception cref="ArgumentNullException"> Thrown if an argument was null.</exception>
         /// <remarks>
         /// If multiple parsers match the effect only the first matching parser is executed.
         /// </remarks>
-        public bool TryParse(Effect effect, Country country, UnderSeaDatabaseContext context, CountryModifierBuilder builder,
-            bool doApplyPermanent)
+        public bool TryParse(Effect effect, Country country, UnderSeaDatabaseContext context,
+            CountryModifierBuilder builder, bool doApplyOnetime)
         {
             if (effect == null)
             {
@@ -108,7 +109,7 @@ namespace StrategyGame.Bll.EffectParsing
 
             foreach (var p in Parsers)
             {
-                if (p.TryParse(effect, country, context, builder, doApplyPermanent))
+                if (p.TryParse(effect, country, context, builder, doApplyOnetime))
                 {
                     return true;
                 }

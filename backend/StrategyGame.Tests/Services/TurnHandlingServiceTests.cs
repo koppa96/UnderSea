@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nito.AsyncEx;
+using StrategyGame.Bll;
 using StrategyGame.Bll.EffectParsing;
 using StrategyGame.Bll.Extensions;
 using StrategyGame.Bll.Services.TurnHandling;
 using StrategyGame.Dal;
-using StrategyGame.Model.Entities;
 using StrategyGame.Model.Entities.Creations;
 using StrategyGame.Model.Entities.Effects;
 using System.Linq;
@@ -53,6 +53,88 @@ namespace StrategyGame.Tests.Services
             await turnService.EndTurnAsync(context);
 
             Assert.AreEqual(country.CurrentEvent, null);
+        }
+
+        [TestMethod]
+        [DataRow("TheResearcher")]
+        public async Task TestEventNewCountry(string username)
+        {
+            var globals = await context.GlobalValues.SingleAsync();
+            globals.Round = 50;
+            globals.RandomEventChance = 0.0;
+
+            var country = await context.Countries
+                .Include(c => c.ParentUser)
+                    .ThenInclude(u => u.RuledCountries)
+                .Include(c => c.InProgressResearches)
+                .Include(c => c.Buildings)
+                .Include(c => c.CurrentEvent)
+                .SingleAsync(x => x.ParentUser.UserName == username);
+            var countryCount = country.ParentUser.RuledCountries.Count;
+
+            context.InProgressResearches.Add(new InProgressResearch
+            {
+                Parent = country,
+                Child = await context.ResearchTypes.FirstAsync(r => r.Effects.Any(e => e.Child.Name == KnownValues.NewCountryEffect)),
+                TimeLeft = 1
+            });
+
+            await context.SaveChangesAsync();
+            Assert.AreEqual(country.InProgressResearches.Count, 1);
+            await turnService.EndTurnAsync(context);
+            Assert.IsTrue(country.ParentUser.RuledCountries.Count > countryCount);
+        }
+
+        [TestMethod]
+        [DataRow("ThePoor")]
+        public async Task TestEventAddBuilding(string username)
+        {
+            var globals = await context.GlobalValues.SingleAsync();
+            globals.Round = 50;
+            globals.RandomEventChance = 1.0;
+
+            context.RandomEvents.RemoveRange(context.RandomEvents.Where(e =>
+                !e.Effects.Any(eff => eff.Child.Name == KnownValues.AddRemoveBuildingEffect && eff.Child.Value > 0)));
+
+            await context.SaveChangesAsync();
+
+            var country = await context.Countries
+                .Include(c => c.ParentUser)
+                .Include(c => c.InProgressBuildings)
+                .Include(c => c.Buildings)
+                .Include(c => c.CurrentEvent)
+                .SingleAsync(x => x.ParentUser.UserName == username);
+            var buildingNumber = country.Buildings.Sum(b => b.Amount);
+
+            Assert.AreEqual(country.InProgressBuildings.Count, 0);
+            await turnService.EndTurnAsync(context);
+            Assert.IsTrue(country.Buildings.Sum(b => b.Amount) > buildingNumber);
+        }
+
+        [TestMethod]
+        [DataRow("TheBuilder")]
+        public async Task TestEventRemoveBuilding(string username)
+        {
+            var globals = await context.GlobalValues.SingleAsync();
+            globals.Round = 50;
+            globals.RandomEventChance = 1.0;
+
+            context.RandomEvents.RemoveRange(context.RandomEvents.Where(e =>
+                !e.Effects.Any(eff => eff.Child.Name == KnownValues.AddRemoveBuildingEffect && eff.Child.Value < 0)));
+
+            await context.SaveChangesAsync();
+
+            var country = await context.Countries
+                .Include(c => c.ParentUser)
+                .Include(c => c.InProgressBuildings)
+                .Include(c => c.Buildings)
+                .Include(c => c.CurrentEvent)
+                .SingleAsync(x => x.ParentUser.UserName == username);
+            var buildingNumber = country.Buildings.Sum(b => b.Amount);
+
+            Assert.AreEqual(country.InProgressBuildings.Count, 0);
+            await turnService.EndTurnAsync(context);
+            Assert.IsTrue(country.Buildings.Sum(b => b.Amount) < buildingNumber);
         }
 
         [TestMethod]
@@ -198,7 +280,7 @@ namespace StrategyGame.Tests.Services
             await turnService.EndTurnAsync(context);
 
             Assert.IsTrue(country.Resources.All(r => r.Amount > 50000 -
-                (totalMaintenance.ContainsKey(r.Child) 
+                (totalMaintenance.ContainsKey(r.Child)
                 ? totalMaintenance[r.Child]
                 : 0)));
         }

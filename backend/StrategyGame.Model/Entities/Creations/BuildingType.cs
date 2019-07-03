@@ -27,6 +27,11 @@ namespace StrategyGame.Model.Entities.Creations
         public int MaxCount { get; set; }
 
         /// <summary>
+        /// Gets or sets if the building is a starting building.
+        /// </summary>
+        public bool IsStarting { get; set; }
+
+        /// <summary>
         /// Gets or sets the <see cref="BuildingContent"/> of the building.
         /// </summary>
         public virtual BuildingContent Content { get; set; }

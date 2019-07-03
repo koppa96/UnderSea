@@ -48,6 +48,7 @@ namespace StrategyGame.Bll.Extensions
             // Purge contents
             context.BuildingContents.RemoveRange(context.BuildingContents);
             context.ResearchContents.RemoveRange(context.ResearchContents);
+            context.ResearchContents.RemoveRange(context.ResearchContents);
             context.UnitContents.RemoveRange(context.UnitContents);
             context.EventContents.RemoveRange(context.EventContents);
             context.ResourceContents.RemoveRange(context.ResourceContents);
@@ -127,7 +128,7 @@ namespace StrategyGame.Bll.Extensions
             var mudTCont = new ResearchContent
             {
                 Name = "Iszap traktor",
-                Description = "Iszapozza a korallt (amitől amúgy IRL meghalna, korall nem növény nem kell neki föld), +10% korall termelés",
+                Description = "Iszapozza a korallt, +10% korall termelés",
                 ImageUrl = "images/static/researches/iszaptraktor-lg.png",
                 IconImageUrl = "images/static/researches/iszaptraktor-sm.png"
             };
@@ -166,12 +167,17 @@ namespace StrategyGame.Bll.Extensions
                 ImageUrl = "images/static/researches/alkimia.svg",
                 IconImageUrl = "images/static/researches/alkimia.svg"
             };
+            var setCont = new ResearchContent
+            {
+                Name = "Telepesek",
+                Description = "Telepeseket küld egy messzi régióba, akik új országot alapítanak"
+            };
 
-            context.ResearchContents.AddRange(mudTCont, mudCCont, defCont, attCont, cCont, taxCont);
+            context.ResearchContents.AddRange(mudTCont, mudCCont, defCont, attCont, cCont, taxCont, setCont);
 
             var plagueCont = new EventContent
             {
-                Name = "Pestis",
+                Name = "Buborék-pestis",
                 Description = "Az országodban kitört a pestis, elveszítesz 50 embert és egy áramlásirányítót.",
                 FlavourText = "Hozzátok a halottakat!"
             };
@@ -258,9 +264,16 @@ namespace StrategyGame.Bll.Extensions
             {
                 Name = KnownValues.PopulationChange,
                 Value = 50,
-                Parameter = pearl.Id.ToString() + ":" + 25
+                Parameter = pearl.Id.ToString() + ":" + 25,
+                IsOneTime = false
             };
-            var cp = new Effect { Name = KnownValues.ResourceProductionChange, Value = 200, Parameter = coral.Id.ToString() };
+            var cp = new Effect
+            {
+                Name = KnownValues.ResourceProductionChange,
+                Value = 200,
+                Parameter = coral.Id.ToString(),
+                IsOneTime = false
+            };
             var currentController = new BuildingType
             {
                 Cost = new[] { new BuildingResource { Amount = 1000, Child = stone } },
@@ -270,7 +283,12 @@ namespace StrategyGame.Bll.Extensions
             };
 
             // zátonyvár
-            var bsIn = new Effect { Name = KnownValues.BarrackSpaceChange, Value = 200 };
+            var bsIn = new Effect
+            {
+                Name = KnownValues.BarrackSpaceChange,
+                Value = 200,
+                IsOneTime = false
+            };
             var reefCastle = new BuildingType
             {
                 Cost = new[] { new BuildingResource { Amount = 1000, Child = stone } },
@@ -280,7 +298,13 @@ namespace StrategyGame.Bll.Extensions
             };
 
             // kőbánya
-            var stIn = new Effect { Name = KnownValues.ResourceProductionChange, Value = 200, Parameter = stone.Id.ToString() };
+            var stIn = new Effect
+            {
+                Name = KnownValues.ResourceProductionChange,
+                Value = 200,
+                Parameter = stone.Id.ToString(),
+                IsOneTime = false
+            };
             var stoneMine = new BuildingType
             {
                 Cost = new[] { new BuildingResource { Amount = 1000, Child = stone } },
@@ -290,36 +314,39 @@ namespace StrategyGame.Bll.Extensions
             };
 
             // Iszaptraktor
-            var harvMod1 = new Effect { Name = KnownValues.ResourceProductionModifier, Value = 0.1, Parameter = pearl.Id.ToString() };
+            var harvMod1 = new Effect { Name = KnownValues.ResourceProductionModifier, Value = 0.1, Parameter = pearl.Id.ToString(), IsOneTime = false };
             var mudT = new ResearchType { Cost = new[] { new ResearchResource { Amount = 1000, Child = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = mudTCont };
 
             // Iszapkombájn
-            var harvMod2 = new Effect { Name = KnownValues.ResourceProductionModifier, Value = 0.15, Parameter = pearl.Id.ToString() };
+            var harvMod2 = new Effect { Name = KnownValues.ResourceProductionModifier, Value = 0.15, Parameter = pearl.Id.ToString(), IsOneTime = false };
             var mudC = new ResearchType { Cost = new[] { new ResearchResource { Amount = 1000, Child = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = mudCCont };
 
             // korallfal
-            var defMod1 = new Effect { Name = KnownValues.UnitDefenseModifier, Value = 0.2 };
+            var defMod1 = new Effect { Name = KnownValues.UnitDefenseModifier, Value = 0.2, IsOneTime = false };
             var wall = new ResearchType { Cost = new[] { new ResearchResource { Amount = 1000, Child = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = defCont };
 
             // Szonárágyú
-            var attMod1 = new Effect { Name = KnownValues.UnitAttackModifier, Value = 0.2 };
+            var attMod1 = new Effect { Name = KnownValues.UnitAttackModifier, Value = 0.2, IsOneTime = false };
             var canon = new ResearchType { Cost = new[] { new ResearchResource { Amount = 1000, Child = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = attCont };
 
             // Harcművészet
-            var combModA = new Effect { Name = KnownValues.UnitAttackModifier, Value = 0.1 };
-            var combModD = new Effect { Name = KnownValues.UnitDefenseModifier, Value = 0.1 };
+            var combModA = new Effect { Name = KnownValues.UnitAttackModifier, Value = 0.1, IsOneTime = false };
+            var combModD = new Effect { Name = KnownValues.UnitDefenseModifier, Value = 0.1, IsOneTime = false };
             var martialArts = new ResearchType { Cost = new[] { new ResearchResource { Amount = 1000, Child = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = cCont };
 
             // Alchemy
-            var taxMod1 = new Effect { Name = KnownValues.ResourceProductionModifier, Value = 0.3, Parameter = pearl.Id.ToString() };
+            var taxMod1 = new Effect { Name = KnownValues.ResourceProductionModifier, Value = 0.3, Parameter = pearl.Id.ToString(), IsOneTime = false };
             var alchemy = new ResearchType { Cost = new[] { new ResearchResource { Amount = 1000, Child = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = taxCont };
 
+            // Settlers
+            var settlerEff = new Effect { Name = KnownValues.NewCountryEffect, IsOneTime = true };
+            var settler = new ResearchType { Cost = new[] { new ResearchResource { Amount = 100000, Child = pearl } }, ResearchTime = 30, MaxCompletedAmount = 1, Content = setCont };
 
             // Add effects, buildings, researches
             context.Effects.AddRange(popIn, cp, bsIn, harvMod1, harvMod2,
                 defMod1, attMod1, combModA, combModD, taxMod1, stIn);
             context.BuildingTypes.AddRange(currentController, reefCastle, stoneMine);
-            context.ResearchTypes.AddRange(mudT, mudC, wall, canon, martialArts, alchemy);
+            context.ResearchTypes.AddRange(mudT, mudC, wall, canon, martialArts, alchemy, settler);
             await context.SaveChangesAsync();
 
 
@@ -336,7 +363,8 @@ namespace StrategyGame.Bll.Extensions
                 new ResearchEffect { Parent = canon, Child = attMod1 },
                 new ResearchEffect { Parent = martialArts, Child = combModA },
                 new ResearchEffect { Parent = martialArts, Child = combModD },
-                new ResearchEffect { Parent = alchemy, Child = taxMod1 });
+                new ResearchEffect { Parent = alchemy, Child = taxMod1 },
+                new ResearchEffect { Parent = settler, Child = settlerEff });
             await context.SaveChangesAsync();
 
             // Add units
@@ -485,11 +513,11 @@ namespace StrategyGame.Bll.Extensions
             // Add events
             var plague = new RandomEvent { Content = plagueCont };
             var removeCurrent = new Effect
-            { Parameter = currentController.Id.ToString(), Name = KnownValues.AddRemoveBuildingEffect, Value = -1 };
+            { Parameter = currentController.Id.ToString(), Name = KnownValues.AddRemoveBuildingEffect, Value = -1, IsOneTime = true };
 
             var fire = new RandomEvent { Content = fireCont };
             var removeCastle = new Effect
-            { Parameter = reefCastle.Id.ToString(), Name = KnownValues.AddRemoveBuildingEffect, Value = -1 };
+            { Parameter = reefCastle.Id.ToString(), Name = KnownValues.AddRemoveBuildingEffect, Value = -1, IsOneTime = true };
 
             var mine = new RandomEvent { Content = mineCont };
             var addPearl = new Effect
@@ -513,7 +541,7 @@ namespace StrategyGame.Bll.Extensions
 
             var contentPopulation = new RandomEvent { Content = contPopCont };
             var addCurrent = new Effect
-            { Name = KnownValues.AddRemoveBuildingEffect, Parameter = currentController.Id.ToString(), Value = 1 };
+            { Name = KnownValues.AddRemoveBuildingEffect, Parameter = currentController.Id.ToString(), Value = 1, IsOneTime = true };
             var discontentPopulation = new RandomEvent();
 
             var contentSoldiers = new RandomEvent { Content = contSolCont };
@@ -554,8 +582,6 @@ namespace StrategyGame.Bll.Extensions
                 ScoreResearchMultiplier = 100,
                 ScorePopulationMultiplier = 1,
                 ScoreUnitMultiplier = 5,
-                FirstStartingBuilding = reefCastle,
-                SecondStartingBuilding = currentController,
                 RandomAttackModifier = 0.1
             });
             await context.SaveChangesAsync();
