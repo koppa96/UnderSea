@@ -29,7 +29,7 @@ namespace StrategyGame.Bll.Services.Validators
             RuleFor(d => d.Units).MustAsync(UnitIdsValidAsync)
                 .WithMessage("Invalid unit id.");
 
-            RuleFor(d => d.Units).MustAsync(UnitDetailsValidAsync)
+            RuleFor(d => d.Units).MustAsync(UnitAmountsValidAsync)
                 .WithMessage("Not enough units");
         }
 
@@ -48,7 +48,7 @@ namespace StrategyGame.Bll.Services.Validators
             }).All(x => x.unitType != null);
         }
 
-        public async Task<bool> UnitDetailsValidAsync(IEnumerable<UnitDetails> details, CancellationToken ct = default)
+        public async Task<bool> UnitAmountsValidAsync(IEnumerable<UnitDetails> details, CancellationToken ct = default)
         {
             var country = await _context.Countries.Include(c => c.Commands)
                     .ThenInclude(c => c.Divisions)

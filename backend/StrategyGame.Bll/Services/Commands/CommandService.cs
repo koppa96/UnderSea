@@ -60,19 +60,18 @@ namespace StrategyGame.Bll.Services.Commands
                 var attackingCommand = new Command
                 {
                     TargetCountry = targetCountry,
-                    ParentCountry = country
+                    ParentCountry = country,
+                    Divisions = new List<Division>()
                 };
+
+                _context.Commands.Add(attackingCommand);
 
                 foreach (var detail in details.Units)
                 {
-                    var defendingDivisions = defendingCommand.Divisions.Where(d => d.Unit.Id == detail.UnitId).ToList();
-
-                    TransferUnits(defendingDivisions,
-                        defendingCommand,
-                        new List<Division>(),
-                        attackingCommand,
-                        detail.Amount
-                    );
+                    TransferUnits(defendingCommand, 
+                        attackingCommand, 
+                        detail.UnitId, 
+                        detail.Amount);
                 }
 
                 if (!attackingCommand.Divisions.Any(d => d.Unit is LeaderType && d.Count > 0))
@@ -80,7 +79,6 @@ namespace StrategyGame.Bll.Services.Commands
                     throw new InvalidOperationException("Every attack must contain a leader.");
                 }
 
-                _context.Commands.Add(attackingCommand);
                 await _context.SaveChangesAsync();
                 return ToCommandInfo(attackingCommand, _mapper);
             }
@@ -100,6 +98,11 @@ namespace StrategyGame.Bll.Services.Commands
 
                 if (command == null)
                 {
+                    if (await _context.Commands.AnyAsync(c => c.Id == commandId))
+                    {
+                        throw new UnauthorizedAccessException("Can not modify commands of others.");
+                    }
+
                     throw new ArgumentOutOfRangeException(nameof(commandId), "No command found by the provided ID.");
                 }
 
@@ -114,22 +117,8 @@ namespace StrategyGame.Bll.Services.Commands
                 }
 
                 var defendingCommand = command.ParentCountry.GetAllDefending();
-                foreach (var division in command.Divisions)
-                {
-                    var defendingDivision = defendingCommand.Divisions.SingleOrDefault(d => d.Unit.Id == division.Unit.Id);
-                    if (defendingDivision == null)
-                    {
-                        if (await _context.Commands.AnyAsync(c => c.Id == commandId))
-                        {
-                            throw new UnauthorizedAccessException("Can not modify commands of others.");
-                        }
-
-                        throw new ArgumentOutOfRangeException("Invalid command id.");
-                    }
-
-                    command.MergeInto(command.ParentCountry.GetAllDefending(), _context);
-                    await _context.SaveChangesAsync();
-                }
+                command.MergeInto(defendingCommand, _context);
+                await _context.SaveChangesAsync();
             }
         }
 
@@ -201,14 +190,10 @@ namespace StrategyGame.Bll.Services.Commands
                 foreach (var detail in details.Units)
                 {
                     var attackingDivisions = command.Divisions.Where(d => d.Id == detail.UnitId).ToList();
-                    var defendingDivisions = defendingCommand.Divisions.Where(d => d.Id == detail.UnitId).ToList();
 
-                    TransferUnits(defendingDivisions,
-                        defendingCommand,
-                        attackingDivisions,
-                        command,
-                        detail.Amount - attackingDivisions.Sum(d => d.Count)
-                    );
+                    TransferUnits(defendingCommand, 
+                        command, detail.UnitId, 
+                        detail.Amount - attackingDivisions.Sum(d => d.Count));
                 }
 
                 if (!command.Divisions.Any(d => d.Unit is LeaderType && d.Count > 0))
@@ -221,71 +206,17 @@ namespace StrategyGame.Bll.Services.Commands
             }
         }
 
-        private void TransferUnits(List<Division> from, Command fromCommand, List<Division> to, Command toCommand, int amount)
+        private void TransferUnits(Command from, Command to, int unitId, int amount)
         {
             if (amount < 0)
             {
-                var tmp = from;
-                from = to;
-                to = tmp;
-                var tmp2 = fromCommand;
-                fromCommand = toCommand;
-                toCommand = tmp2;
-
-                amount = -amount;
+                var tmp = to;
+                to = from;
+                from = tmp;
             }
 
-            if (from.Sum(d => d.Count) < amount)
-            {
-                throw new ArgumentException("Not enough units.");
-            }
-
-            int transferred = 0, i = 0;
-            while (transferred + from[i].Count <= amount)
-            {
-                var division = from[i];
-                var toDivision = to.SingleOrDefault(d => d.BattleCount == division.BattleCount);
-
-                if (toDivision == null)
-                {
-                    division.ParentCommand = toCommand;
-                    transferred += division.Count;
-                }
-                else
-                {
-                    toDivision.Count += division.Count;
-                    _context.Divisions.Remove(division);
-                }
-
-                i++;
-            }
-
-            if (transferred < amount)
-            {
-                var splitDivision = from[i];
-                var toDivision = to.SingleOrDefault(d => d.BattleCount == splitDivision.BattleCount);
-
-                if (toDivision == null)
-                {
-                    var newDivision = new Division
-                    {
-                        Unit = splitDivision.Unit,
-                        BattleCount = splitDivision.BattleCount,
-                        Count = amount - transferred,
-                        ParentCommand = toCommand
-                    };
-
-                    splitDivision.Count -= newDivision.Count;
-                    _context.Divisions.Add(newDivision);
-                }
-                else
-                {
-                    var toBeTransferred = amount - transferred;
-                    toDivision.Count += toBeTransferred;
-                    splitDivision.Count -= toBeTransferred;
-                }
-
-            }
+            var takenDivisions = from.TakeFrom(unitId, amount, _context);
+            takenDivisions.MergeInto(to, _context);
         }
 
         public CommandInfo ToCommandInfo(Command command, IMapper mapper)

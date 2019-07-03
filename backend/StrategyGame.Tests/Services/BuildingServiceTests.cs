@@ -45,7 +45,7 @@ namespace StrategyGame.Tests.Services
 
         [TestMethod]
         [DataRow("ThePoor")]
-        [ExpectedException(typeof(InvalidOperationException))]
+        [ExpectedException(typeof(ArgumentException))]
         public async Task TestStartBuildingNoMoney(string username)
         {
             var buildingId = (await context.BuildingTypes.FirstAsync()).Id;

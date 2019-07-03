@@ -206,6 +206,7 @@ namespace StrategyGame.Bll.Extensions
             if (existing == null)
             {
                 division.ParentCommand = target;
+                target.Divisions.Add(division);
             }
             else
             {
@@ -222,12 +223,53 @@ namespace StrategyGame.Bll.Extensions
         /// <param name="context">The database to use to remove the division if necessary.</param>
         public static void MergeInto(this Command command, Command target, UnderSeaDatabaseContext context)
         {
-            foreach (var div in command.Divisions)
+            command.Divisions.MergeInto(target, context);
+            context.Commands.Remove(command);
+        }
+
+        public static void MergeInto(this IEnumerable<Division> divisions, Command target,
+            UnderSeaDatabaseContext context)
+        {
+            foreach (var div in divisions)
             {
                 div.MergeInto(target, context);
             }
+        }
 
-            context.Commands.Remove(command);
+        public static IEnumerable<Division> TakeFrom(this Command command, int unitId, int amount, UnderSeaDatabaseContext context)
+        {
+            var takenDivisions = new List<Division>();
+            var fromDivisions = command.Divisions.Where(d => d.Unit.Id == unitId);
+            if (fromDivisions.Sum(d => d.Count) < amount)
+            {
+                throw new ArgumentException("Not enough units");
+            }
+
+            foreach (var division in fromDivisions)
+            {
+                if (amount >= division.Count)
+                {
+                    division.ParentCommand = null;
+                    takenDivisions.Add(division);
+                    amount -= division.Count;
+                }
+                else
+                {
+                    division.Count -= amount;
+                    var splitDivision = new Division
+                    {
+                        Unit = division.Unit,
+                        BattleCount = division.BattleCount,
+                        Count = amount
+                    };
+
+                    takenDivisions.Add(splitDivision);
+                    context.Divisions.Add(splitDivision);
+                    break;
+                }
+            }
+
+            return takenDivisions;
         }
 
         public static void IncreaseBattleCount(this Command command)
@@ -244,9 +286,9 @@ namespace StrategyGame.Bll.Extensions
             }
         }
 
-        public static void Purchase<TEnity, TConnector>(this Country country, IPurchasable<TEnity, TConnector> purchasable, int count = 1)
-            where TEnity : AbstractEntity<TEnity>
-            where TConnector : AbstractResourceConnector<TEnity>
+        public static void Purchase<TEntity, TConnector>(this Country country, IPurchasable<TEntity, TConnector> purchasable, int count = 1)
+            where TEntity : AbstractEntity<TEntity>
+            where TConnector : AbstractResourceConnector<TEntity>
         {
             foreach (var resource in purchasable.Cost)
             {
