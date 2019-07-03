@@ -3,7 +3,7 @@
 namespace StrategyGame.Model.Entities.Logging
 {
     /// <summary>
-    /// Represents an exception in the UnderSea database.
+    /// Represents an exception log in the UnderSea database.
     /// </summary>
     public class ExceptionLog : AbstractEntity<ExceptionLog>
     {

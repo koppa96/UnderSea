@@ -60,7 +60,7 @@ namespace StrategyGame.Bll.Services.Units
                     .Include(c => c.Buildings)
                         .ThenInclude(b => b.Child)
                             .ThenInclude(b => b.Effects)
-                                .ThenInclude(bf => bf.Effect)
+                                .ThenInclude(bf => bf.Child)
                     .Include(c => c.Researches)
                         .ThenInclude(r => r.Child)
                             .ThenInclude(r => r.Effects)

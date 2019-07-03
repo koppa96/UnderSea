@@ -10,6 +10,9 @@ namespace StrategyGame.Model.Entities.Creations
     /// </summary>
     public class BuildingType : AbstractEntity<BuildingType>, IPurchasable<BuildingType, BuildingResource>
     {
+        /// <summary>
+        /// Gets or sets the costs of the building.
+        /// </summary>
         public ICollection<BuildingResource> Cost { get; set; }
 
         /// <summary>
@@ -18,7 +21,8 @@ namespace StrategyGame.Model.Entities.Creations
         public int BuildTime { get; set; }
 
         /// <summary>
-        /// Gets or sets the maximal count of a building within a single country. 0 means the building can't be built, negative means it may be built unlimited times.
+        /// Gets or sets the maximal count of a building within a single country.
+        /// 0 means the building can't be built, negative means it may be built unlimited times.
         /// </summary>
         public int MaxCount { get; set; }
 

@@ -209,7 +209,7 @@ namespace StrategyGame.Tests.Services
         public async Task TestAllEffect(string username)
         {
             var magicBuilding = new BuildingType
-            { Effects = context.Effects.Select(x => new BuildingEffect { Effect = x }).ToList() };
+            { Effects = context.Effects.Select(x => new BuildingEffect { Child = x }).ToList() };
             context.BuildingTypes.Add(magicBuilding);
 
             var country = await context.Countries

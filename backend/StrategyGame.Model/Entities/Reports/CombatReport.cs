@@ -90,12 +90,15 @@ namespace StrategyGame.Model.Entities.Reports
         /// Gets or sets the total defensepower.
         /// </summary>
         public double TotalDefensePower { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the round when the combat happened.
         /// </summary>
         public ulong Round { get; set; }
 
+        /// <summary>
+        /// Gets or sets the collection of looted resources.
+        /// </summary>
         public ICollection<ReportResource> Loot { get; set; }
     }
 }

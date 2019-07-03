@@ -93,9 +93,10 @@ namespace StrategyGame.Bll.Extensions
             {
                 foreach (var e in country.CurrentEvent.Effects)
                 {
-                    if (!Parsers.TryParse(e.Effect, country, context, builder, doApplyPermanent))
+                    if (!Parsers.TryParse(e.Child, country, context, builder, doApplyPermanent))
                     {
-                        Debug.WriteLine("Event effect with name {0} could not be handled by the provided parsers.", e.Effect.Name);
+                        Debug.WriteLine("Event effect with name {0} could not be handled by the provided parsers.",
+                            e.Child.Name);
                     }
                 }
             }
@@ -104,11 +105,11 @@ namespace StrategyGame.Bll.Extensions
             var effectparents = country.Buildings.Select(b => new
             {
                 count = b.Amount,
-                effects = b.Child.Effects.Select(e => e.Effect)
+                effects = b.Child.Effects.Select(e => e.Child)
             }).Concat(country.Researches.Select(r => new
             {
                 count = r.Amount,
-                effects = r.Child.Effects.Select(e => e.Effect)
+                effects = r.Child.Effects.Select(e => e.Child)
             })).ToList();
 
             foreach (var effectParent in effectparents)

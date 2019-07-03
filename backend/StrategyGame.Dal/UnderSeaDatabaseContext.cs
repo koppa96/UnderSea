@@ -214,29 +214,29 @@ namespace StrategyGame.Dal
 
             //Building - BuildingEffect - Effect
             builder.Entity<BuildingEffect>()
-                .HasOne(be => be.Building)
+                .HasOne(be => be.Parent)
                 .WithMany(b => b.Effects);
 
             builder.Entity<BuildingEffect>()
-                .HasOne(be => be.Effect)
+                .HasOne(be => be.Child)
                 .WithMany(e => e.AffectedBuildings);
 
             //Research - ResearchEffect - Effect
             builder.Entity<ResearchEffect>()
-                .HasOne(re => re.Research)
+                .HasOne(re => re.Parent)
                 .WithMany(r => r.Effects);
 
             builder.Entity<ResearchEffect>()
-                .HasOne(re => re.Effect)
+                .HasOne(re => re.Child)
                 .WithMany(e => e.AffectedResearches);
 
             // RandomEvent - EventEffect - Effect
             builder.Entity<EventEffect>()
-                .HasOne(ee => ee.Event)
+                .HasOne(ee => ee.Parent)
                 .WithMany(e => e.Effects);
 
             builder.Entity<EventEffect>()
-                .HasOne(ee => ee.Effect)
+                .HasOne(ee => ee.Child)
                 .WithMany(e => e.AffectedEvents);
 
             // Country            

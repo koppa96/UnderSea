@@ -246,9 +246,9 @@ namespace StrategyGame.Bll.Extensions
             await context.SaveChangesAsync();
 
             // Resources
-            var coral = new ResourceType { Content = coralCont, StartingAmount = 500, NewCountryCost = 100000 };
-            var pearl = new ResourceType { Content = pearlCont, StartingAmount = 1000, NewCountryCost = 100000 };
-            var stone = new ResourceType { Content = stoneCont, StartingAmount = 1000, NewCountryCost = 100000 };
+            var coral = new ResourceType { Content = coralCont, StartingAmount = 500 };
+            var pearl = new ResourceType { Content = pearlCont, StartingAmount = 1000 };
+            var stone = new ResourceType { Content = stoneCont, StartingAmount = 1000 };
             context.ResourceTypes.AddRange(coral, pearl, stone);
             await context.SaveChangesAsync();
 
@@ -325,18 +325,18 @@ namespace StrategyGame.Bll.Extensions
 
             // Add effects to buildings and researches
             context.BuildingEffects.AddRange(
-                new BuildingEffect { Building = currentController, Effect = popIn },
-                new BuildingEffect { Building = currentController, Effect = cp },
-                new BuildingEffect { Building = reefCastle, Effect = bsIn });
+                new BuildingEffect { Parent = currentController, Child = popIn },
+                new BuildingEffect { Parent = currentController, Child = cp },
+                new BuildingEffect { Parent = reefCastle, Child = bsIn });
 
             context.ResearchEffects.AddRange(
-                new ResearchEffect { Research = mudT, Effect = harvMod1 },
-                new ResearchEffect { Research = mudC, Effect = harvMod2 },
-                new ResearchEffect { Research = wall, Effect = defMod1 },
-                new ResearchEffect { Research = canon, Effect = attMod1 },
-                new ResearchEffect { Research = martialArts, Effect = combModA },
-                new ResearchEffect { Research = martialArts, Effect = combModD },
-                new ResearchEffect { Research = alchemy, Effect = taxMod1 });
+                new ResearchEffect { Parent = mudT, Child = harvMod1 },
+                new ResearchEffect { Parent = mudC, Child = harvMod2 },
+                new ResearchEffect { Parent = wall, Child = defMod1 },
+                new ResearchEffect { Parent = canon, Child = attMod1 },
+                new ResearchEffect { Parent = martialArts, Child = combModA },
+                new ResearchEffect { Parent = martialArts, Child = combModD },
+                new ResearchEffect { Parent = alchemy, Child = taxMod1 });
             await context.SaveChangesAsync();
 
             // Add units
@@ -528,15 +528,15 @@ namespace StrategyGame.Bll.Extensions
 
             // Add event effects
             context.EventEffects.AddRange(
-                new EventEffect { Effect = removeCurrent, Event = plague },
-                new EventEffect { Effect = removeCastle, Event = fire },
-                new EventEffect { Effect = addPearl, Event = mine },
-                new EventEffect { Effect = extraCoral, Event = goodHarvest },
-                new EventEffect { Effect = lessCoral, Event = badHarvest },
-                new EventEffect { Effect = addCurrent, Event = contentPopulation },
-                new EventEffect { Effect = removeCurrent, Event = discontentPopulation },
-                new EventEffect { Effect = addAttack, Event = contentSoldiers },
-                new EventEffect { Effect = removeAttack, Event = discontentSoldiers }
+                new EventEffect { Child = removeCurrent, Parent = plague },
+                new EventEffect { Child = removeCastle, Parent = fire },
+                new EventEffect { Child = addPearl, Parent = mine },
+                new EventEffect { Child = extraCoral, Parent = goodHarvest },
+                new EventEffect { Child = lessCoral, Parent = badHarvest },
+                new EventEffect { Child = addCurrent, Parent = contentPopulation },
+                new EventEffect { Child = removeCurrent, Parent = discontentPopulation },
+                new EventEffect { Child = addAttack, Parent = contentSoldiers },
+                new EventEffect { Child = removeAttack, Parent = discontentSoldiers }
             );
             await context.SaveChangesAsync();
 

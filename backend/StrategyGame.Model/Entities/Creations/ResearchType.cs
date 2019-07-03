@@ -10,6 +10,9 @@ namespace StrategyGame.Model.Entities.Creations
     /// </summary>
     public class ResearchType : AbstractEntity<ResearchType>, IPurchasable<ResearchType, ResearchResource>
     {
+        /// <summary>
+        /// Gets or sets the costs of the research.
+        /// </summary>
         public ICollection<ResearchResource> Cost { get; set; }
 
         /// <summary>
@@ -19,10 +22,8 @@ namespace StrategyGame.Model.Entities.Creations
 
         /// <summary>
         /// Gets or sets the times the research can be completed by a single country.
-        /// </summary>
-        /// <remarks>
         /// 0 means the research can't be completed, negative means it may be completed unlimited times.
-        /// </remarks>
+        /// </summary>
         public int MaxCompletedAmount { get; set; }
 
         /// <summary>
