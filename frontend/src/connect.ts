@@ -1,22 +1,22 @@
 import { App } from "./App";
 import { connect } from "react-redux";
 import { Dispatch, bindActionCreators } from "redux";
-import { GetProfileActionCreator } from "./components/profileContainer/store/actions/profileContainer.get";
 import { DispachedProps, MappedProps } from "./Interface";
 import { IApllicationState } from "./store";
+import { CheckTokenActionCreator } from "./store/actions/CheckToken.get";
 
 const mapStateToProps = (state: IApllicationState): MappedProps => {
-  const { username } = state.app.pages.profile.profile;
+  const { token } = state.app.pages;
   return {
-    serverResponseLogin: username && username.length > 1 ? true : false,
-    loading: state.app.pages.profile.loading
+    serverResponseLogin: token.tokenCheck,
+    loading: token.loading
   };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch): DispachedProps =>
   bindActionCreators(
     {
-      getUserInfo: GetProfileActionCreator
+      getTokenCheck: CheckTokenActionCreator
     },
     dispatch
   );

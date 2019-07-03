@@ -15,8 +15,10 @@ import { LoginCheckConnected } from "./components/LoginCheck/connect";
 export class App extends React.Component<LoginProps> {
   //TODO: Router kiszervezés
   componentDidMount() {
-    this.props.getUserInfo();
+    this.props.getTokenCheck();
+    console.log("Moiuntolva");
     this.setState({ loadingPage: this.props.loading });
+    console.log("this.props.loading", this.props.loading);
   }
   state = {
     mountedMainpage: false,
@@ -37,35 +39,45 @@ export class App extends React.Component<LoginProps> {
             this.state.mountedMainpage ? "bg-image-loggedin" : "bg-image"
           }
         >
-          <Switch>
-            <Route exact path="/">
-              <LoginCheckConnected
-                login={true}
-                serverResponseLogin={serverResponseLogin}
-              >
-                <MainPageConnected mounted={this.mounted} />
-              </LoginCheckConnected>
-            </Route>
-            <Route path="/account">
-              <LoginCheckConnected
-                login={true}
-                serverResponseLogin={serverResponseLogin}
-              >
-                <MainPageConnected mounted={this.mounted} />
-              </LoginCheckConnected>
-            </Route>
-            <Route path="/register" component={Register} />
+          {loading ? (
+            <div className="loading-circle main-loading" />
+          ) : (
+            <Switch>
+              <Route exact path="/">
+                <LoginCheckConnected
+                  login={true}
+                  serverResponseLogin={serverResponseLogin}
+                  loading={loading}
+                >
+                  {loading ? (
+                    <span>BETÖLTÉS...</span>
+                  ) : (
+                    <MainPageConnected mounted={this.mounted} />
+                  )}
+                </LoginCheckConnected>
+              </Route>
+              <Route path="/account">
+                <LoginCheckConnected
+                  login={true}
+                  serverResponseLogin={serverResponseLogin}
+                  loading={loading}
+                >
+                  <MainPageConnected mounted={this.mounted} />)
+                </LoginCheckConnected>
+              </Route>
+              <Route path="/register" component={Register} />
 
-            <Route path="/login">
-              <LoginCheckConnected
-                login={false}
-                serverResponseLogin={serverResponseLogin}
-              >
-                <LoginConnected />
-              </LoginCheckConnected>
-            </Route>
-            <Route component={NotFound} />
-          </Switch>
+              <Route path="/login">
+                <LoginCheckConnected
+                  login={false}
+                  serverResponseLogin={serverResponseLogin}
+                >
+                  <LoginConnected />
+                </LoginCheckConnected>
+              </Route>
+              <Route component={NotFound} />
+            </Switch>
+          )}
         </div>
       </div>
     );

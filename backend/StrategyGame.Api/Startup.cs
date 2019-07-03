@@ -53,7 +53,7 @@ namespace StrategyGame.Api
                 options.Password.RequireNonAlphanumeric = false;
             });
 
-            services.AddHangfire(x => x.UseSqlServerStorage(Configuration.GetConnectionString("DefaultConnection")));
+           // services.AddHangfire(x => x.UseSqlServerStorage(Configuration.GetConnectionString("DefaultConnection")));
             services.AddDbContext<UnderSeaDatabaseContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddDefaultIdentity<User>()
@@ -163,17 +163,17 @@ namespace StrategyGame.Api
             app.UseOpenApi();
             app.UseSwaggerUi3();
 
-            app.UseHangfireServer();
-            app.UseHangfireDashboard();
+           // app.UseHangfireServer();
+           // app.UseHangfireDashboard();
 
             app.UseCors();
             app.UseMvc();
 
             app.UseSignalR(route => route.MapHub<UnderSeaHub>("/hub"));
-
+            
             app.UseStaticFiles();
 
-            RecurringJob.AddOrUpdate<TurnEndingJob>(x => x.EndTurnAsync(), Cron.Hourly);
+          //  RecurringJob.AddOrUpdate<TurnEndingJob>(x => x.EndTurnAsync(), Cron.Hourly);
         }
     }
 }

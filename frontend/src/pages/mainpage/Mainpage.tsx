@@ -34,23 +34,26 @@ export class MainPage extends React.Component<MainPageProps> {
     const connection = new signalR.HubConnectionBuilder()
       .withUrl(BasePortUrl + "hub", {
         accessTokenFactory: async () =>
-          localStorage.getItem("access_token") || "",
-        skipNegotiation: true,
-        transport: signalR.HttpTransportType.WebSockets
+          localStorage.getItem("access_token") || ""
+        // skipNegotiation: true,
+        //  transport: signalR.HttpTransportType.WebSockets
       })
       .configureLogging(signalR.LogLevel.Information)
       .build();
 
+    console.log("----------------------------------------------------------");
+    console.log(connection, "sanyi");
+    console.log("----------------------------------------------------------");
     connection.start().then(function() {
       console.log("connected");
     });
-    connection.on("ReceiveResultsAsync", country => {
-      console.log("Country signalR", country);
-    });
+    // connection.on("ReceiveResultsAsync", country => {
+    //   console.log("Country signalR", country);
+    // });
   }
 
   render() {
-    const { building } = this.props;
+    const { building, loading } = this.props;
     return (
       <>
         <div className="building-img-holder">

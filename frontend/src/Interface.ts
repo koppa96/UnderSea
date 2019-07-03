@@ -1,7 +1,7 @@
 import { ResetAction } from "./store";
 
 export interface DispachedProps {
-  getUserInfo: () => void;
+  getTokenCheck: () => void;
 }
 export interface MappedProps {
   serverResponseLogin: boolean;

@@ -1,6 +1,7 @@
 export interface NativeProps {
   serverResponseLogin: boolean;
   login: boolean;
+  loading?: boolean;
 }
 export interface MappedProps {
   serverToken: boolean;
