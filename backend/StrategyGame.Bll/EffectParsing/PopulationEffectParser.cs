@@ -9,7 +9,7 @@
         /// Initializes a new instance of the <see cref="PopulationEffectParser"/>.
         /// </summary>
         public PopulationEffectParser()
-            : base(KnownValues.PopulationIncrease, (effect, country, context, builder, doApply) =>
+            : base(KnownValues.PopulationChange, (effect, country, context, builder, doApply) =>
             {
                 var pop = (int)effect.Value;
                 builder.Population += pop;

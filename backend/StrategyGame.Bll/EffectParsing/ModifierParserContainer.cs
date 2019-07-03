@@ -28,11 +28,11 @@ namespace StrategyGame.Bll.EffectParsing
                     new ResourceProductionEffectParser(),
                     new ResourceModifierEffectParser(),
                     new PopulationEffectParser(),
-                    new UnitDefenseEffectParser(),
-                    new UnitAttackEffectParser(),
-                    new AddBuildingEffectParser(),
-                    new IncreaseUnitAttackEffectParser(),
-                    new BuildingCoralProductionEffectParser()
+                    new UnitDefenseModifierEffectParser(),
+                    new UnitAttackModifierEffectParser(),
+                    new AddRemoveBuildingEffectParser(),
+                    new UnitAttackChangeEffectParser(),
+                    new BuildingProductionEffectParser()
                 });
         }
 

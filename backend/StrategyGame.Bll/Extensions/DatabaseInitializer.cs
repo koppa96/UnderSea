@@ -252,11 +252,11 @@ namespace StrategyGame.Bll.Extensions
             // áramlásirányító
             var popIn = new Effect
             {
-                Name = KnownValues.PopulationIncrease,
+                Name = KnownValues.PopulationChange,
                 Value = 50,
                 Parameter = pearl.Id.ToString() + ":" + 25
             };
-            var cp = new Effect { Name = KnownValues.ResourceProductionIncrease, Value = 200, Parameter = coral.Id.ToString() };
+            var cp = new Effect { Name = KnownValues.ResourceProductionChange, Value = 200, Parameter = coral.Id.ToString() };
             var currentController = new BuildingType
             {
                 Cost = new[] { new BuildingResource { Amount = 1000, ResourceType = stone } },
@@ -266,7 +266,7 @@ namespace StrategyGame.Bll.Extensions
             };
 
             // zátonyvár
-            var bsIn = new Effect { Name = KnownValues.BarrackSpaceIncrease, Value = 200 };
+            var bsIn = new Effect { Name = KnownValues.BarrackSpaceChange, Value = 200 };
             var reefCastle = new BuildingType
             {
                 Cost = new[] { new BuildingResource { Amount = 1000, ResourceType = stone } },
@@ -276,7 +276,7 @@ namespace StrategyGame.Bll.Extensions
             };
 
             // kőbánya
-            var stIn = new Effect { Name = KnownValues.ResourceProductionIncrease, Value = 200, Parameter = stone.Id.ToString() };
+            var stIn = new Effect { Name = KnownValues.ResourceProductionChange, Value = 200, Parameter = stone.Id.ToString() };
             var stoneMine = new BuildingType
             {
                 Cost = new[] { new BuildingResource { Amount = 1000, ResourceType = stone } },
@@ -481,20 +481,20 @@ namespace StrategyGame.Bll.Extensions
             // Add events
             var plague = new RandomEvent { Content = plagueCont };
             var removeCurrent = new Effect
-            { Parameter = currentController.Id.ToString(), Name = KnownValues.AddBuildingEffect, Value = -1 };
+            { Parameter = currentController.Id.ToString(), Name = KnownValues.AddRemoveBuildingEffect, Value = -1 };
 
             var fire = new RandomEvent { Content = fireCont };
             var removeCastle = new Effect
-            { Parameter = reefCastle.Id.ToString(), Name = KnownValues.AddBuildingEffect, Value = -1 };
+            { Parameter = reefCastle.Id.ToString(), Name = KnownValues.AddRemoveBuildingEffect, Value = -1 };
 
             var mine = new RandomEvent { Content = mineCont };
             var addPearl = new Effect
-            { Value = 1000, Name = KnownValues.ResourceProductionIncrease, Parameter = pearl.Id.ToString() };
+            { Value = 1000, Name = KnownValues.ResourceProductionChange, Parameter = pearl.Id.ToString() };
 
             var goodHarvest = new RandomEvent { Content = goodhvCont };
             var extraCoral = new Effect
             {
-                Name = KnownValues.BuildingProductionIncrease,
+                Name = KnownValues.BuildingProductionChange,
                 Value = 50,
                 Parameter = currentController.Id.ToString() + ";" + coral.Id.ToString()
             };
@@ -502,23 +502,23 @@ namespace StrategyGame.Bll.Extensions
             var badHarvest = new RandomEvent { Content = badhvCont };
             var lessCoral = new Effect
             {
-                Name = KnownValues.BuildingProductionIncrease,
+                Name = KnownValues.BuildingProductionChange,
                 Value = -50,
                 Parameter = currentController.Id.ToString() + ";" + coral.Id.ToString()
             };
 
             var contentPopulation = new RandomEvent { Content = contPopCont };
             var addCurrent = new Effect
-            { Name = KnownValues.AddBuildingEffect, Parameter = currentController.Id.ToString(), Value = 1 };
+            { Name = KnownValues.AddRemoveBuildingEffect, Parameter = currentController.Id.ToString(), Value = 1 };
             var discontentPopulation = new RandomEvent();
 
             var contentSoldiers = new RandomEvent { Content = contSolCont };
             var addAttack = new Effect
-            { Name = KnownValues.IncreaseUnitAttack, Value = 1 };
+            { Name = KnownValues.UnitAttackChange, Value = 1 };
 
             var discontentSoldiers = new RandomEvent { Content = disconSolCont };
             var removeAttack = new Effect
-            { Name = KnownValues.IncreaseUnitAttack, Value = -1 };
+            { Name = KnownValues.UnitAttackChange, Value = -1 };
 
             await context.SaveChangesAsync();
 

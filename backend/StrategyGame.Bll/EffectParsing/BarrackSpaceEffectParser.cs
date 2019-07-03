@@ -9,7 +9,7 @@
         /// Initializes a new instance of the <see cref="BarrackSpaceEffectParser"/>.
         /// </summary>
         public BarrackSpaceEffectParser()
-            : base(KnownValues.BarrackSpaceIncrease, (effect, country, context, builder, doApply)
+            : base(KnownValues.BarrackSpaceChange, (effect, country, context, builder, doApply)
                   => builder.BarrackSpace += (int)effect.Value)
         { }
     }

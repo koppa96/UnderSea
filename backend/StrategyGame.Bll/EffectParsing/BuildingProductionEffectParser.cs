@@ -5,13 +5,13 @@ namespace StrategyGame.Bll.EffectParsing
     /// <summary>
     /// Represents a parser that can parse effects that increases the coral production of a country for every building of a type.
     /// </summary>
-    public class BuildingCoralProductionEffectParser : AbstractEffectModifierParser
+    public class BuildingProductionEffectParser : AbstractEffectModifierParser
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="BuildingCoralProductionEffectParser"/>.
+        /// Initializes a new instance of the <see cref="BuildingProductionEffectParser"/>.
         /// </summary>
-        public BuildingCoralProductionEffectParser()
-            : base(KnownValues.BuildingProductionIncrease, (effect, country, context, builder, doApply) =>
+        public BuildingProductionEffectParser()
+            : base(KnownValues.BuildingProductionChange, (effect, country, context, builder, doApply) =>
             {
                 var split = effect.Parameter.Split(";");
                 int buildingId = int.Parse(split[0]);

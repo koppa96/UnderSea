@@ -9,7 +9,7 @@
         /// Initializes a new instance of the <see cref="ResourceProductionEffectParser"/>.
         /// </summary>
         public ResourceProductionEffectParser()
-            : base(KnownValues.ResourceProductionIncrease, (effect, country, context, builder, doApply) =>
+            : base(KnownValues.ResourceProductionChange, (effect, country, context, builder, doApply) =>
             {
                 long value = (long)effect.Value;
                 var id = int.Parse(effect.Parameter);
