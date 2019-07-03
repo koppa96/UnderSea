@@ -67,6 +67,14 @@ namespace StrategyGame.Bll.Services.TurnHandling
             {
                 country.CurrentEvent = allEvents[rng.Next(allEvents.Count)];
                 country.ApplyOneTime(country.CurrentEvent.Effects.Select(e => e.Child), context, Parsers);
+
+                context.EventReports.Add(new EventReport
+                {
+                    Country = country,
+                    Event = country.CurrentEvent,
+                    IsSeen = false,
+                    Round = globals.Round
+                });
             }
             else if (country.CurrentEvent != null)
             {
@@ -178,7 +186,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
                     {
                         country.Resources.Single(r => r.Child == resource.Key).Amount -= resource.Value;
                     }
-                    
+
                     report.Loot = loots.Select(x => new ReportResource { Amount = x.Value, Child = x.Key }).ToList();
                 }
 

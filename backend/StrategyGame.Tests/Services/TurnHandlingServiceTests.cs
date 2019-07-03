@@ -48,6 +48,9 @@ namespace StrategyGame.Tests.Services
 
             await turnService.EndTurnAsync(context);
 
+            Assert.AreNotEqual(country.CurrentEvent, null);
+            Assert.AreEqual(country.EventReports.Count, 1);
+
             globals.Round = 50;
             globals.RandomEventChance = 0.0;
             await turnService.EndTurnAsync(context);
