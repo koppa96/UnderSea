@@ -140,30 +140,6 @@ namespace StrategyGame.Tests.Services
         }
 
         [TestMethod]
-        [DataRow("TheCommander", "TheRich")]
-        [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public async Task TestAttackWithNotExistingUnits(string attacker, string target)
-        {
-            var targetCountry = await context.Countries.SingleAsync(c => c.ParentUser.UserName == target);
-            var commandDetails = new CommandDetails
-            {
-                TargetCountryId = targetCountry.Id,
-                Units = new List<UnitDetails>
-                {
-                    new UnitDetails
-                    {
-                        UnitId = -1,
-                        Amount = 5
-                    }
-                }
-            };
-
-            await commandService.AttackTargetAsync(attacker,
-                (await context.Countries.FirstAsync(c => c.ParentUser.UserName == attacker)).Id,
-                commandDetails);
-        }
-
-        [TestMethod]
         [DataRow("TheCommander")]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public async Task TestAttackNotExistingTarget(string attacker)
@@ -278,22 +254,6 @@ namespace StrategyGame.Tests.Services
                 commandDetails);
 
             commandDetails.TargetCountryId = -1;
-            await commandService.UpdateCommandAsync(attacker, info.Id, commandDetails);
-        }
-
-        [TestMethod]
-        [DataRow("TheCommander", "TheRich")]
-        [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public async Task TestModifyCommandNotExistingUnit(string attacker, string defender)
-        {
-            var commandDetails = await SetUpValidAttackAsync(attacker, defender);
-            var info = await commandService.AttackTargetAsync(attacker,
-                (await context.Countries.FirstAsync(c => c.ParentUser.UserName == attacker)).Id,
-                commandDetails);
-
-            var firstUnit = commandDetails.Units.First();
-            firstUnit.UnitId = -1;
-
             await commandService.UpdateCommandAsync(attacker, info.Id, commandDetails);
         }
 
