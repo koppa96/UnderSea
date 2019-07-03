@@ -85,7 +85,7 @@
 .bg-image-loggedin {
   min-height: 100vh;
   background-image: url("./assets/images/login-bg.png");
-  background-repeat: no-repeat;
+  background-repeat: repeat-y;
   background-size: cover;
   position: relative;
 }
@@ -116,17 +116,16 @@
 .circle {
   width: 25px;
   height: 25px;
+  cursor: pointer;
+  display: flex;
   background-color: $primary-color;
   border-radius: 50%;
   user-select: none;
   justify-content: center;
   align-items: center;
   > img {
-    width: 80%;
-    height: 80%;
-    margin-right: auto;
-    margin-left: auto;
-    padding-left: 4px;
+    width: 60%;
+    height: 60%;
   }
 }
 .circle:active {

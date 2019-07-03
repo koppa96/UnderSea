@@ -5,6 +5,7 @@ export interface DispachedProps {
 }
 export interface MappedProps {
   serverResponseLogin: boolean;
+  loading: boolean;
 }
 interface NativeProps {}
 

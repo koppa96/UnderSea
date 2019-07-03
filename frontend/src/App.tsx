@@ -16,17 +16,20 @@ export class App extends React.Component<LoginProps> {
   //TODO: Router kiszervezés
   componentDidMount() {
     this.props.getUserInfo();
+    this.setState({ loadingPage: this.props.loading });
   }
   state = {
-    mountedMainpage: false
+    mountedMainpage: false,
+    loadingPage: null
   };
   mounted = (mount: boolean) => {
     this.setState({ mountedMainpage: mount });
   };
 
   render() {
-    const { serverResponseLogin } = this.props;
-    console.log("serverresponselogin", serverResponseLogin);
+    const { serverResponseLogin, loading } = this.props;
+    console.log("loadingPage", this.state.loadingPage);
+    console.log("loading", loading);
     return (
       <div className="App">
         <div
