@@ -161,7 +161,8 @@ namespace StrategyGame.Bll.Services.Country
                 .Select(i => Mapper.Map<UnitType, BriefUnitInfo>(i)).ToListAsync())
                 .ToList();
 
-            info.UnseenReports = country.Attacks.Count(r => !r.IsSeenByAttacker) + country.Defenses.Count(r => !r.IsSeenByDefender);
+            info.UnseenReports = country.Attacks.Count(r => !r.IsSeenByAttacker && !r.IsDeletedByAttacker) + 
+                                 country.Defenses.Count(r => !r.IsSeenByDefender && !r.IsDeletedByDefender);
 
             if (country.CurrentEvent != null)
             {
