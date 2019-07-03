@@ -189,7 +189,7 @@ namespace StrategyGame.Bll.Services.Commands
 
                 foreach (var detail in details.Units)
                 {
-                    var attackingDivisions = command.Divisions.Where(d => d.Id == detail.UnitId).ToList();
+                    var attackingDivisions = command.Divisions.Where(d => d.Unit.Id == detail.UnitId).ToList();
 
                     TransferUnits(defendingCommand, 
                         command, detail.UnitId, 
