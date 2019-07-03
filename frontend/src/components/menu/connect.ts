@@ -1,4 +1,3 @@
-import { bindActionCreators, Dispatch } from "redux";
 import { connect } from "react-redux";
 import { IApllicationState } from "../../store";
 import { Menu } from "./Menu";

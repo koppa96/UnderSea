@@ -1,11 +1,7 @@
 import React from "react";
-import { Menu } from "../../components/menu";
 import { Route, Switch } from "react-router-dom";
-import { Development } from "./development/Development";
-import { TestConnected } from "../gyakorlás/connect";
 import { BuildingsConnected } from "./buildings/connect";
 import { NavBarConnected } from "../../components/navBar/connect";
-import { Attack } from "./attack";
 import { ArmyConnected } from "./army/connect";
 import { MainPageProps } from "./Interface";
 import { RankConnected } from "./rank/connect";
@@ -18,7 +14,6 @@ import Profile from "./Profile/Profile";
 
 import * as signalR from "@aspnet/signalr";
 import { BasePortUrl } from "../..";
-import { Reports } from "./reports/Reports";
 import { MenuConnected } from "../../components/menu/connect";
 import { ReportsConnected } from "./reports/connect";
 
@@ -41,19 +36,16 @@ export class MainPage extends React.Component<MainPageProps> {
       .configureLogging(signalR.LogLevel.Information)
       .build();
 
-    console.log("----------------------------------------------------------");
-    console.log(connection, "sanyi");
-    console.log("----------------------------------------------------------");
     connection.start().then(function() {
-      console.log("connected");
+      console.log("connected SignalR");
     });
     connection.on("ReceiveResultsAsync", country => {
-      console.log("Country signalR", country);
+      this.props.refreshCountryInfo(country);
     });
   }
 
   render() {
-    const { building, loading } = this.props;
+    const { building } = this.props;
     return (
       <>
         <div className="building-img-holder">
@@ -63,7 +55,7 @@ export class MainPage extends React.Component<MainPageProps> {
                 item.count > 0 &&
                 item.imageUrl && (
                   <div key={item.id} className="bg-items-flex">
-                    <img src={BasePortUrl + item.imageUrl} />
+                    <img src={BasePortUrl + item.imageUrl} alt="items" />
                   </div>
                 )
             )}

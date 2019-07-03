@@ -11,8 +11,6 @@ import { registerAxiosConfig } from "../../../../../config/axiosConfig";
 import { BasePortUrl } from "../../../../..";
 
 const beginToAddBuilding = (id: number): Promise<void> | any => {
-  console.log("Beginig buy building", id);
-
   const url = BasePortUrl + "api/Buildings/" + id;
   const instance = axios.create();
   const configured = registerAxiosConfig(instance);
@@ -31,7 +29,6 @@ function* handleAddBuilding(action: IActionRequestAddBuilding) {
     yield put(fetchSucces(action.params));
   } catch (err) {
     if (err) {
-      console.log("Building hiba", err);
       yield put(fetchError("Sajnos valami hiba történt vásárlás közben"));
     } else {
       yield put(fetchError("Ismeretlen hiba"));

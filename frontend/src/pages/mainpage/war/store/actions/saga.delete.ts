@@ -18,19 +18,16 @@ const beginFetchWar = async (id: number) => {
     const response = await configured.delete(
       BasePortUrl + "api/Commands/" + id
     );
-    console.log("war deleted", response);
 
     return response.data;
   } catch (error) {
-    console.log("war delete error", error);
-
     throw new Error(error);
   }
 };
 
 function* handleDelete(action: IActionRequestDeleteWar) {
   try {
-    const data = yield call(beginFetchWar, action.params.id);
+    yield call(beginFetchWar, action.params.id);
     yield put(fetchSucces(action.params));
   } catch (err) {
     if (err) {

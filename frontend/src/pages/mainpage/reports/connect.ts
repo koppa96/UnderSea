@@ -8,7 +8,6 @@ import { PostReportActionCreator } from "./store/actions/ReportAction.post";
 import { DeleteReportActionCreator } from "./store/actions/ReportAction.delete";
 
 const mapStateToProps = (state: IApllicationState): MappedProps => {
-  console.log("reducerben", state.app.pages.reports);
   return {
     reports: state.app.pages.reports
   };

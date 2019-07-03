@@ -12,8 +12,6 @@ import {
 } from "./ReportAction.delete";
 
 const beginToDeleteReport = (id: number): Promise<void> | any => {
-  console.log("Beginig buy building", id);
-
   const url = BasePortUrl + "api/Reports/" + id;
   const instance = axios.create();
   const configured = registerAxiosConfig(instance);

@@ -16,6 +16,7 @@ export interface MappedProps {
 
 export interface DispatchedProps {
   beginFetchMainpage: () => void;
+  refreshCountryInfo: (params: ICountryInfo) => void;
 }
 
 export type MainPageProps = NativeProps & MappedProps & DispatchedProps;

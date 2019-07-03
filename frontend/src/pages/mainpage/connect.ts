@@ -4,6 +4,7 @@ import { MainPage } from "./Mainpage";
 import { connect } from "react-redux";
 import { MappedProps, DispatchedProps } from "./Interface";
 import { MainpageRequestActionCreator } from "./store/actions/MainpageAction.get";
+import { RefreshRequestActionCreator } from "./store/actions/RefreshActions.update";
 
 const mapStateToProps = (state: IApllicationState): MappedProps => ({
   error: state.app.pages.mainpage.error,
@@ -18,7 +19,8 @@ const mapStateToProps = (state: IApllicationState): MappedProps => ({
 const mapDispatchToProps = (dispatch: Dispatch): DispatchedProps =>
   bindActionCreators(
     {
-      beginFetchMainpage: MainpageRequestActionCreator
+      beginFetchMainpage: MainpageRequestActionCreator,
+      refreshCountryInfo: RefreshRequestActionCreator
     },
 
     dispatch

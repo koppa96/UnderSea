@@ -19,7 +19,6 @@ export const TargetReducer = (
         isRequesting: true
       };
     case GetTargetActions.SUCCES:
-      console.log("action.data", action.data);
       return {
         ...state,
         isRequesting: false,

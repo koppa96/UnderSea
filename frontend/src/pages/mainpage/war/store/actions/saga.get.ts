@@ -19,18 +19,14 @@ const beginFetchWar = async () => {
 
   try {
     const response = await configured.get(BasePortUrl + "api/Commands");
-    console.log("war fetched", response.data);
 
     return response.data;
   } catch (error) {
-    console.log("war fetch error", error);
-
     throw new Error(error);
   }
 };
 
 function* handleFetch(action: IRequestActionGetWar) {
-  console.log("SAGA-War");
   try {
     const data: ICommandInfo[] = yield call(beginFetchWar);
     const response: ISuccesParamState = { wars: data };

@@ -61,12 +61,10 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
 
   handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(this.state);
     var validation = false;
 
     validation = this.handleValidation();
 
-    console.log(validation, "validation");
     if (validation) {
       const config = {
         headers: {
@@ -81,9 +79,7 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
         countryName: this.state.model.countryName
       };
       const url = "https://localhost:44355/api/accounts";
-      console.log(requestBody, "requestBody");
       axios.post(url, requestBody, config).catch(error => {
-        console.log(error, "error");
         if (error.response.status === "408") {
           this.setState({ error: "Connection timeout" });
         } else if (error.response.status === "405") {

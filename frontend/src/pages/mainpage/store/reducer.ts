@@ -30,6 +30,10 @@ import {
   IDeleteReportActions,
   DeleteReportActions
 } from "../reports/store/actions/ReportAction.delete";
+import {
+  IRefreshActions,
+  RefreshActions
+} from "./actions/RefreshActions.update";
 
 export const MainpageReducer = (
   state = initialMainpageResponseState,
@@ -42,6 +46,7 @@ export const MainpageReducer = (
     | IDeleteWarActions
     | IPostReportActions
     | IDeleteReportActions
+    | IRefreshActions
 ): MainpageResponseState => {
   switch (action.type) {
     case MainpageActions.REQUEST:
@@ -51,7 +56,6 @@ export const MainpageReducer = (
       };
 
     case MainpageActions.SUCCES:
-      console.log("Mainpage reducer army", action.params.country);
       return {
         ...state,
         loading: false,
@@ -71,7 +75,7 @@ export const MainpageReducer = (
       var tempPearls = state.model && state.model.pearls;
 
       if (devs !== undefined) {
-        tempDev = devs.find(r => r.id == action.data);
+        tempDev = devs.find(r => r.id === action.data);
         if (tempDev !== undefined) {
           devs.forEach(dev => {
             if (tempDev !== undefined)
@@ -150,14 +154,12 @@ export const MainpageReducer = (
                 armyunit.totalCount += unit.count;
                 armyunit.defendingCount += unit.count;
                 costPearl += unit.price * unit.count;
-                console.log(armyunit.totalCount);
               }
             });
           });
         }
         costPearl = state.model.pearls - costPearl;
       }
-      console.log(costPearl);
       return {
         ...state,
         loading: false,
@@ -199,7 +201,6 @@ export const MainpageReducer = (
           }
           newUnits.push(x);
         });
-      console.log("pushed new unit", newUnits);
       return {
         ...state,
         model: state.model
@@ -276,6 +277,21 @@ export const MainpageReducer = (
       return {
         ...state,
         error: action.error ? action.error : "Beállítási hiba"
+      };
+    case RefreshActions.REQUEST:
+      return {
+        ...state,
+        model: action.params
+      };
+    case RefreshActions.SUCCES:
+      return {
+        ...state,
+        model: action.data
+      };
+    case RefreshActions.ERROR:
+      return {
+        ...state,
+        error: action.error ? action.error : "Frissítési hiba"
       };
     default:
       //  const check: never = action.type;

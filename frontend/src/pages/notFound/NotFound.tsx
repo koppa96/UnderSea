@@ -1,6 +1,5 @@
 import React from "react";
 import Wave from "./../../assets/images/wave.svg";
-import { goBack } from "connected-react-router";
 import { Redirect } from "react-router";
 
 export class NotFound extends React.Component {
@@ -12,7 +11,6 @@ export class NotFound extends React.Component {
   };
 
   render() {
-    console.log("redir: " + this.state.redirect);
     return this.state.redirect ? (
       <Redirect to="/" />
     ) : (

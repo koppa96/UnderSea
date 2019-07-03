@@ -29,9 +29,7 @@ export class Rank extends React.Component<RankProps> {
         if (name.startsWith(filter)) {
           filteredrank.push(x);
         }
-        this.setState({ filteredrank: filteredrank }, () =>
-          console.log("filter", this.state.filteredrank)
-        );
+        this.setState({ filteredrank: filteredrank });
       });
     }
   };

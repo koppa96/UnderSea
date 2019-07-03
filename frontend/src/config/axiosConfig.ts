@@ -1,4 +1,4 @@
-import axios, { AxiosStatic, AxiosInstance } from "axios";
+import axios, { AxiosInstance } from "axios";
 import { BasePortUrl } from "..";
 import qs from "qs";
 
@@ -26,7 +26,6 @@ export const registerAxiosConfig = (instance: AxiosInstance) => {
         console.log("oo 2");
         originalRequest._retry = true;
         console.log("Denied request, begin refresh token connect");
-        const refreshToken = localStorage.getItem("refresh_token");
 
         const config = {
           headers: {
@@ -36,8 +35,6 @@ export const registerAxiosConfig = (instance: AxiosInstance) => {
           }
         };
 
-        console.log(localStorage.getItem("refresh_token"), "ez itt");
-
         const requestBody = qs.stringify({
           refresh_token: localStorage.getItem("refresh_token"),
           client_id: "undersea_client",
@@ -46,15 +43,12 @@ export const registerAxiosConfig = (instance: AxiosInstance) => {
           grant_type: "refresh_token"
         });
         const url = BasePortUrl + "connect/token";
-        console.log("oo 3");
         const tokeninstance = axios.create();
-        console.log("oo 4");
 
         tokeninstance
           .post(url, requestBody, config)
           .then(res => {
             console.log(res);
-            console.log("datatatatatata", res.data);
 
             localStorage.setItem("access_token", "Bearer " + res.data.token);
             localStorage.setItem("refresh_token", res.data.refreshToken);
@@ -68,7 +62,6 @@ export const registerAxiosConfig = (instance: AxiosInstance) => {
             console.log(err);
           });
       }
-      console.log("oo utolso");
       return Promise.reject(error);
     }
   );

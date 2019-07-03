@@ -25,13 +25,7 @@ export class Reports extends React.Component<ReportsProps> {
   };
 
   render() {
-    const {
-      error,
-      isRequesting,
-      isLoaded,
-      isPostRequesting,
-      report
-    } = this.props.reports;
+    const { isRequesting, report } = this.props.reports;
     return (
       <div className="main-component reports-width">
         <ComponentHeader title={title} />

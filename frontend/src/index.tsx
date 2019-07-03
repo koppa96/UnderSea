@@ -1,14 +1,11 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
 import ReactDOM from "react-dom";
-import { App } from "./App";
-import axios from "axios";
 import * as serviceWorker from "./serviceWorker";
 import { Provider } from "react-redux";
 import { configureStore } from "./config/ConfigureStore";
 import { createBrowserHistory } from "history";
 import { ConnectedRouter } from "connected-react-router";
-import qs from "qs";
 import { AppConnected } from "./connect";
 
 export const BasePortUrl = "https://localhost:44355/";
@@ -16,13 +13,6 @@ export const BasePortUrl = "https://localhost:44355/";
 const history = createBrowserHistory({ basename: "/" });
 const { store } = configureStore(history);
 
-// codegen({
-
-//   methodNameMode: 'operationId',
-//   source:require('./config/swagger.json'),
-//   outputDir: '.',
-//   useStaticMethod:true
-// });
 ReactDOM.render(
   <Provider store={store}>
     <ConnectedRouter history={history}>

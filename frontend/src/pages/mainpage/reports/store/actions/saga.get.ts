@@ -1,4 +1,4 @@
-import { call, put, takeEvery, all } from "redux-saga/effects";
+import { call, put, takeEvery } from "redux-saga/effects";
 
 import { BasePortUrl } from "../../../../..";
 import axios from "axios";
@@ -18,18 +18,14 @@ export const beginFetchReport = () => {
   return configured
     .get(url)
     .then(response => {
-      console.log(response);
       return response.data;
     })
-    .catch(error => {
-      throw new Error(error);
-    });
+    .catch(error => {});
 };
 
 function* handleFetch(action: IRequestActionGetReport) {
   try {
     const data: ICombatInfo[] = yield call(beginFetchReport);
-    console.log("data", data);
     yield put(GetReportSuccessActionCreator(data));
   } catch (err) {
     if (err) {

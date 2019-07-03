@@ -12,8 +12,7 @@ export class War extends React.Component<WarProps> {
   }
 
   render() {
-    const { war, error, isRequesting } = this.props.totalWar;
-    console.log("itt az összes kirajzoló harc", war);
+    const { war, isRequesting } = this.props.totalWar;
     return (
       <div className="main-component war-component">
         <ComponentHeader title={title} />

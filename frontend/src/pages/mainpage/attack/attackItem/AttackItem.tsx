@@ -35,7 +35,7 @@ export class AttackItem extends React.Component<defendingTrop> {
   };
 
   render() {
-    const { defendingCount, id, imageUrl, name } = this.props;
+    const { defendingCount, imageUrl, name } = this.props;
     const image = imageUrl ? BasePortUrl + imageUrl : QuestionMark;
     return (
       <div className="attack-item">

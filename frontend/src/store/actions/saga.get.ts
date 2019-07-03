@@ -5,12 +5,7 @@ import axios from "axios";
 import { BasePortUrl } from "../..";
 import { registerAxiosConfig } from "../../config/axiosConfig";
 import { AccountsClient } from "../../api/Client";
-import {
-  IRequestActionCheckToken,
-  fetchSucces,
-  fetchError,
-  CheckTokenActions
-} from "./CheckToken.get";
+import { fetchSucces, fetchError, CheckTokenActions } from "./CheckToken.get";
 
 export const beginFetchBuilding = () => {
   const CheckTokenedList = new AccountsClient();
@@ -24,20 +19,16 @@ const beginFetchUser = async () => {
 
   try {
     const response = await configured.get(BasePortUrl + "api/Accounts/me");
-    console.log("profil fetched", response.data);
 
     return response.data;
   } catch (error) {
-    console.log("profil fetch error", error);
-
     throw new Error(error);
   }
 };
 
-function* handleFetch(action: IRequestActionCheckToken) {
-  console.log("SAGA-Profile");
+function* handleFetch() {
   try {
-    const data = yield call(beginFetchUser);
+    yield call(beginFetchUser);
     yield put(fetchSucces());
   } catch (err) {
     if (err) {

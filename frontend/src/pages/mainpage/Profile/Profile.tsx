@@ -60,9 +60,9 @@ export default class Profile extends React.Component {
         newPassword: this.state.password
       };
 
-      const response = await configured
+      await configured
         .post(BasePortUrl + "api/Accounts/me/password", data)
-        .then(response => {
+        .then(() => {
           this.setState({
             error: "Sikeres jelszóváltoztatás",
             password: "",
@@ -70,7 +70,7 @@ export default class Profile extends React.Component {
             oldpw: ""
           });
         })
-        .catch(error => {
+        .catch(() => {
           this.setState({ error: "Hibás régi jelszó!" });
         });
     }

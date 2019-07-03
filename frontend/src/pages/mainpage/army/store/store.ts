@@ -1,4 +1,3 @@
-import { ArmyItemResponse } from "../ArmyItem/Interface";
 import { ArmyInfoWoCount } from "./actions/ArmyActions.get";
 
 export interface ArmyUnit {

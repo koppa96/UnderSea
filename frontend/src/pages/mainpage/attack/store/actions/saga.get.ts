@@ -1,5 +1,5 @@
 import { call, put, takeEvery } from "redux-saga/effects";
-import { AccountsClient, ITargetInfo } from "../../../../../api/Client";
+import { ITargetInfo } from "../../../../../api/Client";
 import {
   fetchSucces,
   IRequestActionGetTarget,
@@ -17,21 +17,16 @@ const beginFetchTargets = async () => {
 
   try {
     const response = await configured.get(BasePortUrl + "api/Accounts");
-    console.log("targets fetched", response.data);
 
     return response.data;
   } catch (error) {
-    console.log("targets fetch error", error);
-
     throw new Error(error);
   }
 };
 
 function* handleGetTargets(action: IRequestActionGetTarget) {
-  console.log("SAGA-Target");
   try {
     const data: ITargetInfo[] = yield call(beginFetchTargets);
-    console.log("fetched targets", data);
     yield put(fetchSucces(data));
   } catch (err) {
     if (err) {

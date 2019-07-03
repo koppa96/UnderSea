@@ -35,8 +35,7 @@ export class Attack extends React.Component<TargetProps> {
         if (lowerc.startsWith(filter)) {
           filtered.push(x);
         }
-        this.setState({ filteredrank: filtered }, () =>
-          console.log("filter", this.state.filteredrank)
+        this.setState({ filteredrank: filtered }
         );
       });
     }

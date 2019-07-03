@@ -61,10 +61,9 @@ function* handleArmyGetUnits(action: IActionGetArmyUnitRequest) {
 function* handleArmyAddUnits(action: IActionAddArmyUnitRequest) {
   const params = action.params;
   try {
-    const response = yield call(beginAddUnits, action.params.unitsToAdd);
+    yield call(beginAddUnits, action.params.unitsToAdd);
     yield put(fetchSuccess(params));
   } catch (err) {
-    console.log(err);
     const ErrorMEssage: string = "Sajnos valami hiba történt vásárlás közben";
 
     yield put(fetchError(ErrorMEssage));

@@ -2,7 +2,6 @@ import React from "react";
 import { BasePortUrl } from "../../../..";
 import { ArmyInfoWoCount } from "../store/actions/ArmyActions.get";
 import QuestionMark from "./../../../../assets/images/question.svg";
-import { number } from "prop-types";
 
 interface ArmyProps {
   unit: ArmyInfoWoCount;

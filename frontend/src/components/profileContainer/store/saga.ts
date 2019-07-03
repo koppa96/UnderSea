@@ -23,18 +23,14 @@ const beginFetchUser = async () => {
 
   try {
     const response = await configured.get(BasePortUrl + "api/Accounts/me");
-    console.log("profil fetched", response.data);
 
     return response.data;
   } catch (error) {
-    console.log("profil fetch error", error);
-
     throw new Error(error);
   }
 };
 
 function* handleFetch(action: IRequestActionGetProfile) {
-  console.log("SAGA-Profile");
   try {
     const data: IUserInfo = yield call(beginFetchUser);
     const response: ISuccesParamState = { profile: data };

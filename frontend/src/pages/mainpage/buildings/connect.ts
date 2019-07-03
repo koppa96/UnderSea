@@ -4,7 +4,6 @@ import { Dispatch, bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { Buildings } from "./Buildings";
 import { GetBuildingActionCreator } from "./store/actions/BuildingAction.get";
-import { ICreationInfo } from "../../../api/Client";
 import { BuildingAddActionCreator } from "./store/actions/BuildingAction.post";
 
 const mapStateToProps = (state: IApllicationState): MappedProps => {

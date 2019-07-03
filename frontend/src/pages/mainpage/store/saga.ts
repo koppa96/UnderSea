@@ -6,7 +6,7 @@ import {
   fetchError,
   MainpageActions
 } from "./actions/MainpageAction.get";
-import { CountryClient, CountryInfo, ICountryInfo } from "../../../api/Client";
+import { ICountryInfo } from "../../../api/Client";
 import { registerAxiosConfig } from "../../../config/axiosConfig";
 
 import axios from "axios";
@@ -17,12 +17,9 @@ const beginToFetchMainpage = async () => {
 
   try {
     const response = await configured.get(BasePortUrl + "api/Country");
-    console.log("war fetched", response.data);
 
     return response.data;
   } catch (error) {
-    console.log("war fetch error", error);
-
     throw new Error(error);
   }
 };

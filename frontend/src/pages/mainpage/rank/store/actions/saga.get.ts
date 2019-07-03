@@ -18,18 +18,14 @@ const beginFetchRank = async () => {
 
   try {
     const response = await configured.get(BasePortUrl + "api/Accounts/ranked");
-    console.log("rank fetched", response.data);
 
     return response.data;
   } catch (error) {
-    console.log("rank fetch error", error);
-
     throw new Error(error);
   }
 };
 
 function* handleFetch(action: IRequestActionGetRank) {
-  console.log("SAGA-RANK");
   try {
     const data: IRankInfo[] = yield call(beginFetchRank);
     const response: ISuccesParamState = { ranks: data };

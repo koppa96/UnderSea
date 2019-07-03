@@ -1,5 +1,5 @@
 import * as React from "react";
-import { LogCheckProps, LoginCheckInterface } from "./Interface";
+import { LogCheckProps } from "./Interface";
 import { Redirect } from "react-router";
 
 export class LoginCheck extends React.Component<LogCheckProps> {

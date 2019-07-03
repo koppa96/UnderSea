@@ -12,7 +12,6 @@ import {
 } from "./ReportAction.post";
 
 const beginToSeenReport = (id: number): Promise<void> | any => {
-  console.log("Beginig buy building", id);
 
   const url = BasePortUrl + "api/Reports/seen/" + id;
   const instance = axios.create();

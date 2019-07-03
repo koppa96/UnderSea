@@ -20,7 +20,6 @@ export const WarReducer = (
         isRequesting: true
       };
     case GetWarActions.SUCCES:
-      console.log("action.param.war", action.data.wars);
       return {
         ...state,
         isRequesting: false,

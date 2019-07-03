@@ -1,7 +1,4 @@
 import { ICountryInfo } from "../../../api/Client";
-import { combineReducers } from "redux";
-import { BuildingState, RequestBuildingParams } from "../buildings/store/store";
-import { BuildingReducer } from "../buildings/store/reducer";
 
 //STATE
 export interface MainpageResponseState {

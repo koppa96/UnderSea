@@ -6,7 +6,6 @@ import { BuildingProps } from "./Interface";
 export class Buildings extends React.Component<BuildingProps> {
   componentDidMount() {
     document.title = title;
-    console.log("Building mounted");
     if (!this.props.ownedBuildingState.isLoaded) {
       this.props.getAllBuilding();
     }
@@ -22,8 +21,6 @@ export class Buildings extends React.Component<BuildingProps> {
     const currentValue = e.currentTarget.value;
     const { count, ownedBuildingState, totalpearl } = this.props;
     const sendBuilding = count.find(x => x.id === +currentValue);
-
-    console.log("Kiválasztott épület: ", sendBuilding);
 
     const checkMoney = ownedBuildingState.buildings.find(
       item => item.id === +currentValue
@@ -42,21 +39,17 @@ export class Buildings extends React.Component<BuildingProps> {
   beginAddBuilding() {
     const { addBuilding, ownedBuildingState, totalpearl } = this.props;
     const costOfBuilding = ownedBuildingState.buildings.find(
-      item => item.id == this.state.id
+      item => item.id === this.state.id
     );
 
-    console.log(costOfBuilding, "costofBuiilding undefined");
-    console.log(costOfBuilding && costOfBuilding.cost, "costofBuiilding cost");
-
     if (costOfBuilding && costOfBuilding.cost <= totalpearl) {
-      console.log("eljutottam ide");
       addBuilding({ id: this.state.id, cost: costOfBuilding.cost });
     }
   }
 
   render() {
-    const { addBuilding, ownedBuildingState, totalpearl, count } = this.props;
-    const error = ownedBuildingState.error && ownedBuildingState.error;
+    const { ownedBuildingState, count } = this.props;
+    // const error = ownedBuildingState.error && ownedBuildingState.error;
 
     const tempProgress = count.find(item => item.inProgress === true);
 

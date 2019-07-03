@@ -9,9 +9,6 @@ import { DispatchedProps, MappedProps, defendingTrop } from "./interface";
 const mapStateToProps = (state: IApllicationState): MappedProps => {
   const { model } = state.app.pages.mainpage;
   const tempUnit = model ? model.armyInfo : [];
-  console.log("model.armyInfo:", model && model.armyInfo);
-  console.log("tempUnit check", tempUnit);
-  console.log("target: ", state.app.pages.target.targets);
   var addUnit: defendingTrop[] = [];
   tempUnit &&
     tempUnit.forEach(item =>

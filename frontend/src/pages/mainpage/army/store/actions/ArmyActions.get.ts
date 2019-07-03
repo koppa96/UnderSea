@@ -1,5 +1,3 @@
-import { ArmyItemResponse } from "../../ArmyItem/Interface";
-
 export interface ArmyInfoWoCount {
   id: number;
   name: string;

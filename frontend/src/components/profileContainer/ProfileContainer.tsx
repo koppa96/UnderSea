@@ -11,7 +11,6 @@ export class ProfileContainer extends React.Component<ProfileProps> {
 
   render = () => {
     const { profile } = this.props.profile;
-    console.log("profile container rendered");
     return (
       <div className="profile-bg">
         <div className="rectangle">

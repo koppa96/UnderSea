@@ -1,5 +1,4 @@
-import { IBriefCreationInfo, ICreationInfo } from "../../../../api/Client";
-import { DevelpomentDescription } from "../Interface";
+import { ICreationInfo } from "../../../../api/Client";
 
 export interface DevelopmentState {
   isPostRequesting: boolean;

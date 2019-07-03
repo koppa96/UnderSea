@@ -11,7 +11,6 @@ import { BasePortUrl } from "../../../../..";
 import { registerAxiosConfig } from "../../../../../config/axiosConfig";
 
 export const beginToAddResearch = (id: number): Promise<void> => {
-  console.log(id, "elkezdtem, a fejlesztést");
   const url = BasePortUrl + "api/Researches/" + id;
   const instance = axios.create();
   const configured = registerAxiosConfig(instance);

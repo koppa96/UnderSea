@@ -5,10 +5,8 @@ import {
   fetchSucces,
   IRequestActionGetBuilding,
   fetchError,
-  GetBuildingActions,
-  IGetBuildingRespone
+  GetBuildingActions
 } from "./BuildingAction.get";
-import { BuildingsClient, ICreationInfo } from "../../../../../api/Client";
 import { registerAxiosConfig } from "../../../../../config/axiosConfig";
 import { BasePortUrl } from "../../../../..";
 
@@ -18,12 +16,9 @@ const beginFetchBuilding = async () => {
 
   try {
     const response = await configured.get(BasePortUrl + "api/Buildings");
-    console.log("buildings fetched", response.data);
 
     return response.data;
   } catch (error) {
-    console.log("buildings fetch error", error);
-
     throw new Error(error);
   }
 };

@@ -64,13 +64,13 @@ export const ReportReducer = (
         ...state
       };
     case DeleteReportActions.SUCCES:
-      var tempReport: ICombatInfo[] = state.report.filter(
+      var deleteReport: ICombatInfo[] = state.report.filter(
         item => item.id !== action.data.id
       );
 
       return {
         ...state,
-        report: [...tempReport]
+        report: [...deleteReport]
       };
     case DeleteReportActions.ERROR:
       return {

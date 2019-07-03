@@ -15,7 +15,6 @@ export const ProfileReducer = (
         loading: true
       };
     case GetProfileActions.SUCCES:
-      console.log("action.param.building", action.params.profile);
       return {
         ...state,
         loading: false,
