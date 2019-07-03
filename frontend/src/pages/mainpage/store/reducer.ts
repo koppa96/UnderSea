@@ -73,15 +73,22 @@ export const MainpageReducer = (
         state.model && state.model.researches && state.model.researches;
       var tempDev: BriefCreationInfo | undefined;
       var tempPearls = state.model && state.model.pearls;
-
+     
+      var tmpdevs: BriefCreationInfo[] = [];
       if (devs !== undefined) {
         tempDev = devs.find(r => r.id === action.data);
+       
         if (tempDev !== undefined) {
-          devs.forEach(dev => {
-            if (tempDev !== undefined)
+         
+          devs.map(dev => {
+           
+            if (tempDev !== undefined) {
+           
               if (dev.id === tempDev.id) {
                 dev.inProgressCount = 1;
               }
+              tmpdevs.push(dev);
+            }
           });
         }
         if (tempPearls && tempDev !== undefined) {
@@ -89,13 +96,14 @@ export const MainpageReducer = (
           tempPearls -= 1000;
         }
       }
+     
       return {
         ...state,
         loading: false,
         model: state.model
           ? {
               ...state.model,
-              researches: devs,
+              researches: [...tmpdevs],
               pearls: tempPearls ? tempPearls : 0
             }
           : undefined

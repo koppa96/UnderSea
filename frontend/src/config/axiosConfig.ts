@@ -21,11 +21,9 @@ export const registerAxiosConfig = (instance: AxiosInstance) => {
     },
     async function(error) {
       const originalRequest = error.config;
-      console.log("oo 1");
+
       if (error.response.status === 401 && !originalRequest._retry) {
-        console.log("oo 2");
         originalRequest._retry = true;
-        console.log("Denied request, begin refresh token connect");
 
         const config = {
           headers: {

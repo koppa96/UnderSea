@@ -51,7 +51,7 @@ export class Development extends React.Component<DevelopmentProps> {
                   type="radio"
                   name="select"
                   onChange={e => {
-                    this.setState({ id: e.target.value });
+                    this.setState({ id: +e.target.value });
                     this.props.totalResourcesDesc.forEach(dev => {
                       if (+e.target.value === dev.id) {
                         if (dev.count > 0) {
@@ -61,7 +61,6 @@ export class Development extends React.Component<DevelopmentProps> {
                         }
                       }
                     });
-                    console.log(this.completed);
                   }}
                 />
                 <DevelopmentItem
