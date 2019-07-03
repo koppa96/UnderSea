@@ -8,10 +8,14 @@ import {
   IDeleteWarActions,
   DeleteWarActions
 } from "./actions/WarAction.delete";
+import {
+  RefreshActions,
+  IRefreshActions
+} from "../../store/actions/RefreshActions.update";
 
 export const WarReducer = (
   state = WarInitialState,
-  action: IWarActions | IPostTargetActions | IDeleteWarActions
+  action: IWarActions | IPostTargetActions | IDeleteWarActions | IRefreshActions
 ): WarState => {
   switch (action.type) {
     case GetWarActions.REQUEST:
@@ -63,6 +67,20 @@ export const WarReducer = (
         ...state,
         isPostRequesting: false,
         war: state.war.filter(item => item.id !== action.data.id)
+      };
+    case RefreshActions.REQUEST:
+      return {
+        ...state,
+        isLoaded: false
+      };
+    case RefreshActions.SUCCES:
+      return {
+        ...state
+      };
+    case RefreshActions.ERROR:
+      return {
+        ...state,
+        error: action.error ? action.error : "Frissítési hiba"
       };
     default:
       const check: never = action;

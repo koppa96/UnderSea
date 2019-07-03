@@ -24,5 +24,3 @@ export const initialMainpageResponseState: MainpageResponseState = {
     researches: []
   }
 };
-
-//REDUCER

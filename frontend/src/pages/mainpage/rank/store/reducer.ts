@@ -1,9 +1,13 @@
 import { IRankActions, GetRankActions } from "./actions/RankAction.get";
 import { rankInitialState, RankState } from "./store";
+import {
+  RefreshActions,
+  IRefreshActions
+} from "../../store/actions/RefreshActions.update";
 
 export const RankReducer = (
   state = rankInitialState,
-  action: IRankActions
+  action: IRankActions | IRefreshActions
 ): RankState => {
   switch (action.type) {
     case GetRankActions.REQUEST:
@@ -25,7 +29,20 @@ export const RankReducer = (
         isLoaded: true,
         error: action.params ? action.params : "Ismeretlen hiba"
       };
-
+    case RefreshActions.REQUEST:
+      return {
+        ...state,
+        isLoaded: false
+      };
+    case RefreshActions.SUCCES:
+      return {
+        ...state
+      };
+    case RefreshActions.ERROR:
+      return {
+        ...state,
+        error: action.error ? action.error : "Frissítési hiba"
+      };
     default:
       const check: never = action;
       return state;

@@ -4,10 +4,14 @@ import {
   IAddBuildingActions,
   AddBuildingActions
 } from "./actions/BuildingAction.post";
+import {
+  RefreshActions,
+  IRefreshActions
+} from "../../store/actions/RefreshActions.update";
 
 export const BuildingReducer = (
   state = buildingInitialState,
-  action: IGetActions | IAddBuildingActions
+  action: IGetActions | IAddBuildingActions | IRefreshActions
 ): BuildingState => {
   switch (action.type) {
     case GetBuildingActions.REQUEST:
@@ -45,6 +49,20 @@ export const BuildingReducer = (
         ...state,
         isPostRequesting: false,
         error: action.error ? action.error : "Ismeretlen hiba beállításnál"
+      };
+    case RefreshActions.REQUEST:
+      return {
+        ...state,
+        isLoaded: false
+      };
+    case RefreshActions.SUCCES:
+      return {
+        ...state
+      };
+    case RefreshActions.ERROR:
+      return {
+        ...state,
+        error: action.error ? action.error : "Frissítési hiba"
       };
     default:
       const check: never = action;

@@ -7,10 +7,14 @@ import {
   IPostTargetActions,
   PostAttackActions
 } from "./actions/AddAttackAction.post";
+import {
+  IRefreshActions,
+  RefreshActions
+} from "../../store/actions/RefreshActions.update";
 
 export const TargetReducer = (
   state = targetInitialState,
-  action: ITargetActions | IPostTargetActions
+  action: ITargetActions | IPostTargetActions | IRefreshActions
 ): TargetState => {
   switch (action.type) {
     case GetTargetActions.REQUEST:
@@ -52,6 +56,20 @@ export const TargetReducer = (
         ...state,
         isPostRequesting: false,
         error: action.error ? action.error : "Ismeretlen hiba beállításnál"
+      };
+    case RefreshActions.REQUEST:
+      return {
+        ...state,
+        isLoaded: false
+      };
+    case RefreshActions.SUCCES:
+      return {
+        ...state
+      };
+    case RefreshActions.ERROR:
+      return {
+        ...state,
+        error: action.error ? action.error : "Frissítési hiba"
       };
     default:
       const check: never = action;

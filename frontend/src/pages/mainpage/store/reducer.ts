@@ -285,8 +285,7 @@ export const MainpageReducer = (
       };
     case RefreshActions.SUCCES:
       return {
-        ...state,
-        model: action.data
+        ...state
       };
     case RefreshActions.ERROR:
       return {
@@ -294,7 +293,7 @@ export const MainpageReducer = (
         error: action.error ? action.error : "Frissítési hiba"
       };
     default:
-      //  const check: never = action.type;
+      // const check: never = action.type;
       return state;
   }
 };

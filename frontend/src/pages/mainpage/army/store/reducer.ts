@@ -4,10 +4,14 @@ import {
   IGetActions,
   ArmyActions as getArmyActions
 } from "./actions/ArmyActions.get";
+import {
+  RefreshActions,
+  IRefreshActions
+} from "../../store/actions/RefreshActions.update";
 
 export const ArmyReducer = (
   state = ArmyInitialState,
-  action: IArmyActions | IGetActions
+  action: IArmyActions | IGetActions | IRefreshActions
 ): ArmyState => {
   switch (action.type) {
     case ArmyActions.REQUEST:
@@ -53,6 +57,20 @@ export const ArmyReducer = (
         isRequesting: false,
         isLoaded: true,
         error: action.reason
+      };
+    case RefreshActions.REQUEST:
+      return {
+        ...state,
+        isLoaded: false
+      };
+    case RefreshActions.SUCCES:
+      return {
+        ...state
+      };
+    case RefreshActions.ERROR:
+      return {
+        ...state,
+        error: action.error ? action.error : "Frissítési hiba"
       };
     default:
       const check: never = action;
