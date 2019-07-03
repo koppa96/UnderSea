@@ -213,6 +213,7 @@ namespace StrategyGame.Bll.Services.Commands
                 var tmp = to;
                 to = from;
                 from = tmp;
+                amount = -amount;
             }
 
             var takenDivisions = from.TakeFrom(unitId, amount, _context);
