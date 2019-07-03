@@ -82,5 +82,7 @@ namespace StrategyGame.Model.Entities
         /// Gets the collection of combat reports about defensive actions of the country.
         /// </summary>
         public virtual ICollection<CombatReport> Defenses { get; set; }
+
+        public ICollection<EventReport> EventReports { get; set; }
     }
 }

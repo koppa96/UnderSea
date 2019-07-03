@@ -146,6 +146,8 @@ namespace StrategyGame.Dal
 
         public DbSet<UnitResource> UnitResources { get; set; }
 
+        public DbSet<EventReport> EventReports { get; set; }
+
         #endregion
 
         /// <summary>
@@ -160,9 +162,18 @@ namespace StrategyGame.Dal
         /// <summary>
         /// Configures the model of the database.
         /// </summary>
-        /// <param name="Builder">The <see cref="ModelBuilder"/> to use.</param>
+        /// <param name="builder">The <see cref="ModelBuilder"/> to use.</param>
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            // Event reports
+            builder.Entity<EventReport>()
+                .HasOne(r => r.Country)
+                .WithMany(c => c.EventReports);
+
+            builder.Entity<EventReport>()
+                .HasOne(r => r.Event)
+                .WithMany(e => e.EventReports);
+
             // Resources
             builder.Entity<ResourceType>()
                 .HasOne(r => r.Content)

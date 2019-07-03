@@ -1,6 +1,7 @@
 ﻿using StrategyGame.Model.Entities.Effects;
 using StrategyGame.Model.Entities.Frontend;
 using System.Collections.Generic;
+using StrategyGame.Model.Entities.Reports;
 
 namespace StrategyGame.Model.Entities
 {
@@ -23,5 +24,7 @@ namespace StrategyGame.Model.Entities
         /// Gets or sets the collection of countries that have this effect currently.
         /// </summary>
         public virtual ICollection<Country> ParentCountries { get; set; }
+
+        public ICollection<EventReport> EventReports { get; set; }
     }
 }
