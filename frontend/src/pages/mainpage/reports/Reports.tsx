@@ -2,8 +2,10 @@ import React from "react";
 import { ComponentHeader } from "../../../components/componentHeader";
 import { ReportsProps } from "./Interface";
 import { ICombatInfo } from "./store/actions/ReportAction.get";
-
 import Deletemark from "./../../../assets/images/x.svg";
+import Shield from "./../../../assets/images/shield.svg";
+import Sword from "./../../../assets/images/sword.svg";
+
 export class Reports extends React.Component<ReportsProps> {
   componentDidMount() {
     document.title = title;
@@ -33,6 +35,7 @@ export class Reports extends React.Component<ReportsProps> {
           {isRequesting ? (
             <span>Betöltés...</span>
           ) : (
+            report &&
             report.map(item => (
               <div key={item.id} className="report-container">
                 <div
@@ -76,6 +79,11 @@ export class Reports extends React.Component<ReportsProps> {
                   {this.state.openId === item.id && (
                     <>
                       <div className="report-info">
+                        {item.isAttack ? (
+                          <img src={Sword} />
+                        ) : (
+                          <img src={Shield} />
+                        )}
                         <div>
                           <span className="report-units">Egységeid</span>
                           {item.yourUnits ? (

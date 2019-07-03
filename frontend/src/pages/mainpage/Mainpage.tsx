@@ -16,6 +16,7 @@ import * as signalR from "@aspnet/signalr";
 import { BasePortUrl } from "../..";
 import { MenuConnected } from "../../components/menu/connect";
 import { ReportsConnected } from "./reports/connect";
+import { Modal } from "reactstrap";
 
 export class MainPage extends React.Component<MainPageProps> {
   componentWillUnmount() {
@@ -44,8 +45,16 @@ export class MainPage extends React.Component<MainPageProps> {
     });
   }
 
+  state = {
+    showPopup: false
+  };
+  togglePopup = () => {
+    this.setState({
+      showPopup: !this.state.showPopup
+    });
+  };
   render() {
-    const { building } = this.props;
+    const { building, event } = this.props;
     return (
       <>
         <div className="building-img-holder">
@@ -66,7 +75,9 @@ export class MainPage extends React.Component<MainPageProps> {
             <div className="side-menu">
               <MenuConnected />
               <div>
-                <ProfileContainerConnected />
+                <ProfileContainerConnected
+                  togglePopup={() => this.togglePopup()}
+                />
                 <div>
                   <img className="main-wave" src={Wave} alt="wave" />
                   <h3 className="undersea-font-mainpage">UNDERSEA</h3>
@@ -100,6 +111,26 @@ export class MainPage extends React.Component<MainPageProps> {
                   <Profile />
                 </Route>
               </Switch>
+
+              <Modal
+                className="main-component"
+                contentClassName="main-component"
+                isOpen={this.state.showPopup}
+                toggle={() => this.togglePopup()}
+              >
+                <div className="popup">
+                  <h1>Hoppá!</h1>
+                  <h2>{event && event.name ? event.name : "Titok"}</h2>
+                  <span>
+                    {event && event.description
+                      ? event.description
+                      : "Mi lehet a leírás?"}
+                  </span>
+                  <span>
+                    {event && event.flavourtext ? event.flavourtext : null}
+                  </span>
+                </div>
+              </Modal>
             </main>
           </div>
         </div>

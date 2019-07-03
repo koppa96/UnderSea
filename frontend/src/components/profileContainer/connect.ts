@@ -7,7 +7,11 @@ import { DispachedProps, MappedProps } from "./Interface";
 
 const mapStateToProps = (state: IApllicationState): MappedProps => {
   return {
-    profile: state.app.pages.profile
+    profile: state.app.pages.profile,
+    event:
+      state.app.pages.mainpage.model && state.app.pages.mainpage.model.event
+        ? true
+        : false
   };
 };
 

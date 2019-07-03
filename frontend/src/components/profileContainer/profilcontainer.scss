@@ -1,6 +1,7 @@
 $local-profilrect-size: 96px;
 
 .profile-bg {
+  position: relative;
   flex: 1;
   background-color: white;
   border-radius: 16px;
@@ -12,6 +13,25 @@ $local-profilrect-size: 96px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  .popup-bg {
+    background-color: rgba(#63626200, $alpha: 0);
+  }
+  > p {
+    z-index: 10;
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-size: 27px;
+    user-select: none;
+    text-align: center;
+    border-radius: 50%;
+    width: 40px;
+    cursor: pointer;
+    height: 40px;
+    background-color: red;
+    color: whitesmoke;
+    box-shadow: 0 0 3px rgb(243, 68, 68);
+  }
 
   div {
     margin-bottom: 22px;

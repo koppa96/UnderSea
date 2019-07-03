@@ -11,8 +11,11 @@ export class ProfileContainer extends React.Component<ProfileProps> {
 
   render = () => {
     const { profile } = this.props.profile;
+    const { event } = this.props;
     return (
       <div className="profile-bg">
+        {event && <p onClick={() => this.props.togglePopup()}>+</p>}
+
         <div className="rectangle">
           <Link to="/">
             <img alt="profile" src={BasePortUrl + profile.profileImageUrl} />
