@@ -10,7 +10,7 @@ namespace StrategyGame.Model.Entities
     /// <typeparam name="TConnector">The connector between the entity and a <see cref="ResourceType"/>.</typeparam>
     public interface IPurchasable<TEntity, TConnector>
         where TEntity : AbstractEntity<TEntity>
-        where TConnector : AbstractConnectorWithAmount<TEntity, ResourceType>
+        where TConnector : ConnectorWithAmount<TEntity, ResourceType>
     {
         /// <summary>
         /// Gets or sets the collection of resources the entity costs.

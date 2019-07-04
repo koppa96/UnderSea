@@ -1,6 +1,5 @@
 ﻿using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
-using StrategyGame.Model.Entities.Effects;
 using System;
 
 namespace StrategyGame.Bll.EffectParsing

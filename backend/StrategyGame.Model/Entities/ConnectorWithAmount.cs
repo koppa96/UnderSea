@@ -1,17 +1,17 @@
 ﻿namespace StrategyGame.Model.Entities
 {
     /// <summary>
-    /// Provides a connector between two entities, and stores a countdown until the relationship exists.
+    /// Provides a connector between two entities, and stores the amount of <see cref="TChild"/> entities in the relation.
     /// </summary>
     /// <typeparam name="TParent">The type of the parent entity.</typeparam>
     /// <typeparam name="TChild">The type of the child entity</typeparam>
-    public abstract class AbstractConnectorWithProgress<TParent, TChild> : AbstractConnector<TParent, TChild>
+    public class ConnectorWithAmount<TParent, TChild> : Connector<TParent, TChild>
         where TParent : AbstractEntity<TParent>
         where TChild : AbstractEntity<TChild>
     {
         /// <summary>
-        /// Gets or sets the time until the relationships exists.
+        /// Gets or sets the amount in of <see cref="TChild"/>ren in the relation.
         /// </summary>
-        public int TimeLeft { get; set; }
+        public long Amount { get; set; }
     }
 }

@@ -18,8 +18,9 @@ namespace StrategyGame.Bll.EffectParsing
             {
                 if (doApply)
                 {
-                    int count = (int)effect.Value;
-                    var id = int.Parse(effect.Parameter);
+                    var parameters = effect.Parameter.Split(";");
+                    var id = int.Parse(parameters[0]);
+                    int count = int.Parse(parameters[1]);
 
                     if (count > 0)
                     {
@@ -27,18 +28,18 @@ namespace StrategyGame.Bll.EffectParsing
 
                         if (existing == null)
                         {
-                            var bld = new AbstractConnectorWithAmount<Country, BuildingType>
+                            var bld = new ConnectorWithAmount<Country, BuildingType>
                             {
                                 // TODO async effect parsing?
                                 Child = context.BuildingTypes.Find(id),
-                                Amount = (int)effect.Value,
+                                Amount = count,
                             };
                             country.Buildings.Add(bld);
                             context.CountryBuildings.Add(bld);
                         }
                         else
                         {
-                            existing.Amount += (int)effect.Value;
+                            existing.Amount += count;
                         }
                     }
                     else if (count < 0)

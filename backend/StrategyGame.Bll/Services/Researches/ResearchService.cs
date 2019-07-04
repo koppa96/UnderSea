@@ -81,7 +81,7 @@ namespace StrategyGame.Bll.Services.Researches
 
                 country.Purchase(researchType);
 
-                var inProgressResearch = new InProgressResearch
+                var inProgressResearch = new ConnectorWithProgress<Model.Entities.Country, ResearchType>
                 {
                     Parent = country,
                     Child = researchType,

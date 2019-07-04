@@ -5,7 +5,6 @@ using StrategyGame.Bll.EffectParsing;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
 using StrategyGame.Model.Entities.Creations;
-using StrategyGame.Model.Entities.Effects;
 using StrategyGame.Model.Entities.Resources;
 using StrategyGame.Model.Entities.Units;
 using System;
@@ -350,7 +349,7 @@ namespace StrategyGame.Bll.Extensions
         public static void Purchase<TEntity, TConnector>(this Country country,
             IPurchasable<TEntity, TConnector> purchasable, int count = 1)
             where TEntity : AbstractEntity<TEntity>
-            where TConnector : AbstractConnectorWithAmount<TEntity, ResourceType>
+            where TConnector : ConnectorWithAmount<TEntity, ResourceType>
         {
             foreach (var resource in purchasable.Cost)
             {
@@ -380,7 +379,7 @@ namespace StrategyGame.Bll.Extensions
                 Name = name,
                 ParentUser = user,
                 Resources = context.ResourceTypes.ToList()
-                           .Select(r => new CountryResource { Amount = r.StartingAmount, Child = r }).ToList(),
+                           .Select(r => new ConnectorWithAmount<Country, ResourceType> { Amount = r.StartingAmount, Child = r }).ToList(),
                 Score = -1,
                 Rank = -1,
                 CreatedRound = globals.Round
@@ -391,7 +390,7 @@ namespace StrategyGame.Bll.Extensions
             context.Countries.Add(newCountry);
             context.Commands.Add(defenders);
             context.CountryBuildings.AddRange((await context.BuildingTypes.Where(b => b.IsStarting).ToListAsync())
-                .Select(b => new AbstractConnectorWithAmount<Country, BuildingType> { Parent = newCountry, Amount = 1, Child = b }));
+                .Select(b => new ConnectorWithAmount<Country, BuildingType> { Parent = newCountry, Amount = 1, Child = b }));
         }
 
         public static Dictionary<int, long> GetTotalProduction(this CountryModifierBuilder builder)

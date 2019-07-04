@@ -119,12 +119,12 @@ namespace StrategyGame.Bll.Services.Country
             // Map all existing buildings and researches
             foreach (var building in country.Buildings)
             {
-                totalBuildings[building.Child.Id] = Mapper.Map<AbstractConnectorWithAmount<Model.Entities.Country, BuildingType>, BriefCreationInfo>(building);
+                totalBuildings[building.Child.Id] = Mapper.Map<ConnectorWithAmount<Model.Entities.Country, BuildingType>, BriefCreationInfo>(building);
             }
 
             foreach (var research in country.Researches)
             {
-                totalResearches[research.Child.Id] = Mapper.Map<CountryResearch, BriefCreationInfo>(research);
+                totalResearches[research.Child.Id] = Mapper.Map<ConnectorWithAmount<Model.Entities.Country, ResearchType>, BriefCreationInfo>(research);
             }
 
             // Add in progress buildings and researches

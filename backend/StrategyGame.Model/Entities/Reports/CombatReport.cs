@@ -107,8 +107,8 @@ namespace StrategyGame.Model.Entities.Reports
         /// </summary>
         public ICollection<ReportResource> Loot { get; set; }
 
-        public ICollection<ReportBuilding> DefenderBuildings { get; set; }
+        public ICollection<ConnectorWithAmount<CombatReport, BuildingType>> DefenderBuildings { get; set; }
 
-        public ICollection<ReportResearch> DefenderResearches { get; set; }
+        public ICollection<ConnectorWithAmount<CombatReport, ResearchType>> DefenderResearches { get; set; }
     }
 }

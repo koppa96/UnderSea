@@ -172,8 +172,8 @@ namespace StrategyGame.Bll.Services.TurnHandling
                     Loot = new List<ReportResource>(0),
                     AttackerLosses = new List<Division>(0),
                     DefenderLosses = new List<Division>(0),
-                    DefenderBuildings = country.Buildings.Select(b => new ReportBuilding { Amount = b.Amount, Child = b.Child }).ToList(),
-                    DefenderResearches = country.Researches.Select(r => new ReportResearch { Amount = r.Amount, Child = r.Child }).ToList(),
+                    DefenderBuildings = country.Buildings.Select(b => new ConnectorWithAmount<CombatReport, BuildingType> { Amount = b.Amount, Child = b.Child }).ToList(),
+                    DefenderResearches = country.Researches.Select(r => new ConnectorWithAmount<CombatReport, ResearchType> { Amount = r.Amount, Child = r.Child }).ToList(),
                     IsDeletedByAttacker = false,
                     IsDeletedByDefender = false,
                     IsSeenByAttacker = false,
@@ -383,7 +383,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
 
                 if (existing == null)
                 {
-                    var res = new CountryResearch
+                    var res = new ConnectorWithAmount<Model.Entities.Country, ResearchType>
                     {
                         Parent = country,
                         Child = research.Key,
@@ -408,7 +408,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
 
                 if (existing == null)
                 {
-                    var res = new AbstractConnectorWithAmount<Model.Entities.Country, BuildingType>
+                    var res = new ConnectorWithAmount<Model.Entities.Country, BuildingType>
                     {
                         Parent = country,
                         Child = building.Key,

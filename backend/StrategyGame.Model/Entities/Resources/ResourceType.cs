@@ -1,4 +1,5 @@
-﻿using StrategyGame.Model.Entities.Frontend;
+﻿using StrategyGame.Model.Entities.Creations;
+using StrategyGame.Model.Entities.Frontend;
 using System.Collections.Generic;
 
 namespace StrategyGame.Model.Entities.Resources
@@ -21,17 +22,17 @@ namespace StrategyGame.Model.Entities.Resources
         /// <summary>
         /// Gets or sets the collection of resources countries have.
         /// </summary>
-        public ICollection<CountryResource> CountryResources { get; set; }
+        public ICollection<ConnectorWithAmount<Country, ResourceType>> CountryResources { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of costs for buildings in the resource.
         /// </summary>
-        public ICollection<BuildingResource> BuildingResources { get; set; }
+        public ICollection<ConnectorWithAmount<BuildingType, ResourceType>> BuildingResources { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of costs for researches in the resource.
         /// </summary>
-        public ICollection<ResearchResource> ResearchResources { get; set; }
+        public ICollection<ConnectorWithAmount<ResearchType, ResourceType>> ResearchResources { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of costs for units in the resource.

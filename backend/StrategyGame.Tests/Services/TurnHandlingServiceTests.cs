@@ -8,7 +8,7 @@ using StrategyGame.Bll.Services.TurnHandling;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
 using StrategyGame.Model.Entities.Creations;
-using StrategyGame.Model.Entities.Effects;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -76,7 +76,7 @@ namespace StrategyGame.Tests.Services
                 .SingleAsync(x => x.ParentUser.UserName == username);
             var countryCount = country.ParentUser.RuledCountries.Count;
 
-            context.InProgressResearches.Add(new InProgressResearch
+            context.InProgressResearches.Add(new ConnectorWithProgress<Country, ResearchType>
             {
                 Parent = country,
                 Child = await context.ResearchTypes.FirstAsync(r => r.Effects.Any(e => e.Child.Name == KnownValues.NewCountryEffect)),
@@ -98,7 +98,8 @@ namespace StrategyGame.Tests.Services
             globals.RandomEventChance = 1.0;
 
             context.RandomEvents.RemoveRange(context.RandomEvents.Where(e =>
-                !e.Effects.Any(eff => eff.Child.Name == KnownValues.AddRemoveBuildingEffect && eff.Child.Value > 0)));
+                !e.Effects.Any(eff => eff.Child.Name == KnownValues.AddRemoveBuildingEffect
+                && int.Parse(eff.Child.Parameter.Split(";", StringSplitOptions.None)[1]) > 0)));
 
             await context.SaveChangesAsync();
 
@@ -124,7 +125,8 @@ namespace StrategyGame.Tests.Services
             globals.RandomEventChance = 1.0;
 
             context.RandomEvents.RemoveRange(context.RandomEvents.Where(e =>
-                !e.Effects.Any(eff => eff.Child.Name == KnownValues.AddRemoveBuildingEffect && eff.Child.Value < 0)));
+                !e.Effects.Any(eff => eff.Child.Name == KnownValues.AddRemoveBuildingEffect 
+                && int.Parse(eff.Child.Parameter.Split(";", StringSplitOptions.None)[1]) < 0)));
 
             await context.SaveChangesAsync();
 
@@ -295,7 +297,7 @@ namespace StrategyGame.Tests.Services
         public async Task TestAllEffect(string username)
         {
             var magicBuilding = new BuildingType
-            { Effects = context.Effects.Select(x => new BuildingEffect { Child = x }).ToList() };
+            { Effects = context.Effects.Select(x => new Connector<BuildingType, Effect> { Child = x }).ToList() };
             context.BuildingTypes.Add(magicBuilding);
 
             var country = await context.Countries
@@ -304,7 +306,7 @@ namespace StrategyGame.Tests.Services
                 .Include(c => c.InProgressBuildings)
                 .SingleAsync(x => x.ParentUser.UserName == username);
 
-            country.Buildings.Add(new AbstractConnectorWithAmount<Country, BuildingType> { Child = magicBuilding, Amount = 1 });
+            country.Buildings.Add(new ConnectorWithAmount<Country, BuildingType> { Child = magicBuilding, Amount = 1 });
 
             await turnService.EndTurnAsync(context);
         }

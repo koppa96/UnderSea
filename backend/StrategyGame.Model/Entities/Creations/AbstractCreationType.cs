@@ -8,7 +8,7 @@ namespace StrategyGame.Model.Entities.Creations
 {
     public abstract class AbstractCreationType<TEntity, TConnector, TContent> 
             : AbstractEntity<TEntity>, IPurchasable<TEntity, TConnector>
-        where TConnector : AbstractConnectorWithAmount<TEntity, ResourceType>
+        where TConnector : ConnectorWithAmount<TEntity, ResourceType>
         where TContent : AbstractFrontendContent<TEntity>
         where TEntity : AbstractEntity<TEntity>
     {

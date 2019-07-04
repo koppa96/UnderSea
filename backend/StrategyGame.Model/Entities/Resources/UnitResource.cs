@@ -5,7 +5,7 @@ namespace StrategyGame.Model.Entities.Resources
     /// <summary>
     /// Linking table between a building and a resource.
     /// </summary>
-    public class UnitResource : AbstractConnectorWithAmount<UnitType, ResourceType>
+    public class UnitResource : ConnectorWithAmount<UnitType, ResourceType>
     {
         /// <summary>
         /// Gets or sets the amount the unit costs in maintenance.

@@ -1,5 +1,5 @@
-﻿using StrategyGame.Model.Entities.Effects;
-using StrategyGame.Model.Entities.Frontend;
+﻿using StrategyGame.Model.Entities.Frontend;
+using StrategyGame.Model.Entities.Reports;
 using StrategyGame.Model.Entities.Resources;
 using System.Collections.Generic;
 
@@ -8,7 +8,7 @@ namespace StrategyGame.Model.Entities.Creations
     /// <summary>
     /// Represents a research type in the UnderSea database.
     /// </summary>
-    public class ResearchType : AbstractCreationType<ResearchType, ResearchResource, ResearchContent>
+    public class ResearchType : AbstractCreationType<ResearchType, ConnectorWithAmount<ResearchType, ResourceType>, ResearchContent>
     {
         /// <summary>
         /// Gets or sets the built time of the research (in turns).
@@ -24,18 +24,18 @@ namespace StrategyGame.Model.Entities.Creations
         /// <summary>
         /// Gets the collection of effects this research provides.
         /// </summary>
-        public virtual ICollection<ResearchEffect> Effects { get; set; }
+        public virtual ICollection<Connector<ResearchType, Effect>> Effects { get; set; }
 
         /// <summary>
         /// Gets the collection of researches of this type that are completed.
         /// </summary>
-        public virtual ICollection<CountryResearch> CompletedResearches { get; set; }
+        public virtual ICollection<ConnectorWithAmount<Country, ResearchType>> CompletedResearches { get; set; }
 
         /// <summary>
         /// Gets the collection of researches of this type that are being researched.
         /// </summary>
-        public virtual ICollection<InProgressResearch> InProgressResearches { get; set; }
+        public virtual ICollection<ConnectorWithProgress<Country, ResearchType>> InProgressResearches { get; set; }
 
-        public ICollection<ReportResearch> ReportResearches { get; set; }
+        public ICollection<ConnectorWithAmount<CombatReport, ResearchType>> ReportResearches { get; set; }
     }
 }

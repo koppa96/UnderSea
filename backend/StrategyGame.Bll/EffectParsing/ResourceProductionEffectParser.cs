@@ -11,16 +11,16 @@
         public ResourceProductionEffectParser()
             : base(KnownValues.ResourceProductionChange, (effect, country, context, builder, doApply) =>
             {
-                long value = (long)effect.Value;
-                var id = int.Parse(effect.Parameter);
+                var temp = effect.Parameter.Split(";");
+                var id = int.Parse(temp[0]);
 
                 if (builder.ResourceProductions.ContainsKey(id))
                 {
-                    builder.ResourceProductions[id] += value;
+                    builder.ResourceProductions[id] += long.Parse(temp[1]);
                 }
                 else
                 {
-                    builder.ResourceProductions.Add(id, value);
+                    builder.ResourceProductions.Add(id, long.Parse(temp[1]));
                 }
             })
         { }

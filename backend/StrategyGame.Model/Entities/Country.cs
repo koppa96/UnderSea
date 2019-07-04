@@ -16,7 +16,7 @@ namespace StrategyGame.Model.Entities
         /// </summary>
         public string Name { get; set; }
 
-        public ICollection<CountryResource> Resources { get; set; }
+        public ICollection<ConnectorWithAmount<Country, ResourceType>> Resources { get; set; }
 
         /// <summary>
         /// Gets or sets the current score of the country.
@@ -46,22 +46,22 @@ namespace StrategyGame.Model.Entities
         /// <summary>
         /// Gets the collection of buildings that are within the country.
         /// </summary>
-        public virtual ICollection<AbstractConnectorWithAmount<Country, BuildingType>> Buildings { get; set; }
+        public virtual ICollection<ConnectorWithAmount<Country, BuildingType>> Buildings { get; set; }
 
         /// <summary>
         /// Gets the collection of researches completed by the country.
         /// </summary>
-        public virtual ICollection<CountryResearch> Researches { get; set; }
+        public virtual ICollection<ConnectorWithAmount<Country, ResearchType>> Researches { get; set; }
 
         /// <summary>
         /// Gets the collection of buildings that are within the country.
         /// </summary>
-        public virtual ICollection<InProgressBuilding> InProgressBuildings { get; set; }
+        public virtual ICollection<ConnectorWithProgress<Country, BuildingType>> InProgressBuildings { get; set; }
 
         /// <summary>
         /// Gets the collection of researches completed by the country.
         /// </summary>
-        public virtual ICollection<InProgressResearch> InProgressResearches { get; set; }
+        public virtual ICollection<ConnectorWithProgress<Country, ResearchType>> InProgressResearches { get; set; }
 
         /// <summary>
         /// Gets the collection of commands issues by the country for the current turn.

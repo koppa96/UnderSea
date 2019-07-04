@@ -11,13 +11,13 @@
         public PopulationEffectParser()
             : base(KnownValues.PopulationChange, (effect, country, context, builder, doApply) =>
             {
-                var pop = (int)effect.Value;
-                builder.Population += pop;
                 var resources = effect.Parameter.Split(";");
+                var pop = int.Parse(resources[0]);
+                builder.Population += pop;
 
-                foreach (var res in resources)
+                for (int iii = 1; iii < resources.Length; iii++)
                 {
-                    var temp = res.Split(":");
+                    var temp = resources[iii].Split(":");
                     var resId = int.Parse(temp[0]);
                     var amount = long.Parse(temp[1]);
 

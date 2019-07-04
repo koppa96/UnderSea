@@ -10,7 +10,7 @@
         /// </summary>
         public BarrackSpaceEffectParser()
             : base(KnownValues.BarrackSpaceChange, (effect, country, context, builder, doApply)
-                  => builder.BarrackSpace += (int)effect.Value)
+                  => builder.BarrackSpace += int.Parse(effect.Parameter))
         { }
     }
 }

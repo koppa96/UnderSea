@@ -2,7 +2,6 @@
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
 using StrategyGame.Model.Entities.Creations;
-using StrategyGame.Model.Entities.Effects;
 using StrategyGame.Model.Entities.Frontend;
 using StrategyGame.Model.Entities.Reports;
 using StrategyGame.Model.Entities.Resources;
@@ -270,20 +269,18 @@ namespace StrategyGame.Bll.Extensions
             var popIn = new Effect
             {
                 Name = KnownValues.PopulationChange,
-                Value = 50,
-                Parameter = pearl.Id.ToString() + ":" + 25,
+                Parameter = "50;" + pearl.Id.ToString() + ":" + 25,
                 IsOneTime = false
             };
             var cp = new Effect
             {
                 Name = KnownValues.ResourceProductionChange,
-                Value = 200,
-                Parameter = coral.Id.ToString(),
+                Parameter = coral.Id.ToString() + ";200",
                 IsOneTime = false
             };
             var currentController = new BuildingType
             {
-                Cost = new[] { new BuildingResource { Amount = 1000, Child = stone } },
+                Cost = new[] { new ConnectorWithAmount<BuildingType, ResourceType> { Amount = 1000, Child = stone } },
                 BuildTime = 5,
                 MaxCount = -1,
                 Content = currentCont
@@ -293,12 +290,12 @@ namespace StrategyGame.Bll.Extensions
             var bsIn = new Effect
             {
                 Name = KnownValues.BarrackSpaceChange,
-                Value = 200,
+                Parameter = "200",
                 IsOneTime = false
             };
             var reefCastle = new BuildingType
             {
-                Cost = new[] { new BuildingResource { Amount = 1000, Child = stone } },
+                Cost = new[] { new ConnectorWithAmount<BuildingType, ResourceType> { Amount = 1000, Child = stone } },
                 BuildTime = 5,
                 MaxCount = -1,
                 Content = reefCastCont
@@ -308,46 +305,80 @@ namespace StrategyGame.Bll.Extensions
             var stIn = new Effect
             {
                 Name = KnownValues.ResourceProductionChange,
-                Value = 200,
-                Parameter = stone.Id.ToString(),
+                Parameter = stone.Id.ToString() + ";200",
                 IsOneTime = false
             };
             var stoneMine = new BuildingType
             {
-                Cost = new[] { new BuildingResource { Amount = 1000, Child = stone } },
+                Cost = new[] { new ConnectorWithAmount<BuildingType, ResourceType> { Amount = 1000, Child = stone } },
                 BuildTime = 5,
                 MaxCount = -1,
                 Content = reefCastCont
             };
 
             // Iszaptraktor
-            var harvMod1 = new Effect { Name = KnownValues.ResourceProductionModifier, Value = 0.1, Parameter = pearl.Id.ToString(), IsOneTime = false };
-            var mudT = new ResearchType { Cost = new[] { new ResearchResource { Amount = 1000, Child = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = mudTCont };
+            var harvMod1 = new Effect
+            {
+                Name = KnownValues.ResourceProductionModifier,
+                Parameter = pearl.Id.ToString() + ";0.1",
+                IsOneTime = false
+            };
+            var mudT = new ResearchType { Cost = new[] { new ConnectorWithAmount<ResearchType, ResourceType> { Amount = 1000, Child = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = mudTCont };
 
             // Iszapkombájn
-            var harvMod2 = new Effect { Name = KnownValues.ResourceProductionModifier, Value = 0.15, Parameter = pearl.Id.ToString(), IsOneTime = false };
-            var mudC = new ResearchType { Cost = new[] { new ResearchResource { Amount = 1000, Child = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = mudCCont };
+            var harvMod2 = new Effect
+            {
+                Name = KnownValues.ResourceProductionModifier,
+                Parameter = pearl.Id.ToString() + ";0.15",
+                IsOneTime = false
+            };
+            var mudC = new ResearchType { Cost = new[] { new ConnectorWithAmount<ResearchType, ResourceType> { Amount = 1000, Child = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = mudCCont };
 
             // korallfal
-            var defMod1 = new Effect { Name = KnownValues.UnitDefenseModifier, Value = 0.2, IsOneTime = false };
-            var wall = new ResearchType { Cost = new[] { new ResearchResource { Amount = 1000, Child = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = defCont };
+            var defMod1 = new Effect
+            {
+                Name = KnownValues.UnitDefenseModifier,
+                Parameter = "0.2",
+                IsOneTime = false
+            };
+            var wall = new ResearchType { Cost = new[] { new ConnectorWithAmount<ResearchType, ResourceType> { Amount = 1000, Child = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = defCont };
 
             // Szonárágyú
-            var attMod1 = new Effect { Name = KnownValues.UnitAttackModifier, Value = 0.2, IsOneTime = false };
-            var canon = new ResearchType { Cost = new[] { new ResearchResource { Amount = 1000, Child = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = attCont };
+            var attMod1 = new Effect
+            {
+                Name = KnownValues.UnitAttackModifier,
+                Parameter = "0.2",
+                IsOneTime = false
+            };
+            var canon = new ResearchType { Cost = new[] { new ConnectorWithAmount<ResearchType, ResourceType> { Amount = 1000, Child = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = attCont };
 
             // Harcművészet
-            var combModA = new Effect { Name = KnownValues.UnitAttackModifier, Value = 0.1, IsOneTime = false };
-            var combModD = new Effect { Name = KnownValues.UnitDefenseModifier, Value = 0.1, IsOneTime = false };
-            var martialArts = new ResearchType { Cost = new[] { new ResearchResource { Amount = 1000, Child = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = cCont };
+            var combModA = new Effect
+            {
+                Name = KnownValues.UnitAttackModifier,
+                Parameter = "0.1",
+                IsOneTime = false
+            };
+            var combModD = new Effect
+            {
+                Name = KnownValues.UnitDefenseModifier,
+                Parameter = "0.1",
+                IsOneTime = false
+            };
+            var martialArts = new ResearchType { Cost = new[] { new ConnectorWithAmount<ResearchType, ResourceType> { Amount = 1000, Child = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = cCont };
 
             // Alchemy
-            var taxMod1 = new Effect { Name = KnownValues.ResourceProductionModifier, Value = 0.3, Parameter = pearl.Id.ToString(), IsOneTime = false };
-            var alchemy = new ResearchType { Cost = new[] { new ResearchResource { Amount = 1000, Child = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = taxCont };
+            var taxMod1 = new Effect
+            {
+                Name = KnownValues.ResourceProductionModifier,
+                Parameter = pearl.Id.ToString() + ";0.3",
+                IsOneTime = false
+            };
+            var alchemy = new ResearchType { Cost = new[] { new ConnectorWithAmount<ResearchType, ResourceType> { Amount = 1000, Child = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = taxCont };
 
             // Settlers
             var settlerEff = new Effect { Name = KnownValues.NewCountryEffect, IsOneTime = true };
-            var settler = new ResearchType { Cost = new[] { new ResearchResource { Amount = 100000, Child = pearl } }, ResearchTime = 30, MaxCompletedAmount = 1, Content = setCont };
+            var settler = new ResearchType { Cost = new[] { new ConnectorWithAmount<ResearchType, ResourceType> { Amount = 100000, Child = pearl } }, ResearchTime = 30, MaxCompletedAmount = 1, Content = setCont };
 
             // Add effects, buildings, researches
             context.Effects.AddRange(popIn, cp, bsIn, harvMod1, harvMod2,
@@ -359,19 +390,19 @@ namespace StrategyGame.Bll.Extensions
 
             // Add effects to buildings and researches
             context.BuildingEffects.AddRange(
-                new BuildingEffect { Parent = currentController, Child = popIn },
-                new BuildingEffect { Parent = currentController, Child = cp },
-                new BuildingEffect { Parent = reefCastle, Child = bsIn });
+                new Connector<BuildingType, Effect> { Parent = currentController, Child = popIn },
+                new Connector<BuildingType, Effect> { Parent = currentController, Child = cp },
+                new Connector<BuildingType, Effect> { Parent = reefCastle, Child = bsIn });
 
             context.ResearchEffects.AddRange(
-                new ResearchEffect { Parent = mudT, Child = harvMod1 },
-                new ResearchEffect { Parent = mudC, Child = harvMod2 },
-                new ResearchEffect { Parent = wall, Child = defMod1 },
-                new ResearchEffect { Parent = canon, Child = attMod1 },
-                new ResearchEffect { Parent = martialArts, Child = combModA },
-                new ResearchEffect { Parent = martialArts, Child = combModD },
-                new ResearchEffect { Parent = alchemy, Child = taxMod1 },
-                new ResearchEffect { Parent = settler, Child = settlerEff });
+                new Connector<ResearchType, Effect> { Parent = mudT, Child = harvMod1 },
+                new Connector<ResearchType, Effect> { Parent = mudC, Child = harvMod2 },
+                new Connector<ResearchType, Effect> { Parent = wall, Child = defMod1 },
+                new Connector<ResearchType, Effect> { Parent = canon, Child = attMod1 },
+                new Connector<ResearchType, Effect> { Parent = martialArts, Child = combModA },
+                new Connector<ResearchType, Effect> { Parent = martialArts, Child = combModD },
+                new Connector<ResearchType, Effect> { Parent = alchemy, Child = taxMod1 },
+                new Connector<ResearchType, Effect> { Parent = settler, Child = settlerEff });
             await context.SaveChangesAsync();
 
             // Add units
@@ -526,10 +557,10 @@ namespace StrategyGame.Bll.Extensions
             {
                 AttackPower = 0,
                 DefensePower = 0,
-                Cost = new []
+                Cost = new[]
                 {
-                    new UnitResource {Amount = 50, MaintenanceAmount = 1, Child = pearl}, 
-                    new UnitResource {Amount = 0, MaintenanceAmount = 1, Child = coral}, 
+                    new UnitResource {Amount = 50, MaintenanceAmount = 1, Child = pearl},
+                    new UnitResource {Amount = 0, MaintenanceAmount = 1, Child = coral},
                 },
                 IsPurchasable = true,
                 Content = spyCont
@@ -542,58 +573,77 @@ namespace StrategyGame.Bll.Extensions
             // Add events
             var plague = new RandomEvent { Content = plagueCont };
             var removeCurrent = new Effect
-            { Parameter = currentController.Id.ToString(), Name = KnownValues.AddRemoveBuildingEffect, Value = -1, IsOneTime = true };
+            {
+                Parameter = currentController.Id.ToString() + ";-1",
+                Name = KnownValues.AddRemoveBuildingEffect,
+                IsOneTime = true
+            };
 
             var fire = new RandomEvent { Content = fireCont };
             var removeCastle = new Effect
-            { Parameter = reefCastle.Id.ToString(), Name = KnownValues.AddRemoveBuildingEffect, Value = -1, IsOneTime = true };
+            {
+                Parameter = reefCastle.Id.ToString() + ";-1",
+                Name = KnownValues.AddRemoveBuildingEffect,
+                IsOneTime = true
+            };
 
             var mine = new RandomEvent { Content = mineCont };
             var addPearl = new Effect
-            { Value = 1000, Name = KnownValues.ResourceProductionChange, Parameter = pearl.Id.ToString() };
+            {
+                Name = KnownValues.ResourceProductionChange,
+                Parameter = pearl.Id.ToString() + ";1000"
+            };
 
             var goodHarvest = new RandomEvent { Content = goodhvCont };
             var extraCoral = new Effect
             {
                 Name = KnownValues.BuildingProductionChange,
-                Value = 50,
-                Parameter = currentController.Id.ToString() + ";" + coral.Id.ToString()
+                Parameter = "50;" + currentController.Id.ToString() + ";" + coral.Id.ToString()
             };
 
             var badHarvest = new RandomEvent { Content = badhvCont };
             var lessCoral = new Effect
             {
                 Name = KnownValues.BuildingProductionChange,
-                Value = -50,
-                Parameter = currentController.Id.ToString() + ";" + coral.Id.ToString()
+                Parameter = "50;" + currentController.Id.ToString() + ";" + coral.Id.ToString()
             };
 
             var contentPopulation = new RandomEvent { Content = contPopCont };
             var addCurrent = new Effect
-            { Name = KnownValues.AddRemoveBuildingEffect, Parameter = currentController.Id.ToString(), Value = 1, IsOneTime = true };
+            {
+                Name = KnownValues.AddRemoveBuildingEffect,
+                Parameter = currentController.Id.ToString() + ";1",
+                IsOneTime = true
+            };
             var discontentPopulation = new RandomEvent();
 
             var contentSoldiers = new RandomEvent { Content = contSolCont };
             var addAttack = new Effect
-            { Name = KnownValues.UnitAttackChange, Value = 1 };
+            {
+                Name = KnownValues.UnitAttackChange,
+                Parameter = "1"
+            };
 
             var discontentSoldiers = new RandomEvent { Content = disconSolCont };
             var removeAttack = new Effect
-            { Name = KnownValues.UnitAttackChange, Value = -1 };
+            {
+                Name = KnownValues.UnitAttackChange,
+                Parameter = "-1"
+            };
 
             await context.SaveChangesAsync();
 
             // Add event effects
             context.EventEffects.AddRange(
-                new EventEffect { Child = removeCurrent, Parent = plague },
-                new EventEffect { Child = removeCastle, Parent = fire },
-                new EventEffect { Child = addPearl, Parent = mine },
-                new EventEffect { Child = extraCoral, Parent = goodHarvest },
-                new EventEffect { Child = lessCoral, Parent = badHarvest },
-                new EventEffect { Child = addCurrent, Parent = contentPopulation },
-                new EventEffect { Child = removeCurrent, Parent = discontentPopulation },
-                new EventEffect { Child = addAttack, Parent = contentSoldiers },
-                new EventEffect { Child = removeAttack, Parent = discontentSoldiers }
+                new Connector<RandomEvent, Effect> { Child = removeCurrent, Parent = plague },
+                new Connector<RandomEvent, Effect> { Child = removeCastle, Parent = fire },
+                new Connector<RandomEvent, Effect> { Child = addPearl, Parent = mine },
+                new Connector<RandomEvent, Effect> { Child = extraCoral, Parent = goodHarvest },
+                new Connector<RandomEvent, Effect> { Child = lessCoral, Parent = badHarvest },
+                new Connector<RandomEvent, Effect> { Child = addCurrent, Parent = contentPopulation },
+                new Connector<RandomEvent, Effect> { Child = removeCurrent, Parent = discontentPopulation },
+                new Connector<RandomEvent, Effect> { Child = addAttack, Parent = contentSoldiers },
+                new Connector<RandomEvent, Effect> { Child = removeAttack, Parent = discontentSoldiers }
             );
             await context.SaveChangesAsync();
 
@@ -640,31 +690,31 @@ namespace StrategyGame.Bll.Extensions
             {
                 Name = "poor",
                 ParentUser = thePoor,
-                Resources = context.ResourceTypes.Select(x => new CountryResource { Amount = 0, Child = x }).ToList()
+                Resources = context.ResourceTypes.Select(x => new ConnectorWithAmount<Country, ResourceType> { Amount = 0, Child = x }).ToList()
             };
             var rc = new Country
             {
                 Name = "rich",
                 ParentUser = theRich,
-                Resources = context.ResourceTypes.Select(x => new CountryResource { Amount = 100000, Child = x }).ToList()
+                Resources = context.ResourceTypes.Select(x => new ConnectorWithAmount<Country, ResourceType> { Amount = 100000, Child = x }).ToList()
             };
             var cc = new Country
             {
                 Name = "attacky",
                 ParentUser = theCommander,
-                Resources = context.ResourceTypes.Select(x => new CountryResource { Amount = x.StartingAmount, Child = x }).ToList()
+                Resources = context.ResourceTypes.Select(x => new ConnectorWithAmount<Country, ResourceType> { Amount = x.StartingAmount, Child = x }).ToList()
             };
             var bc = new Country
             {
                 Name = "poi",
                 ParentUser = theBuilder,
-                Resources = context.ResourceTypes.Select(x => new CountryResource { Amount = x.StartingAmount, Child = x }).ToList()
+                Resources = context.ResourceTypes.Select(x => new ConnectorWithAmount<Country, ResourceType> { Amount = x.StartingAmount, Child = x }).ToList()
             };
             var sc = new Country
             {
                 Name = "science",
                 ParentUser = theResearcher,
-                Resources = context.ResourceTypes.Select(x => new CountryResource { Amount = x.StartingAmount, Child = x }).ToList()
+                Resources = context.ResourceTypes.Select(x => new ConnectorWithAmount<Country, ResourceType> { Amount = x.StartingAmount, Child = x }).ToList()
             };
             context.Countries.AddRange(pc, rc, cc, bc, sc);
 
@@ -679,32 +729,32 @@ namespace StrategyGame.Bll.Extensions
             var b1 = await context.BuildingTypes.FirstAsync();
             var b2 = await context.BuildingTypes.Skip(1).FirstAsync();
 
-            context.CountryBuildings.AddRange(new AbstractConnectorWithAmount<Country, BuildingType>
+            context.CountryBuildings.AddRange(new ConnectorWithAmount<Country, BuildingType>
             {
                 Child = b1,
                 Amount = 1,
                 Parent = bc
-            }, new AbstractConnectorWithAmount<Country, BuildingType>
+            }, new ConnectorWithAmount<Country, BuildingType>
             {
                 Child = b2,
                 Amount = 13,
                 Parent = bc
             });
 
-            context.InProgressBuildings.Add(new InProgressBuilding
+            context.InProgressBuildings.Add(new ConnectorWithProgress<Country, BuildingType>
             { Child = context.BuildingTypes.First(), Parent = cc, TimeLeft = 1 });
-            context.InProgressResearches.Add(new InProgressResearch
+            context.InProgressResearches.Add(new ConnectorWithProgress<Country, ResearchType>
             { Child = context.ResearchTypes.First(), Parent = cc, TimeLeft = 1 });
 
             var r1 = await context.ResearchTypes.FirstAsync();
             var r2 = await context.ResearchTypes.Skip(3).FirstAsync();
 
-            context.CountryResearches.AddRange(new CountryResearch
+            context.CountryResearches.AddRange(new ConnectorWithAmount<Country, ResearchType>
             {
                 Child = r1,
                 Amount = 1,
                 Parent = sc
-            }, new CountryResearch
+            }, new ConnectorWithAmount<Country, ResearchType>
             {
                 Child = r2,
                 Amount = 1,
@@ -801,15 +851,15 @@ namespace StrategyGame.Bll.Extensions
             var users = Enumerable.Range(1, count).Select(x => new User { UserName = Guid.NewGuid().ToString() }).ToList();
             var countries = users.Select(x => new Country
             {
-                Resources = context.ResourceTypes.Select(r => new CountryResource { Amount = rng.Next(0, 50000), Child = r }).ToList(),
+                Resources = context.ResourceTypes.Select(r => new ConnectorWithAmount<Country, ResourceType> { Amount = rng.Next(0, 50000), Child = r }).ToList(),
                 ParentUser = x,
                 Name = x.UserName,
                 InProgressResearches = context.ResearchTypes.Where(r => rng.NextDouble() < 0.5)
-                    .Select(r => new InProgressResearch { TimeLeft = 1, Child = r }).ToList(),
+                    .Select(r => new ConnectorWithProgress<Country, ResearchType> { TimeLeft = 1, Child = r }).ToList(),
                 InProgressBuildings = context.BuildingTypes.Where(b => rng.NextDouble() < 0.5)
-                    .Select(b => new InProgressBuilding { TimeLeft = 1, Child = b }).ToList(),
+                    .Select(b => new ConnectorWithProgress<Country, BuildingType> { TimeLeft = 1, Child = b }).ToList(),
                 Buildings = context.BuildingTypes.Where(b => rng.NextDouble() < 0.5)
-                    .Select(b => new AbstractConnectorWithAmount<Country, BuildingType> { Amount = rng.Next(1, 5), Child = b }).ToList()
+                    .Select(b => new ConnectorWithAmount<Country, BuildingType> { Amount = rng.Next(1, 5), Child = b }).ToList()
             }).ToList();
 
             foreach (var country in countries)

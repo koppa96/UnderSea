@@ -1,4 +1,6 @@
-﻿namespace StrategyGame.Bll.EffectParsing
+﻿using System.Globalization;
+
+namespace StrategyGame.Bll.EffectParsing
 {
     /// <summary>
     /// Represents a parser that can parse effects that increase the attack of the units of a country.
@@ -10,7 +12,7 @@
         /// </summary>
         public UnitAttackModifierEffectParser()
             : base(KnownValues.UnitAttackModifier, (effect, country, context, builder, doApply)
-                  => builder.AttackModifier += effect.Value)
+                  => builder.AttackModifier += double.Parse(effect.Parameter, CultureInfo.InvariantCulture))
         { }
     }
 }

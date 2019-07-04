@@ -20,13 +20,13 @@ namespace StrategyGame.Bll.Mapping
             CreateMap<Country, CountryInfo>();
             CreateMap<Country, RankInfo>();
 
-            CreateMap<AbstractConnectorWithAmount<Country, BuildingType>, BriefCreationInfo>()
+            CreateMap<ConnectorWithAmount<Country, BuildingType>, BriefCreationInfo>()
                 .ForMember(dest => dest.ImageUrl, conf => conf.MapFrom(src => src.Child.Content.ImageUrl))
                 .ForMember(dest => dest.IconImageUrl, conf => conf.MapFrom(src => src.Child.Content.IconImageUrl))
                 .ForMember(dest => dest.Id, conf => conf.MapFrom(src => src.Child.Id))
                 .ForMember(dest => dest.InProgressCount, conf => conf.MapFrom(src => 0));
 
-            CreateMap<CountryResearch, BriefCreationInfo>()
+            CreateMap<ConnectorWithAmount<Country, ResearchType>, BriefCreationInfo>()
                 .ForMember(dest => dest.ImageUrl, conf => conf.MapFrom(src => src.Child.Content.ImageUrl))
                 .ForMember(dest => dest.IconImageUrl, conf => conf.MapFrom(src => src.Child.Content.IconImageUrl))
                 .ForMember(dest => dest.Id, conf => conf.MapFrom(src => src.Child.Id))
@@ -38,7 +38,7 @@ namespace StrategyGame.Bll.Mapping
                 .ForMember(dest => dest.ImageUrl, conf => conf.MapFrom(src => src.Event.Content.ImageUrl))
                 .ForMember(dest => dest.FlavorText, conf => conf.MapFrom(src => src.Event.Content.FlavourText));
             
-            CreateMap<CountryResource, ResourceInfo>()
+            CreateMap<ConnectorWithAmount<Country, ResourceType>, ResourceInfo>()
                 .ForMember(dest => dest.Name, conf => conf.MapFrom(src => src.Child.Content.Name))
                 .ForMember(dest => dest.ImageUrl, conf => conf.MapFrom(src => src.Child.Content.ImageUrl));
         }

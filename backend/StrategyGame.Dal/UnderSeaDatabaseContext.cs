@@ -2,15 +2,12 @@
 using Microsoft.EntityFrameworkCore;
 using StrategyGame.Model.Entities;
 using StrategyGame.Model.Entities.Creations;
-using StrategyGame.Model.Entities.Effects;
 using StrategyGame.Model.Entities.Frontend;
 using StrategyGame.Model.Entities.Logging;
 using StrategyGame.Model.Entities.Reports;
 using StrategyGame.Model.Entities.Resources;
 using StrategyGame.Model.Entities.Units;
 using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace StrategyGame.Dal
 {
@@ -60,37 +57,37 @@ namespace StrategyGame.Dal
         /// <summary>
         /// Gets the collection of <see cref="CountryResearch"/> in the database.
         /// </summary>
-        public DbSet<CountryResearch> CountryResearches { get; set; }
+        public DbSet<ConnectorWithAmount<Country, ResearchType>> CountryResearches { get; set; }
 
         /// <summary>
         /// Gets the collection of <see cref="CountryBuilding"/> in the database.
         /// </summary>
-        public DbSet<AbstractConnectorWithAmount<Country, BuildingType>> CountryBuildings { get; set; }
+        public DbSet<ConnectorWithAmount<Country, BuildingType>> CountryBuildings { get; set; }
 
         /// <summary>
         /// Gets the collection of <see cref="InProgressBuilding"/> in the database.
         /// </summary>
-        public DbSet<InProgressBuilding> InProgressBuildings { get; set; }
+        public DbSet<ConnectorWithProgress<Country, BuildingType>> InProgressBuildings { get; set; }
 
         /// <summary>
         /// Gets the collection of <see cref="InProgressResearch"/> in the database.
         /// </summary>
-        public DbSet<InProgressResearch> InProgressResearches { get; set; }
+        public DbSet<ConnectorWithProgress<Country, ResearchType>> InProgressResearches { get; set; }
 
         /// <summary>
         /// Gets the collection of <see cref="BuildingEffect"/> in the database.
         /// </summary>
-        public DbSet<BuildingEffect> BuildingEffects { get; set; }
+        public DbSet<Connector<BuildingType, Effect>> BuildingEffects { get; set; }
 
         /// <summary>
         /// Gets the collection of <see cref="ResearchEffect"/> in the database.
         /// </summary>
-        public DbSet<ResearchEffect> ResearchEffects { get; set; }
+        public DbSet<Connector<ResearchType, Effect>> ResearchEffects { get; set; }
 
         /// <summary>
         /// Gets the collection of <see cref="EventEffect"/> in the database.
         /// </summary>
-        public DbSet<EventEffect> EventEffects { get; set; }
+        public DbSet<Connector<RandomEvent, Effect>> EventEffects { get; set; }
 
         /// <summary>
         /// Gets the collection of <see cref="Effect"/> in the database.
@@ -138,19 +135,19 @@ namespace StrategyGame.Dal
 
         public DbSet<ResourceType> ResourceTypes { get; set; }
 
-        public DbSet<CountryResource> CountryResources { get; set; }
+        public DbSet<ConnectorWithAmount<Country, ResourceType>> CountryResources { get; set; }
 
-        public DbSet<BuildingResource> BuildingResources { get; set; }
+        public DbSet<ConnectorWithAmount<BuildingType, ResourceType>> BuildingResources { get; set; }
 
-        public DbSet<ResearchResource> ResearchResources { get; set; }
+        public DbSet<ConnectorWithAmount<ResearchType, ResourceType>> ResearchResources { get; set; }
 
         public DbSet<UnitResource> UnitResources { get; set; }
 
         public DbSet<EventReport> EventReports { get; set; }
 
-        public DbSet<ReportResearch> ReportResearches { get; set; }
+        public DbSet<ConnectorWithAmount<CombatReport, ResearchType>> ReportResearches { get; set; }
 
-        public DbSet<ReportBuilding> ReportBuildings { get; set; }
+        public DbSet<ConnectorWithAmount<CombatReport, BuildingType>> ReportBuildings { get; set; }
 
         public DbSet<ReportResource> ReportResources { get; set; }
 
@@ -171,19 +168,19 @@ namespace StrategyGame.Dal
         /// <param name="builder">The <see cref="ModelBuilder"/> to use.</param>
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<ReportBuilding>()
+            builder.Entity<ConnectorWithAmount<CombatReport, BuildingType>>()
                 .HasOne(b => b.Parent)
                 .WithMany(r => r.DefenderBuildings);
 
-            builder.Entity<ReportBuilding>()
+            builder.Entity<ConnectorWithAmount<CombatReport, BuildingType>>()
                 .HasOne(b => b.Child)
                 .WithMany(b => b.ReportBuildings);
 
-            builder.Entity<ReportResearch>()
+            builder.Entity<ConnectorWithAmount<CombatReport, ResearchType>>()
                 .HasOne(r => r.Parent)
                 .WithMany(r => r.DefenderResearches);
 
-            builder.Entity<ReportResearch>()
+            builder.Entity<ConnectorWithAmount<CombatReport, ResearchType>>()
                 .HasOne(r => r.Child)
                 .WithMany(r => r.ReportResearches);
 
@@ -201,27 +198,27 @@ namespace StrategyGame.Dal
                 .HasOne(r => r.Content)
                 .WithMany(c => c.Parents);
 
-            builder.Entity<CountryResource>()
+            builder.Entity<ConnectorWithAmount<Country, ResourceType>>()
                 .HasOne(cr => cr.Parent)
                 .WithMany(c => c.Resources);
 
-            builder.Entity<CountryResource>()
+            builder.Entity<ConnectorWithAmount<Country, ResourceType>>()
                 .HasOne(cr => cr.Child)
                 .WithMany(r => r.CountryResources);
 
-            builder.Entity<BuildingResource>()
+            builder.Entity<ConnectorWithAmount<BuildingType, ResourceType>>()
                 .HasOne(br => br.Parent)
                 .WithMany(b => b.Cost);
 
-            builder.Entity<BuildingResource>()
+            builder.Entity<ConnectorWithAmount<BuildingType, ResourceType>>()
                 .HasOne(br => br.Child)
                 .WithMany(r => r.BuildingResources);
 
-            builder.Entity<ResearchResource>()
+            builder.Entity<ConnectorWithAmount<ResearchType, ResourceType>>()
                 .HasOne(rr => rr.Parent)
                 .WithMany(r => r.Cost);
 
-            builder.Entity<ResearchResource>()
+            builder.Entity<ConnectorWithAmount<ResearchType, ResourceType>>()
                 .HasOne(rr => rr.Child)
                 .WithMany(r => r.ResearchResources);
 
@@ -254,29 +251,29 @@ namespace StrategyGame.Dal
             builder.Entity<Effect>().Property(e => e.Name).IsRequired().HasMaxLength(200);
 
             //Building - BuildingEffect - Effect
-            builder.Entity<BuildingEffect>()
+            builder.Entity<Connector<BuildingType, Effect>>()
                 .HasOne(be => be.Parent)
                 .WithMany(b => b.Effects);
 
-            builder.Entity<BuildingEffect>()
+            builder.Entity<Connector<BuildingType, Effect>>()
                 .HasOne(be => be.Child)
                 .WithMany(e => e.AffectedBuildings);
 
             //Research - ResearchEffect - Effect
-            builder.Entity<ResearchEffect>()
+            builder.Entity<Connector<ResearchType, Effect>>()
                 .HasOne(re => re.Parent)
                 .WithMany(r => r.Effects);
 
-            builder.Entity<ResearchEffect>()
+            builder.Entity<Connector<ResearchType, Effect>>()
                 .HasOne(re => re.Child)
                 .WithMany(e => e.AffectedResearches);
 
             // RandomEvent - EventEffect - Effect
-            builder.Entity<EventEffect>()
+            builder.Entity<Connector<RandomEvent, Effect>>()
                 .HasOne(ee => ee.Parent)
                 .WithMany(e => e.Effects);
 
-            builder.Entity<EventEffect>()
+            builder.Entity<Connector<RandomEvent, Effect>>()
                 .HasOne(ee => ee.Child)
                 .WithMany(e => e.AffectedEvents);
 
@@ -331,38 +328,38 @@ namespace StrategyGame.Dal
                 .WithMany(u => u.ContainingDivisions);
 
             //Country - CountryBuilding - BuildingType
-            builder.Entity<AbstractConnectorWithAmount<Country, BuildingType>>()
+            builder.Entity<ConnectorWithAmount<Country, BuildingType>>()
                 .HasOne(cb => cb.Parent)
                 .WithMany(c => c.Buildings);
 
-            builder.Entity<AbstractConnectorWithAmount<Country, BuildingType>>()
+            builder.Entity<ConnectorWithAmount<Country, BuildingType>>()
                 .HasOne(cb => cb.Child)
                 .WithMany(b => b.CompletedBuildings);
 
             //Country - CountryResearch - ResearchType
-            builder.Entity<CountryResearch>()
+            builder.Entity<ConnectorWithAmount<Country, ResearchType>>()
                 .HasOne(cr => cr.Parent)
                 .WithMany(c => c.Researches);
 
-            builder.Entity<CountryResearch>()
+            builder.Entity<ConnectorWithAmount<Country, ResearchType>>()
                 .HasOne(cr => cr.Child)
                 .WithMany(r => r.CompletedResearches);
 
             //Country - InProgressBuilding - BuildingType
-            builder.Entity<InProgressBuilding>()
+            builder.Entity<ConnectorWithProgress<Country, BuildingType>>()
                 .HasOne(ib => ib.Parent)
                 .WithMany(c => c.InProgressBuildings);
 
-            builder.Entity<InProgressBuilding>()
+            builder.Entity<ConnectorWithProgress<Country, BuildingType>>()
                 .HasOne(ib => ib.Child)
                 .WithMany(b => b.InProgressBuildings);
 
             //Country - InProgressResearch - ResearchType
-            builder.Entity<InProgressResearch>()
+            builder.Entity<ConnectorWithProgress<Country, ResearchType>>()
                 .HasOne(ir => ir.Parent)
                 .WithMany(c => c.InProgressResearches);
 
-            builder.Entity<InProgressResearch>()
+            builder.Entity<ConnectorWithProgress<Country, ResearchType>>()
                 .HasOne(ir => ir.Child)
                 .WithMany(r => r.InProgressResearches);
 

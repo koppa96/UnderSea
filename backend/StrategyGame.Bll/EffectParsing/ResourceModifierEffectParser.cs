@@ -1,4 +1,6 @@
-﻿namespace StrategyGame.Bll.EffectParsing
+﻿using System.Globalization;
+
+namespace StrategyGame.Bll.EffectParsing
 {
     /// <summary>
     /// Represents a parser that can parse effects that increase the taxation (pearl production) of a country.
@@ -11,15 +13,16 @@
         public ResourceModifierEffectParser()
             : base(KnownValues.ResourceProductionModifier, (effect, country, context, builder, doApply) =>
             {
-                var id = int.Parse(effect.Parameter);
+                var temp = effect.Parameter.Split(";");
+                var id = int.Parse(temp[0]);
 
                 if (builder.ResourceModifiers.ContainsKey(id))
                 {
-                    builder.ResourceModifiers[id] += effect.Value;
+                    builder.ResourceModifiers[id] += double.Parse(temp[1], CultureInfo.InvariantCulture);
                 }
                 else
                 {
-                    builder.ResourceModifiers.Add(id, effect.Value);
+                    builder.ResourceModifiers.Add(id, double.Parse(temp[1], CultureInfo.InvariantCulture));
                 }
             })
         { }

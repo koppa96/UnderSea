@@ -74,7 +74,7 @@ namespace StrategyGame.Bll.Services.Buildings
 
                 country.Purchase(buildingType);
 
-                var inProgressBuilding = new InProgressBuilding
+                var inProgressBuilding = new ConnectorWithProgress<Model.Entities.Country, BuildingType>
                 {
                     Parent = country,
                     Child = buildingType,

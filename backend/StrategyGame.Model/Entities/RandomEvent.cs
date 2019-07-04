@@ -1,7 +1,6 @@
-﻿using StrategyGame.Model.Entities.Effects;
-using StrategyGame.Model.Entities.Frontend;
-using System.Collections.Generic;
+﻿using StrategyGame.Model.Entities.Frontend;
 using StrategyGame.Model.Entities.Reports;
+using System.Collections.Generic;
 
 namespace StrategyGame.Model.Entities
 {
@@ -18,7 +17,7 @@ namespace StrategyGame.Model.Entities
         /// <summary>
         /// Gets or sets the collection of effects this event has.
         /// </summary>
-        public virtual ICollection<EventEffect> Effects { get; set; }
+        public virtual ICollection<Connector<RandomEvent, Effect>> Effects { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of countries that have this effect currently.

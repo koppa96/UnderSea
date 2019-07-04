@@ -5,7 +5,7 @@
     /// </summary>
     /// <typeparam name="TParent">The type of the parent entity.</typeparam>
     /// <typeparam name="TChild">The type of the child entity</typeparam>
-    public abstract class AbstractConnector<TParent, TChild> : AbstractEntity<AbstractConnector<TParent, TChild>>
+    public class Connector<TParent, TChild> : AbstractEntity<Connector<TParent, TChild>>
         where TParent : AbstractEntity<TParent> where TChild : AbstractEntity<TChild>
     {
         /// <summary>

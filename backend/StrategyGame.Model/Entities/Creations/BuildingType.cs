@@ -1,5 +1,5 @@
-﻿using StrategyGame.Model.Entities.Effects;
-using StrategyGame.Model.Entities.Frontend;
+﻿using StrategyGame.Model.Entities.Frontend;
+using StrategyGame.Model.Entities.Reports;
 using StrategyGame.Model.Entities.Resources;
 using System.Collections.Generic;
 
@@ -8,7 +8,7 @@ namespace StrategyGame.Model.Entities.Creations
     /// <summary>
     /// Represents a building type within the UnderSea database.
     /// </summary>
-    public class BuildingType : AbstractCreationType<BuildingType, BuildingResource, BuildingContent>
+    public class BuildingType : AbstractCreationType<BuildingType, ConnectorWithAmount<BuildingType, ResourceType>, BuildingContent>
     {
         /// <summary>
         /// Gets or sets the built time of the building (in turns).
@@ -29,18 +29,18 @@ namespace StrategyGame.Model.Entities.Creations
         /// <summary>
         /// Gets the collection of effects this building provides.
         /// </summary>
-        public virtual ICollection<BuildingEffect> Effects { get; set; }
+        public virtual ICollection<Connector<BuildingType, Effect>> Effects { get; set; }
 
         /// <summary>
         /// Gets the collection of buildings of this type that are completed.
         /// </summary>
-        public virtual ICollection<AbstractConnectorWithAmount<Country, BuildingType>> CompletedBuildings { get; set; }
+        public virtual ICollection<ConnectorWithAmount<Country, BuildingType>> CompletedBuildings { get; set; }
 
         /// <summary>
         /// Gets the collection of buildings of this type that are being built.
         /// </summary>
-        public virtual ICollection<InProgressBuilding> InProgressBuildings { get; set; }
+        public virtual ICollection<ConnectorWithProgress<Country, BuildingType>> InProgressBuildings { get; set; }
 
-        public ICollection<ReportBuilding> ReportBuildings { get; set; }
+        public ICollection<ConnectorWithAmount<CombatReport, BuildingType>> ReportBuildings { get; set; }
     }
 }

@@ -10,7 +10,7 @@
         /// </summary>
         public UnitAttackChangeEffectParser()
             : base(KnownValues.UnitAttackChange, (effect, country, context, builder, doApply) =>
-            builder.AttackIncrease += (int)effect.Value)
+            builder.AttackIncrease += int.Parse(effect.Parameter))
         { }
     }
 }
