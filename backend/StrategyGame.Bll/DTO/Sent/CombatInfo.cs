@@ -14,8 +14,10 @@ namespace StrategyGame.Bll.Dto.Sent
         public IEnumerable<BriefUnitInfo> EnemyUnits { get; set; }
         public IEnumerable<BriefUnitInfo> YourLostUnits { get; set; }
         public IEnumerable<BriefUnitInfo> EnemyLostUnits { get; set; }
-        public int PealLoot { get; set; }
-        public int CoralLoot { get; set; }
+        public IEnumerable<ResourceInfo> Loot { get; set; }
+        public IEnumerable<ResourceInfo> RemainingResources { get; set; }
+        public IEnumerable<BriefCreationInfo> Buildings { get; set; }
+        public IEnumerable<BriefCreationInfo> Researches { get; set; }
         public bool IsSeen { get; set; }
     }
 }
