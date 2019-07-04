@@ -75,7 +75,7 @@ export class Army extends React.Component<ArmyProps, InitialState> {
     return (
       <div className="main-component army-component">
         <ComponentHeader title={title} mainDescription={mainDescription} />
-        {ownedUnitState.isRequesting && "loading..."}
+        {ownedUnitState.isRequesting && <div className="loading-circle" />}
         <div className="army-text">
           <span>Összes ár: </span>
           <span>{this.state.priceAll}</span>
