@@ -12,7 +12,8 @@ namespace StrategyGame.Bll.Dto.Sent
         public string EnemyCountryName { get; set; }
         public IEnumerable<BriefUnitInfo> YourUnits { get; set; }
         public IEnumerable<BriefUnitInfo> EnemyUnits { get; set; }
-        public IEnumerable<BriefUnitInfo> LostUnits { get; set; }
+        public IEnumerable<BriefUnitInfo> YourLostUnits { get; set; }
+        public IEnumerable<BriefUnitInfo> EnemyLostUnits { get; set; }
         public int PealLoot { get; set; }
         public int CoralLoot { get; set; }
         public bool IsSeen { get; set; }

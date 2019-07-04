@@ -1,15 +1,14 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using StrategyGame.Bll.Dto.Sent;
+using StrategyGame.Bll.Dto.Sent.Country;
 using StrategyGame.Dal;
-using StrategyGame.Model.Entities;
 using StrategyGame.Model.Entities.Reports;
 using StrategyGame.Model.Entities.Units;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using StrategyGame.Bll.Dto.Sent.Country;
 
 namespace StrategyGame.Bll.Services.Reports
 {
@@ -88,8 +87,9 @@ namespace StrategyGame.Bll.Services.Reports
                     combatInfo.YourUnits = r.Attackers.Select(d => _mapper.Map<Division, BriefUnitInfo>(d));
                     combatInfo.EnemyUnits = enemySpyCount < yourSpyCount
                         ? r.Defenders.Select(d => _mapper.Map<Division, BriefUnitInfo>(d))
-                        : null; 
-                    combatInfo.LostUnits = r.Losses.Select(d => _mapper.Map<Division, BriefUnitInfo>(d));
+                        : null;
+                    combatInfo.YourLostUnits = r.AttackerLosses.Select(d => _mapper.Map<Division, BriefUnitInfo>(d));
+                    combatInfo.EnemyLostUnits = r.DefenderLosses.Select(d => _mapper.Map<Division, BriefUnitInfo>(d));
                     combatInfo.IsSeen = r.IsSeenByAttacker;
                     return combatInfo;
                 }).Concat(country.Defenses.Where(r => !r.IsDeletedByDefender)
@@ -102,7 +102,8 @@ namespace StrategyGame.Bll.Services.Reports
                         combatInfo.EnemyCountryName = r.Attacker.Name;
                         combatInfo.YourUnits = r.Defenders.Select(d => _mapper.Map<Division, BriefUnitInfo>(d));
                         combatInfo.EnemyUnits = r.Attackers.Select(d => _mapper.Map<Division, BriefUnitInfo>(d));
-                        combatInfo.LostUnits = r.Losses.Select(d => _mapper.Map<Division, BriefUnitInfo>(d));
+                        combatInfo.YourLostUnits = r.DefenderLosses.Select(d => _mapper.Map<Division, BriefUnitInfo>(d));
+                        combatInfo.EnemyLostUnits = r.AttackerLosses.Select(d => _mapper.Map<Division, BriefUnitInfo>(d));
                         combatInfo.IsSeen = r.IsSeenByDefender;
                         return combatInfo;
                     }));

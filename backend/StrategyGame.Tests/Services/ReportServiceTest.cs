@@ -25,7 +25,8 @@ namespace StrategyGame.Tests.Services
         [DataRow("TheResearcher")]
         public async Task TestGetReportInfo(string username)
         {
-            var combatInfos = await reportService.GetCombatInfoAsync(username);
+            var country = await context.Countries.FirstAsync(c => c.ParentUser.UserName == username);
+            var combatInfos = await reportService.GetCombatInfoAsync(username, country.Id);
 
             Assert.AreEqual(1, combatInfos.Count());
             Assert.IsTrue(combatInfos.First().IsAttack);
@@ -39,8 +40,9 @@ namespace StrategyGame.Tests.Services
         {
             var reportId = (await context.Reports.FirstAsync(r => r.Attacker.ParentUser.UserName == username)).Id;
             await reportService.SetCombatReportSeenAsync(username, reportId);
+            var country = await context.Countries.FirstAsync(c => c.ParentUser.UserName == username);
 
-            var combatInfos = await reportService.GetCombatInfoAsync(username);
+            var combatInfos = await reportService.GetCombatInfoAsync(username, country.Id);
             Assert.IsTrue(combatInfos.First().IsSeen);
         }
 
@@ -66,11 +68,13 @@ namespace StrategyGame.Tests.Services
         public async Task TestDeleteReport(string attacker, string defender)
         {
             var reportId = (await context.Reports.FirstAsync()).Id;
+            var att = await context.Countries.FirstAsync(c => c.ParentUser.UserName == attacker);
+            var def = await context.Countries.FirstAsync(c => c.ParentUser.UserName == defender);
 
             await reportService.DeleteCombatReportAsync(attacker, reportId);
 
-            Assert.AreEqual(0, (await reportService.GetCombatInfoAsync(attacker)).Count());
-            Assert.AreEqual(1, (await reportService.GetCombatInfoAsync(defender)).Count());
+            Assert.AreEqual(0, (await reportService.GetCombatInfoAsync(attacker, att.Id)).Count());
+            Assert.AreEqual(1, (await reportService.GetCombatInfoAsync(defender, def.Id)).Count());
         }
 
         [TestMethod]
@@ -78,11 +82,12 @@ namespace StrategyGame.Tests.Services
         public async Task TestBothDeleteReport(string attacker, string defender)
         {
             var reportId = (await context.Reports.FirstAsync()).Id;
+            var def = await context.Countries.FirstAsync(c => c.ParentUser.UserName == defender);
 
             await reportService.DeleteCombatReportAsync(attacker, reportId);
             await reportService.DeleteCombatReportAsync(defender, reportId);
 
-            Assert.AreEqual(0, (await reportService.GetCombatInfoAsync(defender)).Count());
+            Assert.AreEqual(0, (await reportService.GetCombatInfoAsync(defender, def.Id)).Count());
             Assert.AreEqual(0, await context.Reports.CountAsync());
         }
 

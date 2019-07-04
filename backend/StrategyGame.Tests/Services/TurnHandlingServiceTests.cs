@@ -48,14 +48,14 @@ namespace StrategyGame.Tests.Services
 
             await turnService.EndTurnAsync(context);
 
-            Assert.AreNotEqual(country.CurrentEvent, null);
-            Assert.AreEqual(country.EventReports.Count, 1);
+            Assert.AreNotEqual(null, country.CurrentEvent);
+            Assert.AreEqual(1, country.EventReports.Count);
 
             globals.Round = 50;
             globals.RandomEventChance = 0.0;
             await turnService.EndTurnAsync(context);
 
-            Assert.AreEqual(country.CurrentEvent, null);
+            Assert.AreEqual(null, country.CurrentEvent);
         }
 
         [TestMethod]
@@ -83,7 +83,7 @@ namespace StrategyGame.Tests.Services
             });
 
             await context.SaveChangesAsync();
-            Assert.AreEqual(country.InProgressResearches.Count, 1);
+            Assert.AreEqual(1, country.InProgressResearches.Count);
             await turnService.EndTurnAsync(context);
             Assert.IsTrue(country.ParentUser.RuledCountries.Count > countryCount);
         }
@@ -109,7 +109,7 @@ namespace StrategyGame.Tests.Services
                 .SingleAsync(x => x.ParentUser.UserName == username);
             var buildingNumber = country.Buildings.Sum(b => b.Amount);
 
-            Assert.AreEqual(country.InProgressBuildings.Count, 0);
+            Assert.AreEqual(0, country.InProgressBuildings.Count);
             await turnService.EndTurnAsync(context);
             Assert.IsTrue(country.Buildings.Sum(b => b.Amount) > buildingNumber);
         }
@@ -135,7 +135,7 @@ namespace StrategyGame.Tests.Services
                 .SingleAsync(x => x.ParentUser.UserName == username);
             var buildingNumber = country.Buildings.Sum(b => b.Amount);
 
-            Assert.AreEqual(country.InProgressBuildings.Count, 0);
+            Assert.AreEqual(0, country.InProgressBuildings.Count);
             await turnService.EndTurnAsync(context);
             Assert.IsTrue(country.Buildings.Sum(b => b.Amount) < buildingNumber);
         }
@@ -229,8 +229,8 @@ namespace StrategyGame.Tests.Services
 
             await turnService.EndTurnAsync(context);
 
-            Assert.AreEqual(country.Commands.Sum(c =>
-               c.Divisions.Sum(d => d.Count)), 0);
+            Assert.AreEqual(0, country.Commands.Sum(c =>
+               c.Divisions.Sum(d => d.Count)));
         }
 
         [TestMethod]
