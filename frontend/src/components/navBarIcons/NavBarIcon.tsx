@@ -25,6 +25,7 @@ export const NavBarIcon = (props: NavBarIconProp) => {
       <div className="navbaricon-font">
         <span className="navbaricon-amount">
           {props.units ? props.units + "/" + props.count : props.count}
+          {(props.units ? props.units > props.count : false) && <p>!</p>}
         </span>
         {props.info && <span className="navbaricon-info">{props.info}</span>}
       </div>
