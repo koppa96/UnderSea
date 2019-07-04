@@ -71,12 +71,24 @@ $local-profilrect-size: 96px;
   .popup-rectangle {
     width: 300px;
     height: 500px;
+    img {
+      max-width: 100%;
+      height: auto;
+    }
   }
   .popup-content {
     height: 500px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    h1 {
+      color: white;
+      font-family: Baloo;
+    }
+    h3 {
+      color: white;
+      font-family: OpenSansRegular;
+    }
     > button {
       align-items: flex-end;
     }
