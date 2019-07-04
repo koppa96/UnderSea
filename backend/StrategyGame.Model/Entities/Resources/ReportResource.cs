@@ -7,6 +7,9 @@ namespace StrategyGame.Model.Entities.Resources
     /// </summary>
     public class ReportResource : AbstractConnectorWithAmount<CombatReport, ResourceType>
     {
-        public int RemainingAmount { get; set; }
+        /// <summary>
+        /// Gets or sets the amount of remaining resources in the country.
+        /// </summary>
+        public long RemainingAmount { get; set; }
     }
 }
