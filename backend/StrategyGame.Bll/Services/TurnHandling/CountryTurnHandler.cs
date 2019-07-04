@@ -194,7 +194,12 @@ namespace StrategyGame.Bll.Services.TurnHandling
                         country.Resources.Single(r => r.Child == resource.Key).Amount -= resource.Value;
                     }
 
-                    report.Loot = loots.Select(x => new ReportResource { Amount = x.Value, Child = x.Key }).ToList();
+                    report.Loot = loots.Select(x => new ReportResource
+                    {
+                        Amount = x.Value,
+                        RemainingAmount = country.Resources.Single(r => r.Child == x.Key).Amount,
+                        Child = x.Key
+                    }).ToList();
                     report.DefenderLosses = losses;
                 }
                 else
