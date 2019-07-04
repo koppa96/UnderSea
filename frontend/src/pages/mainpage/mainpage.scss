@@ -22,7 +22,7 @@ $randomNumber: random(20);
   height: 100%;
   display: flex;
   width: 100%;
-  flex-direction: row;
+  flex-direction: column;
   user-select: none;
   margin-right: auto;
   margin-left: auto;
@@ -31,9 +31,65 @@ $randomNumber: random(20);
   align-content: center;
   align-items: center;
   /* prettier-ignore */
-  .bg-items-flex {
+  >div{
+    display: flex;
+    flex-direction: row;
+    
+    .bg-items-flex {
     height: 250px;
-    padding-top: $randomNumber
+    padding-top: $randomNumber;
+    
+  }
+  @keyframes glowing {
+    0%   {
+       opacity: 0.95; 
+       filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.3));
+      }
+      33% {
+        opacity: 1;
+        }
+        66% {
+          opacity: 0.97;
+          
+          filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.6));
+        }
+      100% {
+         opacity: 0.95;
+         
+         filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+        }
+  }
+
+  @keyframes moving {
+    0%   {
+       opacity: 0.95; 
+       transform: rotate(0deg);
+      }
+      33% {
+        transform: rotate(1deg);
+        opacity: 1;
+        }
+        66% {
+          transform: rotate(-1deg);
+          opacity: 0.97;
+          }
+      100% {
+         opacity: 0.95;
+         transform: rotate(0deg); 
+        }
+  }
+  }
+  .researches {
+    max-height: 200px;
+  }
+  .building {
+    max-height: 200px;
+  }
+  .research-item-animation {
+    animation: moving 2s infinite ease-in-out;
+  }
+  .building-item-animation {
+    animation: glowing 2s infinite ease-in-out;
   }
 }
 .undersea-font-mainpage {

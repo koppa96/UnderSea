@@ -74,26 +74,40 @@ export class MainPage extends React.Component<MainPageProps> {
             </div>
             <main>
               <div className="building-img-holder">
-                {building &&
-                  building.map(
-                    item =>
-                      item.count > 0 &&
-                      item.imageUrl && (
-                        <div key={item.id} className="bg-items-flex">
-                          <img src={BasePortUrl + item.imageUrl} alt="items" />
-                        </div>
-                      )
-                  )}
-                {researches &&
-                  researches.map(
-                    item =>
-                      item.count > 0 &&
-                      item.imageUrl && (
-                        <div key={item.id} className="bg-items-flex">
-                          <img src={BasePortUrl + item.imageUrl} alt="items" />
-                        </div>
-                      )
-                  )}
+                <div className="building">
+                  {building &&
+                    building.map(
+                      item =>
+                        item.count > 0 &&
+                        item.imageUrl && (
+                          <div key={item.id} className="bg-items-flex">
+                            <img
+                              src={BasePortUrl + item.imageUrl}
+                              alt="items"
+                              className="building-item-animation"
+                            />
+                          </div>
+                        )
+                    )}
+                </div>
+                <div className="researches">
+                  {researches &&
+                    researches.map(
+                      item =>
+                        item.count > 0 &&
+                        item.imageUrl && (
+                          <div
+                            key={item.id}
+                            className="bg-items-flex research-item-animation"
+                          >
+                            <img
+                              src={BasePortUrl + item.imageUrl}
+                              alt="items"
+                            />
+                          </div>
+                        )
+                    )}
+                </div>
               </div>
               <Switch>
                 <Route path="/account/buildings">
