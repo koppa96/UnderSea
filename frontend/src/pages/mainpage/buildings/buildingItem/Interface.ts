@@ -1,6 +1,6 @@
 export interface BuildingProps {
   id: number;
-  imageUrl: string;
+  imageUrl?: string;
   title: string;
   description: string;
   amount: number;

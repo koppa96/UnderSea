@@ -33,7 +33,7 @@ export class Reports extends React.Component<ReportsProps> {
         <ComponentHeader title={title} />
         <ul className="report-page">
           {isRequesting ? (
-              <div className="loading-circle loading-button" />
+            <div className="loading-circle loading-button" />
           ) : (
             report &&
             report.map(item => (
@@ -80,9 +80,9 @@ export class Reports extends React.Component<ReportsProps> {
                     <>
                       <div className="report-info">
                         {item.isAttack ? (
-                          <img src={Sword} />
+                          <img src={Sword} alt="Támadás" />
                         ) : (
-                          <img src={Shield} />
+                          <img src={Shield} alt="Védés" />
                         )}
                         <div>
                           <span className="report-units">Egységeid</span>

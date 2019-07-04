@@ -34,7 +34,11 @@ export class ProfileContainer extends React.Component<ProfileProps> {
         {event && <p onClick={() => this.props.togglePopup()}>+</p>}
 
         <div className="rectangle" onClick={() => this.toggleImgChange()}>
-          <img alt="profile" src={BasePortUrl + profile.profileImageUrl} />
+          <img
+            title="Profil kép módosítás"
+            alt="profile"
+            src={BasePortUrl + profile.profileImageUrl}
+          />
         </div>
         <Link to="/">
           <span className="profil-margin">

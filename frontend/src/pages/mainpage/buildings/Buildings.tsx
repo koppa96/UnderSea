@@ -68,7 +68,9 @@ export class Buildings extends React.Component<BuildingProps> {
           description={description}
         />
         <div className="building-page hide-scroll">
-          {ownedBuildingState.isRequesting &&   <div className="loading-circle loading-button" />}
+          {ownedBuildingState.isRequesting && (
+            <div className="loading-circle loading-button" />
+          )}
 
           {ownedBuildingState.buildings.length > 0 &&
             ownedBuildingState.buildings.map(item => {
@@ -93,7 +95,7 @@ export class Buildings extends React.Component<BuildingProps> {
                         ? item.description
                         : "Nem tartozik leírás"
                     }
-                    imageUrl={item.imageUrl ? item.imageUrl : ""}
+                    imageUrl={item.imageUrl}
                   />
                 </label>
               );
@@ -104,13 +106,17 @@ export class Buildings extends React.Component<BuildingProps> {
           className={buttonClass}
           onClick={() => this.beginAddBuilding()}
         >
-          {tempProgress
-            ? "Épül"
-            : ownedBuildingState
-            ? ownedBuildingState.isPostRequesting
-              ?   <div className="loading-circle loading-button" />
-              : "Megveszem"
-            : "Hiba"}
+          {tempProgress ? (
+            "Épül"
+          ) : ownedBuildingState ? (
+            ownedBuildingState.isPostRequesting ? (
+              <div className="loading-circle loading-button" />
+            ) : (
+              "Megveszem"
+            )
+          ) : (
+            "Hiba"
+          )}
         </button>
       </div>
     );
