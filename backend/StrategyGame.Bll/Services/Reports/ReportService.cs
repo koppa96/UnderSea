@@ -37,7 +37,11 @@ namespace StrategyGame.Bll.Services.Reports
                 .Include(c => c.Attacks)
                     .ThenInclude(r => r.Defender)
                 .Include(c => c.Attacks)
-                    .ThenInclude(r => r.Losses)
+                    .ThenInclude(r => r.AttackerLosses)
+                        .ThenInclude(d => d.Unit)
+                            .ThenInclude(u => u.Content)
+                .Include(c => c.Attacks)
+                    .ThenInclude(r => r.DefenderLosses)
                         .ThenInclude(d => d.Unit)
                             .ThenInclude(u => u.Content)
                 .Include(c => c.Defenses)
@@ -51,7 +55,11 @@ namespace StrategyGame.Bll.Services.Reports
                 .Include(c => c.Defenses)
                     .ThenInclude(r => r.Attacker)
                 .Include(c => c.Defenses)
-                    .ThenInclude(r => r.Losses)
+                    .ThenInclude(r => r.AttackerLosses)
+                        .ThenInclude(d => d.Unit)
+                            .ThenInclude(u => u.Content)
+                .Include(c => c.Defenses)
+                    .ThenInclude(r => r.DefenderLosses)
                         .ThenInclude(d => d.Unit)
                             .ThenInclude(u => u.Content)
                 .Include(c => c.ParentUser)
@@ -229,7 +237,8 @@ namespace StrategyGame.Bll.Services.Reports
 
             _context.Divisions.RemoveRange(report.Attackers);
             _context.Divisions.RemoveRange(report.Defenders);
-            _context.Divisions.RemoveRange(report.Losses);
+            _context.Divisions.RemoveRange(report.AttackerLosses);
+            _context.Divisions.RemoveRange(report.DefenderLosses);
             _context.Reports.Remove(report);
         }
     }

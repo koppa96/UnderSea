@@ -329,7 +329,7 @@ namespace StrategyGame.Bll.Extensions
         /// <param name="context">The database to use to remove the division if necessary.</param>
         public static void IncreaseBattleCount(this Command command, UnderSeaDatabaseContext context)
         {
-            foreach (var div in command.Divisions)
+            foreach (var div in command.Divisions.Where(d => !(d.Unit is SpyType)))
             {
                 div.BattleCount++;
 

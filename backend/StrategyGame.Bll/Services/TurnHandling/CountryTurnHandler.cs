@@ -174,7 +174,14 @@ namespace StrategyGame.Bll.Services.TurnHandling
                     BaseDefensePower = defenseBase,
                     Round = globals.Round,
                     Loot = new List<ReportResource>(0),
-                    Losses = losses
+                    AttackerLosses = attackPower > defensePower ? new List<Division>(0) : losses,
+                    DefenderLosses = attackPower > defensePower ? losses : new List<Division>(0),
+                    DefenderBuildings = country.Buildings.Select(b => new ReportBuilding { Amount = b.Amount, Child = b.Child }).ToList(),
+                    DefenderResearches = country.Researches.Select(r => new ReportResearch { Amount = r.Amount, Child = r.Child }).ToList(),
+                    IsDeletedByAttacker = false,
+                    IsDeletedByDefender = false,
+                    IsSeenByAttacker = false,
+                    IsSeenByDefender = false
                 };
 
                 if (attackPower > defensePower)
@@ -190,6 +197,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
                     report.Loot = loots.Select(x => new ReportResource { Amount = x.Value, Child = x.Key }).ToList();
                 }
 
+                CullSpies(attack, defenders, report.AttackerLosses, globals.SpyLossOnSuccess);
                 context.Reports.Add(report);
             }
         }
@@ -296,7 +304,8 @@ namespace StrategyGame.Bll.Services.TurnHandling
                     // To ensure proper distribution, the divisions are sorted into a dictionary based on their total counts
                     // then a random number is generated, and the first division that contain that unit position is selected.
                     int count = 0;
-                    var lossable = command.Divisions.Where(d => d.Count > 0).ToDictionary(x => count += x.Count, x => x);
+                    var lossable = command.Divisions.Where(d => d.Count > 0 && !(d.Unit is SpyType))
+                        .ToDictionary(x => count += x.Count, x => x);
                     int target = rng.Next(lossable.Keys.Last());
                     var targetDiv = lossable.First(x => x.Key >= target).Value;
 
@@ -315,6 +324,32 @@ namespace StrategyGame.Bll.Services.TurnHandling
             }
 
             return losses.Values.ToList();
+        }
+
+        /// <summary>
+        /// Culls spies for the attacker, according to the lost percentage.
+        /// The numbers are floored, meaning there is always some spies lost.
+        /// </summary>
+        /// <param name="attack">The attacking command.</param>
+        /// <param name="defense">The defending command.</param>
+        /// <param name="existingLosses">The existing losses for the attacker.</param>
+        /// <param name="lostPercentage">The percentage of spies lost.</param>
+        protected void CullSpies(Command attack, Command defense, ICollection<Division> existingLosses, double lostPercentage)
+        {
+            var attacker = attack.Divisions.SingleOrDefault(x => x.Unit is SpyType);
+            var defenderCount = defense.Divisions.SingleOrDefault(x => x.Unit is SpyType)?.Count ?? 0;
+
+            if (attacker != null && attacker.Count != 0)
+            {
+                int loss = attacker.Count;
+                if (attacker.Count > defenderCount)
+                {
+                    loss = attacker.Count - (int)Math.Floor(attacker.Count * (1 - lostPercentage));
+                }
+
+                attacker.Count -= loss;
+                existingLosses.Add(new Division { Unit = attacker.Unit, Count = loss });
+            }
         }
 
         /// <summary>
@@ -420,6 +455,14 @@ namespace StrategyGame.Bll.Services.TurnHandling
             }
         }
 
+        /// <summary>
+        /// Calculates the loot based on the income of the attacker.
+        /// </summary>
+        /// <param name="country">The defending country.</param>
+        /// <param name="lootPercentage">The maximal percentage of loot acquired.</param>
+        /// <param name="attack">The attacking command.</param>
+        /// <param name="builder">The modifier builder for the attacker.</param>
+        /// <returns>The dictionary containing the loots.</returns>
         protected Dictionary<ResourceType, long> CalculateLoot(Model.Entities.Country country, double lootPercentage,
             Command attack, CountryModifierBuilder builder)
         {

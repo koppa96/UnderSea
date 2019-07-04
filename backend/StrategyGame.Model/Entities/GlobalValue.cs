@@ -28,6 +28,11 @@ namespace StrategyGame.Model.Entities
         public double UnitLossOnLostBatle { get; set; }
 
         /// <summary>
+        /// Gets or sets the percentage of units lost in a lost battle.
+        /// </summary>
+        public double SpyLossOnSuccess { get; set; }
+
+        /// <summary>
         /// Gets or sets the percentage of resources lost when the country is looted.
         /// </summary>
         public double LootPercentage { get; set; }
