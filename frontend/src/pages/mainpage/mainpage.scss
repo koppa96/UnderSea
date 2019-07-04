@@ -23,6 +23,7 @@ $randomNumber: random(20);
   display: flex;
   width: 100%;
   flex-direction: row;
+  user-select: none;
   margin-right: auto;
   margin-left: auto;
   flex-wrap: nowrap;
