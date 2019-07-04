@@ -1,2 +1,2 @@
 // TODO: delete
-export const test = '';
+export const test = "";

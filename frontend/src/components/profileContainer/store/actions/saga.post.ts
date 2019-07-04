@@ -23,7 +23,7 @@ const beginToAddImage = (img: FileList): Promise<void> | any => {
   console.log("kép");
   console.log(img);
   return instance
-    .post(url, data)
+    .put(url, data)
     .then(response => {
       return response;
     })
