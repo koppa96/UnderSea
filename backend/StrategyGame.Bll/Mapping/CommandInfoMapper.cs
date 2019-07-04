@@ -16,7 +16,7 @@ namespace StrategyGame.Bll.Mapping
             CreateMap<Command, CommandInfo>()
                 .ForMember(dest => dest.TargetCountryId, conf => conf.MapFrom(src => src.TargetCountry.Id))
                 .ForMember(dest => dest.TargetCountryName, conf => conf.MapFrom(src => src.TargetCountry.Name))
-                .ForMember(dest => dest.Units, conf => conf.MapFrom(src => new List<CommandInfo>()));
+                .ForMember(dest => dest.Units, conf => conf.MapFrom(src => new List<BriefUnitInfo>()));
         }
     }
 }

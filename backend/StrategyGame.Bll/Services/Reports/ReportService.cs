@@ -71,12 +71,16 @@ namespace StrategyGame.Bll.Services.Reports
                 .Select(r =>
                 {
                     var combatInfo = _mapper.Map<CombatReport, CombatInfo>(r);
+                    var enemySpyCount = r.Defenders.Where(d => d.Unit is SpyType).Sum(d => d.Count);
+                    var yourSpyCount = r.Attackers.Where(d => d.Unit is SpyType).Sum(d => d.Count);
                     combatInfo.IsAttack = true;
                     combatInfo.IsWon = r.DidAttackerWin;
                     combatInfo.EnemyCountryId = r.Defender.Id;
                     combatInfo.EnemyCountryName = r.Defender.Name;
                     combatInfo.YourUnits = r.Attackers.Select(d => _mapper.Map<Division, BriefUnitInfo>(d));
-                    combatInfo.EnemyUnits = r.Defenders.Select(d => _mapper.Map<Division, BriefUnitInfo>(d));
+                    combatInfo.EnemyUnits = enemySpyCount < yourSpyCount
+                        ? r.Defenders.Select(d => _mapper.Map<Division, BriefUnitInfo>(d))
+                        : null; 
                     combatInfo.LostUnits = r.Losses.Select(d => _mapper.Map<Division, BriefUnitInfo>(d));
                     combatInfo.IsSeen = r.IsSeenByAttacker;
                     return combatInfo;
