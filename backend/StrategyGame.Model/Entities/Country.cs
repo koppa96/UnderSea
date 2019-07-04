@@ -68,10 +68,14 @@ namespace StrategyGame.Model.Entities
         /// </summary>
         public virtual ICollection<Command> Commands { get; set; }
 
+        public ICollection<SpyCommand> SpyCommands { get; set; }
+
         /// <summary>
         /// Gets the collection of commands targetting the country.
         /// </summary>
         public virtual ICollection<Command> IncomingAttacks { get; set; }
+
+        public ICollection<SpyCommand> IncomingSpyCommands { get; set; }
 
         /// <summary>
         /// Gets the collection of combat reports about offensive actions of the country.
