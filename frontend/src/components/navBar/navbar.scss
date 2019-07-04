@@ -1,20 +1,6 @@
 $local-padding-horizontal: 29px;
 
-p {
-  z-index: 2;
-  position: relative;
-  right: -5px;
-  top: 10px;
-  user-select: none;
-  text-align: center;
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  margin: 0;
-  background-color: red;
-  color: whitesmoke;
-  box-shadow: 0 0 3px rgb(243, 68, 68);
-}
+
 
 .navbar-bg {
   padding-left: $total-padding-vertical;
