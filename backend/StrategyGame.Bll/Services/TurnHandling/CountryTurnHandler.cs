@@ -154,10 +154,6 @@ namespace StrategyGame.Bll.Services.TurnHandling
                 (double defensePower, double defenseMods, double defenseBase) = GetCurrentUnitPower(defenders, globals,
                     false, builder);
 
-                var losses = attackPower > defensePower
-                    ? CullUnits(defenders, globals.UnitLossOnLostBatle)
-                    : CullUnits(attack, globals.UnitLossOnLostBatle);
-
                 var report = new CombatReport
                 {
                     Attacker = attack.ParentCountry,
@@ -174,8 +170,8 @@ namespace StrategyGame.Bll.Services.TurnHandling
                     BaseDefensePower = defenseBase,
                     Round = globals.Round,
                     Loot = new List<ReportResource>(0),
-                    AttackerLosses = attackPower > defensePower ? new List<Division>(0) : losses,
-                    DefenderLosses = attackPower > defensePower ? losses : new List<Division>(0),
+                    AttackerLosses = new List<Division>(0),
+                    DefenderLosses = new List<Division>(0),
                     DefenderBuildings = country.Buildings.Select(b => new ReportBuilding { Amount = b.Amount, Child = b.Child }).ToList(),
                     DefenderResearches = country.Researches.Select(r => new ReportResearch { Amount = r.Amount, Child = r.Child }).ToList(),
                     IsDeletedByAttacker = false,
@@ -183,6 +179,10 @@ namespace StrategyGame.Bll.Services.TurnHandling
                     IsSeenByAttacker = false,
                     IsSeenByDefender = false
                 };
+
+                var losses = attackPower > defensePower
+                    ? CullUnits(defenders, globals.UnitLossOnLostBatle)
+                    : CullUnits(attack, globals.UnitLossOnLostBatle);
 
                 if (attackPower > defensePower)
                 {
@@ -195,6 +195,11 @@ namespace StrategyGame.Bll.Services.TurnHandling
                     }
 
                     report.Loot = loots.Select(x => new ReportResource { Amount = x.Value, Child = x.Key }).ToList();
+                    report.DefenderLosses = losses;
+                }
+                else
+                {
+                    report.AttackerLosses = losses;
                 }
 
                 CullSpies(attack, defenders, report.AttackerLosses, globals.SpyLossOnSuccess);

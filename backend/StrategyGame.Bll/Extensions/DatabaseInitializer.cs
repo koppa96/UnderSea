@@ -38,6 +38,8 @@ namespace StrategyGame.Bll.Extensions
             context.BuildingResources.RemoveRange(context.BuildingResources);
             context.ResearchResources.RemoveRange(context.ResearchResources);
             context.UnitResources.RemoveRange(context.UnitResources);
+            context.ReportResources.RemoveRange(context.ReportResources);
+            context.EventReports.RemoveRange(context.EventReports);
 
             // Purge commands, divisions, units, reports
             context.Reports.RemoveRange(context.Reports);
