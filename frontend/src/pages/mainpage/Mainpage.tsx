@@ -98,9 +98,18 @@ export class MainPage extends React.Component<MainPageProps> {
                         item.imageUrl && (
                           <div
                             key={item.id}
-                            className="bg-items-flex research-item-animation"
+                            className={
+                              item.imageUrl.indexOf("szonaragyu") >= 0
+                                ? "bg-items-flex szonar"
+                                : "bg-items-flex research-item-animation"
+                            }
                           >
                             <img
+                              className={
+                                item.imageUrl.indexOf("szonaragyu") >= 0
+                                  ? "szonar"
+                                  : "img"
+                              }
                               src={BasePortUrl + item.imageUrl}
                               alt="items"
                             />

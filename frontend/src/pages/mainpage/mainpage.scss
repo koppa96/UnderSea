@@ -15,7 +15,6 @@
   min-height: 100%;
   max-height: 100%;
 }
-$randomNumber: random(20);
 .building-img-holder {
   position: absolute;
   z-index: -1;
@@ -30,54 +29,57 @@ $randomNumber: random(20);
   justify-content: center;
   align-content: center;
   align-items: center;
-  /* prettier-ignore */
-  >div{
+  > div {
     display: flex;
     flex-direction: row;
-    
+
     .bg-items-flex {
-    height: 250px;
-    padding-top: $randomNumber;
-    
-  }
-  @keyframes glowing {
-    0%   {
-       opacity: 0.95; 
-       filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.3));
+      height: 250px;
+    }
+    .szonar {
+      position: relative;
+      height: 400px;
+      top: -70px;
+      left: 20px;
+    }
+    @keyframes glowing {
+      0% {
+        opacity: 0.95;
+        filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.3));
       }
       33% {
         opacity: 1;
-        }
-        66% {
-          opacity: 0.97;
-          
-          filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.6));
-        }
-      100% {
-         opacity: 0.95;
-         
-         filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
-        }
-  }
+      }
+      66% {
+        opacity: 0.97;
 
-  @keyframes moving {
-    0%   {
-       opacity: 0.95; 
-       transform: rotate(0deg);
+        filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.6));
+      }
+      100% {
+        opacity: 0.95;
+
+        filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+      }
+    }
+
+    @keyframes moving {
+      0% {
+        opacity: 0.95;
+        transform: rotate(0deg);
       }
       33% {
         transform: rotate(1deg);
         opacity: 1;
-        }
-        66% {
-          transform: rotate(-1deg);
-          opacity: 0.97;
-          }
+      }
+      66% {
+        transform: rotate(-1deg);
+        opacity: 0.97;
+      }
       100% {
-         opacity: 0.95;
-         transform: rotate(0deg); 
-        }
-  }
+        opacity: 0.95;
+        transform: rotate(0deg);
+      }
+    }
   }
   .researches {
     max-height: 200px;
@@ -85,6 +87,7 @@ $randomNumber: random(20);
   .building {
     max-height: 200px;
   }
+
   .research-item-animation {
     animation: moving 2s infinite ease-in-out;
   }
