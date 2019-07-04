@@ -1,8 +1,5 @@
-import {
-  IBriefCreationInfo,
-  ICreationInfo,
-  ICountryInfo
-} from "../../../api/Client";
+import { ICountryInfo } from "../../../pages/mainpage/Interface";
+
 export interface NavbarState {
   navBarIcons?: ICountryInfo;
 }

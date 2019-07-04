@@ -4,4 +4,5 @@ export interface NavBarIconProp {
   count: number;
   info?: string;
   name?: string;
+  units?: number;
 }

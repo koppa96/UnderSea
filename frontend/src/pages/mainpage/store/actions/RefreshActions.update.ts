@@ -1,4 +1,4 @@
-import { ICountryInfo } from "../../../../api/Client";
+import { ICountryInfo } from "../../Interface";
 
 export interface IRefreshActionsTypes {
   REQUEST: "REFRESH_REQUEST_SUPER_DATA";

@@ -23,7 +23,9 @@ export const NavBarIcon = (props: NavBarIconProp) => {
         <img src={image} alt="icon" />
       </div>
       <div className="navbaricon-font">
-        <span className="navbaricon-amount">{props.count}</span>
+        <span className="navbaricon-amount">
+          {props.units ? props.units + "/" + props.count : props.count}
+        </span>
         {props.info && <span className="navbaricon-info">{props.info}</span>}
       </div>
     </div>

@@ -11,6 +11,17 @@ export class NavBar extends React.Component<NavBarProps> {
     const navbarArmy = navBarIcons && navBarIcons.armyInfo;
     const navbarPearl = navBarIcons && navBarIcons.pearls;
     const navbarCollar = navBarIcons && navBarIcons.corals;
+    const navBarBarracks = navBarIcons && navBarIcons.barrackSpace;
+    const buildings = navBarIcons
+      ? navBarIcons.buildings
+        ? navBarIcons.buildings
+        : []
+      : [];
+    const zatonyvar = buildings.find(
+      building =>
+        building.imageUrl && building.imageUrl.indexOf("zatonyvar") >= 0
+    );
+    var allUnits = 0;
 
     const navbarPearlPerRound = navBarIcons && navBarIcons.pearlsPerRound;
     const navbarCoralPerRound = navBarIcons && navBarIcons.coralsPerRound;
@@ -25,17 +36,20 @@ export class NavBar extends React.Component<NavBarProps> {
           <div className="navbar-wrapper">
             <ul className="nav navbar-nav">
               {navbarArmy &&
-                navbarArmy.map(item => (
-                  <li key={item.id}>
-                    <NavBarIcon
-                      id={item.id}
-                      imageUrl={item.imageUrl && item.imageUrl}
-                      count={item.totalCount && item.totalCount}
-                      name={item.name && item.name}
-                      info={item.defendingCount + " véd"}
-                    />
-                  </li>
-                ))}
+                navbarArmy.map(item => {
+                  allUnits += item.totalCount;
+                  return (
+                    <li key={item.id}>
+                      <NavBarIcon
+                        id={item.id}
+                        imageUrl={item.imageUrl && item.imageUrl}
+                        count={item.totalCount && item.totalCount}
+                        name={item.name && item.name}
+                        info={item.defendingCount + " véd"}
+                      />
+                    </li>
+                  );
+                })}
             </ul>
             <NavBarIcon
               count={navbarCollar ? navbarCollar : 0}
@@ -48,6 +62,14 @@ export class NavBar extends React.Component<NavBarProps> {
               id={1}
               info={navbarPearlPerRound + "/kör"}
               name="gyöngy"
+            />
+            <NavBarIcon
+              count={navBarBarracks ? navBarBarracks : 0}
+              id={2}
+              info={"Szállás"}
+              name="barrack"
+              units={allUnits}
+              imageUrl={zatonyvar && zatonyvar.imageUrl}
             />
             <ul className="nav navbar-nav">
               {navbarBuildings &&
