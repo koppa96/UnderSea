@@ -53,7 +53,7 @@ namespace StrategyGame.Api.Controllers
         [Route("me/image")]
         [ProducesResponseType(200)]
         [ProducesResponseType(401)]
-        public async Task<ActionResult> SaveProfileImageAsync()
+        public async Task<ActionResult<string>> SaveProfileImageAsync()
         {
             var image = Request.Form.Files.First();
             var filename = Guid.NewGuid() + "." + image.FileName.Split(".").Last();
@@ -69,7 +69,7 @@ namespace StrategyGame.Api.Controllers
             user.ImageUrl = $"images/profile/{filename}";
             await _userManager.UpdateAsync(user);
 
-            return Ok();
+            return Ok(user.ImageUrl);
         }
 
         [HttpPost]
