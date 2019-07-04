@@ -679,12 +679,12 @@ namespace StrategyGame.Bll.Extensions
             var b1 = await context.BuildingTypes.FirstAsync();
             var b2 = await context.BuildingTypes.Skip(1).FirstAsync();
 
-            context.CountryBuildings.AddRange(new CountryBuilding
+            context.CountryBuildings.AddRange(new AbstractConnectorWithAmount<Country, BuildingType>
             {
                 Child = b1,
                 Amount = 1,
                 Parent = bc
-            }, new CountryBuilding
+            }, new AbstractConnectorWithAmount<Country, BuildingType>
             {
                 Child = b2,
                 Amount = 13,
@@ -809,7 +809,7 @@ namespace StrategyGame.Bll.Extensions
                 InProgressBuildings = context.BuildingTypes.Where(b => rng.NextDouble() < 0.5)
                     .Select(b => new InProgressBuilding { TimeLeft = 1, Child = b }).ToList(),
                 Buildings = context.BuildingTypes.Where(b => rng.NextDouble() < 0.5)
-                    .Select(b => new CountryBuilding { Amount = rng.Next(1, 5), Child = b }).ToList()
+                    .Select(b => new AbstractConnectorWithAmount<Country, BuildingType> { Amount = rng.Next(1, 5), Child = b }).ToList()
             }).ToList();
 
             foreach (var country in countries)

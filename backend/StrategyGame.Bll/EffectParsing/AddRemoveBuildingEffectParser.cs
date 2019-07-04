@@ -27,7 +27,7 @@ namespace StrategyGame.Bll.EffectParsing
 
                         if (existing == null)
                         {
-                            var bld = new CountryBuilding
+                            var bld = new AbstractConnectorWithAmount<Country, BuildingType>
                             {
                                 // TODO async effect parsing?
                                 Child = context.BuildingTypes.Find(id),

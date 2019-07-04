@@ -6,6 +6,7 @@ using StrategyGame.Bll.EffectParsing;
 using StrategyGame.Bll.Extensions;
 using StrategyGame.Bll.Services.TurnHandling;
 using StrategyGame.Dal;
+using StrategyGame.Model.Entities;
 using StrategyGame.Model.Entities.Creations;
 using StrategyGame.Model.Entities.Effects;
 using System.Linq;
@@ -303,7 +304,7 @@ namespace StrategyGame.Tests.Services
                 .Include(c => c.InProgressBuildings)
                 .SingleAsync(x => x.ParentUser.UserName == username);
 
-            country.Buildings.Add(new CountryBuilding { Child = magicBuilding, Amount = 1 });
+            country.Buildings.Add(new AbstractConnectorWithAmount<Country, BuildingType> { Child = magicBuilding, Amount = 1 });
 
             await turnService.EndTurnAsync(context);
         }

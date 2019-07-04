@@ -20,6 +20,7 @@ namespace StrategyGame.DatabaseHelper
             using (var context = new UnderSeaDatabaseContext(builder.Options))
             {
                 Console.WriteLine("Connected to the database.");
+                //context.Database.EnsureDeleted();
                 context.PurgeDatabaseAsync().Wait();
                 context.FillWithDefaultAsync().Wait();
                 //context.AddTestUsersAsync().Wait();

@@ -408,7 +408,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
 
                 if (existing == null)
                 {
-                    var res = new CountryBuilding
+                    var res = new AbstractConnectorWithAmount<Model.Entities.Country, BuildingType>
                     {
                         Parent = country,
                         Child = building.Key,

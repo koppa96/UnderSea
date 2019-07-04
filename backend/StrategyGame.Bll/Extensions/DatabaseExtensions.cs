@@ -391,7 +391,7 @@ namespace StrategyGame.Bll.Extensions
             context.Countries.Add(newCountry);
             context.Commands.Add(defenders);
             context.CountryBuildings.AddRange((await context.BuildingTypes.Where(b => b.IsStarting).ToListAsync())
-                .Select(b => new CountryBuilding { Parent = newCountry, Amount = 1, Child = b }));
+                .Select(b => new AbstractConnectorWithAmount<Country, BuildingType> { Parent = newCountry, Amount = 1, Child = b }));
         }
 
         public static Dictionary<int, long> GetTotalProduction(this CountryModifierBuilder builder)

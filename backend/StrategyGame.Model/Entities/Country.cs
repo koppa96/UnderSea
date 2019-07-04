@@ -46,7 +46,7 @@ namespace StrategyGame.Model.Entities
         /// <summary>
         /// Gets the collection of buildings that are within the country.
         /// </summary>
-        public virtual ICollection<CountryBuilding> Buildings { get; set; }
+        public virtual ICollection<AbstractConnectorWithAmount<Country, BuildingType>> Buildings { get; set; }
 
         /// <summary>
         /// Gets the collection of researches completed by the country.

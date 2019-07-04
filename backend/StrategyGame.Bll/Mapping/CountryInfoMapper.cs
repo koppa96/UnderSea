@@ -20,7 +20,7 @@ namespace StrategyGame.Bll.Mapping
             CreateMap<Country, CountryInfo>();
             CreateMap<Country, RankInfo>();
 
-            CreateMap<CountryBuilding, BriefCreationInfo>()
+            CreateMap<AbstractConnectorWithAmount<Country, BuildingType>, BriefCreationInfo>()
                 .ForMember(dest => dest.ImageUrl, conf => conf.MapFrom(src => src.Child.Content.ImageUrl))
                 .ForMember(dest => dest.IconImageUrl, conf => conf.MapFrom(src => src.Child.Content.IconImageUrl))
                 .ForMember(dest => dest.Id, conf => conf.MapFrom(src => src.Child.Id))
