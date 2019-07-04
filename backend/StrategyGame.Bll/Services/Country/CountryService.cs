@@ -106,6 +106,7 @@ namespace StrategyGame.Bll.Services.Country
             info.CoralsPerRound = (long)Math.Round(mods.CoralProduction * mods.HarvestModifier - coralUpkeep);
             info.PearlsPerRound = (long)Math.Round(mods.Population * globals.BaseTaxation * mods.TaxModifier
                 + mods.PearlProduction - pearlUpkeep);
+            info.BarrackSpace = mods.BarrackSpace;
 
             // Start with all buildings and researches
             var totalBuildings = await Context.BuildingTypes.Include(r => r.Content)
@@ -161,7 +162,7 @@ namespace StrategyGame.Bll.Services.Country
                 .Select(i => Mapper.Map<UnitType, BriefUnitInfo>(i)).ToListAsync())
                 .ToList();
 
-            info.UnseenReports = country.Attacks.Count(r => !r.IsSeenByAttacker && !r.IsDeletedByAttacker) + 
+            info.UnseenReports = country.Attacks.Count(r => !r.IsSeenByAttacker && !r.IsDeletedByAttacker) +
                                  country.Defenses.Count(r => !r.IsSeenByDefender && !r.IsDeletedByDefender);
 
             if (country.CurrentEvent != null)

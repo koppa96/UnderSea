@@ -133,10 +133,6 @@ namespace StrategyGame.Bll.Services.TurnHandling
                 (double defensePower, double defenseMods, double defenseBase) = GetCurrentUnitPower(defenders, globals,
                     false, builder);
 
-                var losses = attackPower > defensePower
-                    ? CullUnits(defenders, globals.UnitLossOnLostBatle)
-                    : CullUnits(attack, globals.UnitLossOnLostBatle);
-
                 var report = new CombatReport
                 {
                     Attacker = attack.ParentCountry,
@@ -153,9 +149,12 @@ namespace StrategyGame.Bll.Services.TurnHandling
                     BaseDefensePower = defenseBase,
                     Round = globals.Round,
                     PearlLoot = 0,
-                    CoralLoot = 0,
-                    Losses = losses
+                    CoralLoot = 0
                 };
+
+                report.Losses = attackPower > defensePower
+                    ? CullUnits(defenders, globals.UnitLossOnLostBatle)
+                    : CullUnits(attack, globals.UnitLossOnLostBatle);
 
                 if (attackPower > defensePower)
                 {
