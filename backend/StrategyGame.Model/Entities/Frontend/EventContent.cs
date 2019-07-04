@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents the content for a research object.
     /// </summary>
-    public class EventContent : AbstractFrontendContent<RandomEvent, EventContent>
+    public class EventContent : AbstractFrontendContent<RandomEvent>
     {
         /// <summary>
         /// Gets or sets the flavour text for the event.

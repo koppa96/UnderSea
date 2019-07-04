@@ -11,8 +11,7 @@ namespace StrategyGame.Model.Entities.Frontend
     /// The <typeparamref name="TEntity"/> generic type is used to provide type safe IEquatable support,
     /// and inheritors should specify their own type as it.
     /// </remarks>
-    public abstract class AbstractFrontendContent<TParent, TEntity> : AbstractEntity<TEntity>
-        where TEntity : AbstractFrontendContent<TParent, TEntity>
+    public abstract class AbstractFrontendContent<TParent> : AbstractEntity<AbstractFrontendContent<TParent>>
     {
         /// <summary>
         /// Gets the object the content belongs to.

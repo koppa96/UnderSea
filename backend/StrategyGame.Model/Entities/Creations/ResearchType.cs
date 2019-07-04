@@ -8,13 +8,8 @@ namespace StrategyGame.Model.Entities.Creations
     /// <summary>
     /// Represents a research type in the UnderSea database.
     /// </summary>
-    public class ResearchType : AbstractEntity<ResearchType>, IPurchasable<ResearchType, ResearchResource>
+    public class ResearchType : AbstractCreationType<ResearchType, ResearchResource, ResearchContent>
     {
-        /// <summary>
-        /// Gets or sets the costs of the research.
-        /// </summary>
-        public ICollection<ResearchResource> Cost { get; set; }
-
         /// <summary>
         /// Gets or sets the built time of the research (in turns).
         /// </summary>
@@ -25,11 +20,6 @@ namespace StrategyGame.Model.Entities.Creations
         /// 0 means the research can't be completed, negative means it may be completed unlimited times.
         /// </summary>
         public int MaxCompletedAmount { get; set; }
-
-        /// <summary>
-        /// Gets or sets the content of the research.
-        /// </summary>
-        public virtual ResearchContent Content { get; set; }
 
         /// <summary>
         /// Gets the collection of effects this research provides.

@@ -43,7 +43,7 @@ namespace StrategyGame.Bll.Services.Reports
                     .ThenInclude(r => r.DefenderLosses)
                         .ThenInclude(d => d.Unit)
                             .ThenInclude(u => u.Content)
-                .Include(c => c.Defenses)
+                    .Include(c => c.Defenses)
                     .ThenInclude(r => r.Attackers)
                         .ThenInclude(d => d.Unit)
                             .ThenInclude(u => u.Content)

@@ -8,13 +8,8 @@ namespace StrategyGame.Model.Entities.Creations
     /// <summary>
     /// Represents a building type within the UnderSea database.
     /// </summary>
-    public class BuildingType : AbstractEntity<BuildingType>, IPurchasable<BuildingType, BuildingResource>
+    public class BuildingType : AbstractCreationType<BuildingType, BuildingResource, BuildingContent>
     {
-        /// <summary>
-        /// Gets or sets the costs of the building.
-        /// </summary>
-        public ICollection<BuildingResource> Cost { get; set; }
-
         /// <summary>
         /// Gets or sets the built time of the building (in turns).
         /// </summary>
@@ -30,11 +25,6 @@ namespace StrategyGame.Model.Entities.Creations
         /// Gets or sets if the building is a starting building.
         /// </summary>
         public bool IsStarting { get; set; }
-
-        /// <summary>
-        /// Gets or sets the <see cref="BuildingContent"/> of the building.
-        /// </summary>
-        public virtual BuildingContent Content { get; set; }
 
         /// <summary>
         /// Gets the collection of effects this building provides.

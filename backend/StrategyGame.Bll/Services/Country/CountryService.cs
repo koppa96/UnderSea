@@ -101,47 +101,8 @@ namespace StrategyGame.Bll.Services.Country
                 throw new UnauthorizedAccessException("Can't access country not owned by the user.");
             }
 
-            var info = Mapper.Map<Model.Entities.Country, CountryInfo>(country);
             var globals = await Context.GlobalValues.SingleAsync();
-            info.Round = globals.Round;
             return await GatherInfoAsync(country, globals);
-        }
-
-        public async Task<IEnumerable<CountryInfo>> GetCountryInfoAsync(string username)
-        {
-            var countries = await Context.Countries
-                  .Include(c => c.Commands)
-                       .ThenInclude(comm => comm.Divisions)
-                           .ThenInclude(d => d.Unit)
-                               .ThenInclude(u => u.Content)
-                  .Include(c => c.Buildings)
-                       .ThenInclude(b => b.Child)
-                           .ThenInclude(b => b.Content)
-                  .Include(c => c.Researches)
-                       .ThenInclude(r => r.Child)
-                           .ThenInclude(r => r.Content)
-                  .Include(c => c.InProgressBuildings)
-                       .ThenInclude(b => b.Child)
-                           .ThenInclude(b => b.Content)
-                  .Include(c => c.InProgressResearches)
-                       .ThenInclude(r => r.Child)
-                           .ThenInclude(r => r.Content)
-                  .Include(c => c.CurrentEvent)
-                       .ThenInclude(e => e.Content)
-                  .Include(c => c.Attacks)
-                  .Include(c => c.Defenses)
-                  .Include(c => c.EventReports)
-                  .Where(c => c.ParentUser.UserName == username).ToListAsync();
-
-            var infos = new List<CountryInfo>(countries.Count);
-            var globals = await Context.GlobalValues.SingleAsync();
-
-            foreach (var c in countries)
-            {
-                infos.Add(await GatherInfoAsync(c, globals));
-            }
-
-            return infos;
         }
 
         protected async Task<CountryInfo> GatherInfoAsync(Model.Entities.Country country, GlobalValue globals)

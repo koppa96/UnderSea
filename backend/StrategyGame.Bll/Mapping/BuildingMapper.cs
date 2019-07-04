@@ -29,6 +29,7 @@ namespace StrategyGame.Bll.Mapping
                 .ForMember(dest => dest.ImageUrl, conf => conf.MapFrom(src => src.Content.ImageUrl))
                 .ForMember(dest => dest.IconImageUrl, conf => conf.MapFrom(src => src.Content.IconImageUrl))
                 .ForMember(dest => dest.Count, conf => conf.MapFrom(src => 0));
+
         }
     }
 }
