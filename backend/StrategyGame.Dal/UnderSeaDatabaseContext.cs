@@ -148,8 +148,6 @@ namespace StrategyGame.Dal
 
         public DbSet<EventReport> EventReports { get; set; }
 
-        public DbSet<SpyCommand> SpyCommands { get; set; }
-
         #endregion
 
         /// <summary>
@@ -260,14 +258,6 @@ namespace StrategyGame.Dal
             builder.Entity<Country>()
                 .HasMany(x => x.Commands)
                 .WithOne(x => x.ParentCountry);
-
-            builder.Entity<Country>()
-                .HasMany(c => c.SpyCommands)
-                .WithOne(c => c.ParentCountry);
-
-            builder.Entity<Country>()
-                .HasMany(c => c.IncomingSpyCommands)
-                .WithOne(c => c.TargetCountry);
 
             builder.Entity<Country>()
                 .HasOne(c => c.ParentUser)
