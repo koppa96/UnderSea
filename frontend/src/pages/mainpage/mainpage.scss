@@ -19,9 +19,7 @@ $randomNumber: random(20);
 .building-img-holder {
   position: absolute;
   z-index: -1;
-  min-height: 10%;
-  max-height: 10%;
-  height: 10%;
+  height: 100%;
   display: flex;
   width: 100%;
   flex-direction: row;
@@ -30,10 +28,11 @@ $randomNumber: random(20);
   flex-wrap: nowrap;
   justify-content: center;
   align-content: center;
+  align-items: center;
   /* prettier-ignore */
   .bg-items-flex {
-    //position: absolute;
-    margin-top: $randomNumber + px;
+    height: 250px;
+    padding-top: $randomNumber
   }
 }
 .undersea-font-mainpage {
