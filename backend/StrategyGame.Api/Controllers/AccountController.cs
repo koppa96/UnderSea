@@ -53,23 +53,29 @@ namespace StrategyGame.Api.Controllers
         [Route("me/image")]
         [ProducesResponseType(200)]
         [ProducesResponseType(401)]
-        public async Task<ActionResult> SaveProvileImageAsync()
+        public async Task<ActionResult<string>> SaveProfileImageAsync()
         {
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
             var image = Request.Form.Files.First();
-            var filename = Guid.NewGuid() + image.FileName.Split(".").Last();
 
-            var path = Path.Combine(Directory.GetCurrentDirectory() + @"\wwwroot\images\profile\" + filename);
+            if (System.IO.File.Exists(user.ImageUrl) && user.ImageUrl != "images/static/defaultprofile.svg")
+            {
+                System.IO.File.Delete(user.ImageUrl);
+            }
 
-            using (var fileStream = System.IO.File.OpenWrite(path))
+            var filename = Guid.NewGuid() + "." + image.FileName.Split(".").Last();
+
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "profile", filename);
+
+            using (var fileStream = System.IO.File.Create(path))
             {
                 await image.CopyToAsync(fileStream);
             }
 
-            var user = await _userManager.FindByNameAsync(User.Identity.Name);
             user.ImageUrl = $"images/profile/{filename}";
             await _userManager.UpdateAsync(user);
 
-            return Ok();
+            return Ok(user.ImageUrl);
         }
 
         [HttpPost]
