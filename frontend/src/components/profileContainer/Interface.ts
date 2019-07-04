@@ -1,6 +1,7 @@
 import { IUserInfo } from "../../api/Client";
 import { ProfileState } from "./store/store";
 import { ResetAction } from "../../store";
+import { PostProfileInput } from "./store/actions/uploadImage.post";
 
 interface NativeProps {
   togglePopup: Function;
@@ -13,6 +14,7 @@ export interface MappedProps {
 export interface DispachedProps {
   getUserInfo: () => void;
   logout: () => ResetAction;
+  uploadImage:(img:PostProfileInput)=>void;
 }
 
 export type ProfileProps = NativeProps & MappedProps & DispachedProps;
