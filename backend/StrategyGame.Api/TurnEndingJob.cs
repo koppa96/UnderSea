@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using StrategyGame.Api.Hubs;
 using StrategyGame.Bll.Services.Country;
+using StrategyGame.Bll.Services.Logger;
 using StrategyGame.Bll.Services.TurnHandling;
 using StrategyGame.Bll.Services.UserTracker;
 using StrategyGame.Dal;
@@ -15,31 +16,44 @@ namespace StrategyGame.Api
     public class TurnEndingJob
     {
         protected UnderSeaDatabaseContext Context { get; }
-
         protected ITurnHandlingService Handler { get; }
-
         protected IHubContext<UnderSeaHub> Hub { get; }
-
         protected ICountryService Service { get; }
-
         protected IUserTracker Tracker { get; }
+        protected IDbLogger Logger { get; }
 
         public TurnEndingJob(UnderSeaDatabaseContext context,
             ITurnHandlingService handler, IHubContext<UnderSeaHub> hub,
-            ICountryService service, IUserTracker tracker)
+            ICountryService service, IUserTracker tracker, IDbLogger logger)
         {
             Context = context ?? throw new ArgumentNullException(nameof(context));
             Handler = handler ?? throw new ArgumentNullException(nameof(handler));
             Hub = hub ?? throw new ArgumentNullException(nameof(hub));
             Service = service ?? throw new ArgumentNullException(nameof(service));
             Tracker = tracker ?? throw new ArgumentNullException(nameof(tracker));
+            logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public async Task EndTurnAsync()
         {
-            await Handler.EndTurnAsync(Context);
+            try
+            {
+                await Handler.EndTurnAsync(Context);
+                await Hub.Clients.All.SendAsync(nameof(IHubClient.NotifyTurnEnded));
+            }
+            catch (Exception e)
+            {
+                try
+                {
+                    await Logger.LogExceptionAsync(e);
+                }
+                catch (Exception ee)
+                {
+                    throw new AggregateException(e, ee);
+                }
 
-            await Hub.Clients.All.SendAsync(nameof(IHubClient.NotifyTurnEnded));
+                throw;
+            }
         }
     }
 }
