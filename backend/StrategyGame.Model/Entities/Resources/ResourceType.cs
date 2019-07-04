@@ -37,5 +37,7 @@ namespace StrategyGame.Model.Entities.Resources
         /// Gets or sets the collection of costs for units in the resource.
         /// </summary>
         public ICollection<UnitResource> UnitResources { get; set; }
+
+        public ICollection<ReportResource> ReportResources { get; set; }
     }
 }

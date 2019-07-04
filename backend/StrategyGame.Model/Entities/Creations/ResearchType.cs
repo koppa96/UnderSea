@@ -45,5 +45,7 @@ namespace StrategyGame.Model.Entities.Creations
         /// Gets the collection of researches of this type that are being researched.
         /// </summary>
         public virtual ICollection<InProgressResearch> InProgressResearches { get; set; }
+
+        public ICollection<ReportResearch> ReportResearches { get; set; }
     }
 }

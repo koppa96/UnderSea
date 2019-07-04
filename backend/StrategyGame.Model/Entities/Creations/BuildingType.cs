@@ -50,5 +50,7 @@ namespace StrategyGame.Model.Entities.Creations
         /// Gets the collection of buildings of this type that are being built.
         /// </summary>
         public virtual ICollection<InProgressBuilding> InProgressBuildings { get; set; }
+
+        public ICollection<ReportBuilding> ReportBuildings { get; set; }
     }
 }

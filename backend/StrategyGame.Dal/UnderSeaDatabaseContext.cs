@@ -148,6 +148,12 @@ namespace StrategyGame.Dal
 
         public DbSet<EventReport> EventReports { get; set; }
 
+        public DbSet<ReportResearch> ReportResearches { get; set; }
+
+        public DbSet<ReportBuilding> ReportBuildings { get; set; }
+
+        public DbSet<ReportResource> ReportResources { get; set; }
+
         #endregion
 
         /// <summary>
@@ -165,6 +171,22 @@ namespace StrategyGame.Dal
         /// <param name="builder">The <see cref="ModelBuilder"/> to use.</param>
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.Entity<ReportBuilding>()
+                .HasOne(b => b.Parent)
+                .WithMany(r => r.DefenderBuildings);
+
+            builder.Entity<ReportBuilding>()
+                .HasOne(b => b.Child)
+                .WithMany(b => b.ReportBuildings);
+
+            builder.Entity<ReportResearch>()
+                .HasOne(r => r.Parent)
+                .WithMany(r => r.DefenderResearches);
+
+            builder.Entity<ReportResearch>()
+                .HasOne(r => r.Child)
+                .WithMany(r => r.ReportResearches);
+
             // Event reports
             builder.Entity<EventReport>()
                 .HasOne(r => r.Country)
@@ -210,6 +232,14 @@ namespace StrategyGame.Dal
             builder.Entity<UnitResource>()
                 .HasOne(ur => ur.Child)
                 .WithMany(r => r.UnitResources);
+
+            builder.Entity<ReportResource>()
+                .HasOne(r => r.Parent)
+                .WithMany(r => r.Loot);
+
+            builder.Entity<ReportResource>()
+                .HasOne(r => r.Child)
+                .WithMany(r => r.ReportResources);
 
             // Combat report
             builder.Entity<CombatReport>()

@@ -2,6 +2,7 @@
 using StrategyGame.Model.Entities.Units;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using StrategyGame.Model.Entities.Creations;
 
 namespace StrategyGame.Model.Entities.Reports
 {
@@ -57,9 +58,14 @@ namespace StrategyGame.Model.Entities.Reports
         public ICollection<Division> Defenders { get; set; }
 
         /// <summary>
-        /// Gets or sets the losses suffered during the attack. Only the loosing side suffers losses.
+        /// Gets or sets the losses suffered by the attacker.
         /// </summary>
-        public ICollection<Division> Losses { get; set; }
+        public ICollection<Division> AttackerLosses { get; set; }
+
+        /// <summary>
+        /// Gets or sets the losses suffered by the defender.
+        /// </summary>
+        public ICollection<Division> DefenderLosses { get; set; }
 
         /// <summary>
         /// Gets or sets the base attack power.
@@ -100,5 +106,9 @@ namespace StrategyGame.Model.Entities.Reports
         /// Gets or sets the collection of looted resources.
         /// </summary>
         public ICollection<ReportResource> Loot { get; set; }
+
+        public ICollection<ReportBuilding> DefenderBuildings { get; set; }
+
+        public ICollection<ReportResearch> DefenderResearches { get; set; }
     }
 }
