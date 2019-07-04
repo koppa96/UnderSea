@@ -58,9 +58,9 @@ namespace StrategyGame.Api.Controllers
             var image = Request.Form.Files.First();
             var filename = Guid.NewGuid() + image.FileName.Split(".").Last();
 
-            var path = Path.Combine(Directory.GetCurrentDirectory() + @"\wwwroot\images\profile\" + filename);
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "profile", filename);
 
-            using (var fileStream = System.IO.File.OpenWrite(path))
+            using (var fileStream = System.IO.File.Create(path))
             {
                 await image.CopyToAsync(fileStream);
             }
