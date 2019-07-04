@@ -58,7 +58,7 @@ namespace StrategyGame.Api.Controllers
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
             var image = Request.Form.Files.First();
 
-            if (System.IO.File.Exists(user.ImageUrl))
+            if (System.IO.File.Exists(user.ImageUrl) && user.ImageUrl != "images/static/defaultprofile.svg")
             {
                 System.IO.File.Delete(user.ImageUrl);
             }
