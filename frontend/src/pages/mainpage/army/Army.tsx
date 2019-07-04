@@ -107,7 +107,11 @@ export class Army extends React.Component<ArmyProps, InitialState> {
             addUnits({ unitsToAdd: temp });
           }}
         >
-          {ownedUnitState.isPostRequesting ? "töltés.." : "Megveszem"}
+          {ownedUnitState.isPostRequesting ? (
+            <div className="loading-circle loading-button" />
+          ) : (
+            "Megveszem"
+          )}
         </button>
         {ownedUnitState.error && (
           <p className="common-error-text">{ownedUnitState.error}</p>

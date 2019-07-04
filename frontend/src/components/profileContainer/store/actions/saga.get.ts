@@ -6,16 +6,10 @@ import {
   fetchError,
   GetProfileActions
 } from "./profileContainer.get";
-import { AccountsClient, IUserInfo } from "../../../../api/Client";
 import { registerAxiosConfig } from "../../../../config/axiosConfig";
 import axios from "axios";
 import { BasePortUrl } from "../../../..";
-
-export const beginFetchBuilding = () => {
-  const getProfileedList = new AccountsClient();
-  const tempData = getProfileedList.getAccount();
-  return tempData;
-};
+import { IUserInfo } from "../../Interface";
 
 const beginFetchUser = async () => {
   const instance = axios.create();

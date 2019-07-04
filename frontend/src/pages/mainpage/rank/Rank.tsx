@@ -47,7 +47,7 @@ export class Rank extends React.Component<RankProps> {
         />
 
         {totalRank.isRequesting ? (
-          <span>Betöltés...</span>
+            <div className="loading-circle loading-button" />
         ) : this.state.filtered.length > 1 ? (
           <ul className="rank-page">
             {this.state.filteredrank.map(item => (

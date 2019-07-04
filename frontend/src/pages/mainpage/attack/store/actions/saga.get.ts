@@ -1,10 +1,10 @@
 import { call, put, takeEvery } from "redux-saga/effects";
-import { ITargetInfo } from "../../../../../api/Client";
 import {
   fetchSucces,
   IRequestActionGetTarget,
   GetTargetActions,
-  fetchError
+  fetchError,
+  ITargetInfo
 } from "./GetAttackAction.get";
 
 import axios from "axios";

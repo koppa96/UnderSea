@@ -68,7 +68,7 @@ export class Buildings extends React.Component<BuildingProps> {
           description={description}
         />
         <div className="building-page hide-scroll">
-          {ownedBuildingState.isRequesting && <span>Betöltés...</span>}
+          {ownedBuildingState.isRequesting &&   <div className="loading-circle loading-button" />}
 
           {ownedBuildingState.buildings.length > 0 &&
             ownedBuildingState.buildings.map(item => {
@@ -108,7 +108,7 @@ export class Buildings extends React.Component<BuildingProps> {
             ? "Épül"
             : ownedBuildingState
             ? ownedBuildingState.isPostRequesting
-              ? "Töltés"
+              ?   <div className="loading-circle loading-button" />
               : "Megveszem"
             : "Hiba"}
         </button>

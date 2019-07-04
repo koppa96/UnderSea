@@ -33,7 +33,7 @@ export class Reports extends React.Component<ReportsProps> {
         <ComponentHeader title={title} />
         <ul className="report-page">
           {isRequesting ? (
-            <span>Betöltés...</span>
+              <div className="loading-circle loading-button" />
           ) : (
             report &&
             report.map(item => (

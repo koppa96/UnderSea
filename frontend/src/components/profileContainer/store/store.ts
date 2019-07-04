@@ -1,4 +1,4 @@
-import { IUserInfo } from "../../../api/Client";
+import { IUserInfo } from "../Interface";
 
 export interface ProfileState {
   profile: IUserInfo;

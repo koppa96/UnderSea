@@ -1,4 +1,3 @@
-import { ITargetInfo } from "../../../../api/Client";
 export interface TargetState {
   targets: ITargetInfo[];
   isPostRequesting: boolean;
@@ -13,3 +12,8 @@ export const targetInitialState: TargetState = {
   isLoaded: false,
   isRequesting: false
 };
+export interface ITargetInfo {
+  username?: string | undefined;
+  countryId: number;
+  countryName?: string | undefined;
+}

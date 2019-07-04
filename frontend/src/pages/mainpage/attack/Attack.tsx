@@ -111,7 +111,7 @@ export class Attack extends React.Component<TargetProps> {
                   ))
                 )
               ) : (
-                <span>Betöltés...</span>
+                <div className="loading-circle loading-button" />
               )}
             </ul>
           </div>
@@ -150,13 +150,15 @@ export class Attack extends React.Component<TargetProps> {
             });
           }}
         >
-          {this.props.targets.isRequesting
-            ? "Töltés"
-            : this.props.targets.isPostRequesting
-            ? "Töltés"
-            : this.state.targetCountryId < 1 || this.state.units.length < 2
-            ? "Válassz"
-            : "Megtámadom"}
+          {this.props.targets.isRequesting ? (
+            <div className="loading-circle loading-button" />
+          ) : this.props.targets.isPostRequesting ? (
+            <div className="loading-circle loading-button" />
+          ) : this.state.targetCountryId < 1 || this.state.units.length < 2 ? (
+            "Válassz"
+          ) : (
+            "Megtámadom"
+          )}
         </button>
       </div>
     );

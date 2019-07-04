@@ -60,7 +60,9 @@
     transform: rotate(360deg);
   }
 }
-
+.loading-button {
+  margin: 0;
+}
 .rectangle {
   width: $rectangle-size;
   height: $rectangle-size;
@@ -152,6 +154,10 @@
 button {
   color: $secondary-color;
   text-align: center;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
   font-family: Baloo;
   font-size: 18px;
   border-radius: 100px;

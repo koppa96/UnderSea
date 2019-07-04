@@ -43,7 +43,7 @@ export class App extends React.Component<LoginProps> {
                   loading={loading}
                 >
                   {loading ? (
-                    <span>BETÖLTÉS...</span>
+                    <div className="loading-circle loading-button" />
                   ) : (
                     <MainPageConnected mounted={this.mounted} />
                   )}

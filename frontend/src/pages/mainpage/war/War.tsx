@@ -18,7 +18,7 @@ export class War extends React.Component<WarProps> {
         <ComponentHeader title={title} />
         <ul className="war-page">
           {isRequesting ? (
-            <span>Betöltés...</span>
+            <div className="loading-circle loading-button" />
           ) : (
             war.map(item => (
               <li key={item.id}>

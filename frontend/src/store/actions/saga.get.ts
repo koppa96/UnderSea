@@ -4,14 +4,7 @@ import axios from "axios";
 
 import { BasePortUrl } from "../..";
 import { registerAxiosConfig } from "../../config/axiosConfig";
-import { AccountsClient } from "../../api/Client";
 import { fetchSucces, fetchError, CheckTokenActions } from "./CheckToken.get";
-
-export const beginFetchBuilding = () => {
-  const CheckTokenedList = new AccountsClient();
-  const tempData = CheckTokenedList.getAccount();
-  return tempData;
-};
 
 const beginFetchUser = async () => {
   const instance = axios.create();
