@@ -20,9 +20,15 @@ export class Attack extends React.Component<TargetProps> {
     targetCountryId: -1,
     units: initUnit,
     filtered: "",
-
+    reset: false,
     filteredrank: initFilter
   };
+
+  componentDidUpdate() {
+    if (this.state.reset) {
+      this.setState({ reset: false });
+    }
+  }
 
   filter = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { targets } = this.props;
@@ -35,8 +41,7 @@ export class Attack extends React.Component<TargetProps> {
         if (lowerc.startsWith(filter)) {
           filtered.push(x);
         }
-        this.setState({ filteredrank: filtered }
-        );
+        this.setState({ filteredrank: filtered });
       });
     }
   };
@@ -123,6 +128,7 @@ export class Attack extends React.Component<TargetProps> {
                 name={item.name}
                 defendingCount={item.defendingCount}
                 setTrop={this.addUnit}
+                reset={this.state.reset}
               />
             ))}
           </div>
@@ -139,7 +145,8 @@ export class Attack extends React.Component<TargetProps> {
               targetCountryId: -1,
               units: initUnit,
               filtered: "",
-              filteredrank: initFilter
+              filteredrank: initFilter,
+              reset: true
             });
           }}
         >

@@ -24,10 +24,27 @@ const PrettoSlider = withStyles({
     borderRadius: 4
   }
 })(Slider);
-export class AttackItem extends React.Component<defendingTrop> {
+
+interface Troops {
+  reset: boolean;
+  imageUrl: string | null;
+  id: number;
+  defendingCount: number;
+  name: string;
+  setTrop?: Function;
+  count: number;
+}
+
+export class AttackItem extends React.Component<Troops> {
   state = {
     value: 0
   };
+
+  componentWillReceiveProps() {
+    if (this.props.reset) {
+      this.setState({ value: 0 });
+    }
+  }
 
   changeUnit = (e: React.ChangeEvent<{}>, value: number | number[]) => {
     this.setState({ value: value });

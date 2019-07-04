@@ -11,10 +11,18 @@ import {
   IRefreshActions,
   RefreshActions
 } from "../../store/actions/RefreshActions.update";
+import {
+  DeleteWarActions,
+  IDeleteWarActions
+} from "../../war/store/actions/WarAction.delete";
 
 export const TargetReducer = (
   state = targetInitialState,
-  action: ITargetActions | IPostTargetActions | IRefreshActions
+  action:
+    | ITargetActions
+    | IPostTargetActions
+    | IRefreshActions
+    | IDeleteWarActions
 ): TargetState => {
   switch (action.type) {
     case GetTargetActions.REQUEST:
@@ -56,6 +64,22 @@ export const TargetReducer = (
         ...state,
         isPostRequesting: false,
         error: action.error ? action.error : "Ismeretlen hiba beállításnál"
+      };
+    case DeleteWarActions.REQUEST:
+      return {
+        ...state
+      };
+    case DeleteWarActions.ERROR:
+      return {
+        ...state,
+        error: action.error
+          ? action.error
+          : "Ismeretlen hiba Támadás törlésénél"
+      };
+    case DeleteWarActions.SUCCES:
+      return {
+        ...state,
+        isLoaded: false
       };
     case RefreshActions.REQUEST:
       return {

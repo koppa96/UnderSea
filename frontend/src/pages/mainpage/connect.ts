@@ -17,7 +17,12 @@ const mapStateToProps = (state: IApllicationState): MappedProps => ({
   event:
     state.app.pages.mainpage.model &&
     state.app.pages.mainpage.model.event &&
-    state.app.pages.mainpage.model.event
+    state.app.pages.mainpage.model.event,
+  researches: state.app.pages.mainpage.model
+    ? state.app.pages.mainpage.model.researches
+      ? state.app.pages.mainpage.model.researches
+      : []
+    : []
 });
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchedProps =>

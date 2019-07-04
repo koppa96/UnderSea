@@ -1,9 +1,4 @@
-import {
-  ICountryInfo,
-  IBriefCreationInfo,
-  BriefCreationInfo,
-  EventInfo
-} from "../../api/Client";
+import { ICountryInfo, BriefCreationInfo, EventInfo } from "../../api/Client";
 import { IEventInfo } from "../../components/profileContainer/Interface";
 
 export interface NativeProps {
@@ -14,6 +9,7 @@ export interface MappedProps {
   error?: string;
   loading: boolean;
   building: BriefCreationInfo[];
+  researches: BriefCreationInfo[];
   event?: EventInfo;
 }
 

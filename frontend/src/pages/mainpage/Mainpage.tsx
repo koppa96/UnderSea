@@ -54,21 +54,9 @@ export class MainPage extends React.Component<MainPageProps> {
     });
   };
   render() {
-    const { building, event } = this.props;
+    const { building, event, researches } = this.props;
     return (
       <>
-        <div className="building-img-holder">
-          {building &&
-            building.map(
-              item =>
-                item.count > 0 &&
-                item.imageUrl && (
-                  <div key={item.id} className="bg-items-flex">
-                    <img src={BasePortUrl + item.imageUrl} alt="items" />
-                  </div>
-                )
-            )}
-        </div>
         <div className="main-page">
           <NavBarConnected />
           <div className="mainpage-content">
@@ -85,6 +73,28 @@ export class MainPage extends React.Component<MainPageProps> {
               </div>
             </div>
             <main>
+              <div className="building-img-holder">
+                {building &&
+                  building.map(
+                    item =>
+                      item.count > 0 &&
+                      item.imageUrl && (
+                        <div key={item.id} className="bg-items-flex">
+                          <img src={BasePortUrl + item.imageUrl} alt="items" />
+                        </div>
+                      )
+                  )}
+                {researches &&
+                  researches.map(
+                    item =>
+                      item.count > 0 &&
+                      item.imageUrl && (
+                        <div key={item.id} className="bg-items-flex">
+                          <img src={BasePortUrl + item.imageUrl} alt="items" />
+                        </div>
+                      )
+                  )}
+              </div>
               <Switch>
                 <Route path="/account/buildings">
                   <BuildingsConnected />
