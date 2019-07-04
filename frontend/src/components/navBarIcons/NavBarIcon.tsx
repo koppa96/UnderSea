@@ -16,7 +16,7 @@ export const NavBarIcon = (props: NavBarIconProp) => {
       ? CoralImage
       : QuestionMark
     : QuestionMark;
-  //TODO: képek
+
   return (
     <div title={props.name ? props.name : "titok"} className="navbaricon-bg">
       <div className="navbaricon-rectangle">
@@ -25,6 +25,7 @@ export const NavBarIcon = (props: NavBarIconProp) => {
       <div className="navbaricon-font">
         <span className="navbaricon-amount">
           {props.units ? props.units + "/" + props.count : props.count}
+          {(props.units ? props.units : 0) > props.count && <p>!</p>}
         </span>
         {props.info && <span className="navbaricon-info">{props.info}</span>}
       </div>
