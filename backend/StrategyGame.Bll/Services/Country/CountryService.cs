@@ -88,6 +88,7 @@ namespace StrategyGame.Bll.Services.Country
                .Include(c => c.Resources)
                     .ThenInclude(r => r.Child)
                         .ThenInclude(r => r.Content)
+               .Include(c => c.EventReports)
                .SingleOrDefaultAsync(c => c.Id == countryId);
 
             if (country == null)
@@ -129,6 +130,7 @@ namespace StrategyGame.Bll.Services.Country
                        .ThenInclude(e => e.Content)
                   .Include(c => c.Attacks)
                   .Include(c => c.Defenses)
+                  .Include(c => c.EventReports)
                   .Where(c => c.ParentUser.UserName == username).ToListAsync();
 
             var infos = new List<CountryInfo>(countries.Count);
