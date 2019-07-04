@@ -25,16 +25,21 @@ const beginToAddImage = (img: FileList): Promise<void> | any => {
   return instance
     .put(url, data)
     .then(response => {
-      return response;
+      var parse: string = JSON.stringify(response.data);
+      parse = parse.replace('"', "");
+      console.log("parse", parse);
+      return parse;
     })
     .catch(error => {
+      console.log("parse", error);
       throw new Error(error);
     });
 };
 function* handleAddImage(action: IRequestActionPostProfileImg) {
   try {
-    yield call(beginToAddImage, action.params.file);
-    yield put(fetchSucces(action.params.name));
+    const temp = yield call(beginToAddImage, action.params.file);
+
+    yield put(fetchSucces(temp));
   } catch (err) {
     if (err) {
       yield put(fetchError("Sajnos valami hiba történt vásárlás közben"));
