@@ -128,7 +128,7 @@ export class MainPage extends React.Component<MainPageProps> {
                 isOpen={this.state.showPopup}
                 toggle={() => this.togglePopup()}
               >
-                <div className="popup">
+                <div className="popup-mainpage">
                   <h1>Hoppá!</h1>
                   <h2>{event && event.name ? event.name : "Titok"}</h2>
                   <span>

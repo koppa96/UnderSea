@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -54,12 +55,14 @@ namespace StrategyGame.Api.Controllers
         [ProducesResponseType(401)]
         public async Task<ActionResult> SaveProvileImageAsync()
         {
-            var filename = User.Identity.Name + "." + Request.Headers["Content-Type"].First().Split("/")[1].Split("+")[0];
+            var image = Request.Form.Files.First();
+            var filename = Guid.NewGuid() + image.FileName.Split(".").Last();
+
             var path = Path.Combine(Directory.GetCurrentDirectory() + @"\wwwroot\images\profile\" + filename);
 
             using (var fileStream = System.IO.File.OpenWrite(path))
             {
-                await Request.Body.CopyToAsync(fileStream);
+                await image.CopyToAsync(fileStream);
             }
 
             var user = await _userManager.FindByNameAsync(User.Identity.Name);

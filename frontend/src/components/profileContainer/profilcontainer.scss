@@ -51,6 +51,7 @@ $local-profilrect-size: 96px;
   .rectangle {
     width: $local-profilrect-size;
     height: $local-profilrect-size;
+    cursor: pointer;
   }
 }
 .logout {
@@ -60,4 +61,60 @@ $local-profilrect-size: 96px;
   color: rgba(#ffffff, $alpha: 0.75);
   font-family: Baloo;
   font-weight: 14px;
+}
+.popup {
+  display: flex;
+  flex-direction: row;
+  align-items: left;
+  justify-content: space-between;
+
+  .popup-rectangle {
+    width: 300px;
+    height: 500px;
+  }
+  .popup-content {
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    > button {
+      align-items: flex-end;
+    }
+    > div {
+      > input[type="file"] {
+        position: relative;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        display: none;
+      }
+      > .input-container {
+        margin: 3em auto;
+        max-width: 300px;
+
+        > .browse-btn {
+          color: $secondary-color;
+          cursor: pointer;
+          text-align: center;
+          font-family: Baloo;
+          font-size: 18px;
+          border-radius: 100px;
+          min-width: 190px;
+          border: none;
+          padding-top: 15px;
+          padding-bottom: 15px;
+          box-shadow: 0 3px 6px rgba(59, 125, 189, 1);
+          background-image: linear-gradient(
+            to right,
+            rgba(15, 207, 222, 1),
+            rgba(159, 255, 240, 1)
+          );
+        }
+
+        > .browse-btn:hover {
+          background: #4ec0b4;
+        }
+      }
+    }
+  }
 }

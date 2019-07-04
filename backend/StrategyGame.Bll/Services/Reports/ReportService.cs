@@ -113,10 +113,14 @@ namespace StrategyGame.Bll.Services.Reports
 
         public async Task DeleteAsync(string username, int reportId)
         {
-            var report = await _context.Reports.Include(r => r.Attacker)
+            var report = await _context.Reports
+                .Include(r => r.Attacker)
                     .ThenInclude(c => c.ParentUser)
                 .Include(r => r.Defender)
                     .ThenInclude(c => c.ParentUser)
+                .Include(r => r.Attackers)
+                .Include(r => r.Defenders)
+                .Include(r => r.Losses)
                 .SingleOrDefaultAsync(r => r.Id == reportId);
 
             if (report == null)

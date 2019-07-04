@@ -77,6 +77,11 @@ namespace StrategyGame.Bll.Services.Units
                     long costPearl = unit.CostPearl * purchase.Count;
                     long costCoral = unit.CostCoral * purchase.Count;
 
+                    if (costPearl > country.Pearls || costCoral > country.Corals)
+                    {
+                        throw new InvalidOperationException("Not enough money.");
+                    }
+
                     var builder = country.ParseAllEffectForCountry(Context, globals, Parsers, false, false);
                     var totalUnits = country.Commands.Sum(c => c.Divisions.Sum(d => d.Count));
 

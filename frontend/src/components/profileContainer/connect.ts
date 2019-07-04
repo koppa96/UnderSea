@@ -4,6 +4,7 @@ import { bindActionCreators, Dispatch } from "redux";
 import { IApllicationState, resetEverything } from "../../store";
 import { GetProfileActionCreator } from "./store/actions/profileContainer.get";
 import { DispachedProps, MappedProps } from "./Interface";
+import { PostProfileImgActionCreator } from "./store/actions/uploadImage.post";
 
 const mapStateToProps = (state: IApllicationState): MappedProps => {
   return {
@@ -19,7 +20,8 @@ const mapDispatchToProps = (dispatch: Dispatch): DispachedProps =>
   bindActionCreators(
     {
       getUserInfo: GetProfileActionCreator,
-      logout: resetEverything
+      logout: resetEverything,
+      uploadImage: PostProfileImgActionCreator
     },
 
     dispatch

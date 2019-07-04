@@ -4,7 +4,6 @@ import { watchArmyUnits } from "./pages/mainpage/army/store/saga";
 
 import { watchMainPageFetchRequest } from "./pages/mainpage/store/saga";
 import { watchRankFetchRequest } from "./pages/mainpage/rank/store/actions/saga.get";
-import { watchProfileFetchRequest } from "./components/profileContainer/store/saga";
 import { watchDevelopmentFetchRequest } from "./pages/mainpage/development/store/actions/saga.get";
 import { watchAddResearchRequest } from "./pages/mainpage/development/store/actions/saga.post";
 import { watchBuildingActions } from "./pages/mainpage/buildings/store/sagaCombiner";
@@ -12,6 +11,8 @@ import { watchTargetActions } from "./pages/mainpage/attack/store/sagaCombiner";
 import { watchWarActions } from "./pages/mainpage/war/store/sagaCombiner";
 import { watchReportActions } from "./pages/mainpage/reports/store/sagaCombiner";
 import { watchTokenCheckRequest } from "./store/actions/saga.get";
+import { watchProfileFetchRequest } from "./components/profileContainer/store/actions/saga.get";
+import { watchProfileActions } from "./components/profileContainer/store/sagaCombiner";
 
 export function* rootSaga() {
   yield all([
@@ -20,7 +21,7 @@ export function* rootSaga() {
     call(watchArmyUnits),
     call(watchBuildingActions),
     call(watchRankFetchRequest),
-    call(watchProfileFetchRequest),
+    call(watchProfileActions),
     call(watchWarActions),
     call(watchDevelopmentFetchRequest),
     call(watchAddResearchRequest),
