@@ -1,4 +1,4 @@
-﻿namespace StrategyGame.Model.Entities
+﻿namespace StrategyGame.Model.Entities.Connectors
 {
     /// <summary>
     /// Provides a connector between two entities, and stores the amount of <see cref="TChild"/> entities in the relation.

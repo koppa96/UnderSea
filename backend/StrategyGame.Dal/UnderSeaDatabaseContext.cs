@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using StrategyGame.Model.Entities;
+using StrategyGame.Model.Entities.Connectors;
 using StrategyGame.Model.Entities.Creations;
 using StrategyGame.Model.Entities.Frontend;
 using StrategyGame.Model.Entities.Logging;
 using StrategyGame.Model.Entities.Reports;
-using StrategyGame.Model.Entities.Resources;
 using StrategyGame.Model.Entities.Units;
 using System;
 

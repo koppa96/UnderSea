@@ -1,4 +1,5 @@
-﻿using StrategyGame.Model.Entities.Creations;
+﻿using StrategyGame.Model.Entities.Connectors;
+using StrategyGame.Model.Entities.Creations;
 using System.Collections.Generic;
 
 namespace StrategyGame.Model.Entities

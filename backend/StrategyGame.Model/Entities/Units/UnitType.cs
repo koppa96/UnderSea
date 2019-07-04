@@ -1,5 +1,4 @@
 ﻿using StrategyGame.Model.Entities.Frontend;
-using StrategyGame.Model.Entities.Resources;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 

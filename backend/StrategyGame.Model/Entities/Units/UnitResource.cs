@@ -1,6 +1,6 @@
-﻿using StrategyGame.Model.Entities.Units;
+﻿using StrategyGame.Model.Entities.Connectors;
 
-namespace StrategyGame.Model.Entities.Resources
+namespace StrategyGame.Model.Entities.Units
 {
     /// <summary>
     /// Linking table between a building and a resource.

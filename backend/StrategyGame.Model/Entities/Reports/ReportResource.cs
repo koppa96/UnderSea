@@ -1,6 +1,6 @@
-﻿using StrategyGame.Model.Entities.Reports;
+﻿using StrategyGame.Model.Entities.Connectors;
 
-namespace StrategyGame.Model.Entities.Resources
+namespace StrategyGame.Model.Entities.Reports
 {
     /// <summary>
     /// Linking table between a report and a resource.

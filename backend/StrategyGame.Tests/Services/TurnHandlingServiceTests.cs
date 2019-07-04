@@ -7,6 +7,7 @@ using StrategyGame.Bll.Extensions;
 using StrategyGame.Bll.Services.TurnHandling;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
+using StrategyGame.Model.Entities.Connectors;
 using StrategyGame.Model.Entities.Creations;
 using System;
 using System.Linq;

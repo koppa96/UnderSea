@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using AutoMapper;
+﻿using AutoMapper;
 using StrategyGame.Bll.Dto.Sent;
 using StrategyGame.Model.Entities;
+using StrategyGame.Model.Entities.Connectors;
 using StrategyGame.Model.Entities.Creations;
 using StrategyGame.Model.Entities.Frontend;
 using StrategyGame.Model.Entities.Reports;
-using StrategyGame.Model.Entities.Resources;
 using StrategyGame.Model.Entities.Units;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace StrategyGame.Bll.Extensions
 {

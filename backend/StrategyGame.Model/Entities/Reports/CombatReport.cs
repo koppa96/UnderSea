@@ -1,8 +1,8 @@
-﻿using StrategyGame.Model.Entities.Resources;
+﻿using StrategyGame.Model.Entities.Connectors;
+using StrategyGame.Model.Entities.Creations;
 using StrategyGame.Model.Entities.Units;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using StrategyGame.Model.Entities.Creations;
 
 namespace StrategyGame.Model.Entities.Reports
 {

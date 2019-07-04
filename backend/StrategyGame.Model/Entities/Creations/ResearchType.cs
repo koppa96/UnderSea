@@ -1,6 +1,6 @@
-﻿using StrategyGame.Model.Entities.Frontend;
+﻿using StrategyGame.Model.Entities.Connectors;
+using StrategyGame.Model.Entities.Frontend;
 using StrategyGame.Model.Entities.Reports;
-using StrategyGame.Model.Entities.Resources;
 using System.Collections.Generic;
 
 namespace StrategyGame.Model.Entities.Creations

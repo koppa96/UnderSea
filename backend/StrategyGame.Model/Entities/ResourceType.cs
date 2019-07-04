@@ -1,8 +1,11 @@
-﻿using StrategyGame.Model.Entities.Creations;
+﻿using StrategyGame.Model.Entities.Connectors;
+using StrategyGame.Model.Entities.Creations;
 using StrategyGame.Model.Entities.Frontend;
+using StrategyGame.Model.Entities.Reports;
+using StrategyGame.Model.Entities.Units;
 using System.Collections.Generic;
 
-namespace StrategyGame.Model.Entities.Resources
+namespace StrategyGame.Model.Entities
 {
     /// <summary>
     /// Represents a resource in the undersea database.

@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using AutoMapper;
+﻿using AutoMapper;
 using StrategyGame.Bll.Dto.Sent;
-using StrategyGame.Model.Entities.Resources;
+using StrategyGame.Model.Entities.Reports;
 
 namespace StrategyGame.Bll.Mapping
 {

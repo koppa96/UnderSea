@@ -1,4 +1,5 @@
-﻿using StrategyGame.Model.Entities.Frontend;
+﻿using StrategyGame.Model.Entities.Connectors;
+using StrategyGame.Model.Entities.Frontend;
 using StrategyGame.Model.Entities.Reports;
 using System.Collections.Generic;
 
