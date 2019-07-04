@@ -53,10 +53,10 @@ namespace StrategyGame.Api.Controllers
         [Route("me/image")]
         [ProducesResponseType(200)]
         [ProducesResponseType(401)]
-        public async Task<ActionResult> SaveProvileImageAsync()
+        public async Task<ActionResult> SaveProfileImageAsync()
         {
             var image = Request.Form.Files.First();
-            var filename = Guid.NewGuid() + image.FileName.Split(".").Last();
+            var filename = Guid.NewGuid() + "." + image.FileName.Split(".").Last();
 
             var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "profile", filename);
 
