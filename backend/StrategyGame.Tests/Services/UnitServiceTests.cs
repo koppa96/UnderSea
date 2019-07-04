@@ -51,8 +51,11 @@ namespace StrategyGame.Tests.Services
         [ExpectedException(typeof(InvalidOperationException))]
         public async Task TestBuyUnitNoMoney(string username)
         {
-            var id = (await context.UnitTypes.FirstAsync()).Id;
+            var globals = await context.GlobalValues.SingleAsync();
+            globals.StartingBarrackSpace = 1000;
+            await context.SaveChangesAsync();
 
+            var id = (await context.UnitTypes.FirstAsync()).Id;
             await unitService.CreateUnitAsync(username, new[] { new PurchaseDetails { UnitId = id, Count = 10 } });
         }
 
