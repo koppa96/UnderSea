@@ -4,7 +4,7 @@ import axios from "axios";
 import Wave from "./../../../assets/images/wave.svg";
 import { Form } from "reactstrap";
 import { RegisterProps, RegisterState } from "./Interface";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 
 export class Register extends React.Component<RegisterProps, RegisterState> {
   state: RegisterState = {
@@ -15,6 +15,7 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
       countryName: "",
       email: ""
     },
+    redirect: false,
     error: null
   };
 
@@ -79,121 +80,130 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
         countryName: this.state.model.countryName
       };
       const url = "https://localhost:44355/api/accounts";
-      axios.post(url, requestBody, config).catch(error => {
-        if (error.response.status === "408") {
-          this.setState({ error: "Connection timeout" });
-        } else if (error.response.status === "405") {
-          this.setState({ error: "Nem engedélyezett" });
-        }
-      });
+      axios
+        .post(url, requestBody, config)
+        .then(() => {
+          this.setState({ redirect: true });
+        })
+        .catch(error => {
+          if (error.response.status === "408") {
+            this.setState({ error: "Connection timeout" });
+          } else if (error.response.status === "405") {
+            this.setState({ error: "Nem engedélyezett" });
+          }
+        });
     }
   };
 
   render() {
     const { error } = this.state;
-    return (
-      <div className="mainpage-width">
-        <div>
-          <img className="wave" src={Wave} alt="wave" />
-          <h1 className="undersea-font-form">UNDERSEA</h1>
-        </div>
-        <div className="form-bg mainpage-width">
-          <h3 className="form-font">Regisztráció</h3>
-          <Form onSubmit={this.handleSubmit}>
-            <input
-              className="form-input"
-              required
-              onChange={e =>
-                this.setState({
-                  ...this.state,
-                  model: {
-                    ...this.state.model,
-                    name: e.target.value
-                  }
-                })
-              }
-              placeholder="Felhasználó"
-              name="name"
-            />
+    if (!this.state.redirect) {
+      return (
+        <div className="mainpage-width">
+          <div>
+            <img className="wave" src={Wave} alt="wave" />
+            <h1 className="undersea-font-form">UNDERSEA</h1>
+          </div>
+          <div className="form-bg mainpage-width">
+            <h3 className="form-font">Regisztráció</h3>
+            <Form onSubmit={this.handleSubmit}>
+              <input
+                className="form-input"
+                required
+                onChange={e =>
+                  this.setState({
+                    ...this.state,
+                    model: {
+                      ...this.state.model,
+                      name: e.target.value
+                    }
+                  })
+                }
+                placeholder="Felhasználó"
+                name="name"
+              />
 
-            <input
-              className="form-input"
-              required
-              onChange={e =>
-                this.setState({
-                  ...this.state,
-                  model: {
-                    ...this.state.model,
-                    password: e.target.value
-                  }
-                })
-              }
-              placeholder="Jelszó"
-              name="password"
-              type="password"
-            />
+              <input
+                className="form-input"
+                required
+                onChange={e =>
+                  this.setState({
+                    ...this.state,
+                    model: {
+                      ...this.state.model,
+                      password: e.target.value
+                    }
+                  })
+                }
+                placeholder="Jelszó"
+                name="password"
+                type="password"
+              />
 
-            <input
-              className="form-input"
-              required
-              onChange={e =>
-                this.setState({
-                  ...this.state,
-                  model: {
-                    ...this.state.model,
-                    repassword: e.target.value
-                  }
-                })
-              }
-              placeholder="Jelszó megerősítése"
-              name="repassword"
-              type="password"
-            />
-            <input
-              className="form-input"
-              required
-              onChange={e =>
-                this.setState({
-                  ...this.state,
-                  model: {
-                    ...this.state.model,
-                    email: e.target.value
-                  }
-                })
-              }
-              placeholder="E-mail"
-              name="email"
-            />
-            <input
-              className="form-input"
-              required
-              onChange={e =>
-                this.setState({
-                  ...this.state,
-                  model: {
-                    ...this.state.model,
-                    countryName: e.target.value
-                  }
-                })
-              }
-              placeholder="Az országod neve, amit építesz"
-              name="countryname"
-            />
+              <input
+                className="form-input"
+                required
+                onChange={e =>
+                  this.setState({
+                    ...this.state,
+                    model: {
+                      ...this.state.model,
+                      repassword: e.target.value
+                    }
+                  })
+                }
+                placeholder="Jelszó megerősítése"
+                name="repassword"
+                type="password"
+              />
+              <input
+                className="form-input"
+                required
+                onChange={e =>
+                  this.setState({
+                    ...this.state,
+                    model: {
+                      ...this.state.model,
+                      email: e.target.value
+                    }
+                  })
+                }
+                placeholder="E-mail"
+                name="email"
+              />
+              <input
+                className="form-input"
+                required
+                onChange={e =>
+                  this.setState({
+                    ...this.state,
+                    model: {
+                      ...this.state.model,
+                      countryName: e.target.value
+                    }
+                  })
+                }
+                placeholder="Az országod neve, amit építesz"
+                name="countryname"
+              />
+              <div className="button-container text-center">
+                <button className="form-button" type="submit">
+                  Regisztráció
+                </button>
+                {error && <p className="form-error">{error}</p>}
+              </div>
+            </Form>
             <div className="button-container text-center">
-              <button className="form-button" type="submit">
-                Regisztráció
-              </button>
-              {error && <p className="form-error">{error}</p>}
+              <Link className="form-link" to="/login">
+                Bejelentkezés
+              </Link>
             </div>
-          </Form>
-          <div className="button-container text-center">
-            <Link className="form-link" to="/login">
-              Bejelentkezés
-            </Link>
           </div>
         </div>
-      </div>
-    );
+      );
+    } else {
+      return <Redirect to="/login" />;
+    }
   }
 }
 export default Register;

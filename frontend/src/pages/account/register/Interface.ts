@@ -14,5 +14,6 @@ export interface RegisterState {
     countryName: string;
     email: string;
   };
+  redirect: boolean;
   error: string | null;
 }
