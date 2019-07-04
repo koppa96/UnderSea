@@ -6,11 +6,11 @@ import {
   fetchError,
   MainpageActions
 } from "./actions/MainpageAction.get";
-import { ICountryInfo } from "../../../api/Client";
 import { registerAxiosConfig } from "../../../config/axiosConfig";
 
 import axios from "axios";
 import { BasePortUrl } from "../../..";
+import { ICountryInfo } from "../Interface";
 const beginToFetchMainpage = async () => {
   const instance = axios.create();
   const configured = registerAxiosConfig(instance);

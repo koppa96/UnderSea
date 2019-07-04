@@ -1,8 +1,22 @@
-import { ICountryInfo, BriefCreationInfo, EventInfo } from "../../api/Client";
-import { IEventInfo } from "../../components/profileContainer/Interface";
+import { BriefCreationInfo, EventInfo, BriefUnitInfo } from "../../api/Client";
 
 export interface NativeProps {
   mounted: Function;
+}
+
+export interface ICountryInfo {
+  round: number;
+  barrackSpace: number;
+  rank: number;
+  armyInfo?: BriefUnitInfo[] | undefined;
+  pearls: number;
+  corals: number;
+  pearlsPerRound: number;
+  coralsPerRound: number;
+  event?: EventInfo | undefined;
+  unseenReports: number;
+  buildings?: BriefCreationInfo[] | undefined;
+  researches?: BriefCreationInfo[] | undefined;
 }
 
 export interface MappedProps {

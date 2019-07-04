@@ -1,4 +1,4 @@
-import { ICountryInfo } from "../../../../api/Client";
+import { ICountryInfo } from "../../Interface";
 
 export interface IMainpageActionsTypes {
   REQUEST: "MAINPAGE_REQUEST_SUPER_DATA";

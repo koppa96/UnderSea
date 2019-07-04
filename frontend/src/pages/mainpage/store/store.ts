@@ -1,4 +1,4 @@
-import { ICountryInfo } from "../../../api/Client";
+import { ICountryInfo } from "../Interface";
 
 //STATE
 export interface MainpageResponseState {
@@ -11,6 +11,7 @@ export const initialMainpageResponseState: MainpageResponseState = {
   error: undefined,
   loading: false,
   model: {
+    barrackSpace: 0,
     round: 0,
     rank: 0,
     armyInfo: [],
