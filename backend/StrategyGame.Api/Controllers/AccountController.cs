@@ -55,7 +55,14 @@ namespace StrategyGame.Api.Controllers
         [ProducesResponseType(401)]
         public async Task<ActionResult<string>> SaveProfileImageAsync()
         {
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
             var image = Request.Form.Files.First();
+
+            if (System.IO.File.Exists(user.ImageUrl))
+            {
+                System.IO.File.Delete(user.ImageUrl);
+            }
+
             var filename = Guid.NewGuid() + "." + image.FileName.Split(".").Last();
 
             var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "profile", filename);
@@ -65,7 +72,6 @@ namespace StrategyGame.Api.Controllers
                 await image.CopyToAsync(fileStream);
             }
 
-            var user = await _userManager.FindByNameAsync(User.Identity.Name);
             user.ImageUrl = $"images/profile/{filename}";
             await _userManager.UpdateAsync(user);
 
