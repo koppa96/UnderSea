@@ -26,7 +26,7 @@ const beginToAddImage = (img: FileList): Promise<void> | any => {
     .put(url, data)
     .then(response => {
       var parse: string = JSON.stringify(response.data);
-      parse = parse.replace('"', "");
+      parse = parse.split('"').join("");
       console.log("parse", parse);
       return parse;
     })
