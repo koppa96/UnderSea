@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using FluentValidation;
 using FluentValidation.AspNetCore;
 using Hangfire;
 using IdentityModel;
@@ -17,7 +16,6 @@ using NSwag.CodeGeneration.TypeScript;
 using StrategyGame.Api.Hubs;
 using StrategyGame.Api.Middlewares;
 using StrategyGame.Bll;
-using StrategyGame.Bll.DTO.Received;
 using StrategyGame.Bll.EffectParsing;
 using StrategyGame.Bll.Services.Buildings;
 using StrategyGame.Bll.Services.Commands;
@@ -31,7 +29,6 @@ using StrategyGame.Bll.Services.UserTracker;
 using StrategyGame.Bll.Services.Validators;
 using StrategyGame.Dal;
 using StrategyGame.Model.Entities;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -182,7 +179,16 @@ namespace StrategyGame.Api
             
             app.UseStaticFiles();
 
+<<<<<<< HEAD
            RecurringJob.AddOrUpdate<TurnEndingJob>(x => x.EndTurnAsync(), Cron.Hourly);
+=======
+            RecurringJob.AddOrUpdate<TurnEndingJob>(x => x.EndTurnAsync(), Cron.Hourly);
+
+            if (!Directory.Exists(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "profile")))
+            {
+                Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "profile"));
+            }
+>>>>>>> master
         }
     }
 }
