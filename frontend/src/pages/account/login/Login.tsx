@@ -16,6 +16,9 @@ export class Login extends React.Component<LoginProps> {
   componentDidUpdate() {
     this.props.succes && this.props.getUserInfo();
   }
+  componentDidMount() {
+    document.title = "Bejelenkezés";
+  }
   handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     this.props.beginlogin({
@@ -93,4 +96,3 @@ export class Login extends React.Component<LoginProps> {
     );
   }
 }
-export default Login;

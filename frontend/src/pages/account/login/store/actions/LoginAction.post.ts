@@ -31,7 +31,7 @@ export interface IActionLoginRequest {
 }
 export interface IActionLoginSucces {
   type: ILoginActionsTypes["SUCCES"];
-  params: ISuccesParamState;
+  error: ISuccesParamState;
 }
 
 export interface IActionLoginError {
@@ -57,7 +57,7 @@ export const fetchError = (params?: string): IActionLoginError => ({
   type: LoginActions.ERROR,
   params
 });
-export const fetchSucces = (params: ISuccesParamState): IActionLoginSucces => ({
+export const fetchSucces = (error: ISuccesParamState): IActionLoginSucces => ({
   type: LoginActions.SUCCES,
-  params
+  error: error
 });

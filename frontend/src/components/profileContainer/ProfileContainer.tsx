@@ -1,19 +1,18 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
-import { ProfileProps } from "./Interface";
+import { ProfileProps, UserLocalState } from "./Interface";
 import { BasePortUrl } from "../..";
 import { Modal } from "reactstrap";
 
-var img: FileList;
 export class ProfileContainer extends React.Component<ProfileProps> {
   componentDidMount() {
     document.title = "Profil";
     this.props.getUserInfo();
   }
-  state = {
+  state: UserLocalState = {
     showImg: false,
-    fileName: "",
-    file: img
+    fileName: null,
+    file: null
   };
   toggleImgChange = () => {
     this.setState({
@@ -77,14 +76,24 @@ export class ProfileContainer extends React.Component<ProfileProps> {
               </label>
             </div>
             <button
-              onClick={() =>
-                this.props.uploadImage({
-                  name: this.state.fileName,
-                  file: this.state.file
-                })
+              className={
+                !this.state.file || !this.state.fileName
+                  ? "button-disabled"
+                  : "button"
               }
+              disabled={!this.state.file || !this.state.fileName}
+              onClick={() => {
+                this.state.file &&
+                  this.state.fileName &&
+                  this.props.uploadImage({
+                    name: this.state.fileName,
+                    file: this.state.file
+                  });
+              }}
             >
-              Feltöltés
+              {!this.state.file || !this.state.fileName
+                ? "Válassz"
+                : "Feltöltés"}
             </button>
           </div>
           <div className="rectangle popup-rectangle">

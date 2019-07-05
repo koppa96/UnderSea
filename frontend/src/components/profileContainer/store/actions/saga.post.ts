@@ -1,6 +1,6 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 
-import axios, { AxiosRequestConfig } from "axios";
+import axios from "axios";
 import {
   PostProfileImgActions,
   IRequestActionPostProfileImg,
@@ -8,7 +8,6 @@ import {
   fetchError
 } from "./uploadImage.post";
 import { BasePortUrl } from "../../../..";
-import { registerAxiosConfig } from "../../../../config/axiosConfig";
 
 const beginToAddImage = (img: FileList): Promise<void> | any => {
   const url = BasePortUrl + "api/Accounts/me/image";
@@ -20,8 +19,6 @@ const beginToAddImage = (img: FileList): Promise<void> | any => {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token"
   };
-  console.log("kép");
-  console.log(img);
   return instance
     .put(url, data)
     .then(response => {

@@ -31,3 +31,9 @@ export interface IUserInfo {
   email?: string | undefined;
   profileImageUrl?: string | undefined;
 }
+
+export interface UserLocalState {
+  showImg: boolean;
+  fileName: string | null;
+  file: FileList|null;
+}

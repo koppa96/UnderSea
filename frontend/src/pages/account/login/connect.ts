@@ -1,10 +1,10 @@
 import { MappedProps, DispatchedProps } from "./Interface";
 import { Dispatch, bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import Login from "./Login";
 import { BeginLoginActionCreator } from "./store/actions/LoginAction.post";
 import { IApllicationState } from "../../../store";
 import { GetProfileActionCreator } from "../../../components/profileContainer/store/actions/profileContainer.get";
+import { Login } from "./Login";
 
 const mapStateToProps = (state: IApllicationState): MappedProps => ({
   error: state.app.pages.loginDetails.error,

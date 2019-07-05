@@ -19,6 +19,10 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
     error: null
   };
 
+  componentDidMount() {
+    document.title = "Regisztráció";
+  }
+
   handleValidation(): boolean {
     const { name, password, countryName, repassword, email } = this.state.model;
     if (password !== repassword) {

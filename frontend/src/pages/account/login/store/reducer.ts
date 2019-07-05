@@ -18,10 +18,10 @@ export const LoginReducer = (
         ...state,
         loading: false,
         model: {
-          access_token: action.params.data.access_token,
-          expires_in: action.params.data.expires_in,
-          refresh_token: action.params.data.refresh_token,
-          token_type: action.params.data.token_type
+          access_token: action.error.data.access_token,
+          expires_in: action.error.data.expires_in,
+          refresh_token: action.error.data.refresh_token,
+          token_type: action.error.data.token_type
         },
         error: ""
       };
