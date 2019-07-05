@@ -75,7 +75,8 @@ namespace StrategyGame.Bll.Extensions
         /// <returns>The task representing the operation.</returns>
         public static async Task FillWithDefaultAsync(this UnderSeaDatabaseContext context)
         {
-            // Add contents
+            #region BuildingContent
+
             var currentCont = new FrontendContent<BuildingType>
             {
                 Name = "Áramlásirányító",
@@ -95,7 +96,15 @@ namespace StrategyGame.Bll.Extensions
                 Name = "Kőbánya",
                 Description = "+200 kő körönként",
             };
-            context.BuildingContents.AddRange(currentCont, reefCastCont, stonemineCont);
+            var damCont = new FrontendContent<BuildingType>
+            {
+                Name = "Vízerőmű",
+                Description = "+10 energia körönként",
+            };
+            context.BuildingContents.AddRange(currentCont, reefCastCont, stonemineCont, damCont);
+            #endregion
+
+            #region UnitContent
 
             var sealCont = new FrontendContent<UnitType>
             {
@@ -128,8 +137,10 @@ namespace StrategyGame.Bll.Extensions
                 Name = "Kém",
                 Description = "Ha kémek segítségével információt gyűjthetsz az ellenségeidről."
             };
-
             context.UnitContents.AddRange(sealCont, ponyCont, lazorCont, leaderCont, spyCont);
+            #endregion
+
+            #region ReserachContent
 
             var mudTCont = new FrontendContent<ResearchType>
             {
@@ -178,8 +189,10 @@ namespace StrategyGame.Bll.Extensions
                 Name = "Telepesek",
                 Description = "Telepeseket küld egy messzi régióba, akik új országot alapítanak"
             };
-
             context.ResearchContents.AddRange(mudTCont, mudCCont, defCont, attCont, cCont, taxCont, setCont);
+            #endregion
+
+            #region EventContent
 
             var plagueCont = new EventContent
             {
@@ -235,9 +248,9 @@ namespace StrategyGame.Bll.Extensions
                 Description = "Katonáid elégedetlenek ebben a körben, minden katona támadása csökken eggyel.",
                 FlavourText = "Elsőnek a morál, utána a hűség"
             };
-
             context.EventContents.AddRange(plagueCont, mineCont, fireCont, goodhvCont, badhvCont,
                 contPopCont, contSolCont, disconSolCont, discontPopCont);
+            #endregion
 
             var coralCont = new FrontendContent<ResourceType>
             {
@@ -254,13 +267,19 @@ namespace StrategyGame.Bll.Extensions
                 Name = "Kő",
                 Description = "Kő, kavics",
             };
-            context.ResourceContents.AddRange(coralCont, pearlCont, stoneCont);
+            var elecCont = new FrontendContent<ResourceType>
+            {
+                Name = "Energia",
+                Description = "Energia, mely az épületek működéséhez szükséges",
+            };
+            context.ResourceContents.AddRange(coralCont, pearlCont, stoneCont, elecCont);
             await context.SaveChangesAsync();
 
             // Resources
             var coral = new ResourceType { Content = coralCont, StartingAmount = 500 };
             var pearl = new ResourceType { Content = pearlCont, StartingAmount = 1000 };
             var stone = new ResourceType { Content = stoneCont, StartingAmount = 1000 };
+            var elec = new ResourceType { Content = elecCont, StartingAmount = 1000 };
             context.ResourceTypes.AddRange(coral, pearl, stone);
             await context.SaveChangesAsync();
 
@@ -280,10 +299,15 @@ namespace StrategyGame.Bll.Extensions
             };
             var currentController = new BuildingType
             {
-                Cost = new[] { new CreationResourceConnector<BuildingType> { CostAmount = 1000, Child = stone } },
+                Cost = new[]
+                {
+                    new CreationResourceConnector<BuildingType> { CostAmount = 1000, Child = stone },
+                    new CreationResourceConnector<BuildingType> { MaintenanceAmount = 1, Child = elec }
+                },
                 BuildTime = 5,
                 MaxCount = -1,
-                Content = currentCont
+                Content = currentCont,
+                IsStarting = true
             };
 
             // zátonyvár
@@ -295,10 +319,15 @@ namespace StrategyGame.Bll.Extensions
             };
             var reefCastle = new BuildingType
             {
-                Cost = new[] { new CreationResourceConnector<BuildingType> { CostAmount = 1000, Child = stone } },
+                Cost = new[]
+                {
+                    new CreationResourceConnector<BuildingType> { CostAmount = 1000, Child = stone },
+                    new CreationResourceConnector<BuildingType> { MaintenanceAmount = 1, Child = elec }
+                },
                 BuildTime = 5,
                 MaxCount = -1,
-                Content = reefCastCont
+                Content = reefCastCont,
+                IsStarting = true
             };
 
             // kőbánya
@@ -310,10 +339,34 @@ namespace StrategyGame.Bll.Extensions
             };
             var stoneMine = new BuildingType
             {
-                Cost = new[] { new CreationResourceConnector<BuildingType> { CostAmount = 1000, Child = stone } },
+                Cost = new[]
+                {
+                    new CreationResourceConnector<BuildingType> { CostAmount = 1000, Child = stone },
+                    new CreationResourceConnector<BuildingType> { MaintenanceAmount = 1, Child = elec }
+                },
                 BuildTime = 5,
                 MaxCount = -1,
-                Content = reefCastCont
+                Content = reefCastCont,
+                IsStarting = true
+            };
+
+            // Vízerőmű
+            var elecIn = new Effect
+            {
+                Name = KnownValues.ResourceProductionChange,
+                Parameter = elec.Id.ToString() + ";10",
+                IsOneTime = false
+            };
+            var dam = new BuildingType
+            {
+                Cost = new[]
+                {
+                    new CreationResourceConnector<BuildingType> { CostAmount = 5000, Child = stone }
+                },
+                BuildTime = 5,
+                MaxCount = -1,
+                Content = damCont,
+                IsStarting = true
             };
 
             // Iszaptraktor
@@ -382,8 +435,8 @@ namespace StrategyGame.Bll.Extensions
 
             // Add effects, buildings, researches
             context.Effects.AddRange(popIn, cp, bsIn, harvMod1, harvMod2,
-                defMod1, attMod1, combModA, combModD, taxMod1, stIn);
-            context.BuildingTypes.AddRange(currentController, reefCastle, stoneMine);
+                defMod1, attMod1, combModA, combModD, taxMod1, stIn, elecIn);
+            context.BuildingTypes.AddRange(currentController, reefCastle, stoneMine, dam);
             context.ResearchTypes.AddRange(mudT, mudC, wall, canon, martialArts, alchemy, settler);
             await context.SaveChangesAsync();
 
@@ -392,7 +445,9 @@ namespace StrategyGame.Bll.Extensions
             context.BuildingEffects.AddRange(
                 new Connector<BuildingType, Effect> { Parent = currentController, Child = popIn },
                 new Connector<BuildingType, Effect> { Parent = currentController, Child = cp },
-                new Connector<BuildingType, Effect> { Parent = reefCastle, Child = bsIn });
+                new Connector<BuildingType, Effect> { Parent = reefCastle, Child = bsIn },
+                new Connector<BuildingType, Effect> { Parent = stoneMine, Child = stIn },
+                new Connector<BuildingType, Effect> { Parent = dam, Child = elecIn });
 
             context.ResearchEffects.AddRange(
                 new Connector<ResearchType, Effect> { Parent = mudT, Child = harvMod1 },
