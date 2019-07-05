@@ -346,21 +346,20 @@ namespace StrategyGame.Bll.Extensions
             }
         }
 
-        public static void Purchase<TEntity, TConnector>(this Country country,
-            IPurchasable<TEntity, TConnector> purchasable, int count = 1)
+        public static void Purchase<TEntity>(this Country country,
+            IPurchasable<TEntity> purchasable, int count = 1)
             where TEntity : AbstractEntity<TEntity>
-            where TConnector : ConnectorWithAmount<TEntity, ResourceType>
         {
             foreach (var resource in purchasable.Cost)
             {
                 var countryResource = country.Resources.SingleOrDefault(r => r.Child.Id == resource.Child.Id);
 
-                if (countryResource == null || countryResource.Amount < resource.Amount * count)
+                if (countryResource == null || countryResource.Amount < resource.CostAmount * count)
                 {
                     throw new ArgumentException("Not enough resource.");
                 }
 
-                countryResource.Amount -= resource.Amount * count;
+                countryResource.Amount -= resource.CostAmount * count;
             }
         }
 

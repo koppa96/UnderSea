@@ -1,13 +1,15 @@
 ﻿using StrategyGame.Model.Entities.Frontend;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using StrategyGame.Model.Entities.Connectors;
+using StrategyGame.Model.Entities.Creations;
 
 namespace StrategyGame.Model.Entities.Units
 {
     /// <summary>
     /// Represents a unit type within the UnderSea database.
     /// </summary>
-    public class UnitType : AbstractEntity<UnitType>, IPurchasable<UnitType, UnitResource>
+    public class UnitType : AbstractCreationType<UnitType>
     {
         /// <summary>
         /// Gets or sets the attack power of the unit.
@@ -23,16 +25,6 @@ namespace StrategyGame.Model.Entities.Units
         /// Gets or sets the total carry capacity of the unit.
         /// </summary>
         public int CarryCapacity { get; set; }
-        
-        /// <summary>
-        /// Gets or sets the costs of the unit.
-        /// </summary>
-        public ICollection<UnitResource> Cost { get; set; }
-
-        /// <summary>
-        /// Gets or sets the content of the unit.
-        /// </summary>
-        public virtual FrontendContent<UnitType> Content { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of divisions that contain the unit type.

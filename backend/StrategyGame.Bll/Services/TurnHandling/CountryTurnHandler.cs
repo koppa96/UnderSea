@@ -435,7 +435,7 @@ namespace StrategyGame.Bll.Services.TurnHandling
 
             if (totalMaintenance.Any(x => x.Value > country.Resources.Single(r => r.Child == x.Key).Amount))
             {
-                foreach (var div in country.Commands.SelectMany(c => c.Divisions).OrderBy(d => d.Unit.Cost.First().Amount))
+                foreach (var div in country.Commands.SelectMany(c => c.Divisions).OrderBy(d => d.Unit.Cost.First().CostAmount))
                 {
                     var requiredReductions = div.Unit.Cost.ToDictionary(x => x.Child,
                         x =>

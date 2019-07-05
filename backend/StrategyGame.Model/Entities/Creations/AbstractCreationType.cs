@@ -4,12 +4,11 @@ using System.Collections.Generic;
 
 namespace StrategyGame.Model.Entities.Creations
 {
-    public abstract class AbstractCreationType<TEntity, TConnector> 
-            : AbstractEntity<TEntity>, IPurchasable<TEntity, TConnector>
-        where TConnector : ConnectorWithAmount<TEntity, ResourceType>
+    public abstract class AbstractCreationType<TEntity> 
+            : AbstractEntity<TEntity>, IPurchasable<TEntity>
         where TEntity : AbstractEntity<TEntity>
     {
         public FrontendContent<TEntity> Content { get; set; }
-        public ICollection<TConnector> Cost { get; set; }
+        public ICollection<CreationResourceConnector<TEntity>> Cost { get; set; }
     }
 }

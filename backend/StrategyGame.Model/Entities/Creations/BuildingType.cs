@@ -8,7 +8,7 @@ namespace StrategyGame.Model.Entities.Creations
     /// <summary>
     /// Represents a building type within the UnderSea database.
     /// </summary>
-    public class BuildingType : AbstractCreationType<BuildingType, ConnectorWithAmount<BuildingType, ResourceType>>
+    public class BuildingType : AbstractCreationType<BuildingType>
     {
         /// <summary>
         /// Gets or sets the built time of the building (in turns).

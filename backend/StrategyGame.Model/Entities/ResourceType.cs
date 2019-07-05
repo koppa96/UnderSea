@@ -30,17 +30,17 @@ namespace StrategyGame.Model.Entities
         /// <summary>
         /// Gets or sets the collection of costs for buildings in the resource.
         /// </summary>
-        public ICollection<ConnectorWithAmount<BuildingType, ResourceType>> BuildingResources { get; set; }
+        public ICollection<CreationResourceConnector<BuildingType>> BuildingResources { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of costs for researches in the resource.
         /// </summary>
-        public ICollection<ConnectorWithAmount<ResearchType, ResourceType>> ResearchResources { get; set; }
+        public ICollection<CreationResourceConnector<ResearchType>> ResearchResources { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of costs for units in the resource.
         /// </summary>
-        public ICollection<UnitResource> UnitResources { get; set; }
+        public ICollection<CreationResourceConnector<UnitType>> UnitResources { get; set; }
 
         public ICollection<ReportResource> ReportResources { get; set; }
     }

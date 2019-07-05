@@ -137,11 +137,11 @@ namespace StrategyGame.Dal
 
         public DbSet<ConnectorWithAmount<Country, ResourceType>> CountryResources { get; set; }
 
-        public DbSet<ConnectorWithAmount<BuildingType, ResourceType>> BuildingResources { get; set; }
+        public DbSet<CreationResourceConnector<BuildingType>> BuildingResources { get; set; }
 
-        public DbSet<ConnectorWithAmount<ResearchType, ResourceType>> ResearchResources { get; set; }
+        public DbSet<CreationResourceConnector<ResearchType>> ResearchResources { get; set; }
 
-        public DbSet<UnitResource> UnitResources { get; set; }
+        public DbSet<CreationResourceConnector<UnitType>> UnitResources { get; set; }
 
         public DbSet<EventReport> EventReports { get; set; }
 
@@ -206,27 +206,27 @@ namespace StrategyGame.Dal
                 .HasOne(cr => cr.Child)
                 .WithMany(r => r.CountryResources);
 
-            builder.Entity<ConnectorWithAmount<BuildingType, ResourceType>>()
+            builder.Entity<CreationResourceConnector<BuildingType>>()
                 .HasOne(br => br.Parent)
                 .WithMany(b => b.Cost);
 
-            builder.Entity<ConnectorWithAmount<BuildingType, ResourceType>>()
+            builder.Entity<CreationResourceConnector<BuildingType>>()
                 .HasOne(br => br.Child)
                 .WithMany(r => r.BuildingResources);
 
-            builder.Entity<ConnectorWithAmount<ResearchType, ResourceType>>()
+            builder.Entity<CreationResourceConnector<ResearchType>>()
                 .HasOne(rr => rr.Parent)
                 .WithMany(r => r.Cost);
 
-            builder.Entity<ConnectorWithAmount<ResearchType, ResourceType>>()
+            builder.Entity<CreationResourceConnector<ResearchType>>()
                 .HasOne(rr => rr.Child)
                 .WithMany(r => r.ResearchResources);
 
-            builder.Entity<UnitResource>()
+            builder.Entity<CreationResourceConnector<UnitType>>()
                 .HasOne(ur => ur.Parent)
                 .WithMany(u => u.Cost);
 
-            builder.Entity<UnitResource>()
+            builder.Entity<CreationResourceConnector<UnitType>>()
                 .HasOne(ur => ur.Child)
                 .WithMany(r => r.UnitResources);
 

@@ -280,7 +280,7 @@ namespace StrategyGame.Bll.Extensions
             };
             var currentController = new BuildingType
             {
-                Cost = new[] { new ConnectorWithAmount<BuildingType, ResourceType> { Amount = 1000, Child = stone } },
+                Cost = new[] { new CreationResourceConnector<BuildingType> { CostAmount = 1000, Child = stone } },
                 BuildTime = 5,
                 MaxCount = -1,
                 Content = currentCont
@@ -295,7 +295,7 @@ namespace StrategyGame.Bll.Extensions
             };
             var reefCastle = new BuildingType
             {
-                Cost = new[] { new ConnectorWithAmount<BuildingType, ResourceType> { Amount = 1000, Child = stone } },
+                Cost = new[] { new CreationResourceConnector<BuildingType> { CostAmount = 1000, Child = stone } },
                 BuildTime = 5,
                 MaxCount = -1,
                 Content = reefCastCont
@@ -310,7 +310,7 @@ namespace StrategyGame.Bll.Extensions
             };
             var stoneMine = new BuildingType
             {
-                Cost = new[] { new ConnectorWithAmount<BuildingType, ResourceType> { Amount = 1000, Child = stone } },
+                Cost = new[] { new CreationResourceConnector<BuildingType> { CostAmount = 1000, Child = stone } },
                 BuildTime = 5,
                 MaxCount = -1,
                 Content = reefCastCont
@@ -323,7 +323,7 @@ namespace StrategyGame.Bll.Extensions
                 Parameter = pearl.Id.ToString() + ";0.1",
                 IsOneTime = false
             };
-            var mudT = new ResearchType { Cost = new[] { new ConnectorWithAmount<ResearchType, ResourceType> { Amount = 1000, Child = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = mudTCont };
+            var mudT = new ResearchType { Cost = new[] { new CreationResourceConnector<ResearchType> { CostAmount = 1000, Child = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = mudTCont };
 
             // Iszapkombájn
             var harvMod2 = new Effect
@@ -332,7 +332,7 @@ namespace StrategyGame.Bll.Extensions
                 Parameter = pearl.Id.ToString() + ";0.15",
                 IsOneTime = false
             };
-            var mudC = new ResearchType { Cost = new[] { new ConnectorWithAmount<ResearchType, ResourceType> { Amount = 1000, Child = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = mudCCont };
+            var mudC = new ResearchType { Cost = new[] { new CreationResourceConnector<ResearchType> { CostAmount = 1000, Child = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = mudCCont };
 
             // korallfal
             var defMod1 = new Effect
@@ -341,7 +341,7 @@ namespace StrategyGame.Bll.Extensions
                 Parameter = "0.2",
                 IsOneTime = false
             };
-            var wall = new ResearchType { Cost = new[] { new ConnectorWithAmount<ResearchType, ResourceType> { Amount = 1000, Child = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = defCont };
+            var wall = new ResearchType { Cost = new[] { new CreationResourceConnector<ResearchType> { CostAmount = 1000, Child = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = defCont };
 
             // Szonárágyú
             var attMod1 = new Effect
@@ -350,7 +350,7 @@ namespace StrategyGame.Bll.Extensions
                 Parameter = "0.2",
                 IsOneTime = false
             };
-            var canon = new ResearchType { Cost = new[] { new ConnectorWithAmount<ResearchType, ResourceType> { Amount = 1000, Child = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = attCont };
+            var canon = new ResearchType { Cost = new[] { new CreationResourceConnector<ResearchType> { CostAmount = 1000, Child = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = attCont };
 
             // Harcművészet
             var combModA = new Effect
@@ -365,7 +365,7 @@ namespace StrategyGame.Bll.Extensions
                 Parameter = "0.1",
                 IsOneTime = false
             };
-            var martialArts = new ResearchType { Cost = new[] { new ConnectorWithAmount<ResearchType, ResourceType> { Amount = 1000, Child = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = cCont };
+            var martialArts = new ResearchType { Cost = new[] { new CreationResourceConnector<ResearchType> { CostAmount = 1000, Child = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = cCont };
 
             // Alchemy
             var taxMod1 = new Effect
@@ -374,11 +374,11 @@ namespace StrategyGame.Bll.Extensions
                 Parameter = pearl.Id.ToString() + ";0.3",
                 IsOneTime = false
             };
-            var alchemy = new ResearchType { Cost = new[] { new ConnectorWithAmount<ResearchType, ResourceType> { Amount = 1000, Child = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = taxCont };
+            var alchemy = new ResearchType { Cost = new[] { new CreationResourceConnector<ResearchType> { CostAmount = 1000, Child = pearl } }, ResearchTime = 15, MaxCompletedAmount = 1, Content = taxCont };
 
             // Settlers
             var settlerEff = new Effect { Name = KnownValues.NewCountryEffect, IsOneTime = true };
-            var settler = new ResearchType { Cost = new[] { new ConnectorWithAmount<ResearchType, ResourceType> { Amount = 100000, Child = pearl } }, ResearchTime = 30, MaxCompletedAmount = 1, Content = setCont };
+            var settler = new ResearchType { Cost = new[] { new CreationResourceConnector<ResearchType> { CostAmount = 100000, Child = pearl } }, ResearchTime = 30, MaxCompletedAmount = 1, Content = setCont };
 
             // Add effects, buildings, researches
             context.Effects.AddRange(popIn, cp, bsIn, harvMod1, harvMod2,
@@ -413,8 +413,8 @@ namespace StrategyGame.Bll.Extensions
                 DefensePower = 5,
                 Cost = new[]
                 {
-                    new UnitResource { MaintenanceAmount = 1, Child = pearl },
-                    new UnitResource { MaintenanceAmount = 1, Child = coral }
+                    new CreationResourceConnector<UnitType> { MaintenanceAmount = 1, Child = pearl },
+                    new CreationResourceConnector<UnitType> { MaintenanceAmount = 1, Child = coral }
                 },
                 IsPurchasable = false,
                 CarryCapacity = 10,
@@ -426,8 +426,8 @@ namespace StrategyGame.Bll.Extensions
                 DefensePower = 3,
                 Cost = new[]
                 {
-                    new UnitResource { MaintenanceAmount = 1, Child = pearl },
-                    new UnitResource { MaintenanceAmount = 1, Child = coral }
+                    new CreationResourceConnector<UnitType> { MaintenanceAmount = 1, Child = pearl },
+                    new CreationResourceConnector<UnitType> { MaintenanceAmount = 1, Child = coral }
                 },
                 BattlesToRankUp = 5,
                 RankedUpType = seal3,
@@ -441,8 +441,8 @@ namespace StrategyGame.Bll.Extensions
                 DefensePower = 2,
                 Cost = new[]
                 {
-                    new UnitResource { Amount = 50, MaintenanceAmount = 1, Child = pearl },
-                    new UnitResource { MaintenanceAmount = 1, Child = coral }
+                    new CreationResourceConnector<UnitType> { CostAmount = 50, MaintenanceAmount = 1, Child = pearl },
+                    new CreationResourceConnector<UnitType> { MaintenanceAmount = 1, Child = coral }
                 },
                 BattlesToRankUp = 3,
                 RankedUpType = seal2,
@@ -457,8 +457,8 @@ namespace StrategyGame.Bll.Extensions
                 DefensePower = 10,
                 Cost = new[]
                 {
-                    new UnitResource { MaintenanceAmount = 1, Child = pearl },
-                    new UnitResource { MaintenanceAmount = 1, Child = coral }
+                    new CreationResourceConnector<UnitType> { MaintenanceAmount = 1, Child = pearl },
+                    new CreationResourceConnector<UnitType> { MaintenanceAmount = 1, Child = coral }
                 },
                 IsPurchasable = false,
                 CarryCapacity = 30,
@@ -470,8 +470,8 @@ namespace StrategyGame.Bll.Extensions
                 DefensePower = 8,
                 Cost = new[]
                 {
-                    new UnitResource { MaintenanceAmount = 1, Child = pearl },
-                    new UnitResource { MaintenanceAmount = 1, Child = coral }
+                    new CreationResourceConnector<UnitType> { MaintenanceAmount = 1, Child = pearl },
+                    new CreationResourceConnector<UnitType> { MaintenanceAmount = 1, Child = coral }
                 },
                 BattlesToRankUp = 5,
                 RankedUpType = pony3,
@@ -485,8 +485,8 @@ namespace StrategyGame.Bll.Extensions
                 DefensePower = 6,
                 Cost = new[]
                 {
-                    new UnitResource {Amount = 50, MaintenanceAmount = 1, Child = pearl },
-                    new UnitResource { Amount = 1, Child = coral }
+                    new CreationResourceConnector<UnitType> { CostAmount = 50, MaintenanceAmount = 1, Child = pearl },
+                    new CreationResourceConnector<UnitType> { CostAmount = 1, Child = coral }
                 },
                 BattlesToRankUp = 3,
                 RankedUpType = pony2,
@@ -501,8 +501,8 @@ namespace StrategyGame.Bll.Extensions
                 DefensePower = 10,
                 Cost = new[]
                 {
-                    new UnitResource { MaintenanceAmount = 3, Child = pearl },
-                    new UnitResource { MaintenanceAmount = 2, Child = coral }
+                    new CreationResourceConnector<UnitType> { MaintenanceAmount = 3, Child = pearl },
+                    new CreationResourceConnector<UnitType> { MaintenanceAmount = 2, Child = coral }
                 },
                 IsPurchasable = false,
                 CarryCapacity = 40,
@@ -514,8 +514,8 @@ namespace StrategyGame.Bll.Extensions
                 DefensePower = 7,
                 Cost = new[]
                 {
-                    new UnitResource { MaintenanceAmount = 1, Child = pearl },
-                    new UnitResource { MaintenanceAmount = 1, Child = coral }
+                    new CreationResourceConnector<UnitType> { MaintenanceAmount = 1, Child = pearl },
+                    new CreationResourceConnector<UnitType> { MaintenanceAmount = 1, Child = coral }
                 },
                 BattlesToRankUp = 5,
                 RankedUpType = lazor3,
@@ -529,8 +529,8 @@ namespace StrategyGame.Bll.Extensions
                 DefensePower = 5,
                 Cost = new[]
                 {
-                    new UnitResource {Amount = 100, MaintenanceAmount = 3, Child = pearl },
-                    new UnitResource { MaintenanceAmount = 2, Child = coral }
+                    new CreationResourceConnector<UnitType> { CostAmount = 100, MaintenanceAmount = 3, Child = pearl },
+                    new CreationResourceConnector<UnitType> { MaintenanceAmount = 2, Child = coral }
                 },
                 BattlesToRankUp = 3,
                 RankedUpType = lazor2,
@@ -545,8 +545,8 @@ namespace StrategyGame.Bll.Extensions
                 DefensePower = 0,
                 Cost = new[]
                 {
-                    new UnitResource { Amount = 400, MaintenanceAmount = 4, Child = pearl },
-                    new UnitResource { MaintenanceAmount = 2, Child = coral }
+                    new CreationResourceConnector<UnitType> { CostAmount = 400, MaintenanceAmount = 4, Child = pearl },
+                    new CreationResourceConnector<UnitType> { MaintenanceAmount = 2, Child = coral }
                 },
                 BattlesToRankUp = 3,
                 IsPurchasable = true,
@@ -559,8 +559,8 @@ namespace StrategyGame.Bll.Extensions
                 DefensePower = 0,
                 Cost = new[]
                 {
-                    new UnitResource {Amount = 50, MaintenanceAmount = 1, Child = pearl},
-                    new UnitResource {Amount = 0, MaintenanceAmount = 1, Child = coral},
+                    new CreationResourceConnector<UnitType> { CostAmount = 50, MaintenanceAmount = 1, Child = pearl },
+                    new CreationResourceConnector<UnitType> { CostAmount = 0, MaintenanceAmount = 1, Child = coral }
                 },
                 IsPurchasable = true,
                 Content = spyCont

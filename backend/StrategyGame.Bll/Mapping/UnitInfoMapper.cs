@@ -21,7 +21,7 @@ namespace StrategyGame.Bll.Mapping
                 .ForMember(dest => dest.Cost, conf => conf.MapFrom(src => src.Cost.Select(c => new ResourceInfo
                 {
                     Name = c.Child.Content.Name,
-                    Amount = (int)c.Amount,
+                    Amount = (int)c.CostAmount,
                     ImageUrl = c.Child.Content.ImageUrl
                 })));
 
@@ -44,7 +44,7 @@ namespace StrategyGame.Bll.Mapping
                 .ForMember(dest => dest.Cost, conf => conf.MapFrom(src => src.Unit.Cost.Select(c => new ResourceInfo
                 {
                     Name = c.Child.Content.Name,
-                    Amount = (int)c.Amount,
+                    Amount = (int)c.CostAmount,
                     ImageUrl = c.Child.Content.ImageUrl
                 })));
         }

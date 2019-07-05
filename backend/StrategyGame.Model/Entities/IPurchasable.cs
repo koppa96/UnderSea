@@ -7,14 +7,12 @@ namespace StrategyGame.Model.Entities
     /// Provides an interface for entities that can be purchased for a set amount of resources.
     /// </summary>
     /// <typeparam name="TEntity">The entity that can be purchased.</typeparam>
-    /// <typeparam name="TConnector">The connector between the entity and a <see cref="ResourceType"/>.</typeparam>
-    public interface IPurchasable<TEntity, TConnector>
+    public interface IPurchasable<TEntity>
         where TEntity : AbstractEntity<TEntity>
-        where TConnector : ConnectorWithAmount<TEntity, ResourceType>
     {
         /// <summary>
         /// Gets or sets the collection of resources the entity costs.
         /// </summary>
-        ICollection<TConnector> Cost { get; set; }
+        ICollection<CreationResourceConnector<TEntity>> Cost { get; set; }
     }
 }
