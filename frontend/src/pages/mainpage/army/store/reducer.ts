@@ -49,6 +49,7 @@ export const ArmyReducer = (
         ...state,
         isRequesting: false,
         isLoaded: true,
+        error: null,
         units: action.data
       };
     case getArmyActions.ERROR:
@@ -73,7 +74,7 @@ export const ArmyReducer = (
         error: action.error ? action.error : "Frissítési hiba"
       };
     default:
-      const check: never = action;
+      const _check: never = action;
       return state;
   }
 };

@@ -42,7 +42,7 @@ export const TokenReducer = (
         ...state
       };
     default:
-      const check: never = action;
+      const _check: never = action;
       return state;
   }
 };

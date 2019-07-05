@@ -78,7 +78,7 @@ export const ReportReducer = (
         error: action.error ? action.error : "Beállítási hiba"
       };
     default:
-      const check: never = action;
+      const _check: never = action;
       return state;
   }
 };

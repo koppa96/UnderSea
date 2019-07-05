@@ -73,17 +73,14 @@ export const MainpageReducer = (
         state.model && state.model.researches && state.model.researches;
       var tempDev: BriefCreationInfo | undefined;
       var tempPearls = state.model && state.model.pearls;
-     
+
       var tmpdevs: BriefCreationInfo[] = [];
       if (devs !== undefined) {
         tempDev = devs.find(r => r.id === action.data);
-       
+
         if (tempDev !== undefined) {
-         
           devs.map(dev => {
-           
             if (tempDev !== undefined) {
-           
               if (dev.id === tempDev.id) {
                 dev.inProgressCount = 1;
               }
@@ -96,7 +93,7 @@ export const MainpageReducer = (
           tempPearls -= 1000;
         }
       }
-     
+
       return {
         ...state,
         loading: false,
@@ -301,7 +298,7 @@ export const MainpageReducer = (
         error: action.error ? action.error : "Frissítési hiba"
       };
     default:
-      // const check: never = action.type;
+      // const _check: never = action.type;
       return state;
   }
 };

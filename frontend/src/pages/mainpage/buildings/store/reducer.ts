@@ -65,7 +65,7 @@ export const BuildingReducer = (
         error: action.error ? action.error : "Frissítési hiba"
       };
     default:
-      const check: never = action;
+      const _check: never = action;
       return state;
   }
 };

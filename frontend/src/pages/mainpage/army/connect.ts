@@ -14,6 +14,7 @@ const mapStateToProps = (state: IApllicationState): MappedProps => {
   return {
     pearls: model ? model.pearls : 0,
     ownedUnitState: state.app.pages.Army,
+    barrackSpace: model ? model.barrackSpace : 0,
     count: model
       ? model.armyInfo
         ? model.armyInfo.map(info => ({ id: info.id, count: info.totalCount }))

@@ -33,7 +33,7 @@ export const LoginReducer = (
       };
 
     default:
-      const check: never = action;
+      const _check: never = action;
       return state;
   }
 };

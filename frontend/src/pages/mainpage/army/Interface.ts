@@ -9,6 +9,7 @@ export interface MappedProps {
   ownedUnitState: ArmyState;
   count: Array<{ id: number; count: number }>;
   pearls: number;
+  barrackSpace: number;
 }
 
 export interface DispachedProps {
@@ -18,3 +19,14 @@ export interface DispachedProps {
 }
 
 export type ArmyProps = NativeProps & MappedProps & DispachedProps;
+
+export interface ArmyInfoWoCount {
+  id: number;
+  name: string;
+  imageUrl: string;
+  attackPower: number;
+  defensePower: number;
+  maintenancePearl: number;
+  maintenanceCoral: number;
+  costPearl: number;
+}

@@ -65,11 +65,16 @@ export class Army extends React.Component<ArmyProps, InitialState> {
   };
 
   render() {
+    var totalUnit = 0;
+    this.state.units.forEach(x => (totalUnit += x.count));
     const { addUnits, ownedUnitState, count } = this.props;
     const buttonState =
       !this.state.unitsAdded ||
       ownedUnitState.isPostRequesting ||
-      this.state.disableButton;
+      this.state.disableButton ||
+      this.props.barrackSpace < totalUnit
+        ? true
+        : false;
     const buttonClass = buttonState ? "button-disabled" : "button";
 
     return (

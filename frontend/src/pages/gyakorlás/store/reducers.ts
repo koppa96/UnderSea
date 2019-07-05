@@ -22,7 +22,7 @@ export const ManReducer = (
       };
 
     default:
-      const check: never = action;
+      const _check: never = action;
       return state;
   }
 };

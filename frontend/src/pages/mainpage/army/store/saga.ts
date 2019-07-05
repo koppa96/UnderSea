@@ -17,7 +17,6 @@ import { BasePortUrl } from "../../../..";
 import { registerAxiosConfig } from "../../../../config/axiosConfig";
 export const asd = 0;
 
-// TODO: create error handling (dont use any)
 const beginAddUnits = (unitsToAdd: ArmyUnit[]): Promise<IArmyActions> | any => {
   const url = BasePortUrl + "api/Units";
   const instance = axios.create();
@@ -64,7 +63,7 @@ function* handleArmyAddUnits(action: IActionAddArmyUnitRequest) {
     yield call(beginAddUnits, action.params.unitsToAdd);
     yield put(fetchSuccess(params));
   } catch (err) {
-    const ErrorMEssage: string = "Sajnos valami hiba történt vásárlás közben";
+    const ErrorMEssage: string = "Nincs elég szállás";
 
     yield put(fetchError(ErrorMEssage));
   }

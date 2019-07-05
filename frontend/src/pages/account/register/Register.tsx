@@ -210,4 +210,3 @@ export class Register extends React.Component<RegisterProps, RegisterState> {
     }
   }
 }
-export default Register;

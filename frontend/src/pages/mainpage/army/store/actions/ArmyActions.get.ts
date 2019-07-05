@@ -1,13 +1,4 @@
-export interface ArmyInfoWoCount {
-  id: number;
-  name: string;
-  imageUrl: string;
-  attackPower: number;
-  defensePower: number;
-  maintenancePearl: number;
-  maintenanceCoral: number;
-  costPearl: number;
-}
+import { ArmyInfoWoCount } from "../../Interface";
 
 export type IGetArmyRespone = ArmyInfoWoCount[];
 

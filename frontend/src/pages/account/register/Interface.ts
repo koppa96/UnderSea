@@ -1,8 +1,8 @@
-export interface NativeProps {}
+interface NativeProps {}
 
-export interface MappedProps {}
+interface MappedProps {}
 
-export interface dispatchedProps {}
+interface dispatchedProps {}
 
 export type RegisterProps = NativeProps & MappedProps & dispatchedProps;
 

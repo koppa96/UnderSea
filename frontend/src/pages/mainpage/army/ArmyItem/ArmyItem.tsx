@@ -1,14 +1,7 @@
 import React from "react";
 import { BasePortUrl } from "../../../..";
-import { ArmyInfoWoCount } from "../store/actions/ArmyActions.get";
 import QuestionMark from "./../../../../assets/images/question.svg";
-
-interface ArmyProps {
-  unit: ArmyInfoWoCount;
-  currentTroops: (id: number, troop: number, price: number) => void;
-  count: number;
-  reset: boolean;
-}
+import { ArmyProps } from "./Interface";
 
 export class ArmyItem extends React.Component<ArmyProps> {
   state = {

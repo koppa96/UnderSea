@@ -1,5 +1,4 @@
-import { ArmyInfoWoCount } from "./actions/ArmyActions.get";
-
+import { ArmyInfoWoCount } from "../Interface";
 export interface ArmyUnit {
   unitId: number;
   count: number;
