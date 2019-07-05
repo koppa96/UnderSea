@@ -32,7 +32,7 @@ namespace StrategyGame.Model.Entities.Units
         /// <summary>
         /// Gets or sets the content of the unit.
         /// </summary>
-        public virtual UnitContent Content { get; set; }
+        public virtual FrontendContent<UnitType> Content { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of divisions that contain the unit type.

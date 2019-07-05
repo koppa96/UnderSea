@@ -84,8 +84,8 @@ namespace StrategyGame.Bll.Extensions
                 return resourceInfo;
             });
 
-            combatInfo.Buildings = report.DefenderBuildings.Select(r => r.ToBriefCreationInfo<CombatReport, BuildingType, ConnectorWithAmount<BuildingType, ResourceType>, BuildingContent>());
-            combatInfo.Researches = report.DefenderResearches.Select(r => r.ToBriefCreationInfo<CombatReport, ResearchType, ConnectorWithAmount<ResearchType, ResourceType>, ResearchContent>());
+            combatInfo.Buildings = report.DefenderBuildings.Select(r => r.ToBriefCreationInfo<CombatReport, BuildingType, ConnectorWithAmount<BuildingType, ResourceType>>());
+            combatInfo.Researches = report.DefenderResearches.Select(r => r.ToBriefCreationInfo<CombatReport, ResearchType, ConnectorWithAmount<ResearchType, ResourceType>>());
 
             return combatInfo;
         }
@@ -95,11 +95,10 @@ namespace StrategyGame.Bll.Extensions
             return divisions.Select(mapper.Map<Division, BriefUnitInfo>);
         }
 
-        public static BriefCreationInfo ToBriefCreationInfo<TEntity, TCreation, TConnector, TContent>(this ConnectorWithAmount<TEntity, TCreation> connector)
+        public static BriefCreationInfo ToBriefCreationInfo<TEntity, TCreation, TConnector>(this ConnectorWithAmount<TEntity, TCreation> connector)
             where TEntity : AbstractEntity<TEntity>
-            where TCreation : AbstractCreationType<TCreation, TConnector, TContent>
+            where TCreation : AbstractCreationType<TCreation, TConnector>
             where TConnector : ConnectorWithAmount<TCreation, ResourceType>
-            where TContent: AbstractFrontendContent<TCreation>
         {
             return new BriefCreationInfo
             {

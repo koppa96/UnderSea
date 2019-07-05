@@ -107,17 +107,17 @@ namespace StrategyGame.Dal
         /// <summary>
         /// Gets the collection of <see cref="BuildingContent"/> in the database.
         /// </summary>
-        public DbSet<BuildingContent> BuildingContents { get; set; }
+        public DbSet<FrontendContent<BuildingType>> BuildingContents { get; set; }
 
         /// <summary>
         /// Gets the collection of <see cref="ResearchContent"/> in the database.
         /// </summary>
-        public DbSet<ResearchContent> ResearchContents { get; set; }
+        public DbSet<FrontendContent<ResearchType>> ResearchContents { get; set; }
 
         /// <summary>
         /// Gets the collection of <see cref="UnitContent"/> in the database.
         /// </summary>
-        public DbSet<UnitContent> UnitContents { get; set; }
+        public DbSet<FrontendContent<UnitType>> UnitContents { get; set; }
 
         /// <summary>
         /// Gets the collection of <see cref="EventContent"/> in the database.
@@ -127,7 +127,7 @@ namespace StrategyGame.Dal
         /// <summary>
         /// Gets the collection of <see cref="UnitContent"/> in the database.
         /// </summary>
-        public DbSet<ResourceContent> ResourceContents { get; set; }
+        public DbSet<FrontendContent<ResourceType>> ResourceContents { get; set; }
 
         public DbSet<ExceptionLog> ExceptionLogs { get; set; }
 

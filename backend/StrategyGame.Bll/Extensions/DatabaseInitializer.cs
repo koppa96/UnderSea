@@ -76,54 +76,54 @@ namespace StrategyGame.Bll.Extensions
         public static async Task FillWithDefaultAsync(this UnderSeaDatabaseContext context)
         {
             // Add contents
-            var currentCont = new BuildingContent
+            var currentCont = new FrontendContent<BuildingType>
             {
                 Name = "Áramlásirányító",
                 Description = "+50 lakos, 200 korall / kör",
                 ImageUrl = "images/static/buildings/aramlasiranyito-lg.png",
                 IconImageUrl = "images/static/buildings/aramlasiranyito-icon.svg"
             };
-            var reefCastCont = new BuildingContent
+            var reefCastCont = new FrontendContent<BuildingType>
             {
                 Name = "Zátonyvár",
                 Description = "+200 szállás",
                 ImageUrl = "images/static/buildings/zatonyvar-lg.png",
                 IconImageUrl = "images/static/buildings/zatonyvar-icon.svg"
             };
-            var stonemineCont = new BuildingContent
+            var stonemineCont = new FrontendContent<BuildingType>
             {
                 Name = "Kőbánya",
                 Description = "+200 kő körönként",
             };
             context.BuildingContents.AddRange(currentCont, reefCastCont, stonemineCont);
 
-            var sealCont = new UnitContent
+            var sealCont = new FrontendContent<UnitType>
             {
                 Name = "Rohamfóka",
                 Description = "Jól támad de rosszul véd",
                 ImageUrl = "images/static/units/rohamfoka.svg",
                 IconImageUrl = "images/static/units/rohamfoka.svg"
             };
-            var ponyCont = new UnitContent
+            var ponyCont = new FrontendContent<UnitType>
             {
                 Name = "Csatacsikó",
                 Description = "Jól véd de rosszul támad",
                 ImageUrl = "images/static/units/csatacsiko.svg",
                 IconImageUrl = "images/static/units/csatacsiko.svg"
             };
-            var lazorCont = new UnitContent
+            var lazorCont = new FrontendContent<UnitType>
             {
                 Name = "Lézercápa",
                 Description = "lazers man",
                 ImageUrl = "images/static/units/lezercapa.svg",
                 IconImageUrl = "images/static/units/lezercapa.svg"
             };
-            var leaderCont = new UnitContent
+            var leaderCont = new FrontendContent<UnitType>
             {
                 Name = "Parancsnok",
                 Description = "Támadást csak parancsnok tud vezetni",
             };
-            var spyCont = new UnitContent
+            var spyCont = new FrontendContent<UnitType>
             {
                 Name = "Kém",
                 Description = "Ha kémek segítségével információt gyűjthetsz az ellenségeidről."
@@ -131,49 +131,49 @@ namespace StrategyGame.Bll.Extensions
 
             context.UnitContents.AddRange(sealCont, ponyCont, lazorCont, leaderCont, spyCont);
 
-            var mudTCont = new ResearchContent
+            var mudTCont = new FrontendContent<ResearchType>
             {
                 Name = "Iszap traktor",
                 Description = "Iszapozza a korallt, +10% korall termelés",
                 ImageUrl = "images/static/researches/iszaptraktor-lg.png",
                 IconImageUrl = "images/static/researches/iszaptraktor-sm.png"
             };
-            var mudCCont = new ResearchContent
+            var mudCCont = new FrontendContent<ResearchType>
             {
                 Name = "Iszap kombájn",
                 Description = "Nagyon iszapozza a korallt, +15% korall termelés",
                 ImageUrl = "images/static/researches/iszapkombajn-lg.png",
                 IconImageUrl = "images/static/researches/iszapkombajn-sm.png"
             };
-            var defCont = new ResearchContent
+            var defCont = new FrontendContent<ResearchType>
             {
                 Name = "Korallfal",
                 Description = "Fal, korallból. +20% védekezés",
                 ImageUrl = "images/static/researches/korallfal.svg",
                 IconImageUrl = "images/static/researches/korallfal.svg"
             };
-            var attCont = new ResearchContent
+            var attCont = new FrontendContent<ResearchType>
             {
                 Name = "Szonárágyú",
                 Description = "Mint a denevér, echo-lokáció. +20% támadás",
                 ImageUrl = "images/static/researches/szonaragyu-lg.png",
                 IconImageUrl = "images/static/researches/szonaragyu-sm.png"
             };
-            var cCont = new ResearchContent
+            var cCont = new FrontendContent<ResearchType>
             {
                 Name = "Vízalatti harcművészetek",
                 Description = "\"A különbség a lehetetlen és a lehetséges között az egyén akarata.\", +10% védekezés és támadás",
                 ImageUrl = "images/static/researches/vizalatti-harcmuveszetek.svg",
                 IconImageUrl = "images/static/researches/vizalatti-harcmuveszetek.svg"
             };
-            var taxCont = new ResearchContent
+            var taxCont = new FrontendContent<ResearchType>
             {
                 Name = "Alkímia",
                 Description = "A népesség pénzt csinál, +30% adó bevétel",
                 ImageUrl = "images/static/researches/alkimia.svg",
                 IconImageUrl = "images/static/researches/alkimia.svg"
             };
-            var setCont = new ResearchContent
+            var setCont = new FrontendContent<ResearchType>
             {
                 Name = "Telepesek",
                 Description = "Telepeseket küld egy messzi régióba, akik új országot alapítanak"
@@ -239,17 +239,17 @@ namespace StrategyGame.Bll.Extensions
             context.EventContents.AddRange(plagueCont, mineCont, fireCont, goodhvCont, badhvCont,
                 contPopCont, contSolCont, disconSolCont, discontPopCont);
 
-            var coralCont = new ResourceContent
+            var coralCont = new FrontendContent<ResourceType>
             {
                 Name = "Korall",
                 Description = "Kis rákok várat építenek",
             };
-            var pearlCont = new ResourceContent
+            var pearlCont = new FrontendContent<ResourceType>
             {
                 Name = "Gyöngy",
                 Description = "gyöngy",
             };
-            var stoneCont = new ResourceContent
+            var stoneCont = new FrontendContent<ResourceType>
             {
                 Name = "Kő",
                 Description = "Kő, kavics",

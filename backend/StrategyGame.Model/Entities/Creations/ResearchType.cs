@@ -8,7 +8,7 @@ namespace StrategyGame.Model.Entities.Creations
     /// <summary>
     /// Represents a research type in the UnderSea database.
     /// </summary>
-    public class ResearchType : AbstractCreationType<ResearchType, ConnectorWithAmount<ResearchType, ResourceType>, ResearchContent>
+    public class ResearchType : AbstractCreationType<ResearchType, ConnectorWithAmount<ResearchType, ResourceType>>
     {
         /// <summary>
         /// Gets or sets the built time of the research (in turns).

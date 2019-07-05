@@ -15,7 +15,7 @@ namespace StrategyGame.Model.Entities
         /// <summary>
         /// Gets or sets the content for the resource.
         /// </summary>
-        public ResourceContent Content { get; set; }
+        public FrontendContent<ResourceType> Content { get; set; }
 
         /// <summary>
         /// Gets or sets the starting amount of the resource.
