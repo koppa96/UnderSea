@@ -86,6 +86,9 @@ export class Attack extends React.Component<TargetProps> {
                       }
                     >
                       <span>{item.username}</span>
+                      <span>
+                        {item.countryName ? item.countryName : "Not Found"}
+                      </span>
                       {item.countryId === this.state.targetCountryId && (
                         <div className="circle">
                           <img src={CheckMark} alt="Checkmark" />
@@ -102,6 +105,9 @@ export class Attack extends React.Component<TargetProps> {
                       }
                     >
                       <span>{item.username}</span>
+                      <span>
+                        {item.countryName ? item.countryName : "Not Found"}
+                      </span>
                       {item.countryId === this.state.targetCountryId && (
                         <div className="circle">
                           <img src={CheckMark} alt="Checkmark" />
