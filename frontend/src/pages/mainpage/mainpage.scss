@@ -99,6 +99,7 @@
   @extend .undersea-font;
   font-size: 38px;
   align-self: flex-end;
+  user-select: none;
 }
 .main-page {
   z-index: 999;

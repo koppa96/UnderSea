@@ -157,25 +157,29 @@ export class MainPage extends React.Component<MainPageProps> {
                 </Route>
               </Switch>
 
-              <Modal
-                className="main-component"
-                contentClassName="main-component"
-                isOpen={this.state.showPopup}
-                toggle={() => this.togglePopup()}
-              >
-                <div className="popup-mainpage">
-                  <h1>Hoppá!</h1>
-                  <h2>{event && event.name ? event.name : "Titok"}</h2>
-                  <span>
-                    {event && event.description
-                      ? event.description
-                      : "Mi lehet a leírás?"}
-                  </span>
-                  <span>
-                    {event && event.flavourtext ? event.flavourtext : null}
-                  </span>
-                </div>
-              </Modal>
+              {this.state.showPopup && event ? (
+                <Modal
+                  className="main-component"
+                  contentClassName="main-component"
+                  isOpen={this.state.showPopup}
+                  toggle={() => this.togglePopup()}
+                >
+                  <div className="popup-mainpage">
+                    <h1>Hoppá!</h1>
+                    <h2>{event && event.name ? event.name : "Titok"}</h2>
+                    <span>
+                      {event && event.description
+                        ? event.description
+                        : "Mi lehet a leírás?"}
+                    </span>
+                    <button onClick={() => this.togglePopup()}>
+                      {event && event.flavourtext ? event.flavourtext : null}
+                    </button>
+                  </div>
+                </Modal>
+              ) : (
+                () => this.setState({ showPopup: false })
+              )}
             </main>
           </div>
         </div>
